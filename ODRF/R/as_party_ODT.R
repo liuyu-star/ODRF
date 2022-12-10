@@ -1,0 +1,137 @@
+#' projection pursuit classification tree plot
+#' 
+#' Draw projection pursuit classification tree with tree structure. It is 
+#' modified from a function in party library.
+#' @title PPtree plot
+#' @param x PPtreeclass object
+#' @param font.size font size of plot
+#' @param width.size size of eclipse in each node.
+#' @param main main title
+#' @param sub sub title
+#' @param ... arguments to be passed to methods
+#' @references Lee, EK(2017) 
+#' PPtreeViz: An R Package for Visualizing Projection Pursuit Classification 
+#' Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
+#' @import partykit
+#' @keywords tree
+#' 
+#' @export
+#' 
+#' @examples
+#' data(iris)
+#' Tree.result <- PPTreeclass(Species~., data = iris,"LDA")
+#' Tree.result
+#' plot(Tree.result,xjust=3)
+# @export
+#@import partykit 
+##@aliases as.party.ODT
+#@rdname as.party.ODT
+#@method as.party ODT
+as.party.ODT<-function(tree,X,y,data=TRUE,...){
+  #ff <- data.frame(obj$Tree.Struct)
+  X=as.matrix(X)
+  
+  numNode=length(tree$structure$nodeCutValue)
+  cutNode=which(tree$structure$nodeCutValue!=0)
+  
+  TS=matrix(0,numNode,5)
+  TS[,1]=seq(numNode)
+  TS[,2]=tree[["structure"]][["childNode"]]
+  if(tree$method!="regression"){
+    TS[setdiff(seq(numNode),cutNode),3]=max.col(tree$structure$nodeNumLabel)[setdiff(seq(numNode),cutNode)]
+  }else{
+    TS[setdiff(seq(numNode),cutNode),3]=round(tree$structure$nodeNumLabel[,1][setdiff(seq(numNode),cutNode)],3)
+  }
+  TS[cutNode,3]=TS[cutNode,2]+1
+  TS[cutNode,4]=seq(length(cutNode))
+  TS[cutNode,5]=tree[["structure"]][["nodeCutIndex"]][cutNode]
+  colnames(TS)=c("node","left_node","right_node/leaf_label","cut_node","cut_node_index")
+  TS=data.frame(TS)
+  CutValue<-tree$structure$nodeCutValue[cutNode]
+  
+  
+  n <- nrow(TS)
+  if (n == 1) 
+    return(partykit::partynode(as.integer(1)))
+  is.leaf <- (TS$cut_node == 0)
+  ncomplete<-rep(2,n)
+  ncomplete[is.leaf]<-0
+  index<-cumsum(c(1,ncomplete+1*(!is.leaf)))
+  primary<-numeric(n)
+  primary[!is.leaf]<-index[c(!is.leaf,FALSE)]
+  
+  nodeRotaMat<-tree[["structure"]][["nodeRotaMat"]]
+  Alpha=matrix(0,length(cutNode),tree[["data"]][["p"]])
+  for (cn in  1:length(cutNode)) {
+    idx=which(nodeRotaMat[,2]==cutNode[cn])
+    Alpha[cn,nodeRotaMat[idx,1]]=nodeRotaMat[idx,3]
+  }
+  
+  mf<-X%*%t(Alpha)
+  rownames(mf)<-rownames(X)
+  colnames(mf)<-paste0(paste0("proj",1:ncol(mf)),"X") 
+  mf<-data.frame(mf)
+  
+  fit <- as.data.frame(matrix(nrow = NROW(mf), ncol = 0))
+  #fit <- as.data.frame(matrix(nrow = NROW(mf), ncol = 0))
+  #if(tree$method!="regression"){
+  #  pred=as.numeric(factor(predict_ppCART(tree,X),levels = tree$Levels))
+  #}else{
+  #  pred=predict_ppCART(tree,X)
+  #}
+  #fit[["(fitted)"]] <- apply(matrix(pred,ncol=1),1,function(x) which((TS[,3]==x)*is.leaf==1))
+  fit[["(fitted)"]] <- predict(tree,X,type="node")
+  fit[["(response)"]] <- y
+  
+  #fitted <- predict_ppCART(tree,X)
+  pptree_kids <- function(i) {
+    if (is.leaf[i]) 
+      return(NULL)
+    else 
+      return(c(TS[i,c(3,2)])) 
+  }
+  
+  pptree_split <- function(j) {
+    if (j < 1) 
+      return(NULL)
+    idj <- as.integer(TS$cut_node[j])
+    ret <- partykit::partysplit(varid = idj, 
+                                breaks = as.double(CutValue[idj]), 
+                                right = FALSE, 
+                                index = 2L:1L)
+    ret
+  }
+  
+  pptree_node <- function(i) {
+    if (is.null(pptree_kids(i))) 
+      return(partynode(as.integer(i)))
+    
+    nd <- partykit::partynode(as.integer(i), split = pptree_split(i), 
+                              kids = lapply(pptree_kids(i),pptree_node))
+    
+    left <- partykit::nodeids(kids_node(nd)[[1L]], terminal = TRUE)
+    right <- partykit::nodeids(kids_node(nd)[[2L]], terminal = TRUE)
+    nd$split$prob <- c(0, 0)
+    nl <- sum(fit[["(fitted)"]] %in% left)
+    nr <- sum(fit[["(fitted)"]] %in% right)
+    if(nl > nr) {
+      nd$split$prob <- c(1, 0)
+    } else {
+      nd$split$prob <- c(0, 1)
+    }
+    nd$split$prob <- as.double(nd$split$prob)
+    return(nd)
+  }
+  
+  node <- pptree_node(1)
+  #rval <- pp_party(node = node, 
+  rval <- partykit::party(node = node, 
+                          data = if (data) mf else mf[0L, ], 
+                          fitted = fit, 
+                          terms =  tree$terms, 
+                          info = list(method = "ODT"))
+  class(rval) <- c("constparty", class(rval))
+  #class(me) <- append(class(rval),"constparty")
+  #rval
+  return(rval)
+}

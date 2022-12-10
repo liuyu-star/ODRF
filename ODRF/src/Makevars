@@ -1,0 +1,9 @@
+## Use c++11
+#CXX_STD = CXX11
+#CXX = g++-4.8.1
+#PKG_CXXFLAGS = -std=c++11
+#PKG_CPPFLAGS = -DR_BUILD
+PKG_CPPFLAGS += -I../inst/include/
+#R_LIBS=~/R_libs:/data/apps/R/3.1.0/lib64/R/library 
+#R CMD INSTALL diseaseSims
+
