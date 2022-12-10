@@ -223,7 +223,7 @@ ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-c
     }
     
     ##########################################
-    if(NodeRotateFun=="MakeRotMat"){
+    if(NodeRotateFun=="RotMatMake"){
       sparseM <- MakeRotMat(X[nodeXIndx[[currentNode]],], y[nodeXIndx[[currentNode]]], 
                             paramList$RotMatFun, paramList$PPFun, FunDir, paramList)
     }
@@ -235,7 +235,7 @@ ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-c
       paramList$x = NULL;paramList$y = NULL;
     }
     
-    if(NodeRotateFun%in%c('RotMatRF','RandRotMat')){
+    if(NodeRotateFun%in%c('RotMatRF','RotMatRand')){
       sparseM <- do.call(FUN, paramList)
     }
     

@@ -36,7 +36,7 @@
 #'
 #' bestcut=BestCutNode(X,y,method='g-classification')
 #' print(bestcut)
-best_split_node <- function(X, y, method='g-classification', weights=1, MinLeaf=ifelse(method=='regression',5,1),
+BestCutNode <- function(X, y, method='g-classification', weights=1, MinLeaf=ifelse(method=='regression',5,1),
                           numLabels=ifelse(method=='regression',0,length(unique(y)))) {
 
   X <- as.matrix(X)

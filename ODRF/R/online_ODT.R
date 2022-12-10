@@ -237,7 +237,7 @@ online.ODT=function(ppTree,data,weights=NULL)
     }
     
     ##########################################
-    if(NodeRotateFun=="MakeRotMat"){
+    if(NodeRotateFun=="RotMatMake"){
       sparseM <- MakeRotMat(X[nodeXIndx[[currentNode]],], y[nodeXIndx[[currentNode]]], 
                             paramList$RotMatFun, paramList$PPFun, FunDir, paramList)
     }
@@ -249,7 +249,7 @@ online.ODT=function(ppTree,data,weights=NULL)
       paramList$x = NULL;paramList$y = NULL;
     }
     
-    if(NodeRotateFun%in%c('RotMatRF','RandRotMat')){
+    if(NodeRotateFun%in%c('RotMatRF','RotMatRand')){
       sparseM <- do.call(FUN, paramList)
     }
     

@@ -21,7 +21,7 @@
 #' prob <- 0.5
 #' set.seed(4)
 #' (a <- RandMatBinary(p, d, sparsity, prob))
-RandRotMat <- function(dimX,RandDist=c("Binary","Norm","Uniform")[1],numProj=ceiling(sqrt(paramList$dimX)),
+RotMatRand <- function(dimX,RandDist=c("Binary","Norm","Uniform")[1],numProj=ceiling(sqrt(paramList$dimX)),
                        dimProj = NULL,sparsity=ifelse(paramList$dimX >=10, 3/paramList$dimX, 1/paramList$dimX),
                        prob=0.5, lambda=1, catLabel = NULL, ...) {
   if(!is.null(dimProj)){
@@ -341,7 +341,7 @@ RotMatPPO <- function(x, y, numProj,dimProj,catLabel = NULL,ppMethod="PPR",
 #' paramList <- list(p = p, d = d)
 #' set.seed(4)
 #' (a <- do.call(RandMatRF, paramList))
-MakeRotMat <- function(x, y, RotMatFun, PPFun, FunDir, paramList) {
+RotMatMake <- function(x, y, RotMatFun, PPFun, FunDir, paramList) {
   if(!RotMatFun%in%ls("package:ODRF")){
     source(paste0(FunDir,"/",RotMatFun,".R"))
   }
