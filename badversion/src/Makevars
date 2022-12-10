@@ -1,9 +1,0 @@
-## Use c++11
-#CXX_STD = CXX11
-#PKG_CPPFLAGS = -DR_BUILD
-PKG_CPPFLAGS += -I../inst/include/
-#R_LIBS=~/R_libs:/data/apps/R/3.1.0/lib64/R/library 
-#PKG_LIBS=-L/data/apps/user_contributed_software/krthornt/fwdpp/0.2.4/lib -L/data/apps/gsl/1.16/lib64 -L/data/apps/user_contributed_software/krthornt/libsequence/1.8.0/lib -L/data/apps/hdf5/1.8.11/lib -L/data/apps/boost/1.54/lib -L/data/apps/zlib/1.2.7/lib -L/data/apps/mpi/openmpi-1.6.0/gcc/4.7.3/lib -L/data/apps/gcc/4.7.3/lib64 -L/data/apps/gcc/4.7.3/lib 
-#PKG_CPPFLAGS=-I/data/users/krthornt/src/disease_sims/R/.. -I/data/apps/user_contributed_software/krthornt/fwdpp/0.2.4/include -I/data/apps/gsl/1.16/include -I/data/apps/boost/1.54/include -I/data/apps/user_contributed_software/krthornt/libsequence/1.8.0/include -I/data/apps/zlib/1.2.7/include -I/data/apps/mpc-1.0.1/include 
-#R CMD INSTALL diseaseSims
-
