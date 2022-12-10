@@ -206,8 +206,8 @@ ODRF = function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='
     #}else{
     #  colnames(data)=all.vars(Terms)
     #}
-    paramList$weights=weights1
-    ppForestT=ODT(formula,data,subset=NULL,weights=NULL,na.action=NULL,method,NodeRotateFun,FunDir,
+    #paramList$weights=weights1
+    ppForestT=ODT(formula,data,subset=NULL,weights=weights1,na.action=NULL,method,NodeRotateFun,FunDir,
                   paramList,catLabel,Xcat=0L,MaxDepth,numNode,MinLeaf,Levels,Xscale="No",TreeRandRotate);
     
     if ((numOOB>0)&storeOOB){

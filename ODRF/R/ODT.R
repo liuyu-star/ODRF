@@ -29,10 +29,11 @@
 #' library(rerf)
 #' forest <- RerF1(as.matrix(iris[, 1:4]), iris[[5L]], num.cores = 1L)
 #' 
-#X=X;y=y;method='g-classification';NodeRotateFun="RotMatPPO";paramList=NULL;catLabel=NULL;MaxDepth=Inf;
-#MinLeaf=ifelse(method=='regression',5,1);weights=1;numNode=Inf;
-#Levels=if(method=='regression')NULL else levels(as.factor(y));Xcat=NULL;
-#Xscale=c("Min-max","Quantile","No")[1];FunDir=getwd();TreeRandRotate=FALSE
+#formula=y~.;data=data.frame(X,y=y);subset=NULL;weights=NULL;na.action=na.fail;method='i-classification';
+#NodeRotateFun="RotMatPPO";FunDir=getwd();paramList=NULL;catLabel=NULL;
+#Xcat=0;MaxDepth=Inf;numNode=Inf;MinLeaf=ifelse(method=='regression',5,1);
+#Levels=NULL;Xscale=c("Min-max","Quantile","No")[1];TreeRandRotate=FALSE
+#Call=quote(ODT(formula=y~.,data=data.frame(X,y=y), method='i-classification',NodeRotateFun = "RotMatPPO"))
 #Xcat=c(NULL,0)[1]
 ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-classification',
              NodeRotateFun="RotMatPPO",FunDir=getwd(),paramList=NULL,catLabel=NULL,
@@ -72,7 +73,7 @@ ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-c
   if (int > 0)
     X <- X[, -int, drop = FALSE]
   
-  weights=c(weights,paramList$weights)
+  #weights=c(weights,paramList$weights)
   if(!is.null(weights))
     X <- X * matrix(weights,length(y),ncol(X))
   colnames(X)=varName
@@ -224,7 +225,7 @@ ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-c
     
     ##########################################
     if(NodeRotateFun=="RotMatMake"){
-      sparseM <- MakeRotMat(X[nodeXIndx[[currentNode]],], y[nodeXIndx[[currentNode]]], 
+      sparseM <- RotMatMake(X[nodeXIndx[[currentNode]],], y[nodeXIndx[[currentNode]]], 
                             paramList$RotMatFun, paramList$PPFun, FunDir, paramList)
     }
     
@@ -246,7 +247,7 @@ ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-c
     }
     
     if(NodeRotateFun=="PPO"){
-      sparseM=ppRF:::PPO(x=X[nodeXIndx[[currentNode]],],y=y[nodeXIndx[[currentNode]]],q = paramList$q,
+      sparseM=ODRF:::PPO(x=X[nodeXIndx[[currentNode]],],y=y[nodeXIndx[[currentNode]]],q = paramList$q,
                          ppMethod = paramList$ppMethod,weight = paramList$weight,r = paramList$r,
                          lambda = paramList$lambda,energy = paramList$energy,cooling = paramList$cooling,
                          TOL = paramList$TOL,maxiter = paramList$maxiter)

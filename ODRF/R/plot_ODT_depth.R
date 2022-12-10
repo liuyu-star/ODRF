@@ -21,16 +21,21 @@
 #' Tree.result <- PPTreeclass(Species~., data = iris,"LDA")
 #' Tree.result
 #' plot(Tree.result,xjust=3)
-plot.ODT.depth=function(X,y,Xnew,ynew,method='g-classification',NodeRotateFun="RotMatPPO",
+plot.ODT.depth=function(formula,data,newdata,method='i-classification',NodeRotateFun="RotMatPPO",
                            paramList=NULL,main=paste0("Oblique ",
                            ifelse(method=="regression","Regression","Classification")," Tree"),...){
   set.seed(221109)
   
-  paramList$X=X;paramList$y=y;paramList$MaxDepth=Inf
+  paramList$formula=formula;paramList$data=data;paramList$MaxDepth=Inf
   paramList$method=method;paramList$NodeRotateFun=NodeRotateFun
   tree <- do.call(ODT, paramList)
   Depth=max(tree$structure$nodeDepth)
   #Depth=Depth+ceiling(Depth/2)
+  
+  y= data[,all.vars(tree$terms)[1]]
+  ynew= newdata[,all.vars(tree$terms)[1]]
+  Xnew= newdata[,all.vars(tree$terms)[-1]]
+  Xnew=as.matrix(Xnew) 
   
   err=rep(0,Depth)
   for (d in 1:Depth) {

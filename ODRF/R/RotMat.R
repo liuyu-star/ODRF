@@ -168,7 +168,7 @@ RotMatPPO <- function(x, y, numProj,dimProj,catLabel = NULL,ppMethod="PPR",
                       method='i-classification',weights=NULL) {
   p = ncol(x)
   n=length(y)
-  weights=ifelse(is.null(weights),rep(1, n),weights)
+  weights=if(is.null(weights))rep(1, n)
   #d=min(100, max(5, ceiling(p/q))) d q
   p0=p-(!is.null(catLabel))*(length(unlist(catLabel))-length(catLabel))
   

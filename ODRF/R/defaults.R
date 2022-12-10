@@ -46,7 +46,7 @@ defaults <- function(paramList,dimX,catLabel,NodeRotateFun,method,weights) {
   if (is.null(paramList[["numProj"]])) {
     #  q<- min(ceiling(length(y)^0.4),ceiling(paramList$p*2/3))
     #  paramList$d <-min(max(5, ceiling(paramList$p/q)),paramList$p)
-    if(NodeRotateFun=="RotMatRand")paramList$numProj<-ceiling(sqrt(paramList$dimX))
+    if(NodeRotateFun!="RotMatPPO")paramList$numProj<-ceiling(sqrt(paramList$dimX))
   }
   if (is.null(paramList[["ppMethod"]])) {
     paramList$ppMethod =ifelse(NodeRotateFun=="PPO","LDA","PPR")

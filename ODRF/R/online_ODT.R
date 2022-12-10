@@ -67,7 +67,7 @@ online.ODT=function(ppTree,data,weights=NULL)
   
   if(!is.null(subset))
     X=X[subset,]
-  weights=c(weights,paramList$weights)
+  #weights=c(weights,paramList$weights)
   if(!is.null(weights))
     X <- X * matrix(weights0,length(y),ncol(X))
   weights=weights0

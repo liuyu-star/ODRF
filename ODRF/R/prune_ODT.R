@@ -61,8 +61,8 @@ prune.ODT=function(ppTree,data,weights=NULL,MaxDepth=NULL)
   
   if(!is.null(ppTree$data$subset))
     Xnew=Xnew[ppTree$data$subset,]
-  weights0=c(ppTree$data$weights,ppTree$paramList$weights)
-  if(!is.null(weights0))
+  #weights0=c(ppTree$data$weights,ppTree$paramList$weights)
+  if(!is.null(ppTree$data$weights))
     Xnew <- Xnew * matrix(weights,length(y),ncol(Xnew))
   
   p=ncol(Xnew)

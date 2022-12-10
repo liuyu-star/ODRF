@@ -5,11 +5,10 @@
 \title{PPtree plot}
 \usage{
 \method{plot}{ODT.depth}(
-  X,
-  y,
-  Xnew,
-  ynew,
-  method = "g-classification",
+  formula,
+  data,
+  newdata,
+  method = "i-classification",
   NodeRotateFun = "RotMatPPO",
   paramList = NULL,
   main = paste0("Oblique ", ifelse(method == "regression", "Regression",
