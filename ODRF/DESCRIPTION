@@ -3,11 +3,15 @@ Type: Package
 Title: Oblique Decision Random Forest for Classification and Regression
 Version: 1.0
 Date: 2022-09-21
-Author: Yu Liu, Yingcun Xia
+Author: Yu Liu<liuyuchina123@gmail.com>, Yingcun Xia<staxyc@nus.edu.sg>
 Maintainer: Yu Liu <liuyuchina123@gmail.com>
 Description: The oblique decision tree (ODT), which uses linear combinations of predictors as partitioning variables. ODT-based random forests (ODRF) uses either fixed-size or random-size subset of features in the features bagging.
 License: GPL (>= 2)
+LazyData: yes
+Depends: R (>= 3.1.0)
 NeedsCompilation: yes
-Imports: Rcpp, Pursuit, doParallel, foreach, grid, partykit, nnet
+Imports: Rcpp (>= 0.11.0), stats, doParallel, foreach, Pursuit,  grid, partykit, nnet
 LinkingTo: Rcpp, RcppArmadillo
 RoxygenNote: 7.2.0
+Suggests: knitr
+VignetteBuilder: knitr
