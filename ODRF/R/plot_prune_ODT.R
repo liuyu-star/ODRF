@@ -25,7 +25,7 @@
 #' Tree.result <- PPTreeclass(Species~., data = iris,"LDA")
 #' Tree.result
 #' plot(Tree.result,xjust=3)
-plot.prune.ODT=function(pptree,position="bottomleft",main=paste0("Oblique ",
+plot.prune.ODT=function(pptree,position="topleft",main=paste0("Oblique ",
                         ifelse(pptree$method=="regression","Regression","Classification")," Tree"),...){
   pruneError=pptree$pruneError
   
@@ -51,7 +51,7 @@ plot.prune.ODT=function(pptree,position="bottomleft",main=paste0("Oblique ",
   #axis(side = 4)
   mtext("Depth", side = 4, line = 3)
   
-  legend(x=position, legend = c("Error", "Depth"),lty = c(1,2),pch = c(21,4), pt.bg = c("skyblue","black") ,col = c("black","black"))
+  legend(x=position, legend = c("Error", "Depth"),lty = c(1,2),pch = c(21,4), pt.bg = c("skyblue","black") ,col = c("black","black"),bty="n")
   
  
   return(invisible(pruneError))

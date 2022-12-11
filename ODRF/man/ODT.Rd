@@ -19,7 +19,7 @@ ODT(
   MaxDepth = Inf,
   numNode = Inf,
   MinLeaf = ifelse(method == "regression", 5, 1),
-  Levels = NULL,
+  Levels = NA,
   Xscale = c("Min-max", "Quantile", "No")[1],
   TreeRandRotate = FALSE,
   ...

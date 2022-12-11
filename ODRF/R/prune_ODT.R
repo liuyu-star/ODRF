@@ -128,7 +128,8 @@ prune.ODT=function(ppTree,data,weights=NULL,MaxDepth=NULL)
   if(ppTree$method!="regression"){
     err0 <- mean(prediction != ynew)
   }else{
-    err0 <- mean((as.numeric(prediction)-ynew)^2)
+    e.0 = mean((ynew-mean(y))^2)
+    err0 <- mean((as.numeric(prediction)-ynew)^2)/e.0
     #structure$nodeLabel=as.numeric(structure$nodeLabel)
   }
   
@@ -234,7 +235,7 @@ prune.ODT=function(ppTree,data,weights=NULL,MaxDepth=NULL)
     if(ppTree$method!="regression"){
       err <- mean(prediction != ynew)
     }else{
-      err <- mean((as.numeric(prediction)-ynew)^2)
+      err <- mean((as.numeric(prediction)-ynew)^2)/e.0
     }
     pruneError[ncut,]=c(currentNode-1,length(nodeCutValue),max(structure$nodeDepth[-idx]),err)
     

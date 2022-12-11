@@ -21,7 +21,7 @@
 #' Tree.result <- PPTreeclass(Species~., data = iris,"LDA")
 #' Tree.result
 #' plot(Tree.result,xjust=3)
-plot.ODT.depth=function(formula,data,newdata,method='i-classification',NodeRotateFun="RotMatPPO",
+plot_ODT_depth=function(formula,data,newdata,method='i-classification',NodeRotateFun="RotMatPPO",
                            paramList=NULL,main=paste0("Oblique ",
                            ifelse(method=="regression","Regression","Classification")," Tree"),...){
   set.seed(221109)

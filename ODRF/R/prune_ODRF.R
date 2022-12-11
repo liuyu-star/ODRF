@@ -88,11 +88,13 @@ prune.ODRF = function(ppForest,data,weights=NULL,MaxDepth=NULL,useOOB=TRUE)
   numClass=nC
   ntrees=length(ppTrees);
   
-  classCt <- cumsum(table(ynew))
-  if (stratify) {
-    Cindex <- vector("list", numClass)
-    for (m in 1L:numClass) {
-      Cindex[[m]] <- which(ynew == ppForest$Levels[m])
+  if(method!="regression"){
+    classCt <- cumsum(table(ynew))
+    if (stratify) {
+      Cindex <- vector("list", numClass)
+      for (m in 1L:numClass) {
+        Cindex[[m]] <- which(ynew == ppForest$Levels[m])
+      }
     }
   }
 

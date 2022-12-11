@@ -38,7 +38,7 @@
 ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-classification',
              NodeRotateFun="RotMatPPO",FunDir=getwd(),paramList=NULL,catLabel=NULL,
              Xcat=0,MaxDepth=Inf,numNode=Inf,MinLeaf=ifelse(method=='regression',5,1),
-             Levels=NULL,Xscale=c("Min-max","Quantile","No")[1],TreeRandRotate=FALSE,...)
+             Levels=NA,Xscale=c("Min-max","Quantile","No")[1],TreeRandRotate=FALSE,...)
 {
   # address na values.
   if (any(is.na(data))) {
@@ -91,7 +91,7 @@ ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-c
   p = ncol(X);
   
   if(method!="regression"){
-    if(is.null(Levels)){
+    if(is.na(Levels)){
       Levels=levels(as.factor(y))
     }
     if (!is.integer(y)) {

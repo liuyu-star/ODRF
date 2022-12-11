@@ -94,7 +94,7 @@ ODRF = function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='
   colnames(X)=varName
   
   
-  ppForest <- list(call=Call,terms=Terms,method=method,Levels = NULL,
+  ppForest <- list(call=Call,terms=Terms,method=method,Levels = NA,
                    NodeRotateFun=NodeRotateFun,paramList=paramList,oobErr=NULL,oobConfusionMat=NULL)
   if(method!="regression"){
     # adjust y to go from 1 to numClass if needed
