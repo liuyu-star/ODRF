@@ -2,42 +2,56 @@
 % Please edit documentation in R/prune_ODT.R
 \name{prune.ODT}
 \alias{prune.ODT}
-\title{RerF Tree Generator}
+\title{Pruning of class \code{ODT}.}
 \usage{
-\method{prune}{ODT}(ppTree, data, weights = NULL, MaxDepth = NULL)
+\method{prune}{ODT}(ppTree, data, MaxDepth = 1)
 }
 \arguments{
-\item{'g-classification'}{: gini impurity index (classification)}
+\item{data}{validation data of class \code{data.frame} is used to prune the object of class \code{ODT}.}
 
-\item{'i-classification'}{: information gain (classification, default)}
+\item{MaxDepth}{The maximum depth of the tree after pruning. (Default 1)}
 
-\item{'regression'}{: squared error (regression)
-
-Other parameters that can be set are:}
-
-\item{paramList}{parameters in a named list to be used by FUN. If left unchanged,}
-
-\item{catMap}{a list specifying which columns in X correspond to the same one-of-K encoded feature. Each element of catMap is a numeric vector specifying the K column indices of X corresponding to the same categorical feature after one-of-K encoding. All one-of-K encoded features in X must come after the numeric features. The K encoded columns corresponding to the same categorical feature must be placed contiguously within X. The reason for specifying catMap is to adjust for the fact that one-of-K encoding cateogorical features results in a dilution of numeric features, since a single categorical feature is expanded to K binary features. If catMap = NULL, then RerF assumes all features are numeric (i.e. none of the features have been one-of-K encoded).}
-
-\item{FUN}{:FUN=RandMatPPR.}
-
-\item{minparent}{: the minimum amount of samples in an impure node for it to be considered for splitting (default 2)}
-
-\item{MinLeaf}{: the minimum amount of samples in a leaf (default 1)}
-
-\item{Xweights}{: a vector of values which weigh the samples when considering a split (default [])}
-
-\item{nvartosample}{: the number of (randomly selected) variables to consider at each node (default all)}
+\item{obj}{an object of class \code{\link{ODT}}.}
 }
 \value{
-ppTree
+\itemize{an object of class \code{ODT} and \code{prune.ODT}. 
+\item{\code{ppTree} The same result as \code{ODT}.}
+\item{\code{pruneError} Error of validation data after each pruning, classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.}
+}
 }
 \description{
-Grows a CARTree using X(samplesXfeatures) and one of the following criteria which can be set via the parameter 'method'
+Prune \code{ODT} from bottom to top with validation data based on prediction error.
 }
 \examples{
-### Train RerF on numeric data ###
-library(rerf)
-forest <- RerF1(as.matrix(iris[, 1:4]), iris[[5L]], num.cores = 1L)
+library(ODRF)
 
+#Classification with Oblique Decision Tree
+data(seeds)
+set.seed(221212)
+train = sample(1:209,100)
+train_data = data.frame(seeds[train,])
+test_data = data.frame(seeds[-train,])
+
+tree = ODT(varieties_of_wheat~.,train_data[seq(floor(nrow(train_data)/2)),],type='i-classification')
+tree = prune(tree,train_data[-seq(floor(nrow(train_data)/2)),])
+pred <- predict(tree,test_data[,-8])
+#estimation error
+(mean(pred!=test_data[,8]))
+
+#Regression with Oblique Decision Tree
+data(body_fat)
+set.seed(221212)
+train = sample(1:252,100)
+train_data = data.frame(body_fat[train,])
+test_data = data.frame(body_fat[-train,])
+
+tree = ODT(Density~.,train_data[seq(floor(nrow(train_data)/2)),],type='regression')
+tree = prune(tree,train_data[-seq(floor(nrow(train_data)/2)),])
+pred <- predict(tree,test_data[,-8])
+#estimation error
+mean((pred-test_data[,1])^2)
+
+}
+\seealso{
+\code{ODT} \code{plot.prune.ODRF}
 }

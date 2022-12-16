@@ -2,45 +2,41 @@
 % Please edit documentation in R/plot_VarImp.R
 \name{plot.VarImp}
 \alias{plot.VarImp}
-\title{PPtree plot}
+\title{Variable Importance Plot}
 \usage{
 \method{plot}{VarImp}(
   varImp,
   nvar = min(30, nrow(varImp$varImp)),
-  main = paste0("Oblique ", ifelse(varImp$method == "regression", "Regression",
+  main = paste0("Oblique ", ifelse(varImp$type == "regression", "Regression",
     "Classification"), " Forest"),
   ...
 )
 }
 \arguments{
-\item{main}{main title}
+\item{varImp}{an object of class \code{\link{VarImp}}.}
 
-\item{...}{arguments to be passed to methods}
+\item{nvar}{How many variables to show?}
 
-\item{x}{PPtreeclass object}
+\item{main}{plot title.}
 
-\item{font.size}{font size of plot}
-
-\item{width.size}{size of eclipse in each node.}
-
-\item{sub}{sub title}
+\item{...}{arguments to be passed to methods.}
+}
+\value{
+A matrix of importance measure, first column for each predictor variable and second column is Increased error. 
+classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.
 }
 \description{
-projection pursuit classification tree plot
-}
-\details{
-Draw projection pursuit classification tree with tree structure. It is 
-modified from a function in party library.
+Dotchart of variable importance as measured by a Oblique Decision Random Forest.
 }
 \examples{
-data(iris)
-Tree.result <- PPTreeclass(Species~., data = iris,"LDA")
-Tree.result
-plot(Tree.result,xjust=3)
+library(ODRF)
+
+data(breast_cancer)
+forest = ODRF(diagnosis~.,seeds,type='i-classification')
+varimp=VarImp(forest,seeds)
+plot(varimp)
+
 }
-\references{
-Lee, EK(2017) 
-PPtreeViz: An R Package for Visualizing Projection Pursuit Classification 
-Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
+\seealso{
+\code{ODRF} \code{VarImp}
 }
-\keyword{tree}

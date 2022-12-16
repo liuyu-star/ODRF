@@ -4,7 +4,7 @@
 \alias{defaults}
 \title{Default values passed to RandMat*}
 \usage{
-defaults(paramList, dimX, catLabel, NodeRotateFun, method, weights)
+defaults(paramList, dimX, catLabel, NodeRotateFun, type, weights)
 }
 \arguments{
 \item{paramList}{a list (possibly empty), to be populated with a set

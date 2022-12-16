@@ -7,9 +7,9 @@
 RotMatRand(
   dimX,
   RandDist = c("Binary", "Norm", "Uniform")[1],
-  numProj = ceiling(sqrt(paramList$dimX)),
+  numProj = ceiling(sqrt(dimX)),
   dimProj = NULL,
-  sparsity = ifelse(paramList$dimX >= 10, 3/paramList$dimX, 1/paramList$dimX),
+  sparsity = ifelse(dimX >= 10, 3/dimX, 1/dimX),
   prob = 0.5,
   lambda = 1,
   catLabel = NULL,

@@ -1,31 +1,37 @@
-#' projection pursuit classification tree plot
+#' Plot method for ODRF objects
 #' 
-#' Draw projection pursuit classification tree with tree structure. It is 
-#' modified from a function in party library.
-#' @title PPtree plot
-#' @param x PPtreeclass object
-#' @param font.size font size of plot
-#' @param width.size size of eclipse in each node.
-#' @param main main title
-#' @param sub sub title
-#' @param ... arguments to be passed to methods
-#' @references Lee, EK(2017) 
-#' PPtreeViz: An R Package for Visualizing Projection Pursuit Classification 
-#' Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
-#' @keywords tree
+#' Draw the error graph of class \code{ODRF} at different number of trees.
+#' 
+#' @param Err Object of class \code{\link{ODRF.error}}.
+#' @param lty a vector of line types, see \code{\link{par}}.
+#' @param main main title of the plot.
+#' @param ... arguments to be passed to methods.
+#' 
+#' @return OOB error and test error, classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.
+#' 
+#' @keywords forest
+#' 
+#' @seealso \code{ODRF} \code{ODRF.error}
+#' 
+#' @examples
+#' library(ODRF)
+#' 
+#' data(seeds)
+#' set.seed(221212)
+#' train = sample(1:209,100)
+#' train_data = data.frame(seeds[train,])
+#' test_data = data.frame(seeds[-train,])
+#' 
+#' forest = ODRF(varieties_of_wheat~.,train_data,type='i-classification')
+#' error=ODRF.error(forest,train_data,test_data)
+#' plot(error)
 #' 
 #' @aliases plot.ODRF.error
 #' @rdname plot.ODRF.error
 #' @method plot ODRF.error
 #' @export
-#' 
-#' @examples
-#' data(iris)
-#' Tree.result <- PPTreeclass(Species~., data = iris,"LDA")
-#' Tree.result
-#' plot(Tree.result,xjust=3)
 plot.ODRF.error <- function(Err, lty=1, main=paste0("Oblique ",
-                      ifelse(Err$method=="regression","Regression","Classification")," Forest"), ...) {
+                      ifelse(Err$type=="regression","Regression","Classification")," Forest"), ...) {
   
   err <- cbind(Err$err.oob,Err$err.test)
   

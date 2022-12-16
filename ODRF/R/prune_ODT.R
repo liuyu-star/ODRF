@@ -1,69 +1,75 @@
-#' RerF Tree Generator
+#' Pruning of class \code{ODT}.
 #' 
-#' Grows a CARTree using X(samplesXfeatures) and one of the following criteria which can be set via the parameter 'method'
+#' Prune \code{ODT} from bottom to top with validation data based on prediction error.
 #'
-#' @param       'g-classification' : gini impurity index (classification)
-#' @param       'i-classification' : information gain (classification, default)
-#' @param       'regression' : squared error (regression)
+#' @param obj an object of class \code{\link{ODT}}.
+#' @param data validation data of class \code{data.frame} is used to prune the object of class \code{ODT}.
+#' @param MaxDepth The maximum depth of the tree after pruning. (Default 1)
 #' 
-#' Other parameters that can be set are:
+#' @return \itemize{an object of class \code{ODT} and \code{prune.ODT}. 
+#' \item{\code{ppTree} The same result as \code{ODT}.}
+#' \item{\code{pruneError} Error of validation data after each pruning, classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.}
+#'}
+#' @seealso \code{ODT} \code{plot.prune.ODRF}
 #' 
-#' @param paramList parameters in a named list to be used by FUN. If left unchanged,
-#' @param catMap a list specifying which columns in X correspond to the same one-of-K encoded feature. Each element of catMap is a numeric vector specifying the K column indices of X corresponding to the same categorical feature after one-of-K encoding. All one-of-K encoded features in X must come after the numeric features. The K encoded columns corresponding to the same categorical feature must be placed contiguously within X. The reason for specifying catMap is to adjust for the fact that one-of-K encoding cateogorical features results in a dilution of numeric features, since a single categorical feature is expanded to K binary features. If catMap = NULL, then RerF assumes all features are numeric (i.e. none of the features have been one-of-K encoded).
-#' @param FUN :FUN=RandMatPPR.
-#' @param minparent    : the minimum amount of samples in an impure node for it to be considered for splitting (default 2)
-#' @param MinLeaf      : the minimum amount of samples in a leaf (default 1)
-#' @param Xweights      : a vector of values which weigh the samples when considering a split (default [])
-#' @param nvartosample : the number of (randomly selected) variables to consider at each node (default all)
-#' @return ppTree
+#' @examples
+#' library(ODRF)
+#' 
+#' #Classification with Oblique Decision Tree
+#' data(seeds)
+#' set.seed(221212)
+#' train = sample(1:209,100)
+#' train_data = data.frame(seeds[train,])
+#' test_data = data.frame(seeds[-train,])
+#' 
+#' tree = ODT(varieties_of_wheat~.,train_data[seq(floor(nrow(train_data)/2)),],type='i-classification')
+#' tree = prune(tree,train_data[-seq(floor(nrow(train_data)/2)),])
+#' pred <- predict(tree,test_data[,-8])
+#' #estimation error
+#' (mean(pred!=test_data[,8]))
+#' 
+#' #Regression with Oblique Decision Tree
+#' data(body_fat)
+#' set.seed(221212)
+#' train = sample(1:252,100)
+#' train_data = data.frame(body_fat[train,])
+#' test_data = data.frame(body_fat[-train,])
+#' 
+#' tree = ODT(Density~.,train_data[seq(floor(nrow(train_data)/2)),],type='regression')
+#' tree = prune(tree,train_data[-seq(floor(nrow(train_data)/2)),])
+#' pred <- predict(tree,test_data[,-8])
+#' #estimation error
+#' mean((pred-test_data[,1])^2)
 #'
-#' @useDynLib ODRF
 #' @import Rcpp
-#' 
 #' @aliases prune.ODT
 #' @rdname prune.ODT
 #' @method prune ODT
 #' @export
-#'
-#' @examples
-#' ### Train RerF on numeric data ###
-#' library(rerf)
-#' forest <- RerF1(as.matrix(iris[, 1:4]), iris[[5L]], num.cores = 1L)
-#' 
-#X=X;y=y;method='g-classification';NodeRotateFun="RandMatPPR";paramList=NULL;catLabel=NULL;MaxDepth=Inf;
-#MinLeaf=ifelse(method=='regression',5,1);Xweights=1;numNode=Inf;
-#Levels=if(method=='regression')NULL else levels(as.factor(y));Xcat=NULL;
-#Xscale=c("Min-max","Quantile","No")[1];FunDir=getwd();TreeRandRotate=FALSE
-#Xcat=c(NULL,0)[1]
-#ppTree=ppTree0
-#Xnew=X1
-#ynew=y1
-#Levels=ppTree$Levels
-#method=ppTree$method
-prune.ODT=function(ppTree,data,weights=NULL,MaxDepth=NULL)
+prune.ODT=function(ppTree,data,MaxDepth=1)
 {
   structure=ppTree$structure
   if(!is.null(MaxDepth)){
     MaxDepth=min(MaxDepth,max(structure$nodeDepth))
-  }else{
-    MaxDepth=1
   }
   numNode=length(structure$nodeCutValue)
   
+  vars=all.vars(ppTree$terms)
   # address na values.
   if (any(is.na(data))) {
     data=ppTree$data$na.action(data.frame(data))
     warning("NA values exist in data matrix")
   }
-  ynew= data[,all.vars(ppTree$terms)[1]]
-  Xnew= data[,all.vars(ppTree$terms)[-1]]
+  
+  ynew= data[,setdiff(colnames(data),vars[-1])]
+  Xnew= data[,vars[-1]]
   Xnew=as.matrix(Xnew) 
   
   if(!is.null(ppTree$data$subset))
     Xnew=Xnew[ppTree$data$subset,]
   #weights0=c(ppTree$data$weights,ppTree$paramList$weights)
-  if(!is.null(ppTree$data$weights))
-    Xnew <- Xnew * matrix(weights,length(y),ncol(Xnew))
+  #if(!is.null(ppTree$data$weights))
+  #  Xnew <- Xnew * matrix(weights,length(y),ncol(Xnew))
   
   p=ncol(Xnew)
   n=nrow(Xnew)
@@ -108,7 +114,7 @@ prune.ODT=function(ppTree,data,weights=NULL,MaxDepth=NULL)
   }
   
   
-  if(ppTree$method!="regression"){
+  if(ppTree$type!="regression"){
     #nodeLabel=rep(0,NROW(structure$nodeNumLabel))
     #leafid=which(rowSums(structure$nodeNumLabel)!=0)
     #leafLabel=structure$nodeNumLabel[leafid,,drop = FALSE]
@@ -125,7 +131,7 @@ prune.ODT=function(ppTree,data,weights=NULL,MaxDepth=NULL)
                        structure$nodeCutValue, structure$childNode,nodeLabel)$prediction
   }
   
-  if(ppTree$method!="regression"){
+  if(ppTree$type!="regression"){
     err0 <- mean(prediction != ynew)
   }else{
     e.0 = mean((ynew-mean(y))^2)
@@ -196,9 +202,9 @@ prune.ODT=function(ppTree,data,weights=NULL,MaxDepth=NULL)
     
     id=idx[nodeCutValue[idx]==0]
     #id=idx[!idx%in%cutNode]
-    #nodeLabel[currentNode]=ifelse(ppTree$method!="regression",nodeLabel[idx][which.max(structure$nodeNumLabel[idx])],
+    #nodeLabel[currentNode]=ifelse(ppTree$type!="regression",nodeLabel[idx][which.max(structure$nodeNumLabel[idx])],
     #                              structure$nodeNumLabel[idx]*nodeLabel[idx]/sum(structure$nodeNumLabel[idx]))
-    if(ppTree$method!="regression"){
+    if(ppTree$type!="regression"){
       #nnl=rep(nodeLabel[id],nodeNumLabel[id]) 
       #nnl=table(nnl)
       #nodeLabel[currentNode]=names(nnl)[which.max(nnl)]
@@ -218,7 +224,7 @@ prune.ODT=function(ppTree,data,weights=NULL,MaxDepth=NULL)
     nodeCutValue[currentNode] = 0;
     nodeCutValue=nodeCutValue[-idx]
     
-    if(ppTree$method!="regression"){
+    if(ppTree$type!="regression"){
       nodeLabel=colnames(nodeNumLabel)[max.col(nodeNumLabel)] ## "random"
       #nodeLabel[which(rowSums(structure$nodeNumLabel)==0),]=0
     }else{
@@ -232,7 +238,7 @@ prune.ODT=function(ppTree,data,weights=NULL,MaxDepth=NULL)
                          nodeRotaMat,nodeCutValue,childNode,nodeLabel)$prediction
     }
     
-    if(ppTree$method!="regression"){
+    if(ppTree$type!="regression"){
       err <- mean(prediction != ynew)
     }else{
       err <- mean((as.numeric(prediction)-ynew)^2)/e.0
@@ -259,6 +265,8 @@ prune.ODT=function(ppTree,data,weights=NULL,MaxDepth=NULL)
   
   #structure$nodeLabel=as.character(structure$nodeLabel)
   colnames(nodeRotaMat)=c("var","node","coef")
+  #rownames(nodeRotaMat)=rep(structure$nodeDepth,table(nodeRotaMat[,2]))
+  #rownames(nodeNumLabel)=structure$nodeDepth
   
   ppTree$structure=structure
   pruneError=pruneError[(ncut+1):(length(cutNode)+1),]

@@ -4,7 +4,7 @@
 \alias{print.ODT}
 \title{Print PP.Tree.class result}
 \usage{
-\method{print}{ODT}(tree, projection = FALSE, cutvalue = FALSE, verbose = TRUE, ...)
+\method{print}{ODT}(ppTree, projection = FALSE, cutvalue = FALSE, verbose = TRUE, ...)
 }
 \arguments{
 \item{verbose}{print if TRUE, no output if FALSE}

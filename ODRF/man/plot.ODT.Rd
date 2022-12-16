@@ -2,48 +2,47 @@
 % Please edit documentation in R/plot_ODT.R
 \name{plot.ODT}
 \alias{plot.ODT}
-\title{PPtree plot}
+\title{oblique decision tree plot}
 \usage{
 \method{plot}{ODT}(
-  tree,
+  ppTree,
   font.size = 17,
   width.size = 1,
   xadj = 0,
-  main = paste0("Oblique ", ifelse(tree$method == "regression", "Regression",
+  main = paste0("Oblique ", ifelse(ppTree$type == "regression", "Regression",
     "Classification"), " Tree"),
   sub = NULL,
   ...
 )
 }
 \arguments{
+\item{ppTree}{an object of class \code{\link{ODT}}.}
+
 \item{font.size}{font size of plot}
 
 \item{width.size}{size of eclipse in each node.}
+
+\item{xadj}{The size of the left and right movement.}
 
 \item{main}{main title}
 
 \item{sub}{sub title}
 
-\item{...}{arguments to be passed to methods}
-
-\item{x}{PPtreeclass object}
+\item{...}{arguments to be passed to methods.}
 }
 \description{
-projection pursuit classification tree plot
-}
-\details{
-Draw projection pursuit classification tree with tree structure. It is 
-modified from a function in party library.
+Draw oblique decision tree with tree structure. It is modified from a function in \code{PPtreeViz} library.
 }
 \examples{
 data(iris)
-Tree.result <- PPTreeclass(Species~., data = iris,"LDA")
-Tree.result
-plot(Tree.result,xjust=3)
+tree <- ODT(Species~., data = iris,type='i-classification')
+plot(tree)
+
 }
 \references{
-Lee, EK(2017) 
-PPtreeViz: An R Package for Visualizing Projection Pursuit Classification 
-Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
+Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
+}
+\seealso{
+\code{ODT} \code{\link{plot_ODT_depth}}
 }
 \keyword{tree}

@@ -1,70 +1,111 @@
-#' RerF Tree Generator
+#' Classification and Regression with Oblique Decision Tree
 #' 
-#' Grows a CARTree using X(samplesXfeatures) and one of the following criteria which can be set via the parameter 'method'
+#' ODT uses a linear combination of predictors as partitioning variables to create classification and regression tree. 
 #'
-#' @param       'g-classification' : gini impurity index (classification)
-#' @param       'i-classification' : information gain (classification, default)
-#' @param       'regression' : squared error (regression)
+#' @param formula Object of class \code{formula} with a response but no interaction terms describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})
+#' @param data Training data of class \code{data.frame} in which to interpret the variables named in the formula.If data is missing it is obtained from the current environment by \code{formula}.
+#' @param type The criterion used for splitting the nodes. g-classification': gini impurity index(default) and i-classification': information gain for classification; 'regression': mean square error for regression.
+#' y is a factor then is a classification.
+#' @param NodeRotateFun Name of the function of class \code{character} that implements a linear combination of predictor variables in the split node. Default is "RotMatPPO" with model="PPR". (see \code{\link{RotMatPPO}}) 
+#' Users can define this function, for details see \code{\link{RotMatMake}}.
+#' @param FunDir The path to the \code{function} of the user-defined \code{NodeRotateFun}. (default current Workspace)
+#' @param paramList Parameters in a named list to be used by \code{NodeRotateFun}.If left unchanged, default values will be populated, for details see \code{\link[ODRF]{defaults}}.
+#' @param MaxDepth The maximum depth of the tree (default \code{Inf}).
+#' @param numNode The number of nodes used by the tree (default \code{Inf}).
+#' @param MinLeaf Minimal node size. Default 1 for classification, 5 for regression.
+#' @param Levels The category label of the response variable when \code{type} is not equal to 'regression'.
+#' @param subset An index vector indicating which rows should be used. (NOTE: If given, this argument must be named.)
+#' @param weights A vector of length same as \code{data} that are positive weights.
+#' @param na.action A function to specify the action to be taken if NAs are found. (NOTE: If given, this argument must be named.)
+#' @param catLabel A category labels of class \code{list} in prediction variables. (for details see Details and Examples)
+#' @param Xcat A class \code{vector} is used to indicate which variables are class variables. The default Xcat=0 means that no special treatment is given to class variables.
+#' @param Xscale Predictor variable standardization methods." Min-max", "Quantile", "No" denote Min-max transformation, Quantile transformation and No transformation, respectively. (default "Min-max")
+#' @param TreeRandRotate If or not to randomly rotate the Training data before building the tree. (default FALSE)
+#' @param ... optional parameters to be passed to the low level function.
 #' 
-#' Other parameters that can be set are:
-#' 
-#' @param paramList parameters in a named list to be used by FUN. If left unchanged,
-#' @param catMap a list specifying which columns in X correspond to the same one-of-K encoded feature. Each element of catMap is a numeric vector specifying the K column indices of X corresponding to the same categorical feature after one-of-K encoding. All one-of-K encoded features in X must come after the numeric features. The K encoded columns corresponding to the same categorical feature must be placed contiguously within X. The reason for specifying catMap is to adjust for the fact that one-of-K encoding cateogorical features results in a dilution of numeric features, since a single categorical feature is expanded to K binary features. If catMap = NULL, then RerF assumes all features are numeric (i.e. none of the features have been one-of-K encoded).
-#' @param FUN :FUN=RandMatPPR.
-#' @param minparent    : the minimum amount of samples in an impure node for it to be considered for splitting (default 2)
-#' @param MinLeaf      : the minimum amount of samples in a leaf (default 1)
-#' @param weights      : a vector of values which weigh the samples when considering a split (default [])
-#' @param nvartosample : the number of (randomly selected) variables to consider at each node (default all)
-#' @return ppTree
+#' @return An object of class ODT, which is a list with the following components:
+#' \itemize{
+#' \item{\code{call}: The original call to ODT.}
+#' \item{\code{terms}: An object of class \code{c("terms", "formula")} (see \code{\link{terms.object}}) summarizing the formula. Used by various methods, but typically not of direct relevance to users.}
+#' \item{\itemize{\code{structure}: A set of tree structure data records.
+#' \item{\code{nodeRotaMat}: Record the split variables (first column), split node serial number (second column) and rotation direction (third column) for each node. (The first column and the third column are 0 means leaf nodes)}
+#' \item{\code{nodeNumLabel}: Record each leaf node's category for classification or predicted value for regression (second column is data size). (Each column is 0 means it is not a leaf node)}
+#' \item{\code{nodeCutValue}: Record the split point of each node. (0 means leaf nodes)}
+#' \item{\code{nodeCutIndex}: Record the index values of the partitioning variables selected based on the partition criterion \code{type}.}
+#' \item{\code{childNode}: Record the number of child nodes after each splitting.}
+#' \item{\code{nodeDepth}: Record the depth of the tree where each node is located.}
+#' }}
+#' \item{\code{type}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
+#' \item{\code{paramList}: Parameters in a named list to be used by \code{NodeRotateFun}.}
+#' \item{\code{data}: The list of data related parameters used to build the tree.}
+#' \item{\code{tree}: The list of tree related parameters used to build the tree.}
+#' }
 #'
+#' @seealso \code{\link{predict.ODT}} \code{\link{print.ODT}} \code{\link{plot.ODT}} \code{\link{plot_ODT_depth}}
+#' 
+#' @author YU Liu and Yingcun Xia
+#' @references Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.
+#'
+#' @examples
+#' library(ODRF)
+#' 
+#' #Classification with Oblique Decision Tree
+#' data(seeds)
+#' set.seed(221212)
+#' train = sample(1:209,100)
+#' train_data = data.frame(seeds[train,])
+#' test_data = data.frame(seeds[-train,])
+#' 
+#' tree = ODT(varieties_of_wheat~.,train_data,type='i-classification')
+#' pred <- predict(tree,test_data[,-8])
+#' #estimation error
+#' (mean(pred!=test_data[,8]))
+#' 
+#' #Regression with Oblique Decision Tree
+#' data(body_fat)
+#' set.seed(221212)
+#' train = sample(1:252,100)
+#' train_data = data.frame(body_fat[train,])
+#' test_data = data.frame(body_fat[-train,])
+#' 
+#' tree = ODT(Density~.,train_data,type='regression')
+#' pred <- predict(tree,test_data[,-1])
+#' #estimation error
+#' mean((pred-test_data[,1])^2)
+#' 
 #' @useDynLib ODRF
 #' @import Rcpp
 #' @importFrom stats model.frame model.extract model.matrix na.fail
-#' 
 #' @export
-#'
-#'
-#' @examples
-#' ### Train RerF on numeric data ###
-#' library(rerf)
-#' forest <- RerF1(as.matrix(iris[, 1:4]), iris[[5L]], num.cores = 1L)
-#' 
-#formula=y~.;data=data.frame(X,y=y);subset=NULL;weights=NULL;na.action=na.fail;method='i-classification';
-#NodeRotateFun="RotMatPPO";FunDir=getwd();paramList=NULL;catLabel=NULL;
-#Xcat=0;MaxDepth=Inf;numNode=Inf;MinLeaf=ifelse(method=='regression',5,1);
-#Levels=NULL;Xscale=c("Min-max","Quantile","No")[1];TreeRandRotate=FALSE
-#Call=quote(ODT(formula=y~.,data=data.frame(X,y=y), method='i-classification',NodeRotateFun = "RotMatPPO"))
-#Xcat=c(NULL,0)[1]
-ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-classification',
-             NodeRotateFun="RotMatPPO",FunDir=getwd(),paramList=NULL,catLabel=NULL,
-             Xcat=0,MaxDepth=Inf,numNode=Inf,MinLeaf=ifelse(method=='regression',5,1),
-             Levels=NA,Xscale=c("Min-max","Quantile","No")[1],TreeRandRotate=FALSE,...)
+ODT=function(formula,data=NULL,type=NULL,NodeRotateFun="RotMatPPO",FunDir=getwd(),paramList=NULL,
+             MaxDepth=Inf,numNode=Inf,MinLeaf=5,Levels=NULL,subset=NULL,weights=NULL,na.action=na.fail,
+             catLabel=NULL,Xcat=0,Xscale="Min-max",TreeRandRotate=FALSE,...)
 {
-  # address na values.
-  if (any(is.na(data))) {
-    warning("NA values exist in data matrix")
-  }
-  
   Call<-match.call()
   indx<-match(c("formula", "data", "subset", "na.action"),names(Call),nomatch=0L)#, "weights"
   if (indx[[1]]==0)
     stop("a 'formula' argument is required")
   if (indx[[2]]==0){
-    stop("a 'data' argument is required")
+    #stop("a 'data' argument is required")
     #data <- environment(formula)
-    #data <- data.frame(eval(formula[[2]]),eval(formula[[3]]))
-    #varName=colnames(eval(formula[[3]]))
-    #colnames(data)=c(as.character(formula[[2]]),varName)
-    #Call$formula=
+    data <- data.frame(y=eval(formula[[2]]),eval(formula[[3]]))
+    formula=y~.
+    Call$formula=formula
+    Call$data=quote(data)
+  }
+  # address na values.
+  if (any(is.na(data))) {
+    warning("NA values exist in data frame")
   }
     
   #Call=match.call(expand.dots = FALSE)
-  #indx<-match(c("formula", "data", "subset", "weights", "na.action"),names(Call),nomatch=0L)
+  indx<-match(c("formula", "data", "subset", "na.action"),names(Call),nomatch=0L)
   temp<-Call[c(1L,indx)]
   temp[[1L]]<-quote(stats::model.frame)
   temp$drop.unused.levels <- TRUE
-  temp <- eval(temp, parent.frame())
+  temp <- eval(temp)#, parent.frame()
   Terms<-attr(temp, "terms")
+  #Terms<-stats::model.frame(temp)
   
   varName=setdiff(colnames(data),as.character(formula[[2]]))
   y <- model.extract(temp, "response")
@@ -79,19 +120,32 @@ ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-c
   colnames(X)=varName
   
   
+  if(is.factor(y)&is.null(type)){
+    type='i-classification'
+    warning("You are creating a tree for classification")
+  }
+  if(is.numeric(y)&is.null(type)){
+    type='regression'
+    warning("You are creating a tree for regression")
+  }
+  if(is.factor(y)&type=='regression')
+    stop(paste0("When ",formula[[2]]," is a factor type, type cannot take 'regression'."))
+  if(MinLeaf==5)
+    MinLeaf=ifelse(type=='regression',5,1)
+  
   if(!NodeRotateFun%in%ls("package:ODRF")){
     source(paste0(FunDir,"/",NodeRotateFun,".R"))
   }
   
   FUN <- match.fun(NodeRotateFun, descend = TRUE)
-  method0=strsplit(method,split = "")[[1]][1]
+  type0=strsplit(type,split = "")[[1]][1]
   
   
   n = length(y);
   p = ncol(X);
   
-  if(method!="regression"){
-    if(is.na(Levels)){
+  if(type!="regression"){
+    if(is.null(Levels)){
       Levels=levels(as.factor(y))
     }
     if (!is.integer(y)) {
@@ -159,7 +213,7 @@ ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-c
     }
   }
   
-  paramList = ODRF:::defaults(paramList,p,catLabel,NodeRotateFun,method,weights)
+  paramList = ODRF:::defaults(paramList,p,catLabel,NodeRotateFun,type,weights)
   
   if(is.infinite(MaxDepth)) {
     numNode=min(numNode,sum(2^(0:ceiling(log2(n/MinLeaf))))) 
@@ -171,7 +225,7 @@ ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-c
   nodeXIndx = vector("list", numNode+1);
   nodeXIndx[[1]] = 1:n;
   
-  if(method!="regression"){
+  if(type!="regression"){
     nodeNumLabel=matrix(0,0,maxLabel)
     colnames(nodeNumLabel)=Levels
     sl=seq(maxLabel)
@@ -199,7 +253,7 @@ ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-c
        (length(nodeXIndx[[currentNode]])<=(MinLeaf+1))||
        (nodeDepth[currentNode]>=MaxDepth)||
        (freeNode>=numNode)){
-      if(method!="regression"){
+      if(type!="regression"){
         leafLabel = table(Levels[c(sl,y[nodeXIndx[[currentNode]]])])-1
         #nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
         #nodeNumLabel[currentNode]=max(leafLabel)
@@ -243,7 +297,7 @@ ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-c
     if(NodeRotateFun=="RotMatPPO"){
       sparseM=RotMatPPO(x=X[nodeXIndx[[currentNode]],],y=y[nodeXIndx[[currentNode]]],numProj=paramList$numProj,
                         dimProj=paramList$dimProj,catLabel = paramList$catLabel,weights=paramList$weights,
-                        ppMethod = paramList$ppMethod,method=paramList$method)#"NNet"
+                        model = paramList$model,type=paramList$type)#"NNet"
     }
     
     if(NodeRotateFun=="PPO"){
@@ -264,7 +318,7 @@ ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-c
     
     rotaX=X[nodeXIndx[[currentNode]],,drop = FALSE] %*% rotaX;
     
-    bestCut=ODRF:::best_cut_node(method0,rotaX,y[nodeXIndx[[currentNode]]],Wcd,MinLeaf,maxLabel);
+    bestCut=ODRF:::best_cut_node(type0,rotaX,y[nodeXIndx[[currentNode]]],Wcd,MinLeaf,maxLabel);
     
     if(bestCut$BestCutVar==-1){
       TF=TRUE
@@ -273,7 +327,7 @@ ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-c
       TF=min(length(Lindex),length(nodeXIndx[[currentNode]])-length(Lindex))<=MinLeaf;
     }
     if(TF){
-      if(method!="regression"){
+      if(type!="regression"){
         leafLabel = table(Levels[c(sl,y[nodeXIndx[[currentNode]]])])-1
         #nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
         #nodeNumLabel[currentNode]=max(leafLabel)
@@ -313,22 +367,19 @@ ODT=function(formula,data,subset=NULL,weights=NULL,na.action=na.fail,method='i-c
     currentNode = currentNode+1;
   }
   
+  nodeDepth=nodeDepth[1:(currentNode-1)]
   colnames(nodeRotaMat)=c("var","node","coef")
+  rownames(nodeRotaMat)=rep(nodeDepth,table(nodeRotaMat[,2]))
+  rownames(nodeNumLabel)=nodeDepth
   
-  ppTree=list()
-  ppTree$call=Call
-  ppTree$terms=Terms
-  ppTree$method=method
-  ppTree$Levels=Levels
-  ppTree$NodeRotateFun=NodeRotateFun
-  ppTree$paramList=paramList
+  ppTree=list(call=Call,terms=Terms,type=type,Levels=Levels,NodeRotateFun=NodeRotateFun,paramList=paramList)
   ppTree$data=list(subset=subset,weights=weights,na.action=na.action,n=n,p=p,varName=varName,
                    Xscale=Xscale,minCol=minCol,maxminCol=maxminCol,Xcat=Xcat,catLabel=catLabel,
                    TreeRandRotate=TreeRandRotate,rotdims=rotdims,rotmat=rotmat);
   ppTree$tree=list(FunDir=FunDir,MaxDepth=MaxDepth,MinLeaf=MinLeaf,numNode=numNode);
   ppTree$structure=list(nodeRotaMat = nodeRotaMat,nodeNumLabel = nodeNumLabel,nodeCutValue =nodeCutValue[1:(currentNode-1)],
                         nodeCutIndex =nodeCutIndex[1:(currentNode-1)],childNode = childNode[1:(currentNode-1)],
-                        nodeDepth=nodeDepth[1:(currentNode-1)])
+                        nodeDepth=nodeDepth)
   class(ppTree) <- "ODT"
   return(ppTree)
 }

@@ -2,42 +2,21 @@
 % Please edit documentation in R/prune.R
 \name{prune}
 \alias{prune}
-\title{RerF Tree Generator}
+\title{Pruning of class \code{ODT} or \code{ODRF}.}
 \usage{
 prune(obj, ...)
 }
 \arguments{
-\item{'g-classification'}{: gini impurity index (classification)}
+\item{obj}{an object of class \code{ODT} or \code{ODRF}.}
 
-\item{'i-classification'}{: information gain (classification, default)}
-
-\item{'regression'}{: squared error (regression)
-
-Other parameters that can be set are:}
-
-\item{paramList}{parameters in a named list to be used by FUN. If left unchanged,}
-
-\item{catMap}{a list specifying which columns in X correspond to the same one-of-K encoded feature. Each element of catMap is a numeric vector specifying the K column indices of X corresponding to the same categorical feature after one-of-K encoding. All one-of-K encoded features in X must come after the numeric features. The K encoded columns corresponding to the same categorical feature must be placed contiguously within X. The reason for specifying catMap is to adjust for the fact that one-of-K encoding cateogorical features results in a dilution of numeric features, since a single categorical feature is expanded to K binary features. If catMap = NULL, then RerF assumes all features are numeric (i.e. none of the features have been one-of-K encoded).}
-
-\item{FUN}{:FUN=RandMatPPR.}
-
-\item{minparent}{: the minimum amount of samples in an impure node for it to be considered for splitting (default 2)}
-
-\item{MinLeaf}{: the minimum amount of samples in a leaf (default 1)}
-
-\item{Xweights}{: a vector of values which weigh the samples when considering a split (default [])}
-
-\item{nvartosample}{: the number of (randomly selected) variables to consider at each node (default all)}
+\item{...}{For other parameters related to class \code{obj}, see \code{\link{ODT}} or \code{\link{ODRF}}.}
 }
 \value{
-ppTree
+an object of class \code{ODT} and \code{prune.ODT}.
 }
 \description{
-Grows a CARTree using X(samplesXfeatures) and one of the following criteria which can be set via the parameter 'method'
+Prune \code{ODT} or \code{ODRF} from bottom to top with validation data based on prediction error. \code{prune} is a S3 method for class class \code{ODT} and \code{ODRF}.
 }
-\examples{
-### Train RerF on numeric data ###
-library(rerf)
-forest <- RerF1(as.matrix(iris[, 1:4]), iris[[5L]], num.cores = 1L)
-
+\seealso{
+\code{ODT} \code{\link{OORF}} \code{prune.ODT} \code{\link{prune.OORF}}
 }

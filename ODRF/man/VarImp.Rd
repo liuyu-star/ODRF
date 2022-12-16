@@ -2,29 +2,34 @@
 % Please edit documentation in R/VarImp.R
 \name{VarImp}
 \alias{VarImp}
-\title{carPPtree Prediction}
+\title{oblique decision random forest variable importance}
 \usage{
-VarImp(forest, X, y)
+VarImp(ppForest, data)
 }
 \arguments{
-\item{X}{an n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.}
+\item{ppForest}{an object of class \code{\link{ODRF}}.}
+
+\item{data}{Training data of class \code{data.frame} in which to interpret the variables named in the formula.If data is missing it is obtained from the current environment by \code{formula}.}
 }
 \value{
-carPPtree Prediction
+A matrix of importance measure, first column for each predictor variable and second column is Increased error. classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.
 }
 \description{
-Prediction a decision tree based on an input matrix and class vector.  This is the main function in the ppRF1 package.
+variable importance measure is computed from permuting OOB data.
+}
+\details{
+A note from \code{randomForest}, here are the definitions of the variable importance measures. The first measure is computed from permuting OOB data: For each tree, the prediction error on the out-of-bag portion of the data is recorded (error rate for classification, 
+RPE for regression). Then the same is done after permuting each predictor variable. The difference between the two are then averaged over all trees, and normalized by the standard deviation of the differences. 
+If the standard deviation of the differences is equal to 0 for a variable, the division is not done (but the average is almost always equal to 0 in that case).
 }
 \examples{
-### Train RerF on numeric data ###
-library(rerf)
-forest <- RerF1(as.matrix(iris[, 1:4]), iris[[5L]], num.cores = 1L)
+library(ODRF)
 
-### Train RerF on one-of-K encoded categorical data ###
-df1 <- as.data.frame(Titanic)
-nc <- ncol(df1)
-df2 <- df1[NULL, -nc]
-for (i in which(df1$Freq != 0L)) {
-  df2 <- rbind(df2, df1[rep(i, df1$Freq[i]), -nc])
+data(breast_cancer)
+forest = ODRF(diagnosis~.,seeds,type='i-classification')
+varimp=VarImp(forest,seeds)
+
 }
+\seealso{
+\code{ODRF} \code{plot.VarImp}
 }

@@ -8,20 +8,20 @@
 #' @export
 #' 
 ### @method print ppRF
-print.ODRF <-function(forest, ...) {
-  cat("\nCall:\n", deparse(forest$call), "\n")
+print.ODRF <-function(ppForest, ...) {
+  cat("\nCall:\n", deparse(ppForest$call), "\n")
   cat("               Type of oblique decision random forest: ", 
-      ifelse(forest$method=="regression","regression","classification"), "\n", sep="")
-  cat("                                      Number of trees: ", forest$forest$ntrees, "\n",sep="")
+      ifelse(ppForest$type=="regression","regression","classification"), "\n", sep="")
+  cat("                                      Number of trees: ", ppForest$forest$ntrees, "\n",sep="")
   #cat("No. of variables tried at each split: ", x$mtrforest, "\n\n", sep="")
-  if(forest$forest$numOOB==0){
+  if(ppForest$forest$numOOB==0){
   cat("The number of OOBs is 0")
   }
-  if(!is.null(forest$oobErr)){
-  cat("                           OOB estimate of error rate: ",round(forest$oobErr*100,2), "%\n", sep="")
+  if(!is.null(ppForest$oobErr)){
+  cat("                           OOB estimate of error rate: ",round(ppForest$oobErr*100,2), "%\n", sep="")
   }
-  if(!is.null(forest$oobConfusionMat)) {    
+  if(!is.null(ppForest$oobConfusionMat)) {    
   cat("Confusion matrix:\n")
-    print(forest$oobConfusionMat)
+    print(ppForest$oobConfusionMat)
   }
 }

@@ -2,46 +2,50 @@
 % Please edit documentation in R/plot_prune_ODT.R
 \name{plot.prune.ODT}
 \alias{plot.prune.ODT}
-\title{PPtree plot}
+\title{prune oblique decision tree plot}
 \usage{
 \method{plot}{prune.ODT}(
-  pptree,
-  position = "bottomleft",
-  main = paste0("Oblique ", ifelse(pptree$method == "regression", "Regression",
+  ppTree,
+  position = "topleft",
+  main = paste0("Oblique ", ifelse(ppTree$type == "regression", "Regression",
     "Classification"), " Tree"),
   ...
 )
 }
 \arguments{
+\item{ppTree}{an object of class \code{\link{prune.ODT}}.}
+
+\item{position}{Position of the curve label.}
+
 \item{main}{main title}
 
-\item{...}{arguments to be passed to methods}
-
-\item{x}{PPtreeclass object}
-
-\item{font.size}{font size of plot}
-
-\item{width.size}{size of eclipse in each node.}
-
-\item{sub}{sub title}
+\item{...}{arguments to be passed to methods.}
+}
+\value{
+Error of test data after each pruning, classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.
 }
 \description{
-projection pursuit classification tree plot
-}
-\details{
-Draw projection pursuit classification tree with tree structure. It is 
-modified from a function in party library.
+Draw the error graph of class \code{ODT} at different number of split nodes.
 }
 \examples{
-data(iris)
-class(pptree)="prune.ODT"
-Tree.result <- PPTreeclass(Species~., data = iris,"LDA")
-Tree.result
-plot(Tree.result,xjust=3)
+library(ODRF)
+
+data(seeds)
+set.seed(221212)
+train = sample(1:209,100)
+train_data = data.frame(seeds[train,])
+test_data = data.frame(seeds[-train,])
+
+tree = ODT(varieties_of_wheat~.,train_data,type='i-classification')
+tree = prune(tree,train_data)
+#oblique decision tree plot (default)
+plot(tree)
+#prune oblique decision tree plot
+class(tree)="prune.ODT"
+plot(tree)
+
 }
-\references{
-Lee, EK(2017) 
-PPtreeViz: An R Package for Visualizing Projection Pursuit Classification 
-Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
+\seealso{
+\code{ODT} \code{prune.ODRF}
 }
 \keyword{tree}

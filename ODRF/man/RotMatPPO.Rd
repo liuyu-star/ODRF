@@ -10,8 +10,8 @@ RotMatPPO(
   numProj,
   dimProj,
   catLabel = NULL,
-  ppMethod = "PPR",
-  method = "i-classification",
+  model = "PPR",
+  type = "i-classification",
   weights = NULL
 )
 }

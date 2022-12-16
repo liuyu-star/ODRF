@@ -2,29 +2,36 @@
 % Please edit documentation in R/ODRF_error.R
 \name{ODRF.error}
 \alias{ODRF.error}
-\title{carPPRF Prediction}
+\title{oblique decision random forest error}
 \usage{
-ODRF.error(forest, y, Xnew = NULL, ynew = NULL, ...)
+ODRF.error(ppForest, data, newdata = NULL, ...)
 }
 \arguments{
-\item{Xnew}{an n by d numeric matrix (preferable) or Xnew frame. The rows correspond to observations and columns correspond to features.}
+\item{ppForest}{an object of class \code{ODRF}, as that created by the function \code{\link{ODRF}}.}
+
+\item{data}{Training data of class \code{data.frame} in which to interpret the variables named in the formula.If data is missing it is obtained from the current environment by \code{formula}.}
+
+\item{newdata}{A data frame or matrix containing new data.}
 }
 \value{
-carPPtree Prediction v_subs PPtree
+OOB error and test error, classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.
 }
 \description{
-Prediction a decision tree based on an input matrix and class vector.  This is the main function in the ppRF1 package.
+the error of class \code{ODRF} at different number of trees.
 }
 \examples{
-### Train RerF on numeric Xnew ###
-library(rerf)
-forest <- RerF1(as.matrix(iris[, 1:4]), iris[[5L]], num.cores = 1L)
+library(ODRF)
 
-### Train RerF on one-of-K encoded categorical Xnew ###
-df1 <- as.Xnew.frame(Titanic)
-nc <- ncol(df1)
-df2 <- df1[NULL, -nc]
-for (i in which(df1$Freq != 0L)) {
-  df2 <- rbind(df2, df1[rep(i, df1$Freq[i]), -nc])
+data(seeds)
+set.seed(221212)
+train = sample(1:209,100)
+train_data = data.frame(seeds[train,])
+test_data = data.frame(seeds[-train,])
+
+forest = ODRF(varieties_of_wheat~.,train_data,type='i-classification')
+error=ODRF.error(forest,train_data,test_data)
+
 }
+\seealso{
+\code{ODRF} \code{plot.ODRF.error}
 }

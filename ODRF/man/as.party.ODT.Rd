@@ -4,7 +4,7 @@
 \alias{as.party.ODT}
 \title{PPtree plot}
 \usage{
-\method{as.party}{ODT}(tree, X, y, data = TRUE, ...)
+\method{as.party}{ODT}(ppTree, data, ...)
 }
 \arguments{
 \item{...}{arguments to be passed to methods}

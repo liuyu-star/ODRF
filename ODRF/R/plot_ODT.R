@@ -1,49 +1,48 @@
-#' projection pursuit classification tree plot
+#' oblique decision tree plot
 #' 
-#' Draw projection pursuit classification tree with tree structure. It is 
-#' modified from a function in party library.
-#' @title PPtree plot
-#' @param x PPtreeclass object
+#' Draw oblique decision tree with tree structure. It is modified from a function in \code{PPtreeViz} library.
+#' 
+#' @param ppTree an object of class \code{\link{ODT}}.
 #' @param font.size font size of plot
 #' @param width.size size of eclipse in each node.
+#' @param xadj The size of the left and right movement.
 #' @param main main title
 #' @param sub sub title
-#' @param ... arguments to be passed to methods
-#' @references Lee, EK(2017) 
-#' PPtreeViz: An R Package for Visualizing Projection Pursuit Classification 
-#' Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
+#' @param ... arguments to be passed to methods.
+#' @references Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
 #' @keywords tree
+#' 
+#' @seealso \code{ODT} \code{\link{plot_ODT_depth}}
+#' 
+#' @examples
+#' data(iris)
+#' tree <- ODT(Species~., data = iris,type='i-classification')
+#' plot(tree)
 #' 
 #' @aliases plot.ODT
 #' @rdname plot.ODT
 #' @method plot ODT
 #' @export
-#' 
-#' @examples
-#' data(iris)
-#' Tree.result <- PPTreeclass(Species~., data = iris,"LDA")
-#' Tree.result
-#' plot(Tree.result,xjust=3)
-plot.ODT<-function(tree,font.size=17,width.size=1,xadj=0,main=paste0("Oblique ",
-                   ifelse(tree$method=="regression","Regression","Classification")," Tree"),sub=NULL,...){
-  numNode=length(tree$structure$nodeCutValue)
-  cutNode=which(tree$structure$nodeCutValue!=0)
+plot.ODT<-function(ppTree,font.size=17,width.size=1,xadj=0,main=paste0("Oblique ",
+                   ifelse(ppTree$type=="regression","Regression","Classification")," Tree"),sub=NULL,...){
+  numNode=length(ppTree$structure$nodeCutValue)
+  cutNode=which(ppTree$structure$nodeCutValue!=0)
   
   TS=matrix(0,numNode,5)
   TS[,1]=seq(numNode)
-  TS[,2]=tree[["structure"]][["childNode"]]
-  if(tree$method!="regression"){
-    TS[setdiff(seq(numNode),cutNode),3]=max.col(tree$structure$nodeNumLabel)[setdiff(seq(numNode),cutNode)]
+  TS[,2]=ppTree[["structure"]][["childNode"]]
+  if(ppTree$type!="regression"){
+    TS[setdiff(seq(numNode),cutNode),3]=max.col(ppTree$structure$nodeNumLabel)[setdiff(seq(numNode),cutNode)]
   }else{
-    TS[setdiff(seq(numNode),cutNode),3]=round(tree$structure$nodeNumLabel[,1][setdiff(seq(numNode),cutNode)],3)
+    TS[setdiff(seq(numNode),cutNode),3]=round(ppTree$structure$nodeNumLabel[,1][setdiff(seq(numNode),cutNode)],3)
   }
   TS[cutNode,3]=TS[cutNode,2]+1
   TS[cutNode,4]=seq(length(cutNode))
-  TS[cutNode,5]=tree[["structure"]][["nodeCutIndex"]][cutNode]
+  TS[cutNode,5]=ppTree[["structure"]][["nodeCutIndex"]][cutNode]
   colnames(TS)=c("node","left_node","right_node/leaf_label","cut_node","cut_node_index")
-  CutValue<-tree$structure$nodeCutValue[cutNode]
+  CutValue<-ppTree$structure$nodeCutValue[cutNode]
   
-   plotPPtree<-function(tree,node.id,xlim,ylim){
+   plotPPtree<-function(ppTree,node.id,xlim,ylim){
 
       if(TS[node.id,2]==0){
          x<-xlim[1]+0.5  
@@ -54,7 +53,7 @@ plot.ODT<-function(tree,font.size=17,width.size=1,xadj=0,main=paste0("Oblique ",
                                 height=unit(1,"native")-unit(2,"lines"),
                                 just=c("center","top"))
          pushViewport(Final.Node.V)
-         node.terminal.PPtree(tree,node.id) 
+         node.terminal.PPtree(ppTree,node.id) 
          upViewport()
          return(NULL)
       }
@@ -76,7 +75,7 @@ plot.ODT<-function(tree,font.size=17,width.size=1,xadj=0,main=paste0("Oblique ",
                        width=unit(1,"native"),
                        height=unit(1,"native")-unit(1,"lines"))
       pushViewport(node.V)
-      node.inner.PPtree(tree,node.id)
+      node.inner.PPtree(ppTree,node.id)
       upViewport()
       #ylpos<-y0-0.6
       #yrpos<-y0-0.45
@@ -99,8 +98,8 @@ plot.ODT<-function(tree,font.size=17,width.size=1,xadj=0,main=paste0("Oblique ",
       pushViewport(RightEdge.V) 
       edge.lable.PPtree(TS,node.id,left=FALSE)
       upViewport()     
-      plotPPtree(tree,TS[node.id,2],c(xlim[1],x0),c(1,y1+1))
-      plotPPtree(tree,TS[node.id,3],c(x0,xlim[2]),c(1,y1+1))
+      plotPPtree(ppTree,TS[node.id,2],c(xlim[1],x0),c(1,y1+1))
+      plotPPtree(ppTree,TS[node.id,3],c(x0,xlim[2]),c(1,y1+1))
    }    
 
    n.final<-function(TS,node.id,direction){  
@@ -149,9 +148,9 @@ plot.ODT<-function(tree,font.size=17,width.size=1,xadj=0,main=paste0("Oblique ",
       } 
    }
 
-   node.inner.PPtree<-function(tree,node.id){   
+   node.inner.PPtree<-function(ppTree,node.id){   
       
-      PS<-print(tree,verbose=FALSE)
+      PS<-print(ppTree,verbose=FALSE)
       label1<-rep(NA,length(PS))
       label2<-rep(NA,length(PS))
       ID<-rep(NA,length(PS))
@@ -198,11 +197,11 @@ plot.ODT<-function(tree,font.size=17,width.size=1,xadj=0,main=paste0("Oblique ",
       upViewport()
    }    
 
-   node.terminal.PPtree<- function(tree,node.id){
+   node.terminal.PPtree<- function(ppTree,node.id){
       
       #gName<-names(table(PPtreeobj$origclass)) print xscale
-      gN<-ifelse(tree$method!="regression",tree$Levels[TS[node.id,3]],TS[node.id,3])
-      #gN<-tree$Levels[TS[node.id,3]]
+      gN<-ifelse(ppTree$type!="regression",ppTree$Levels[TS[node.id,3]],TS[node.id,3])
+      #gN<-ppTree$Levels[TS[node.id,3]]
       temp<-strsplit(as.character(gN),split="")[[1]]
       gN.width<-length(temp)     
       set.unit<-(sum(tolower(temp)!=temp)*0.65+
@@ -233,9 +232,9 @@ plot.ODT<-function(tree,font.size=17,width.size=1,xadj=0,main=paste0("Oblique ",
    }
 
    ########################################
-   #length(tree$Levels)
+   #length(ppTree$Levels)
    nx<-numNode-length(cutNode)
-   ny<-max(tree$structure$nodeDepth)+1
+   ny<-max(ppTree$structure$nodeDepth)+1
    #ny<-calc.depth(TS)
    tnex<-1
    node.id<-1
@@ -257,7 +256,7 @@ plot.ODT<-function(tree,font.size=17,width.size=1,xadj=0,main=paste0("Oblique ",
    pushViewport(PPtree.Tree.V)
    
    
-   plotPPtree(tree,1,c(0,nx-xadj),ylim=c(1,ny+1)) 
+   plotPPtree(ppTree,1,c(0,nx-xadj),ylim=c(1,ny+1)) 
    grid.text(y=unit(1,"lines"),
              sub,
              just="center",gp=gpar(fontsize=font.size*0.7))

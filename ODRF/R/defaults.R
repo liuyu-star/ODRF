@@ -32,7 +32,7 @@
 #'
 #' @keywords internal
 #'
-defaults <- function(paramList,dimX,catLabel,NodeRotateFun,method,weights) {
+defaults <- function(paramList,dimX,catLabel,NodeRotateFun,type,weights) {
   #public parameter.
   #if (is.null(paramList[["dimProj"]])) {
   #  paramList$dimProj = NULL
@@ -47,9 +47,6 @@ defaults <- function(paramList,dimX,catLabel,NodeRotateFun,method,weights) {
     #  q<- min(ceiling(length(y)^0.4),ceiling(paramList$p*2/3))
     #  paramList$d <-min(max(5, ceiling(paramList$p/q)),paramList$p)
     if(NodeRotateFun!="RotMatPPO")paramList$numProj<-ceiling(sqrt(paramList$dimX))
-  }
-  if (is.null(paramList[["ppMethod"]])) {
-    paramList$ppMethod =ifelse(NodeRotateFun=="PPO","LDA","PPR")
   }
   if (is.null(paramList[["weights"]])) {
     paramList$weights = weights
@@ -72,12 +69,18 @@ defaults <- function(paramList,dimX,catLabel,NodeRotateFun,method,weights) {
   
   #RotMatPPO parameter.
   ###########################################
-  if (is.null(paramList[["method"]])) {
-    paramList$method = method#method='g-classification'
+  if (is.null(paramList[["type"]])) {
+    paramList$type = type#method='g-classification'
+  }
+  if (is.null(paramList[["model"]])) {
+    paramList$model ="PPR"
   }
   
   #################################################
   #pp optimization parameter.
+  if (is.null(paramList[["ppMethod"]])) {
+    paramList$ppMethod ="LDA"
+  }
   if (is.null(paramList[["q"]])) {
     paramList$q=1
   }

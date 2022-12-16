@@ -22,38 +22,38 @@
 #' Tree.result <- PPTreeclass(Species~.,data = iris,"LDA")
 #' Tree.result
 #' print(Tree.result,coef.print=TRUE,cutoff.print=TRUE)tree
-print.ODT<-function(tree,projection=FALSE,cutvalue=FALSE,verbose=TRUE,...){
-  numNode=length(tree$structure$nodeCutValue)
-  cutNode=which(tree$structure$nodeCutValue!=0)
+print.ODT<-function(ppTree,projection=FALSE,cutvalue=FALSE,verbose=TRUE,...){
+  numNode=length(ppTree$structure$nodeCutValue)
+  cutNode=which(ppTree$structure$nodeCutValue!=0)
   
   TS=matrix(0,numNode,5)
   TS[,1]=seq(numNode)
-  TS[,2]=tree[["structure"]][["childNode"]]
-  if(tree$method!="regression"){
-    TS[setdiff(seq(numNode),cutNode),3]=max.col(tree$structure$nodeNumLabel)[setdiff(seq(numNode),cutNode)]
+  TS[,2]=ppTree[["structure"]][["childNode"]]
+  if(ppTree$type!="regression"){
+    TS[setdiff(seq(numNode),cutNode),3]=max.col(ppTree$structure$nodeNumLabel)[setdiff(seq(numNode),cutNode)]
   }else{
-    TS[setdiff(seq(numNode),cutNode),3]=round(tree$structure$nodeNumLabel[,1][setdiff(seq(numNode),cutNode)],3)
+    TS[setdiff(seq(numNode),cutNode),3]=round(ppTree$structure$nodeNumLabel[,1][setdiff(seq(numNode),cutNode)],3)
   }
   TS[cutNode,3]=TS[cutNode,2]+1
   TS[cutNode,4]=seq(length(cutNode))
-  TS[cutNode,5]=tree[["structure"]][["nodeCutIndex"]][cutNode]
+  TS[cutNode,5]=ppTree[["structure"]][["nodeCutIndex"]][cutNode]
   colnames(TS)=c("node","left_node","right_node/leaf_label","cut_node","cut_node_index")
   leaf=rep(0,numNode)
   leaf[setdiff(seq(numNode),cutNode)]=seq(numNode-length(cutNode))
   
-  #TS<-tree$Tree.Struct
-  #Alpha<-tree$projbest.node
-  nodeRotaMat<-tree[["structure"]][["nodeRotaMat"]]
-  Alpha=matrix(0,length(cutNode),tree[["data"]][["p"]])
+  #TS<-ppTree$ppTree.Struct
+  #Alpha<-ppTree$projbest.node
+  nodeRotaMat<-ppTree[["structure"]][["nodeRotaMat"]]
+  Alpha=matrix(0,length(cutNode),ppTree[["data"]][["p"]])
   for (cn in  1:length(cutNode)) {
     idx=which(nodeRotaMat[,2]==cutNode[cn])
     Alpha[cn,nodeRotaMat[idx,1]]=nodeRotaMat[idx,3]
   }
   
-  CutValue<-tree$structure$nodeCutValue[cutNode]
-  #CutValue<-tree$splitCutoff.node
-  #gName<-tree$Levels
-  #gName<-names(table(tree$origclass))
+  CutValue<-ppTree$structure$nodeCutValue[cutNode]
+  #CutValue<-ppTree$splitCutoff.node
+  #gName<-ppTree$Levels
+  #gName<-names(table(ppTree$origclass))
   pastemake<-function(k,arg,sep.arg=""){
     temp<-""
     for(i in 1:k)
@@ -73,7 +73,7 @@ print.ODT<-function(tree,projection=FALSE,cutvalue=FALSE,verbose=TRUE,...){
         n.temp<-length(TreePrint)
         tempp<-strsplit(TreePrint[n.temp],") ")[[1]]
         temp.L<-paste(tempp[1],")#",tempp[2],sep="")
-        temp.L<- paste(temp.L," -> ","(","leaf",leaf[i]," = ",ifelse(tree$method!="regression",tree$Levels[TS[i,3]],TS[i,3]),")",sep="")
+        temp.L<- paste(temp.L," -> ","(","leaf",leaf[i]," = ",ifelse(ppTree$type!="regression",ppTree$Levels[TS[i,3]],TS[i,3]),")",sep="")
         TreePrint<-TreePrint[-n.temp]
         id.l<-length(keep.track)-1
         i<-keep.track[id.l]
@@ -101,13 +101,13 @@ print.ODT<-function(tree,projection=FALSE,cutvalue=FALSE,verbose=TRUE,...){
       depth<-depth.track[id.l]
     }
   }
-  colnames(Alpha)<-tree$data$varName
+  colnames(Alpha)<-ppTree$data$varName
   rownames(Alpha)<-paste("proj",1:nrow(Alpha),sep="")  
   #colnames(CutValue)<-paste("Rule",1:ncol(CutValue),sep="")
   names(CutValue)<-paste("CutValue",1:length(CutValue),sep="")
   TreePrint.output<-
     paste("=============================================================",                          
-          "\nOblique",ifelse(tree$method=="regression","Regression","Classification"),"Tree result",                           
+          "\nOblique",ifelse(ppTree$type=="regression","Regression","Classification"),"Tree result",                           
           "\n=============================================================\n")
   for(i in 1:length(TreePrint))
     TreePrint.output<-paste(TreePrint.output,TreePrint[i],sep="\n")

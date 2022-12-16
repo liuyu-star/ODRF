@@ -1,38 +1,53 @@
-#' carPPtree Prediction
+#' variable importance measure is computed from permuting OOB data.
+#' 
+#' A note from \code{randomForest}, here are the definitions of the variable importance measures. The first measure is computed from permuting OOB data: For each tree, the prediction error on the out-of-bag portion of the data is recorded (error rate for classification, 
+#' RPE for regression). Then the same is done after permuting each predictor variable. The difference between the two are then averaged over all trees, and normalized by the standard deviation of the differences. 
+#' If the standard deviation of the differences is equal to 0 for a variable, the division is not done (but the average is almost always equal to 0 in that case).
+#' 
+#' @title oblique decision random forest variable importance
+#' @param ppForest an object of class \code{\link{ODRF}}.
+#' @param data Training data of class \code{data.frame} in which to interpret the variables named in the formula.If data is missing it is obtained from the current environment by \code{formula}.
+#' 
+#' @return A matrix of importance measure, first column for each predictor variable and second column is Increased error. classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.
 #'
-#' Prediction a decision tree based on an input matrix and class vector.  This is the main function in the ppRF1 package.
+#' @seealso \code{ODRF} \code{plot.VarImp}
 #'
-#' @param X an n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
-#' @return carPPtree Prediction
-#'
-#' @import Rcpp
+#' @examples
+#' library(ODRF)
+#' 
+#' data(breast_cancer)
+#' forest = ODRF(diagnosis~.,seeds,type='i-classification')
+#' varimp=VarImp(forest,seeds)
 #' 
 #' @export
-#' 
-#' @examples
-#' ### Train RerF on numeric data ###
-#' library(rerf)
-#' forest <- RerF1(as.matrix(iris[, 1:4]), iris[[5L]], num.cores = 1L)
-#'
-#' ### Train RerF on one-of-K encoded categorical data ###
-#' df1 <- as.data.frame(Titanic)
-#' nc <- ncol(df1)
-#' df2 <- df1[NULL, -nc]
-#' for (i in which(df1$Freq != 0L)) {
-#'   df2 <- rbind(df2, df1[rep(i, df1$Freq[i]), -nc])
-#' }
-## @rdname predict#'  #' @aliases predict_ppCART #' @method predict ppCART
-VarImp=function(forest,X,y){
-  if(forest$method!="regression"){
-    y <- factor(y,levels = forest$Levels)
+VarImp=function(ppForest,data){
+  vars=all.vars(ppForest$terms)
+  # address na values.
+  if (any(is.na(data))) {
+    data=ppForest$data$na.action(data.frame(data))
+    warning("NA values exist in data matrix")
   }
-  #X=forest$data$X
-  #y=forest$data$y
-  ntrees=forest$tree$ntrees
+  y= data[,setdiff(colnames(data),vars[-1])]
+  X= data[,vars[-1]]
+  X=as.matrix(X)
+  
+  if(!is.null(ppForest$data$subset))
+    X=X[ppForest$data$subset,]
+  #if(!is.null(weights))
+  #  X <- X * matrix(weights0,length(y),ncol(X))
+  #weights=weights0
+  
+  
+  if(ppForest$type!="regression"){
+    y <- factor(y,levels = ppForest$Levels)
+  }
+  #X=ppForest$data$X
+  #y=ppForest$data$y
+  ntrees=ppForest$tree$ntrees
   n=length(y);p=ncol(X)
   
-  Xcat=forest$data$Xcat
-  catLabel=forest$data$catLabel
+  Xcat=ppForest$data$Xcat
+  catLabel=ppForest$data$catLabel
   numCat=0
   if(sum(Xcat)>0){
     xj=1
@@ -60,10 +75,10 @@ VarImp=function(forest,X,y){
   }
   
   #Variable scaling.
-  if(forest$data$Xscale!="No"){
+  if(ppForest$data$Xscale!="No"){
     indp=(sum(numCat)+1):p
-    X[,indp]=(X[,indp]-matrix(forest$data$minCol,n,length(indp),byrow = T))/
-      matrix(forest$data$maxminCol,n,length(indp),byrow = T)
+    X[,indp]=(X[,indp]-matrix(ppForest$data$minCol,n,length(indp),byrow = T))/
+      matrix(ppForest$data$maxminCol,n,length(indp),byrow = T)
   }
   
   runOOBErr=function(tree,...){
@@ -74,7 +89,7 @@ VarImp=function(forest,X,y){
     Xi=X[oobIndex,]
     yi=y[oobIndex]
     yn=length(yi)
-    if(forest$method=="regression"){
+    if(ppForest$type=="regression"){
       e.0=mean((yi-mean(y[-oobIndex]))^2)
     }
     for (j in 1:(p+1)) {
@@ -82,7 +97,7 @@ VarImp=function(forest,X,y){
           Xi[,j-1]=Xi[sample(yn),j-1]#+rnorm(length(oobIndex))
         }
         pred <- predict(tree,Xi)
-        if(forest$method!="regression"){
+        if(ppForest$type!="regression"){
           oobErr=mean(pred!=yi);
         }else{
           oobErr=mean((pred-yi)^2)/e.0
@@ -98,12 +113,12 @@ VarImp=function(forest,X,y){
     return(oobErrs)
   }
   
-  oobErrVar=sapply(forest$ppTrees,runOOBErr)[-1,]
+  oobErrVar=sapply(ppForest$ppTrees,runOOBErr)[-1,]
   oobErrVar=rowMeans(oobErrVar)
   varimport=cbind(varible=seq(p),increased_error=oobErrVar)
   rownames(varimport)=colnames(X)
 
-  varimport=list(varImp=varimport[order(oobErrVar,decreasing = T),],method=forest$method)
+  varimport=list(varImp=varimport[order(oobErrVar,decreasing = T),],type=ppForest$type)
   class(varimport)="VarImp"
   
   return(varimport)

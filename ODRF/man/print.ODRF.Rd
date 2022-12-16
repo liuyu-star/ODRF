@@ -4,7 +4,7 @@
 \alias{print.ODRF}
 \title{Print PP.Tree.class result}
 \usage{
-\method{print}{ODRF}(forest, ...)
+\method{print}{ODRF}(ppForest, ...)
 }
 \arguments{
 \item{x}{PPtreeclass object}

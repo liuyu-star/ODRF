@@ -36,17 +36,17 @@
 #'
 #' bestcut=BestCutNode(X,y,method='g-classification')
 #' print(bestcut)
-BestCutNode <- function(X, y, method='g-classification', weights=1, MinLeaf=ifelse(method=='regression',5,1),
-                          numLabels=ifelse(method=='regression',0,length(unique(y)))) {
+BestCutNode <- function(X, y, type='g-classification', weights=1, MinLeaf=ifelse(type=='regression',5,1),
+                          numLabels=ifelse(type=='regression',0,length(unique(y)))) {
 
   X <- as.matrix(X)
-  if(method!="regression"){
+  if(type!="regression"){
     y <- as.integer(as.factor(y));
   }else{
     y=c(y)
   }
   
   
-  .Call(`_ODRF_best_cut_node`, strsplit(method,split = "")[[1]][1], X, y, weights, MinLeaf, numLabels)
+  .Call(`_ODRF_best_cut_node`, strsplit(type,split = "")[[1]][1], X, y, weights, MinLeaf, numLabels)
 }
 

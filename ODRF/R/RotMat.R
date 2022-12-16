@@ -21,8 +21,8 @@
 #' prob <- 0.5
 #' set.seed(4)
 #' (a <- RandMatBinary(p, d, sparsity, prob))
-RotMatRand <- function(dimX,RandDist=c("Binary","Norm","Uniform")[1],numProj=ceiling(sqrt(paramList$dimX)),
-                       dimProj = NULL,sparsity=ifelse(paramList$dimX >=10, 3/paramList$dimX, 1/paramList$dimX),
+RotMatRand <- function(dimX,RandDist=c("Binary","Norm","Uniform")[1],numProj=ceiling(sqrt(dimX)),
+                       dimProj = NULL,sparsity=ifelse(dimX >=10, 3/dimX, 1/dimX),
                        prob=0.5, lambda=1, catLabel = NULL, ...) {
   if(!is.null(dimProj)){
     if (dimProj > dimX) {
@@ -164,8 +164,8 @@ RotMatRF <- function(dimX, numProj, catLabel = NULL, ...) {
 #' set.seed(220828)
 #' (a <- RandMatPPR(x,y,d,sparsity,catMap=NULL))
 #@importFrom dcov dcor2d q=NUll numProj="Rand" #' @importFrom energy dcor2d
-RotMatPPO <- function(x, y, numProj,dimProj,catLabel = NULL,ppMethod="PPR",
-                      method='i-classification',weights=NULL) {
+RotMatPPO <- function(x, y, numProj,dimProj,catLabel = NULL,model="PPR",
+                      type='i-classification',weights=NULL) {
   p = ncol(x)
   n=length(y)
   weights=if(is.null(weights))rep(1, n)
@@ -220,7 +220,7 @@ RotMatPPO <- function(x, y, numProj,dimProj,catLabel = NULL,ppMethod="PPR",
   ##########################    
   if(n>10){
     Yi=c(y);indC=0L
-    if(method!='regression'){
+    if(type!='regression'){
       y=as.factor(y)
       indC=levels(y)
       if(length(indC)>2){
@@ -236,7 +236,7 @@ RotMatPPO <- function(x, y, numProj,dimProj,catLabel = NULL,ppMethod="PPR",
     ind=as.numeric(names(indTab)[which(indTab>1)])
     jx=which(sparseM1[,2]%in%ind)
     d11=min(max(c(indTab,d1)),length(unique(sparseM1[jx,1])))
-    #d11=min(c(length(unique(sparseM[jx,1])),ifelse(method=='r',Inf,Inf)))#
+    #d11=min(c(length(unique(sparseM[jx,1])),ifelse(type=='r',Inf,Inf)))#
     #d11=max(max(indTab),min(length(unique(sparseM1[jx,1])),d1)) 
     
     sparseM1=rbind(sparseM1,matrix(d1+d2+1,d11,3))
@@ -257,24 +257,24 @@ RotMatPPO <- function(x, y, numProj,dimProj,catLabel = NULL,ppMethod="PPR",
       #Ii = 1:min(which((cumsum(S$values)+1e-4)/sum(S$values,1e-4) > 0.99))
       #Xi = Xi%*%S$vectors[,Ii, drop = FALSE]
       if (pi > 1L) {
-        if(ppMethod=="PPR"){
+        if(model=="PPR"){
           PP <- try(ppr(Xi, Yi,weights,nterms = 1, bass=1)$alpha, silent = TRUE)# sm.method="spline",sm.method="gcvspline"
         }
-        if(ppMethod=="RAND"){
+        if(model=="RAND"){
           PP <- sample(c(1L, -1L),ncol(Xi), replace = TRUE,prob = c(0.5, 0.5))
         }
         
-        if(ppMethod=="NN"){
-          #if((n>5*pi)&(pi<10)){
-          #  PP <- try(ppr(Xi, Yi, nterms = 1, bass=1)$alpha, silent = TRUE)
-          #}else{
+        if(model=="Logistic"){
+          if((n>5*pi)&(pi<10)){
+            PP <- try(ppr(Xi, Yi, weights, nterms = 1, bass=1)$alpha, silent = TRUE)
+          }else{
             #PP = try(nnet(Xi, y, size=1,trace=FALSE)$wts[2:(1+pi)], silent = TRUE)
             PP = nnet(Xi, Yi,weights, size=1,linout=TRUE,trace=FALSE)$wts[2:(1+pi)]#  
-          #}
+          }
         }
         
-        if(!ppMethod%in%c("PPR","RAND","NN")){
-          PP <- ppRF:::ppOptCpp(y,Xi,q = 1L, PPmethod = ppMethod, weight = TRUE, r = 1L, lambda = 0.1, 
+        if(!model%in%c("PPR","RAND","Logistic")){
+          PP <- ppRF:::ppOptCpp(y,Xi,q = 1L, PPmethod = model, weight = TRUE, r = 1L, lambda = 0.1, 
                                     energy = 0, cooling = 0.9, TOL = 0.001, maxiter = 1000L)$projbest
         }
 

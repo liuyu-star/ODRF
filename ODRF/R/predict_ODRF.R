@@ -1,45 +1,73 @@
-#' carODRF Prediction
+#' predict method for ODRF objects
 #'
-#' Prediction a decision tree based on an input matrix and class vector.  This is the main function in the ODRF1 package.
-#'
-#' @param Xnew an n by d numeric matrix (preferable) or Xnew frame. The rows correspond to observations and columns correspond to features.
-#' @return carPPtree Prediction v_subs PPtree
+#' Prediction a oblique decision random forest based on an input matrix or data frame using \code{\link{ODRF}} function.
 #' 
+#' @param ppForest an object of class ODRF, as that created by the function \code{ODRF}.
+#' @param Xnew an n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
+#' @param type one of \code{response}, \code{prob} or \code{tree}, indicating the type of output: predicted values, matrix of class probabilities or predicted value for each tree.
+#' @param weight.tree Whether to weight the tree, if \code{TRUE} then use the out-of-bag error of the tree as the weight. (default \code{FALSE})
+#' 
+#' @return A set of vectors in the following list:
+#' \itemize{
+#' \item \code{response}: the prediced values of the new data.
+#' \item \code{prob}: matrix of class probabilities (one column for each class and one row for each input). If \code{ppForest$type} is \code{regression}, a vector of tree weights is returned.
+#' \item \code{tree}: it is a matrix where each column contains prediction by a tree in the forest.
+#' } 
+#' 
+#'
+#' @seealso \code{\link{OORF}}
+#' 
+#' @references \itemize{
+#' \item{Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.}
+#' }
+#' 
+#' @examples
+#' library(ODRF)
+#' 
+#' #Classification with Oblique Decision Tree
+#' data(seeds)
+#' set.seed(221212)
+#' train = sample(1:209,100)
+#' train_data = data.frame(seeds[train,])
+#' test_data = data.frame(seeds[-train,])
+#' 
+#' tree = ODRF(varieties_of_wheat~.,train_data,type='i-classification')
+#' pred <- predict(tree,test_data[,-8])
+#' #estimation error
+#' (mean(pred!=test_data[,8]))
+#' 
+#' #Regression with Oblique Decision Tree
+#' data(body_fat)
+#' set.seed(221212)
+#' train = sample(1:252,100)
+#' train_data = data.frame(body_fat[train,])
+#' test_data = data.frame(body_fat[-train,])
+#' 
+#' tree = ODRF(Density~.,train_data,type='regression')
+#' pred <- predict(tree,test_data[,-1])
+#' #estimation error
+#' mean((pred-test_data[,1])^2)
+#
 #' @import Rcpp
-#' 
 #' @aliases predict.ODRF
 #' @rdname predict.ODRF
 #' @method predict ODRF
-#' 
 #' @export
-#' 
-#' @examples
-#' ### Train RerF on numeric Xnew ###
-#' library(rerf)
-#' forest <- RerF1(as.matrix(iris[, 1:4]), iris[[5L]], num.cores = 1L)
-#'
-#' ### Train RerF on one-of-K encoded categorical Xnew ###
-#' df1 <- as.Xnew.frame(Titanic)
-#' nc <- ncol(df1)
-#' df2 <- df1[NULL, -nc]
-#' for (i in which(df1$Freq != 0L)) {
-#'   df2 <- rbind(df2, df1[rep(i, df1$Freq[i]), -nc])
-#' }
-#Returns the output of the ensemble (f_output) as well
-#as a [num_treesXnum_samples] matrix (f_votes) containing
-#the outputs of the individual trees. 
-#
-#The 'oobe' flag allows the out-of-bag error to be used to 
-#weight the final response (only for classification).
-predict.ODRF= function(ppForest,Xnew,weight=FALSE){
-
-  if (!is.matrix(Xnew)) {
-    Xnew <- as.matrix(Xnew)
+predict.ODRF= function(ppForest,Xnew,type="response",weight.tree=FALSE){
+  if (any(is.na(Xnew))) {
+    Xnew=ppForest$data$na.action(data.frame(Xnew))
+    warning("NA values exist in data matrix")
   }
+  Xnew=as.matrix(Xnew)
+  
+  if(!is.null(ppForest$data$subset))
+    Xnew=Xnew[ppForest$data$subset,]
+  
   p=ncol(Xnew)
   n=nrow(Xnew)
   nC=length(ppForest$Levels)
   ntrees=length(ppForest$ppTrees);
+  
   
   Xcat=ppForest$data$Xcat
   catLabel=ppForest$data$catLabel
@@ -84,11 +112,11 @@ predict.ODRF= function(ppForest,Xnew,weight=FALSE){
   #}
   #Votes=t(sapply(seq(ntrees), function(i)PPtreePredict(Xnew,ppForest$trees[[i]])))
   
-  VALUE=rep(ifelse(ppForest$method=='regression',0,as.character(0)),n)
+  VALUE=rep(ifelse(ppForest$type=='regression',0,as.character(0)),n)
   TreePrediction=vapply(ppForest$ppTrees, function(tree){class(tree)="ODT";predict(tree,Xnew)},VALUE)
   Votes=t(TreePrediction)
   
-  if ((!ppForest$forest$storeOOB)&weight) {
+  if ((!ppForest$forest$storeOOB)&weight.tree) {
     stop("out-of-bag indices for each tree are not stored. ODRF must be called with storeOOB = TRUE.")
   }
   if ((ppForest$forest$numOOB>0)&ppForest$forest$storeOOB){
@@ -96,8 +124,9 @@ predict.ODRF= function(ppForest,Xnew,weight=FALSE){
   }else{
     oobErr=rep(1,ntrees)
   }
-  weights=weight*oobErr+(!weight);
-  if(ppForest$method!="regression"){
+  weights=weight.tree*oobErr+(!weight.tree);
+  weights=weights/sum(weights)
+  if(ppForest$type!="regression"){
     # prob=matrix(0,n,nC)
     # for (i in 1:n) {
     #    prob[i,]=aggregate(c(rep(0,nC),weights[,i]), by=list(c(1:nC, f_votes[,i])),sum)[,2];
@@ -132,5 +161,15 @@ predict.ODRF= function(ppForest,Xnew,weight=FALSE){
     #prob=NULL
   }
   
-  return(list(prediction=pred,probability=prob,TreePrediction=TreePrediction,method=ppForest$method))
+  if(type=="response"){
+    prediction=pred
+  }
+  if(type=="prob"){
+    prediction=prob
+  }
+  if(type=="tree"){
+    prediction=TreePrediction
+  }
+  
+  return(prediction)
 }

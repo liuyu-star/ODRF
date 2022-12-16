@@ -2,45 +2,58 @@
 % Please edit documentation in R/prune_ODRF.R
 \name{prune.ODRF}
 \alias{prune.ODRF}
-\title{ppRF forest Generator}
+\title{Pruning of class \code{ODRF}.}
 \usage{
-\method{prune}{ODRF}(ppForest, data, weights = NULL, MaxDepth = NULL, useOOB = TRUE)
+\method{prune}{ODRF}(ppForest, data, MaxDepth = 1, useOOB = TRUE)
 }
 \arguments{
-\item{ntrees}{: number of trees in the ensemble (default 50).}
+\item{data}{validation data of class \code{data.frame} is used to prune the object of class \code{ODRF}. Note that when \code{useOOB=TRUE}, \code{data} must be the training data \code{data} in \code{\link{ODRF}}}
 
-\item{oobe}{: out-of-bag error calculation, values ('y'/'n' -> yes/no) (default 'n').}
+\item{MaxDepth}{The maximum depth of the tree after pruning. (Default 1)}
 
-\item{nsamtosample}{: number of randomly selected (withreplacement) samples to use to grow each tree (default num_samples)
+\item{useOOB}{Whether to use OOB for pruning. (Default TRUE)}
 
-
-Furthermore the following parameters can be set regarding the trees themselves :}
-
-\item{method}{: the criterion used for splitting the nodes
-'g-classification' : gini impurity index (classification)
-'i-classification' : information gain (classification)
-'regression' : squared error (regression)}
-
-\item{minparent}{: the minimum amount of samples in an impure node for it to be considered for splitting}
-
-\item{minleaf}{: the minimum amount of samples in a leaf}
-
-\item{Xweights}{: a vector of values which weigh the samples when considering a split}
-
-\item{nvartosample}{: the number of (randomly selected) variables to consider at each node}
+\item{obj}{an object of class \code{\link{ODRF}}.}
 }
 \value{
-ppForest
+\itemize{an object of class \code{ODRF} and \code{prune.ODRF}. 
+\item{\code{ppForest} The same result as \code{ODRF}.}
+\item{\code{pruneError} Error of validation data or OOB () after each pruning in each tree, classification error rate for classification or mean square error for regression.}
+}
 }
 \description{
-Creates an ensemble of carPPtrees using X(samplesXfeatures).
-}
-\details{
-The following parameters can be set :
+Prune \code{ODRF} from bottom to top with validation data based on prediction error.
 }
 \examples{
-### Train RerF on numeric data ###
-library(rerf)
-forest <- RerF1(as.matrix(iris[, 1:4]), iris[[5L]], num.cores = 1L)
+library(ODRF)
 
+#Classification with Oblique Decision Tree
+data(seeds)
+set.seed(221212)
+train = sample(1:209,100)
+train_data = data.frame(seeds[train,])
+test_data = data.frame(seeds[-train,])
+
+tree = ODRF(varieties_of_wheat~.,train_data[seq(floor(nrow(train_data)/2)),],type='i-classification')
+tree = prune(tree,train_data[-seq(floor(nrow(train_data)/2)),])
+pred <- predict(tree,test_data[,-8])
+#estimation error
+(mean(pred!=test_data[,8]))
+
+#Regression with Oblique Decision Tree
+data(body_fat)
+set.seed(221212)
+train = sample(1:252,100)
+train_data = data.frame(body_fat[train,])
+test_data = data.frame(body_fat[-train,])
+
+tree = ODRF(Density~.,train_data[seq(floor(nrow(train_data)/2)),],type='regression')
+tree = prune(tree,train_data[-seq(floor(nrow(train_data)/2)),])
+pred <- predict(tree,test_data[,-8])
+#estimation error
+mean((pred-test_data[,1])^2)
+
+}
+\seealso{
+\code{ODRF} \code{prune.ODT}
 }

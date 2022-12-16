@@ -1,48 +1,55 @@
-#' RerF Tree Generator
+#' A machine learning algorithm for training class \code{ODT}.
 #' 
-#' Grows a CARTree using X(samplesXfeatures) and one of the following criteria which can be set via the parameter 'method'
+#' The \code{\link{ODT}}is constantly updated by multiple batches of data to optimize the model.
 #'
-#' @param       'g-classification' : gini impurity index (classification)
-#' @param       'i-classification' : information gain (classification, default)
-#' @param       'regression' : squared error (regression)
+#' @param obj an object of class \code{ODT}.
+#' @param data Training data of class \code{data.frame} is used to update the object of class \code{ODT}.
+#' @param weights A vector of length same as \code{data} that are positive weights. (default NULL)
 #' 
-#' Other parameters that can be set are:
-#' 
-#' @param paramList parameters in a named list to be used by FUN. If left unchanged,
-#' @param catMap a list specifying which columns in X correspond to the same one-of-K encoded feature. Each element of catMap is a numeric vector specifying the K column indices of X corresponding to the same categorical feature after one-of-K encoding. All one-of-K encoded features in X must come after the numeric features. The K encoded columns corresponding to the same categorical feature must be placed contiguously within X. The reason for specifying catMap is to adjust for the fact that one-of-K encoding cateogorical features results in a dilution of numeric features, since a single categorical feature is expanded to K binary features. If catMap = NULL, then RerF assumes all features are numeric (i.e. none of the features have been one-of-K encoded).
-#' @param FUN :FUN=RandMatPPR.
-#' @param minparent    : the minimum amount of samples in an impure node for it to be considered for splitting (default 2)
-#' @param MinLeaf      : the minimum amount of samples in a leaf (default 1)
-#' @param Xweights      : a vector of values which weigh the samples when considering a split (default [])
-#' @param nvartosample : the number of (randomly selected) variables to consider at each node (default all)
-#' @return ppTree
+#' @return The same result as \code{ODT}.
 #'
-#' @import Rcpp
+#' @seealso \code{ODT} \code{prune.ODT}
 #' 
-#' @aliases online.ODT
-#' @rdname online.ODT
-#' @method online ODT
-#' @export
-#'
 #' @examples
-#' ### Train RerF on numeric data ###
-#' library(rerf)
-#' forest <- RerF1(as.matrix(iris[, 1:4]), iris[[5L]], num.cores = 1L)
+#' library(ODRF)
 #' 
-#X=X;y=y;method='g-classification';NodeRotateFun="RandMatPPR";paramList=NULL;catLabel=NULL;MaxDepth=Inf;
-#MinLeaf=ifelse(method=='regression',5,1);Xweights=1;numNode=Inf;
-#Levels=if(method=='regression')NULL else levels(as.factor(y));Xcat=NULL;
-#Xscale=c("Min-max","Quantile","No")[1];FunDir=getwd();TreeRandRotate=FALSE
-#Xcat=c(NULL,0)[1]
-#ppTree=A
-#X=X1
-#y=y1
+#' #Classification with Oblique Decision Tree
+#' data(seeds)
+#' set.seed(221212)
+#' train = sample(1:209,100)
+#' train_data = data.frame(seeds[train,])
+#' test_data = data.frame(seeds[-train,])
+#' 
+#' tree = ODT(varieties_of_wheat~.,train_data[seq(floor(nrow(train_data)/2)),],type='i-classification')
+#' tree = online(tree,train_data[-seq(floor(nrow(train_data)/2)),])
+#' pred <- predict(tree,test_data[,-8])
+#' #estimation error
+#' (mean(pred!=test_data[,8]))
+#' 
+#' #Regression with Oblique Decision Tree
+#' data(body_fat)
+#' set.seed(221212)
+#' train = sample(1:252,100)
+#' train_data = data.frame(body_fat[train,])
+#' test_data = data.frame(body_fat[-train,])
+#' 
+#' tree = ODT(Density~.,train_data[seq(floor(nrow(train_data)/2)),],type='regression')
+#' tree = online(tree,train_data[-seq(floor(nrow(train_data)/2)),])
+#' pred <- predict(tree,test_data[,-8])
+#' #estimation error
+#' mean((pred-test_data[,1])^2)
+#' 
+#' @import Rcpp
+#' @aliases online.ODRF
+#' @rdname online.ODRF
+#' @method online ODRF
+#' @export
 online.ODT=function(ppTree,data,weights=NULL)
 {
   weights0=weights
   Call=ppTree$call
   Terms=ppTree$terms
-  method=ppTree$method
+  type=ppTree$type
   Levels=ppTree$Levels
   NodeRotateFun=ppTree$NodeRotateFun
   paramList=ppTree$paramList
@@ -61,7 +68,7 @@ online.ODT=function(ppTree,data,weights=NULL)
     data=na.action(data.frame(data))
     warning("NA values exist in data matrix")
   }
-  y= data[,vars[1]]
+  y= data[,setdiff(colnames(data),vars[-1])]
   X= data[,vars[-1]]
   X=as.matrix(X) 
   
@@ -82,13 +89,10 @@ online.ODT=function(ppTree,data,weights=NULL)
   
   #get()
   FUN <- match.fun(NodeRotateFun, descend = TRUE)
-  method0=strsplit(method,split = "")[[1]][1]
+  method0=strsplit(type,split = "")[[1]][1]
   
   
-  if(method!="regression"){
-    if(is.null(Levels)){
-      Levels=levels(as.factor(y))
-    }
+  if(type!="regression"){
     if (!is.integer(y)) {
       y <- as.integer(as.factor(y));
     }
@@ -151,7 +155,7 @@ online.ODT=function(ppTree,data,weights=NULL)
     #, as.character(ppTree$nodeLabel)
   }
   
-  paramList = ODRF:::defaults(paramList,p,catLabel,NodeRotateFun,method,weights)
+  paramList = ODRF:::defaults(paramList,p,catLabel,NodeRotateFun,type,weights)
   
   if(is.infinite(MaxDepth)) {
     numNode=max(numNode,sum(2^(0:ceiling(log2(n/MinLeaf))))) 
@@ -204,7 +208,7 @@ online.ODT=function(ppTree,data,weights=NULL)
       nn=length(y[nodeXIndx[[currentNode]]])
       #r=ceiling(nn*nodeNumLabel0[currentNode])
       #parentLabel=nn*nodeNumLabel0[currentNode,]
-      if(method!="regression"){
+      if(type!="regression"){
         leafLabel = table(Levels[c(sl,y[nodeXIndx[[currentNode]]])])-1+nn*nodeNumLabel0[currentNode,]
         #leafLabel = table(c(Levels[y[nodeXIndx[[currentNode]]]],rep(names(nodeNumLabel0[currentNode]),r)))
         #nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
@@ -213,7 +217,7 @@ online.ODT=function(ppTree,data,weights=NULL)
         #nodeLabel[currentNode]=(r*as.numeric(names(nodeNumLabel0[currentNode]))+nn*mean(y[nodeXIndx[[currentNode]]]))/(r+nn);
         #nodeNumLabel[currentNode]=nn
         leafLabel=c((nn*nodeNumLabel0[currentNode,2]*nodeNumLabel0[currentNode,1]+
-                       nn*mean(y[nodeXIndx[[currentNode]]]))/(nn*nodeNumLabel0[currentNode,2]+nn))
+                     nn*mean(y[nodeXIndx[[currentNode]]]))/(nn*nodeNumLabel0[currentNode,2]+nn))
         leafLabel=c(leafLabel,(nn*nodeNumLabel0[currentNode,2]+nn))
       }
       #nodeNumLabel0=rbind(nodeNumLabel0,leafLabel)
@@ -256,7 +260,7 @@ online.ODT=function(ppTree,data,weights=NULL)
     if(NodeRotateFun=="RotMatPPO"){
       sparseM=RotMatPPO(x=X[nodeXIndx[[currentNode]],],y=y[nodeXIndx[[currentNode]]],numProj=paramList$numProj,
                         dimProj=paramList$dimProj,catLabel = paramList$catLabel,weights=paramList$weights,
-                        ppMethod = paramList$ppMethod,method=paramList$method)#"NNet"
+                        model = paramList$model,type=paramList$type)#"NNet"
     }
 
     if(NodeRotateFun=="PPO"){
@@ -289,7 +293,7 @@ online.ODT=function(ppTree,data,weights=NULL)
       nn=length(y[nodeXIndx[[currentNode]]])
       #r=ceiling(nn*nodeNumLabel0[currentNode])
       #parentLabel=nn*nodeNumLabel0[currentNode,]
-      if(method!="regression"){
+      if(type!="regression"){
         leafLabel = table(Levels[c(sl,y[nodeXIndx[[currentNode]]])])-1+nn*nodeNumLabel0[currentNode,]
         #leafLabel = table(c(Levels[y[nodeXIndx[[currentNode]]]],rep(names(nodeNumLabel0[currentNode]),r)))
         #nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
@@ -322,7 +326,7 @@ online.ODT=function(ppTree,data,weights=NULL)
       #names(r)=rep(nodeLabel[currentNode],2)
       LRnode= rbind(nodeNumLabel0[currentNode,],nodeNumLabel0[currentNode,])
       if(!is.na(childNode0[currentNode])) {
-        if(method!="regression"){
+        if(type!="regression"){
           #r=rep(nodeNumLabel0[currentNode],2)
           #names(r)=rep(names(nodeNumLabel0[currentNode]),2)
           LRnode= LRnode/length(y[nodeXIndx[[currentNode]]])
@@ -390,22 +394,19 @@ online.ODT=function(ppTree,data,weights=NULL)
   }
   childNode0[is.na(childNode0)]=0
   childNode[1:numNode0]=childNode0
+  nodeDepth=nodeDepth[1:(currentNode-1)]
   colnames(nodeRotaMat)=c("var","node","coef")
+  rownames(nodeRotaMat)=rep(nodeDepth,table(nodeRotaMat[,2]))
+  rownames(nodeNumLabel)=nodeDepth
   
-  ppTree=list()
-  ppTree$call=Call
-  ppTree$terms=Terms
-  ppTree$method=method
-  ppTree$Levels=Levels
-  ppTree$NodeRotateFun=NodeRotateFun
-  ppTree$paramList=paramList
+  ppTree=list(call=Call,terms=Terms,type=type,Levels=Levels,NodeRotateFun=NodeRotateFun,paramList=paramList)
   ppTree$data=list(subset=subset,weights=weights,na.action=na.action,n=n,p=p,varName=varName,
                    Xscale=Xscale,minCol=minCol,maxminCol=maxminCol,Xcat=Xcat,catLabel=catLabel,
                    TreeRandRotate=TreeRandRotate,rotdims=rotdims,rotmat=rotmat);
   ppTree$tree=list(FunDir=FunDir,MaxDepth=MaxDepth,MinLeaf=MinLeaf,numNode=numNode);
   ppTree$structure=list(nodeRotaMat = nodeRotaMat,nodeNumLabel = nodeNumLabel,nodeCutValue =nodeCutValue[1:(currentNode-1)],
                         nodeCutIndex =nodeCutIndex[1:(currentNode-1)],childNode = childNode[1:(currentNode-1)],
-                        nodeDepth=nodeDepth[1:(currentNode-1)])
+                        nodeDepth=nodeDepth)
   class(ppTree) <- "ODT"
   return(ppTree)
 }

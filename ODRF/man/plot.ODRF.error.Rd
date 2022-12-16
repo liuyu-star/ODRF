@@ -2,45 +2,46 @@
 % Please edit documentation in R/plot_ODRF_error.R
 \name{plot.ODRF.error}
 \alias{plot.ODRF.error}
-\title{PPtree plot}
+\title{Plot method for ODRF objects}
 \usage{
 \method{plot}{ODRF.error}(
   Err,
   lty = 1,
-  main = paste0("Oblique ", ifelse(Err$method == "regression", "Regression",
+  main = paste0("Oblique ", ifelse(Err$type == "regression", "Regression",
     "Classification"), " Forest"),
   ...
 )
 }
 \arguments{
-\item{main}{main title}
+\item{Err}{Object of class \code{\link{ODRF.error}}.}
 
-\item{...}{arguments to be passed to methods}
+\item{lty}{a vector of line types, see \code{\link{par}}.}
 
-\item{x}{PPtreeclass object}
+\item{main}{main title of the plot.}
 
-\item{font.size}{font size of plot}
-
-\item{width.size}{size of eclipse in each node.}
-
-\item{sub}{sub title}
+\item{...}{arguments to be passed to methods.}
+}
+\value{
+OOB error and test error, classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.
 }
 \description{
-projection pursuit classification tree plot
-}
-\details{
-Draw projection pursuit classification tree with tree structure. It is 
-modified from a function in party library.
+Draw the error graph of class \code{ODRF} at different number of trees.
 }
 \examples{
-data(iris)
-Tree.result <- PPTreeclass(Species~., data = iris,"LDA")
-Tree.result
-plot(Tree.result,xjust=3)
+library(ODRF)
+
+data(seeds)
+set.seed(221212)
+train = sample(1:209,100)
+train_data = data.frame(seeds[train,])
+test_data = data.frame(seeds[-train,])
+
+forest = ODRF(varieties_of_wheat~.,train_data,type='i-classification')
+error=ODRF.error(forest,train_data,test_data)
+plot(error)
+
 }
-\references{
-Lee, EK(2017) 
-PPtreeViz: An R Package for Visualizing Projection Pursuit Classification 
-Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
+\seealso{
+\code{ODRF} \code{ODRF.error}
 }
-\keyword{tree}
+\keyword{forest}

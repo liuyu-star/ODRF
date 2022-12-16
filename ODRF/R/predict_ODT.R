@@ -1,35 +1,57 @@
-#' carPPtree Prediction
+#' predict method for ODT objects
 #'
-#' Prediction a decision tree based on an input matrix and class vector.  This is the main function in the ppRF1 package.
-#' @param Xnew an n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
-#' @return carPPtree Prediction
-#'
-#' @import Rcpp
-#' @import grid
+#' Prediction a oblique decision tree based on an input matrix or data frame using \code{\link{ODT}} function.
 #' 
+#' @param ppTree an object of class ODT, as that created by the function ODT.
+#' @param Xnew an n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
+#' @param leafnode If or not output the leaf node sequence number that \code{Xnew} is partitioned. (default FALSE)
+#' 
+#' @return A set of vectors in the following list:
+#' \itemize{
+#' \item prediction: the prediced response of the new data.
+#' \item leafnode: the leaf node sequence number that the new data is partitioned.
+#' }
+#' 
+#' @seealso \code{\link{OOT}}
+#' 
+#' @references \itemize{
+#' \item{Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.}
+#' }
+#' 
+#' @examples
+#' library(ODRF)
+#' 
+#' #Classification with Oblique Decision Tree
+#' data(seeds)
+#' set.seed(221212)
+#' train = sample(1:209,100)
+#' train_data = data.frame(seeds[train,])
+#' test_data = data.frame(seeds[-train,])
+#' 
+#' tree = ODT(varieties_of_wheat~.,train_data,type='i-classification')
+#' pred <- predict(tree,test_data[,-8])
+#' #estimation error
+#' (mean(pred!=test_data[,8]))
+#' 
+#' #Regression with Oblique Decision Tree
+#' data(body_fat)
+#' set.seed(221212)
+#' train = sample(1:252,100)
+#' train_data = data.frame(body_fat[train,])
+#' test_data = data.frame(body_fat[-train,])
+#' 
+#' tree = ODT(Density~.,train_data,type='regression')
+#' pred <- predict(tree,test_data[,-1])
+#' #estimation error
+#' mean((pred-test_data[,1])^2)
+#' 
+#' @import Rcpp
 #' @aliases predict.ODT
 #' @rdname predict.ODT
 #' @method predict ODT
 #' @export
-#' 
-#' @examples
-#' ### Train RerF on numeric data ###
-#' library(rerf)
-#' forest <- RerF1(as.matrix(iris[, 1:4]), iris[[5L]], num.cores = 1L)
-#'
-#' ### Train RerF on one-of-K encoded categorical data ###
-#' df1 <- as.data.frame(Titanic)
-#' nc <- ncol(df1)
-#' df2 <- df1[NULL, -nc]
-#' for (i in which(df1$Freq != 0L)) {
-#'   df2 <- rbind(df2, df1[rep(i, df1$Freq[i]), -nc])
-#' }
-#' 
-## @rdname predict#'  #' @aliases predict_ODT #' @method predict ODT #' @useDynLib ppRF
-#@rdname predict
-#@method predict ODT
-predict.ODT <- function(ppTree,Xnew,type=c("prediction","node")[1]){
-  #ppTreeVar=c("method",names(ppTree$structure),names(ppTree$data),names(ppTree$tree))
+predict.ODT <- function(ppTree,Xnew,leafnode=FALSE){
+  #ppTreeVar=c("type",names(ppTree$structure),names(ppTree$data),names(ppTree$tree))
   #ppTree=do.call("c",ppTree)
   #assign("Levels", as.vector(unlist(ppTree[c(2,3)])))
   #ppTree=ppTree[-c(2,3)]
@@ -37,11 +59,23 @@ predict.ODT <- function(ppTree,Xnew,type=c("prediction","node")[1]){
   #  assign(ppTreeVar[v], ppTree[[v]])
   #}
   #rm(ppTree)
-  Xnew=as.matrix(Xnew)
+  # address na values.
+  if (any(is.na(Xnew))) {
+    Xnew=ppTree$data$na.action(data.frame(Xnew))
+    warning("NA values exist in data matrix")
+  }
+  Xnew=as.matrix(Xnew) 
+  
+  if(!is.null(ppTree$data$subset))
+    Xnew=Xnew[ppTree$data$subset,]
+  #weights0=c(ppTree$data$weights,ppTree$paramList$weights)
+  #if(!is.null(ppTree$data$weights))
+  #  Xnew <- Xnew * matrix(weights,length(y),ncol(Xnew))
+  
   p=ncol(Xnew)
   n=nrow(Xnew)
   
-  if(ppTree$method!="regression"){
+  if(ppTree$type!="regression"){
     nodeLabel=colnames(ppTree$structure$nodeNumLabel)[max.col(ppTree$structure$nodeNumLabel)] ## "random"
     nodeLabel[which(rowSums(ppTree$structure$nodeNumLabel)==0)]=0
   }else{
@@ -93,19 +127,14 @@ predict.ODT <- function(ppTree,Xnew,type=c("prediction","node")[1]){
     pred = .Call('_ODRF_predict_ODT', PACKAGE = 'ODRF',Xnew, ppTree$structure$nodeRotaMat, 
                        ppTree$structure$nodeCutValue, ppTree$structure$childNode,nodeLabel)
     
-    if(type=="node"){
+    if(leafnode){
       pred=pred$node
     }else{
       pred=pred$prediction
     }
   }
   
-  if((ppTree$method=='regression')&(type=="prediction")){pred=as.numeric(pred)}
-  
-  #class(pred) <- append(class(pred),"ppCART")
+  if(ppTree$type=='regression'){pred=as.numeric(pred)}
   
   return(pred)
 }
-
-#predict <- function(x, ...)  UseMethod("predict")
-

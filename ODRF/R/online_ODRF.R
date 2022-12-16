@@ -1,65 +1,56 @@
-#' ppRF forest Generator
-#'
-#' Creates an ensemble of carPPtrees using X(samplesXfeatures).
-#'
-#' The following parameters can be set :
-#'
-#' @param       ntrees       : number of trees in the ensemble (default 50).
-#'
-#' @param       oobe         : out-of-bag error calculation, values ('y'/'n' -> yes/no) (default 'n').
-#'
-#' @param       nsamtosample : number of randomly selected (withreplacement) samples to use to grow each tree (default num_samples)
+#' A machine learning algorithm for training class \code{ODRF}.
 #' 
+#' The \code{\link{ODRF}}is constantly updated by multiple batches of data to optimize the model.
 #'
-#' Furthermore the following parameters can be set regarding the trees themselves :
-# 
-#' @param       method       : the criterion used for splitting the nodes
-#'                           'g-classification' : gini impurity index (classification)
-#'                           'i-classification' : information gain (classification)
-#'                           'regression' : squared error (regression)
-#'
-#' @param       minparent    : the minimum amount of samples in an impure node for it to be considered for splitting
-#'
-#' @param       minleaf      : the minimum amount of samples in a leaf
-#'
-#' @param       Xweights      : a vector of values which weigh the samples when considering a split
-#'
-#' @param       nvartosample : the number of (randomly selected) variables to consider at each node 
-#'
-#' @return ppForest
+#' @param obj An object of class \code{ODRF}.
+#' @param data Training data of class \code{data.frame} is used to update the object of class \code{ODT}.
+#' @param weights A vector of length same as \code{data} that are positive weights. (default NULL)
 #' 
-#' @import Rcpp
-#' @import doParallel
-#' @import foreach
+#' @return The same result as \code{ODRF}.
+#'
+#' @seealso \code{ODRF} \code{prune.ODRF}
+#' 
+#' @examples
+#' library(ODRF)
+#' 
+#' #Classification with Oblique Decision Tree
+#' data(seeds)
+#' set.seed(221212)
+#' train = sample(1:209,100)
+#' train_data = data.frame(seeds[train,])
+#' test_data = data.frame(seeds[-train,])
+#' 
+#' tree = ODRF(varieties_of_wheat~.,train_data[seq(floor(nrow(train_data)/2)),],type='i-classification')
+#' tree = online(tree,train_data[-seq(floor(nrow(train_data)/2)),])
+#' pred <- predict(tree,test_data[,-8])
+#' #estimation error
+#' (mean(pred!=test_data[,8]))
+#' 
+#' #Regression with Oblique Decision Tree
+#' data(body_fat)
+#' set.seed(221212)
+#' train = sample(1:252,100)
+#' train_data = data.frame(body_fat[train,])
+#' test_data = data.frame(body_fat[-train,])
+#' 
+#' tree = ODRF(Density~.,train_data[seq(floor(nrow(train_data)/2)),],type='regression')
+#' tree = online(tree,train_data[-seq(floor(nrow(train_data)/2)),])
+#' pred <- predict(tree,test_data[,-8])
+#' #estimation error
+#' mean((pred-test_data[,1])^2)
+#' 
+#' @import Rcpp doParallel foreach
 #' @importFrom parallel detectCores makeCluster clusterSplit stopCluster
-#' @importFrom stats na.action
-#' 
 #' @aliases online.ODRF
 #' @rdname online.ODRF
 #' @method online ODRF
 #' @export
-#'
-#' @examples
-#' ### Train RerF on numeric data ###
-#' library(rerf)
-#' forest <- RerF1(as.matrix(iris[, 1:4]), iris[[5L]], num.cores = 1L)
-#' 
-## ##@importFrom foreach foreach `%dopar%`
-#method='g-classification';NodeRotateFun="RandMatPPR02";FunDir=getwd();paramList=NULL;catLabel=NULL;
-#MinLeaf=ifelse(method=='regression',5,1);rotate = FALSE;replacement = TRUE;stratify = TRUE;
-#ntrees=500;numOOB=c(0,ceiling(length(y)/5))[2];storeOOB = FALSE;
-#Xweights=1;numCores=0L;seed=220924;MaxDepth=Inf;numNode=Inf;Xcat=0;
-#Xscale=c("Min-max","Quantile","No")[1];FUNDir=getwd();TreeRandRotate=F
-#Xcat=c(NULL,0)[1]
-#ppForest=ppForest0
-#X=Xnew
-#y=ynew
 online.ODRF = function(ppForest,data,weights=NULL)
 {
   weights0=weights
   ppTrees=ppForest$ppTrees
   Levels=ppForest$Levels
-  method=ppForest$method
+  type=ppForest$type
   NodeRotateFun=ppForest$NodeRotateFun
   Call=ppForest$call
   Terms=ppForest$terms
@@ -78,9 +69,9 @@ online.ODRF = function(ppForest,data,weights=NULL)
   # address na values.
   if (any(is.na(data))) {
     data=na.action(data.frame(data))
-    warning("NA values exist in data matrix")
+    warning("NA values exist in data frame")
   }
-  y= data[,vars[1]]
+  y= data[,setdiff(colnames(data),vars[-1])]
   X= data[,vars[-1]]
   X=as.matrix(X) 
   
@@ -91,9 +82,9 @@ online.ODRF = function(ppForest,data,weights=NULL)
   weights=weights0
   
   
-  ppForest <- list(call=Call,terms=Terms,method=method,Levels = NULL,
+  ppForest <- list(call=Call,terms=Terms,type=type,Levels = NULL,
                    NodeRotateFun=NodeRotateFun,paramList=paramList,oobErr=NULL,oobConfusionMat=NULL)
-  if(method!="regression"){
+  if(type!="regression"){
     # adjust y to go from 1 to numClass if needed
     if (is.factor(y)) {
       ppForest$Levels <-levels(y)
@@ -155,7 +146,7 @@ online.ODRF = function(ppForest,data,weights=NULL)
                      Xscale=Xscale,minCol=minCol,maxminCol=maxminCol,Xcat=Xcat,catLabel=catLabel);
   ppForest$tree=list(FunDir=FunDir,MaxDepth=MaxDepth,MinLeaf=MinLeaf,numNode=numNode,TreeRandRotate=TreeRandRotate);
   ppForest$forest=list(ntrees=ntrees,numOOB=numOOB,storeOOB = storeOOB,replacement=replacement,stratify=stratify,
-                       numCores=numCores,seed=seed)
+                       parallel=parallel,numCores=numCores,seed=seed)
   
   
   PPtree=function(itree,...){
@@ -170,7 +161,7 @@ online.ODRF = function(ppForest,data,weights=NULL)
       go <- TRUE
       while (go) {
         # make sure each class is represented in proportion to classes in initial dataset
-        if (stratify&(method!='regression')) {
+        if (stratify&(type!='regression')) {
           if (classCt[1L] != 0L) {
             TDindx[1:classCt[1L]] <- sample(Cindex[[1L]], classCt[1L], replace = TRUE)
           }
@@ -198,7 +189,7 @@ online.ODRF = function(ppForest,data,weights=NULL)
       NTD = setdiff(TDindx0,TDindx);
       pred = predict(ppForestT,X[NTD,]);
       
-      if(method!="regression"){
+      if(type!="regression"){
         oobErr=mean(pred!=Levels[y[NTD]]);
       }else{
         oobErr=mean((pred-y[NTD])^2);
@@ -211,9 +202,9 @@ online.ODRF = function(ppForest,data,weights=NULL)
   }
   
   
-  if (numCores != 1L) {
+  if (parallel) {
     #RNGkind("L'Ecuyer-CMRG")
-    if (numCores == 0) {
+    if (is.infinite(numCores)) {
       # Use all but 1 core if numCores=0.
       numCores <- parallel::detectCores()- 1L #logical = FALSE
     }
@@ -256,7 +247,7 @@ online.ODRF = function(ppForest,data,weights=NULL)
     oobVotes=oobVotes[idx,,drop = FALSE]
     yy=y[idx]
     
-    if(method!="regression"){
+    if(type!="regression"){
       ny=length(yy)
       nC=numClass
       weights=rep(1,ny*ntrees)
@@ -276,7 +267,7 @@ online.ODRF = function(ppForest,data,weights=NULL)
       #}
       
       #oobErr=mean(oobPred!=Levels[y[idx]]);
-      XConfusionMat=table(oobPred,yy)
+      XConfusionMat=table(oobPred,Levels[yy])
       class_error=(rowSums(XConfusionMat)-diag(XConfusionMat))/rowSums(XConfusionMat)
       XConfusionMat=cbind(XConfusionMat,class_error)
       ppForest$oobConfusionMat=XConfusionMat

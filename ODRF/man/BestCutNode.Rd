@@ -7,10 +7,10 @@
 BestCutNode(
   X,
   y,
-  method = "g-classification",
+  type = "g-classification",
   weights = 1,
-  MinLeaf = ifelse(method == "regression", 5, 1),
-  numLabels = ifelse(method == "regression", 0, length(unique(y)))
+  MinLeaf = ifelse(type == "regression", 5, 1),
+  numLabels = ifelse(type == "regression", 0, length(unique(y)))
 )
 }
 \arguments{
@@ -18,16 +18,16 @@ BestCutNode(
 
 \item{y}{: a n vector.}
 
-\item{method}{: the criterion used for splitting the nodes
-'g-classification' : gini impurity index (classification, default)
-'i-classification' : information gain (classification)
-'regression' : mean square error (regression)}
-
 \item{weights}{: a vector of values which weigh the samples when considering a split}
 
 \item{MinLeaf}{: the minimum amount of samples in a leaf}
 
 \item{numLabels}{: the number of categories}
+
+\item{method}{: the criterion used for splitting the nodes
+'g-classification' : gini impurity index (classification, default)
+'i-classification' : information gain (classification)
+'regression' : mean square error (regression)}
 }
 \value{
 a list which contains:

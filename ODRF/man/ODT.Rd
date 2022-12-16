@@ -2,61 +2,124 @@
 % Please edit documentation in R/ODT.R
 \name{ODT}
 \alias{ODT}
-\title{RerF Tree Generator}
+\title{Classification and Regression with Oblique Decision Tree}
 \usage{
 ODT(
   formula,
-  data,
-  subset = NULL,
-  weights = NULL,
-  na.action = na.fail,
-  method = "i-classification",
+  data = NULL,
+  type = NULL,
   NodeRotateFun = "RotMatPPO",
   FunDir = getwd(),
   paramList = NULL,
-  catLabel = NULL,
-  Xcat = 0,
   MaxDepth = Inf,
   numNode = Inf,
-  MinLeaf = ifelse(method == "regression", 5, 1),
-  Levels = NA,
-  Xscale = c("Min-max", "Quantile", "No")[1],
+  MinLeaf = 5,
+  Levels = NULL,
+  subset = NULL,
+  weights = NULL,
+  na.action = na.fail,
+  catLabel = NULL,
+  Xcat = 0,
+  Xscale = "Min-max",
   TreeRandRotate = FALSE,
   ...
 )
 }
 \arguments{
-\item{weights}{: a vector of values which weigh the samples when considering a split (default [])}
+\item{formula}{Object of class \code{formula} with a response but no interaction terms describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
 
-\item{paramList}{parameters in a named list to be used by FUN. If left unchanged,}
+\item{data}{Training data of class \code{data.frame} in which to interpret the variables named in the formula.If data is missing it is obtained from the current environment by \code{formula}.}
 
-\item{MinLeaf}{: the minimum amount of samples in a leaf (default 1)}
+\item{type}{The criterion used for splitting the nodes. g-classification': gini impurity index(default) and i-classification': information gain for classification; 'regression': mean square error for regression.
+y is a factor then is a classification.}
 
-\item{'g-classification'}{: gini impurity index (classification)}
+\item{NodeRotateFun}{Name of the function of class \code{character} that implements a linear combination of predictor variables in the split node. Default is "RotMatPPO" with model="PPR". (see \code{\link{RotMatPPO}}) 
+Users can define this function, for details see \code{\link{RotMatMake}}.}
 
-\item{'i-classification'}{: information gain (classification, default)}
+\item{FunDir}{The path to the \code{function} of the user-defined \code{NodeRotateFun}. (default current Workspace)}
 
-\item{'regression'}{: squared error (regression)
+\item{paramList}{Parameters in a named list to be used by \code{NodeRotateFun}.If left unchanged, default values will be populated, for details see \code{\link[ODRF]{defaults}}.}
 
-Other parameters that can be set are:}
+\item{MaxDepth}{The maximum depth of the tree (default \code{Inf}).}
 
-\item{catMap}{a list specifying which columns in X correspond to the same one-of-K encoded feature. Each element of catMap is a numeric vector specifying the K column indices of X corresponding to the same categorical feature after one-of-K encoding. All one-of-K encoded features in X must come after the numeric features. The K encoded columns corresponding to the same categorical feature must be placed contiguously within X. The reason for specifying catMap is to adjust for the fact that one-of-K encoding cateogorical features results in a dilution of numeric features, since a single categorical feature is expanded to K binary features. If catMap = NULL, then RerF assumes all features are numeric (i.e. none of the features have been one-of-K encoded).}
+\item{numNode}{The number of nodes used by the tree (default \code{Inf}).}
 
-\item{FUN}{:FUN=RandMatPPR.}
+\item{MinLeaf}{Minimal node size. Default 1 for classification, 5 for regression.}
 
-\item{minparent}{: the minimum amount of samples in an impure node for it to be considered for splitting (default 2)}
+\item{Levels}{The category label of the response variable when \code{type} is not equal to 'regression'.}
 
-\item{nvartosample}{: the number of (randomly selected) variables to consider at each node (default all)}
+\item{subset}{An index vector indicating which rows should be used. (NOTE: If given, this argument must be named.)}
+
+\item{weights}{A vector of length same as \code{data} that are positive weights.}
+
+\item{na.action}{A function to specify the action to be taken if NAs are found. (NOTE: If given, this argument must be named.)}
+
+\item{catLabel}{A category labels of class \code{list} in prediction variables. (for details see Details and Examples)}
+
+\item{Xcat}{A class \code{vector} is used to indicate which variables are class variables. The default Xcat=0 means that no special treatment is given to class variables.}
+
+\item{Xscale}{Predictor variable standardization methods." Min-max", "Quantile", "No" denote Min-max transformation, Quantile transformation and No transformation, respectively. (default "Min-max")}
+
+\item{TreeRandRotate}{If or not to randomly rotate the Training data before building the tree. (default FALSE)}
+
+\item{...}{optional parameters to be passed to the low level function.}
 }
 \value{
-ppTree
+An object of class ODT, which is a list with the following components:
+\itemize{
+\item{\code{call}: The original call to ODT.}
+\item{\code{terms}: An object of class \code{c("terms", "formula")} (see \code{\link{terms.object}}) summarizing the formula. Used by various methods, but typically not of direct relevance to users.}
+\item{\itemize{\code{structure}: A set of tree structure data records.
+\item{\code{nodeRotaMat}: Record the split variables (first column), split node serial number (second column) and rotation direction (third column) for each node. (The first column and the third column are 0 means leaf nodes)}
+\item{\code{nodeNumLabel}: Record each leaf node's category for classification or predicted value for regression (second column is data size). (Each column is 0 means it is not a leaf node)}
+\item{\code{nodeCutValue}: Record the split point of each node. (0 means leaf nodes)}
+\item{\code{nodeCutIndex}: Record the index values of the partitioning variables selected based on the partition criterion \code{type}.}
+\item{\code{childNode}: Record the number of child nodes after each splitting.}
+\item{\code{nodeDepth}: Record the depth of the tree where each node is located.}
+}}
+\item{\code{type}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
+\item{\code{paramList}: Parameters in a named list to be used by \code{NodeRotateFun}.}
+\item{\code{data}: The list of data related parameters used to build the tree.}
+\item{\code{tree}: The list of tree related parameters used to build the tree.}
+}
 }
 \description{
-Grows a CARTree using X(samplesXfeatures) and one of the following criteria which can be set via the parameter 'method'
+ODT uses a linear combination of predictors as partitioning variables to create classification and regression tree.
 }
 \examples{
-### Train RerF on numeric data ###
-library(rerf)
-forest <- RerF1(as.matrix(iris[, 1:4]), iris[[5L]], num.cores = 1L)
+library(ODRF)
 
+#Classification with Oblique Decision Tree
+data(seeds)
+set.seed(221212)
+train = sample(1:209,100)
+train_data = data.frame(seeds[train,])
+test_data = data.frame(seeds[-train,])
+
+tree = ODT(varieties_of_wheat~.,train_data,type='i-classification')
+pred <- predict(tree,test_data[,-8])
+#estimation error
+(mean(pred!=test_data[,8]))
+
+#Regression with Oblique Decision Tree
+data(body_fat)
+set.seed(221212)
+train = sample(1:252,100)
+train_data = data.frame(body_fat[train,])
+test_data = data.frame(body_fat[-train,])
+
+tree = ODT(Density~.,train_data,type='regression')
+pred <- predict(tree,test_data[,-1])
+#estimation error
+mean((pred-test_data[,1])^2)
+
+}
+\references{
+Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.
+}
+\seealso{
+\code{\link{predict.ODT}} \code{\link{print.ODT}} \code{\link{plot.ODT}} \code{\link{plot_ODT_depth}}
+}
+\author{
+YU Liu and Yingcun Xia
 }

@@ -1,38 +1,47 @@
-#' carPPRF Prediction
-#'
-#' Prediction a decision tree based on an input matrix and class vector.  This is the main function in the ppRF1 package.
-#'
-#' @param Xnew an n by d numeric matrix (preferable) or Xnew frame. The rows correspond to observations and columns correspond to features.
-#' @return carPPtree Prediction v_subs PPtree
-#'
-#' @import Rcpp
-#' @export
+#' oblique decision random forest error
 #' 
-#' @examples
-#' ### Train RerF on numeric Xnew ###
-#' library(rerf)
-#' forest <- RerF1(as.matrix(iris[, 1:4]), iris[[5L]], num.cores = 1L)
+#' the error of class \code{ODRF} at different number of trees.
+#' 
+#' @param ppForest an object of class \code{ODRF}, as that created by the function \code{\link{ODRF}}.
+#' @param data Training data of class \code{data.frame} in which to interpret the variables named in the formula.If data is missing it is obtained from the current environment by \code{formula}.
+#' @param newdata A data frame or matrix containing new data.
+#' 
+#' @return OOB error and test error, classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.
 #'
-#' ### Train RerF on one-of-K encoded categorical Xnew ###
-#' df1 <- as.Xnew.frame(Titanic)
-#' nc <- ncol(df1)
-#' df2 <- df1[NULL, -nc]
-#' for (i in which(df1$Freq != 0L)) {
-#'   df2 <- rbind(df2, df1[rep(i, df1$Freq[i]), -nc])
-#' }
-## @aliases predict #' @method predict ppRF #' @aliases predict_ppRF #' @method predict ppRF
-ODRF.error <- function(forest,y, Xnew=NULL, ynew=NULL, ...) {
-  if(forest$method!="regression"){
-    y <- factor(y,levels = forest$Levels)
+#' @seealso \code{ODRF} \code{plot.ODRF.error}
+#'
+#' @examples
+#' library(ODRF)
+#' 
+#' data(seeds)
+#' set.seed(221212)
+#' train = sample(1:209,100)
+#' train_data = data.frame(seeds[train,])
+#' test_data = data.frame(seeds[-train,])
+#' 
+#' forest = ODRF(varieties_of_wheat~.,train_data,type='i-classification')
+#' error=ODRF.error(forest,train_data,test_data)
+#' 
+#' @export
+ODRF.error <- function(ppForest,data,newdata=NULL, ...) {
+  vars=all.vars(ppForest$terms)
+  y= data[,setdiff(colnames(data),vars[-1])]
+  if(is.null(newdata))newdata=data
+  ynew= newdata[,setdiff(colnames(newdata),vars[-1])]
+  Xnew= newdata[,vars[-1]]
+  Xnew=as.matrix(Xnew) 
+  if(ppForest$type!="regression"){
+    y <- factor(y,levels = ppForest$Levels)
   }
+  
   n=length(y)
-  nt=ntrees=forest$forest$ntrees
-  nC=length(forest$Levels)
+  nt=ntrees=ppForest$forest$ntrees
+  nC=length(ppForest$Levels)
   ny=length(ynew)
   
-  treeVotes=predict(forest,Xnew,weight=FALSE)$TreePrediction
+  treeVotes=predict(ppForest,Xnew,type="tree")
   err.test=rep(0,ntrees)
-  if(forest$method=="regression"){
+  if(ppForest$type=="regression"){
     e.0=mean((ynew-mean(y))^2)
     pred=rowSums(treeVotes);
     err.test[nt]=mean((ynew-pred/nt)^2)/e.0;
@@ -42,7 +51,7 @@ ODRF.error <- function(forest,y, Xnew=NULL, ynew=NULL, ...) {
     }
   }else{
     weights=rep(1,ny*nt)
-    Votes=factor(c(t(treeVotes)),levels =forest$Levels)
+    Votes=factor(c(t(treeVotes)),levels =ppForest$Levels)
     treeVotes=matrix(as.integer(Votes),nt,ny)
     
     Votes=c(treeVotes)+nC*rep(0:(ny-1),rep(nt,ny));
@@ -51,13 +60,13 @@ ODRF.error <- function(forest,y, Xnew=NULL, ynew=NULL, ...) {
     
     #prob=matrix(Votes,ny,nC,byrow = TRUE);
     Votes=matrix(Votes,ny,nC,byrow = TRUE);
-    pred=forest$Levels[max.col(Votes)]## "random"
+    pred=ppForest$Levels[max.col(Votes)]## "random"
     err.test[nt]=mean(ynew!=pred)
     treeC=matrix(seq(nC),ny,nC,byrow = TRUE)
     for (t in seq(nt-1,1)) {
       Votes=Votes-(treeC==treeVotes[t+1,])*1
       #pred=apply(prob,1,which.max);
-      pred=forest$Levels[max.col(Votes)]## "random"
+      pred=ppForest$Levels[max.col(Votes)]## "random"
       err.test[t]=mean(ynew!=pred)
     }
   }
@@ -67,32 +76,32 @@ ODRF.error <- function(forest,y, Xnew=NULL, ynew=NULL, ...) {
   for (tt in 1:ntrees) {
     oobVotes=matrix(NA,n,tt)
     for (t in 1:tt) {
-      oobVotes[forest$ppTrees[[t]]$oobIndex,t]=forest$ppTrees[[t]]$oobPred
+      oobVotes[ppForest$ppTrees[[t]]$oobIndex,t]=ppForest$ppTrees[[t]]$oobPred
     }
     idx=which(rowSums(is.na(oobVotes))<tt) 
     oobVotes=oobVotes[idx,,drop = FALSE]
     
-    if(forest$method=="regression"){
+    if(ppForest$type=="regression"){
       pred=rowMeans(oobVotes,na.rm = TRUE);
       err=mean((y[idx]-pred)^2)/mean((y[idx]-mean(y))^2);
     }else{
       ny=length(y[idx])
       nt=ncol(oobVotes)
       weights=rep(1,ny*nt)
-      Votes=factor(c(t(oobVotes)),levels =forest$Levels)
+      Votes=factor(c(t(oobVotes)),levels =ppForest$Levels)
       Votes=as.integer(Votes)+nC*rep(0:(ny-1),rep(nt,ny));
       Votes=aggregate(c(rep(0,ny*nC),weights), by=list(c(1:(ny*nC),Votes)),sum)[,2];
       
       prob=matrix(Votes,ny,nC,byrow = TRUE);
       #pred=apply(prob,1,which.max);
       pred=max.col(prob) ## "random"
-      pred=forest$Levels[pred]
+      pred=ppForest$Levels[pred]
       err=mean(y[idx]!=pred)
     }
     err.oob[tt]=err
   }
   
-  error=list(err.oob=err.oob,err.test=err.test,method=forest$method)
+  error=list(err.oob=err.oob,err.test=err.test,type=ppForest$type)
   
   class(error)="ODRF.error"
   return(error)

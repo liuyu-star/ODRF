@@ -2,30 +2,60 @@
 % Please edit documentation in R/predict_ODT.R
 \name{predict.ODT}
 \alias{predict.ODT}
-\title{carPPtree Prediction}
+\title{predict method for ODT objects}
 \usage{
-\method{predict}{ODT}(ppTree, Xnew, type = c("prediction", "node")[1])
+\method{predict}{ODT}(ppTree, Xnew, leafnode = FALSE)
 }
 \arguments{
+\item{ppTree}{an object of class ODT, as that created by the function ODT.}
+
 \item{Xnew}{an n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.}
+
+\item{leafnode}{If or not output the leaf node sequence number that \code{Xnew} is partitioned. (default FALSE)}
 }
 \value{
-carPPtree Prediction
+A set of vectors in the following list:
+\itemize{
+\item prediction: the prediced response of the new data.
+\item leafnode: the leaf node sequence number that the new data is partitioned.
+}
 }
 \description{
-Prediction a decision tree based on an input matrix and class vector.  This is the main function in the ppRF1 package.
+Prediction a oblique decision tree based on an input matrix or data frame using \code{\link{ODT}} function.
 }
 \examples{
-### Train RerF on numeric data ###
-library(rerf)
-forest <- RerF1(as.matrix(iris[, 1:4]), iris[[5L]], num.cores = 1L)
+library(ODRF)
 
-### Train RerF on one-of-K encoded categorical data ###
-df1 <- as.data.frame(Titanic)
-nc <- ncol(df1)
-df2 <- df1[NULL, -nc]
-for (i in which(df1$Freq != 0L)) {
-  df2 <- rbind(df2, df1[rep(i, df1$Freq[i]), -nc])
+#Classification with Oblique Decision Tree
+data(seeds)
+set.seed(221212)
+train = sample(1:209,100)
+train_data = data.frame(seeds[train,])
+test_data = data.frame(seeds[-train,])
+
+tree = ODT(varieties_of_wheat~.,train_data,type='i-classification')
+pred <- predict(tree,test_data[,-8])
+#estimation error
+(mean(pred!=test_data[,8]))
+
+#Regression with Oblique Decision Tree
+data(body_fat)
+set.seed(221212)
+train = sample(1:252,100)
+train_data = data.frame(body_fat[train,])
+test_data = data.frame(body_fat[-train,])
+
+tree = ODT(Density~.,train_data,type='regression')
+pred <- predict(tree,test_data[,-1])
+#estimation error
+mean((pred-test_data[,1])^2)
+
 }
-
+\references{
+\itemize{
+\item{Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.}
+}
+}
+\seealso{
+\code{\link{OOT}}
 }
