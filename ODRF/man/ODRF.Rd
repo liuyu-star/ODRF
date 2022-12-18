@@ -71,15 +71,14 @@ Users can define this function, for details see \code{\link{RotMatMake}}.}
 
 \item{subset}{An index vector indicating which rows should be used. (NOTE: If given, this argument must be named.)}
 
-\item{weights}{A vector of length same as \code{data} that are positive weights.}
+\item{weights}{A vector of length same as \code{data} that are positive weights.(default NULL)}
 
 \item{na.action}{A function to specify the action to be taken if NAs are found. (NOTE: If given, this argument must be named.)}
 
 \item{catLabel}{A category labels of class \code{list} in prediction variables. (for details see Details and Examples)}
 
-\item{Xcat}{A class \code{vector} is used to indicate which variables are class variables. The default Xcat=0 means that no special treatment is given to class variables.}
-
-\item{Xscale}{Predictor variable standardization methods." Min-max", "Quantile", "No" denote Min-max transformation, Quantile transformation and No transformation (default "Min-max"), respectively.}
+\item{Xcat}{A class \code{vector} is used to indicate which variables are class variables. The default Xcat=0 means that no special treatment is given to category variables. 
+When Xcat=NULL, the variable x that satisfies the condition \code{(length(unique(x))<10) & (n>20)} is judged to be a category variable #' @param Xscale Predictor variable standardization methods." Min-max", "Quantile", "No" denote Min-max transformation, Quantile transformation and No transformation (default "Min-max"), respectively.}
 
 \item{TreeRandRotate}{If or not to randomly rotate the Training data before building the tree. (default FALSE)}
 
@@ -109,8 +108,6 @@ An object of class ODT, which is a list with the following components:
 ODRF is the assembly of multiple ODTs, which can effectively reduce the overfitting of individual ODTs and improve the accuracy of classification and regression.
 }
 \examples{
-library(ODRF)
-
 #Classification with Oblique Decision Tree
 data(seeds)
 set.seed(221212)
@@ -134,6 +131,47 @@ tree = ODRF(Density~.,train_data,type='regression')
 pred <- predict(tree,test_data[,-1])
 #estimation error
 mean((pred-test_data[,1])^2)
+
+
+### Train ODT on one-of-K encoded categorical data ###
+Xcol1=sample(c("A","B","C"),100,replace = TRUE)
+Xcol2=sample(c("1","2","3","4","5"),100,replace = TRUE)
+Xcon=matrix(rnorm(100*3),100,3)
+X=data.frame(Xcol1,Xcol2,Xcon)
+Xcat=c(1,2)
+catLabel=NULL
+y=as.factor(sample(c(0,1),100,replace = TRUE))
+tree = ODRF(y~X,type='g-classification')
+
+numCat <- apply(X[,Xcat,drop = FALSE], 2, function(x) length(unique(x)))
+X1 <- matrix(0, nrow = nrow(X), ncol = sum(numCat)) # initialize training data matrix X
+catLabel <- vector("list", length(Xcat))
+names(catLabel)<- colnames(X)[Xcat]
+col.idx <- 0L
+# one-of-K encode each categorical feature and store in X
+for (j in 1:length(Xcat)) {
+  catMap <- (col.idx + 1L):(col.idx + numCat[j])
+  # convert categorical feature to K dummy variables
+  catLabel[[j]]=levels(as.factor(X[,Xcat[j]]))
+  X1[, catMap] <- (matrix(X[,Xcat[j]],nrow(X),numCat[j])==matrix(catLabel[[j]],nrow(X),numCat[j],byrow = TRUE))+0
+  col.idx <- col.idx + numCat[j]
+}
+X=cbind(X1,X[,-Xcat])
+
+#Print the result after processing of category variables
+X
+#  1 2 3 4 5 6 7 8          X1         X2          X3
+#1 0 1 0 0 1 0 0 0 -0.81003483  0.7900958 -1.94504333
+#2 0 0 1 0 0 0 0 1 -0.02528851 -0.5143964 -0.18628226
+#3 1 0 0 1 0 0 0 0  1.15532067  2.0236020  1.02942500
+#4 1 0 0 0 0 1 0 0  1.18598589  1.0594630  0.42990019
+#5 1 0 0 1 0 0 0 0 -0.21695438  1.5145973  0.09316665
+#6 0 0 1 0 0 0 0 1 -1.11507717 -0.5775602  0.09918911
+catLabel
+#$Xcol1
+#[1] "A" "B" "C"
+#$Xcol2
+#[1] "1" "2" "3" "4" "5"
 
 }
 \references{

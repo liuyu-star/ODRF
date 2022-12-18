@@ -2,30 +2,34 @@
 % Please edit documentation in R/RotMat.R
 \name{RotMatRF}
 \alias{RotMatRF}
-\title{Create a Random Matrix: Random Forest (RF)}
+\title{Create a Projection Matrix: Random Forest (RF)}
 \usage{
 RotMatRF(dimX, numProj, catLabel = NULL, ...)
 }
 \arguments{
+\item{dimX}{the number of dimensions.}
+
+\item{numProj}{the number of desired columns in the projection matrix, is also the number of projection directions.(default ceiling(sqrt(dimX)))}
+
+\item{catLabel}{A category labels of class \code{list} in prediction variables，for details see Examples of \code{\link{ODRF}}.}
+
 \item{...}{used to handle superfluous arguments passed in using paramList.}
-
-\item{p}{the number of dimensions.}
-
-\item{d}{the number of desired columns in the projection matrix.}
-
-\item{catMap}{a list specifying specifies which one-of-K encoded columns in X correspond to the same categorical feature.}
 }
 \value{
-A random matrix to use in running \code{\link{RerF}}.
+\itemize{A random matrix to use in running \code{\link{ODT}}.
+\item{Variable: variables to be projected.} 
+\item{Number: Number of variables to be projected.}
+\item{Coefficient: Coefficients of the projection matrix.}
+}
 }
 \description{
-Create a Random Matrix: Random Forest (RF)
+Create a projection matrix with coefficient 1, so that ODRF (ODT) has the same partition variables as random forest (tree).
 }
 \examples{
-
-p <- 8
-d <- 3
-paramList <- list(p = p, d = d)
-set.seed(4)
-(a <- do.call(RandMatRF, paramList))
+paramList <- list(dimX = 8, numProj= 3, catLabel=NULL)
+set.seed(2)
+(RotMat <- do.call(RotMatRF, paramList))
+}
+\seealso{
+\code{\link{RotMatPPO}} \code{\link{RotMatRand}} \code{\link{RotMatMake}}
 }

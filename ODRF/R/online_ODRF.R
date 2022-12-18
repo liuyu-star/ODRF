@@ -8,11 +8,9 @@
 #' 
 #' @return The same result as \code{ODRF}.
 #'
-#' @seealso \code{ODRF} \code{prune.ODRF}
+#' @seealso \code{\link{ODRF}} \code{\link{prune.ODRF}}
 #' 
 #' @examples
-#' library(ODRF)
-#' 
 #' #Classification with Oblique Decision Tree
 #' data(seeds)
 #' set.seed(221212)

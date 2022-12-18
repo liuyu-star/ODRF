@@ -1,13 +1,22 @@
-#' Print the projection pursuit classification tree result
-#' @title Print PP.Tree.class result
-#' @param x PPtreeclass object
-#' @keywords tree
+#' Print ODRF
+#' 
+#' Print contents of ODRF object.
+#' 
+#' @param ppForest an object of class \code{\link{ODRF}}.
+#' @param ... arguments to be passed to methods
+#' 
+#' @seealso \code{\link{ODRF}}
+#' 
+#' @examples
+#' data(iris)
+#' forest <- ODRF(Species~.,data = iris)
+#' forest
+#' 
+#' @keywords forest
 #' @aliases print.ODRF
 #' @rdname print.ODRF
 #' @method print ODRF
 #' @export
-#' 
-### @method print ppRF
 print.ODRF <-function(ppForest, ...) {
   cat("\nCall:\n", deparse(ppForest$call), "\n")
   cat("               Type of oblique decision random forest: ", 

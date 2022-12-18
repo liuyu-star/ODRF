@@ -2,14 +2,25 @@
 % Please edit documentation in R/print_ODRF.R
 \name{print.ODRF}
 \alias{print.ODRF}
-\title{Print PP.Tree.class result}
+\title{Print ODRF}
 \usage{
 \method{print}{ODRF}(ppForest, ...)
 }
 \arguments{
-\item{x}{PPtreeclass object}
+\item{ppForest}{an object of class \code{\link{ODRF}}.}
+
+\item{...}{arguments to be passed to methods}
 }
 \description{
-Print the projection pursuit classification tree result
+Print contents of ODRF object.
 }
-\keyword{tree}
+\examples{
+data(iris)
+forest <- ODRF(Species~.,data = iris)
+forest
+
+}
+\seealso{
+\code{\link{ODRF}}
+}
+\keyword{forest}

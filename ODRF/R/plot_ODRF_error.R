@@ -11,11 +11,9 @@
 #' 
 #' @keywords forest
 #' 
-#' @seealso \code{ODRF} \code{ODRF.error}
+#' @seealso \code{\link{ODRF}} \code{\link{ODRF.error}}
 #' 
 #' @examples
-#' library(ODRF)
-#' 
 #' data(seeds)
 #' set.seed(221212)
 #' train = sample(1:209,100)

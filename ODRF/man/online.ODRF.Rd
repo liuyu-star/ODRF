@@ -27,8 +27,6 @@ The \code{\link{ODRF}}is constantly updated by multiple batches of data to optim
 The \code{\link{ODT}}is constantly updated by multiple batches of data to optimize the model.
 }
 \examples{
-library(ODRF)
-
 #Classification with Oblique Decision Tree
 data(seeds)
 set.seed(221212)
@@ -54,8 +52,6 @@ tree = online(tree,train_data[-seq(floor(nrow(train_data)/2)),])
 pred <- predict(tree,test_data[,-8])
 #estimation error
 mean((pred-test_data[,1])^2)
-
-library(ODRF)
 
 #Classification with Oblique Decision Tree
 data(seeds)
@@ -85,7 +81,7 @@ mean((pred-test_data[,1])^2)
 
 }
 \seealso{
-\code{ODRF} \code{prune.ODRF}
+\code{\link{ODRF}} \code{\link{prune.ODRF}}
 
-\code{ODT} \code{prune.ODT}
+\code{\link{ODT}} \code{\link{prune.ODT}}
 }

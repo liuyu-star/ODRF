@@ -11,11 +11,9 @@
 #' 
 #' @keywords tree
 #' 
-#' @seealso \code{ODT} \code{prune.ODRF}
+#' @seealso \code{\link{ODT}} \code{\link{prune.ODT}}
 #' 
 #' @examples
-#' library(ODRF)
-#' 
 #' data(seeds)
 #' set.seed(221212)
 #' train = sample(1:209,100)

@@ -23,8 +23,6 @@
 Prune \code{ODT} from bottom to top with validation data based on prediction error.
 }
 \examples{
-library(ODRF)
-
 #Classification with Oblique Decision Tree
 data(seeds)
 set.seed(221212)
@@ -53,5 +51,5 @@ mean((pred-test_data[,1])^2)
 
 }
 \seealso{
-\code{ODT} \code{plot.prune.ODRF}
+\code{\link{ODT}} \code{\link{plot.prune.ODRF}}
 }

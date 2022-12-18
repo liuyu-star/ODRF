@@ -10,11 +10,9 @@
 #' \item{\code{ppTree} The same result as \code{ODT}.}
 #' \item{\code{pruneError} Error of validation data after each pruning, classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.}
 #'}
-#' @seealso \code{ODT} \code{plot.prune.ODRF}
+#' @seealso \code{\link{ODT}} \code{\link{plot.prune.ODRF}}
 #' 
 #' @examples
-#' library(ODRF)
-#' 
 #' #Classification with Oblique Decision Tree
 #' data(seeds)
 #' set.seed(221212)

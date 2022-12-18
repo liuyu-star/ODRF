@@ -1,32 +1,30 @@
-#' projection pursuit classification tree plot
+#' ODT as \code{party}
 #' 
-#' Draw projection pursuit classification tree with tree structure. It is 
-#' modified from a function in party library.
-#' @title PPtree plot
-#' @param x PPtreeclass object
-#' @param font.size font size of plot
-#' @param width.size size of eclipse in each node.
-#' @param main main title
-#' @param sub sub title
+#' Functions coercing \code{ODT} object to objects of class \code{party}.
+#' 
+#' @param ppTree an object of class \code{\link{ODT}}.
+#' @param data Training data of class \code{data.frame} is used to convert the object of class \code{ODRF}. 
+#' and \code{data} must be the training data \code{data} in \code{\link{ODT}}.
 #' @param ... arguments to be passed to methods
-#' @references Lee, EK(2017) 
-#' PPtreeViz: An R Package for Visualizing Projection Pursuit Classification 
-#' Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
-#' @import partykit
-#' @keywords tree
 #' 
-#' @export
+#' @references Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
+#' 
+#' @seealso \code{\link{OOT}} \code{\link{party}}
 #' 
 #' @examples
 #' data(iris)
-#' Tree.result <- PPTreeclass(Species~., data = iris,"LDA")
-#' Tree.result
-#' plot(Tree.result,xjust=3)
-# @export
-#@import partykit 
-##@aliases as.party.ODT
-#@rdname as.party.ODT
-#@method as.party ODT
+#' tree <- ODT(Species~.,data = iris)
+#' tree
+#' party.tree<- as.party(tree,data = iris)
+#' party.tree
+#' plot(party.tree)
+#' 
+#' @keywords tree
+#' @import partykit
+#' @aliases as.party.ODT
+#' @rdname as.party.ODT
+#' @method as.party ODT
+#' @export
 as.party.ODT<-function(ppTree,data,...){
   #if(is.null(data)){
   #  data <- data.frame(y=eval(formula[[2]]),eval(formula[[3]]))

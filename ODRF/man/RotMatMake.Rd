@@ -4,34 +4,75 @@
 \alias{RotMatMake}
 \title{Create rotation matrix used to determine linear combination of mtry features.}
 \usage{
-RotMatMake(x, y, RotMatFun, PPFun, FunDir, paramList)
+RotMatMake(
+  X = NULL,
+  y = NULL,
+  RotMatFun = "RotMatPPO",
+  PPFun = "PPO",
+  FunDir = getwd(),
+  paramList = NULL
+)
 }
 \arguments{
-\item{p}{the number of dimensions.}
+\item{X}{An n by d numeric matrix (preferable) or data frame.}
 
-\item{d}{the number of desired columns in the projection matrix.}
+\item{y}{a n vector.}
 
-\item{sparsity}{a real number in \eqn{(0,1)} that specifies the distribution of non-zero elements in the random matrix.}
+\item{RotMatFun}{a self-defined projection matrix function name, which can also be \code{\link{RotMatRand}} and \code{\link{RotMatPPO}}. Note that \code{(,...)} is necessary.}
+
+\item{PPFun}{a self-defined projection matrix function, which can also be \code{\link{PPO}}. Note that \code{(,...)} is necessary.}
+
+\item{FunDir}{The path to the \code{function} of the user-defined \code{NodeRotateFun}. (default current Workspace)}
+
+\item{paramList}{Parameters in a named list to be used.If left unchanged, default values will be populated, for details see \code{\link[ODRF]{defaults}}.}
 
 \item{...}{used to handle superfluous arguments passed in using paramList.}
 }
 \value{
-rotationMatrix the matrix used to determine which mtry features or combination of features will be used to split a node.
+\itemize{A random matrix to use in running \code{\link{ODT}}.
+\item{Variable: variables to be projected.} 
+\item{Number: Number of variables to be projected.}
+\item{Coefficient: Coefficients of the projection matrix.}
+}
 }
 \description{
-This function is the default option to make the projection matrix for
-unsupervised random forest. The sparseM matrix is the projection
-matrix.  The creation of this matrix can be changed, but the nrow of
-sparseM should remain p.  The ncol of the sparseM matrix is currently
-set to mtry but this can actually be any integer > 1; can even be
-greater than p.  The matrix returned by this function creates a
-sparse matrix with multiple features per column.
+Create any projection matrix with a self-defined projection matrix function and projection optimization model function
 }
 \examples{
+X <- matrix(rnorm(200),20,10)
+y <- (rnorm(20)>0)+0
+set.seed(220828)
+(RotMat <- RotMatMake(X,y,"RotMatRand","PPO"))
+(RotMat <- RotMatMake(X,y,"RotMatPPO","PPO",paramList=list(model="Log")))
 
-p <- 8
-d <- 3
-paramList <- list(p = p, d = d)
-set.seed(4)
-(a <- do.call(RandMatRF, paramList))
+
+## Self-defined projection matrix function and projection optimization model function.##
+## Note that (,...) is necessary.
+makeRotMat=function(dimX,dimProj,numProj,...){
+ RotMat=matrix(1,dimProj*numProj,3)
+ for (np in seq(numProj)) {
+   RotMat[(dimProj*(np-1)+1):(dimProj*np),1]=sample(1:dimX,dimProj,replace = FALSE)
+   RotMat[(dimProj*(np-1)+1):(dimProj*np),2]=np
+ }
+ return(RotMat)
+}
+
+makePP=function(dimProj,prob,...){
+  pp=sample(c(1L, -1L),dimProj, replace = TRUE,prob = c(prob, 1-prob))
+ return(pp)
+}
+
+RotMat <- RotMatMake(RotMatFun="makeRotMat",PPFun="makePP",paramList=list(dimX=8,dimProj=5,numProj=4,prob=0.5))
+head(RotMat)
+#     Variable Number Coefficient
+#[1,]        3      1          -1
+#[2,]        6      1           1
+#[3,]        4      1          -1
+#[4,]        7      1          -1
+#[5,]        8      1           1
+#[6,]        6      2          -1
+
+}
+\seealso{
+\code{\link{RotMatPPO}} \code{\link{RotMatRand}} \code{\link{RotMatRF}}
 }

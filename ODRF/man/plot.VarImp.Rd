@@ -29,8 +29,6 @@ classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2))
 Dotchart of variable importance as measured by a Oblique Decision Random Forest.
 }
 \examples{
-library(ODRF)
-
 data(breast_cancer)
 forest = ODRF(diagnosis~.,seeds,type='i-classification')
 varimp=VarImp(forest,seeds)
@@ -38,5 +36,5 @@ plot(varimp)
 
 }
 \seealso{
-\code{ODRF} \code{VarImp}
+\code{\link{ODRF}} \code{\link{VarImp}}
 }

@@ -11,11 +11,9 @@
 #' \item{\code{ppForest} The same result as \code{ODRF}.}
 #' \item{\code{pruneError} Error of validation data or OOB () after each pruning in each tree, classification error rate for classification or mean square error for regression.}
 #'}
-#' @seealso \code{ODRF} \code{prune.ODT}
+#' @seealso \code{\link{ODRF}} \code{\link{prune.ODT}}
 #' 
 #' @examples
-#' library(ODRF)
-#' 
 #' #Classification with Oblique Decision Tree
 #' data(seeds)
 #' set.seed(221212)

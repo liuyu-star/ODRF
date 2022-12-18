@@ -10,11 +10,9 @@
 #' 
 #' @return A matrix of importance measure, first column for each predictor variable and second column is Increased error. classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.
 #'
-#' @seealso \code{ODRF} \code{plot.VarImp}
+#' @seealso \code{\link{ODRF}} \code{\link{plot.VarImp}}
 #'
 #' @examples
-#' library(ODRF)
-#' 
 #' data(breast_cancer)
 #' forest = ODRF(diagnosis~.,seeds,type='i-classification')
 #' varimp=VarImp(forest,seeds)

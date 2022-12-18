@@ -47,6 +47,7 @@
 #' #estimation error
 #' mean((pred-test_data[,1])^2)
 #' 
+
 #' tree = ODT(Density~.,train_data,type='regression')
 #' pred <- predict(tree,test_data[,-1])
 #' #estimation error

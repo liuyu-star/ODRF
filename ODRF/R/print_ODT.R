@@ -1,27 +1,29 @@
-#' Print PP.Tree.class result
+#' Print ODT result
 #' 
-#' Print the projection pursuit classification tree result
-#' @title Print PP.Tree.class result
-#' @param x PPtreeclass object
-#' @param coef.print print projection coefficients in each node ifTRUE
-#' @param cutoff.print print cutoff values in each node if TRUE
+#' Print the oblique decision tree result
+#' @param ppTree an object of class \code{\link{ODT}}.
+#' @param projection print projection coefficients in each node ifTRUE
+#' @param cutvalue print cutoff values in each node if TRUE
 #' @param verbose print if TRUE, no output if FALSE
 #' @param ... arguments to be passed to methods
+#' 
 #' @references Lee, EK(2017) 
 #' PPtreeViz: An R Package for Visualizing Projection Pursuit Classification 
 #' Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
+#' 
+#' @seealso \code{\link{ODT}}
+#' 
+#' @examples
+#' data(iris)
+#' tree <- ODT(Species~.,data = iris)
+#' tree
+#' print(tree,projection=TRUE,cutvalue=TRUE)
 #' 
 #' @keywords tree
 #' @aliases print.ODT
 #' @rdname print.ODT
 #' @method print ODT
 #' @export
-#' 
-#' @examples
-#' data(iris)
-#' Tree.result <- PPTreeclass(Species~.,data = iris,"LDA")
-#' Tree.result
-#' print(Tree.result,coef.print=TRUE,cutoff.print=TRUE)tree
 print.ODT<-function(ppTree,projection=FALSE,cutvalue=FALSE,verbose=TRUE,...){
   numNode=length(ppTree$structure$nodeCutValue)
   cutNode=which(ppTree$structure$nodeCutValue!=0)

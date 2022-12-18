@@ -16,11 +16,9 @@
 #' 
 #' @keywords tree
 #' 
-#' @seealso \code{ODT} \code{plot.ODT}
+#' @seealso \code{\link{ODT}} \code{\link{plot.ODT}}
 #' 
 #' @examples
-#' library(ODRF)
-#' 
 #' data(body_fat)
 #' set.seed(221212)
 #' train = sample(1:252,100)
@@ -28,7 +26,6 @@
 #' test_data = data.frame(body_fat[-train,])
 #' plot_ODT_depth(Density~.,train_data,test_data,type='regression')
 #' 
-#' @rdname plot.ODT.depth
 #' @export
 plot_ODT_depth=function(formula,data=NULL,newdata=NULL,type='i-classification',NodeRotateFun="RotMatPPO",
                         paramList=NULL,main=paste0("Oblique ",

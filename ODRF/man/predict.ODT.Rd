@@ -24,8 +24,6 @@ A set of vectors in the following list:
 Prediction a oblique decision tree based on an input matrix or data frame using \code{\link{ODT}} function.
 }
 \examples{
-library(ODRF)
-
 #Classification with Oblique Decision Tree
 data(seeds)
 set.seed(221212)

@@ -2,72 +2,75 @@
 % Please edit documentation in R/PPO.R
 \name{PPO}
 \alias{PPO}
-\title{Projection pursuit optimization}
+\title{Projection Pursuit Optimization}
 \usage{
-PPO(
-  x,
-  y,
-  q = 1L,
-  ppMethod = "LDA",
-  weight = TRUE,
-  r = 1L,
-  lambda = 0.1,
-  energy = 0,
-  cooling = 0.9,
-  TOL = 1e-04,
-  maxiter = 1000L,
-  ...
-)
+PPO(X, y, model = "PPR", type = "i-classification", weights = NULL, ...)
 }
 \arguments{
-\item{y}{class information vector}
+\item{X}{An n by d numeric matrix (preferable) or data frame.}
 
-\item{q}{dimension of projection matrix}
+\item{y}{a n vector.}
 
-\item{ppMethod}{method for projection pursuit; "LDA", "PDA", "Lr", "GINI", 
-and "ENTROPY"}
+\item{model}{\itemize{model for projection pursuit.
+\item{"PPR"(default): projection projection regression from \code{\link{ppr}}. When y is a category label, it is
+expanded to K binary features.}
+\item{"Log": logistic regression from \code{\link{nnet}}.}
+\item{"Rand": The random projection generated from {-1, 1}.}
+The following models can only be used for classification, i.e. the type must be 'i-classification' or 'g-classification'.
+\item{"LDA", "PDA", "Lr", "GINI", and "ENTROPY" from \code{\link{PPtreeViz}}.}
+\item{\itemize{The following models from \code{\link{PPtreeViz}}.
+\item{"holes": Holes index}
+\item{"cm": Central Mass index}
+\item{"holes": Holes index}
+\item{"friedmantukey": Friedman Tukey index}
+\item{"legendre": Legendre index}
+\item{"laguerrefourier": Laguerre Fourier index}
+\item{"hermite": Hermite index,}
+\item{"naturalhermite": Natural Hermite index}
+\item{"kurtosismax": Maximum kurtosis index,}
+\item{"kurtosismin": Minimum kurtosis index,}
+\item{"moment": Moment index}
+\item{"mf": MF index}
+\item{"chi": Chi-square index}
+}}
+}}
 
-\item{weight}{weight flag in LDA, PDA and Lr index}
+\item{type}{The criterion used for splitting the variable. 'g-classification': gini impurity index (classification, default), 
+'i-classification': information gain (classification) or 'regression': mean square error (regression).}
 
-\item{r}{r in Lr index}
-
-\item{lambda}{lambda in PDA index}
-
-\item{energy}{energy parameter}
-
-\item{cooling}{cooling parameter}
-
-\item{TOL}{tolerance}
-
-\item{maxiter}{number of maximum iteration}
-
-\item{X}{data matrix without class information}
+\item{weights}{A vector of length same as \code{data} that are positive weights. (default NULL)}
 }
 \value{
-bestIndex maximum LDA index value
-
-projMat optimal q-dim projection matrix
+optimal projection direction.
 }
 \description{
-PP optimization using various projection pursuit indices
-}
-\details{
-Find the q-dim optimal projection using various projectin pursuit indices 
-with class information
+Find the optimal projection using various projectin pursuit indices with class information.
 }
 \examples{
+#classification
 data(iris)
-PP.proj.result <- ppOpt(as.matrix(iris[,1:4]),iris[,5])
-PP.proj.result
+(PP <- PPO(iris[,1:4],iris[,5],model = "Log",type='i-classification'))
+(PP <- PPO(iris[,1:4],iris[,5],model = "PPR",type='i-classification'))
+(PP <- PPO(iris[,1:4],iris[,5],model = "LDA",type='i-classification'))
+
+#regression
+data(body_fat)
+(PP <- PPO(body_fat[,2:15],body_fat[,1],model = "Log",type='regression'))
+(PP <- PPO(body_fat[,2:15],body_fat[,1],model = "Rand",type='regression'))
+(PP <- PPO(body_fat[,2:15],body_fat[,1],model = "PPR",type='regression'))
+
 }
 \references{
-Lee, EK., Cook, D., Klinke, S., and Lumley, T.(2005) 
-Projection Pursuit for exploratory supervised classification, 
-Journal of Computational and Graphical statistics, 14(4):831-846.
+Friedman, J. H. and Stuetzle, W. (1981). Projection pursuit regression. Journal of the American Statistical Association, 76, 817–823. doi: 10.2307/2287576.
 
-Lee, YD, Cook, D., Park JW, and Lee, EK(2013) 
-PPtree: Projection Pursuit Classification Tree, 
-Electronic Journal of Statistics, 7:1369-1386.
+Ripley, B. D. (1996) Pattern Recognition and Neural Networks. Cambridge.
+
+Lee, YD, Cook, D., Park JW, and Lee, EK(2013) PPtree: Projection Pursuit Classification Tree, Electronic Journal of Statistics, 7:1369-1386.
+
+COOK, D., LEE, E. K., BUJA, A., WICKHAM, H.. Grand tours, projection pursuit guided tours and manual controls. In Chen, Chunhouh, Hardle, Wolfgang, Unwin, e Antony (Eds.), Handbook of data Visualization, Springer Handbooks of Computational Statistics, chapter III.2, p. 295-314. Springer, 2008.
+}
+\seealso{
+\code{\link{RotMatMake}} \code{\link{RotMatRand}} \code{\link{RotMatRF}} \code{\link{RotMatMake}}
 }
 \keyword{projection}
 \keyword{pursuit}

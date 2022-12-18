@@ -1,0 +1,44 @@
+#' Find  best split variable and node.
+#' 
+#' Three criterion functions for splitting variables.
+#'
+#' @param X An n by d numeric matrix (preferable) or data frame.
+#' @param y a n vector.
+#' @param type The criterion used for splitting the variable. 'i-classification': information gain (classification, default), 
+#' 'g-classification': gini impurity index (classification) or 'regression': mean square error (regression).
+#' @param MinLeaf the minimum amount of samples in a leaf.
+#' @param weights a vector of values which weigh the samples when considering a split.
+#' @param numLabels the number of categories.
+#' 
+#' @return a list which contains:
+#' \itemize{
+#' \item BestCutVar: the best split variable.
+#' \item BestCutVal: the best split point for the best split variable.
+#' \item BestIndex: Each variable corresponds to the min gini impurity index(method='g-classification'),
+#' the max information gain(method='i-classification') or the min squared error(method='regression').
+#' }
+#' 
+#' @examples
+#' ### Find the best split variable ###
+#' library(ppRF)
+#' X=as.matrix(iris[, 1:4])
+#' y=iris[[5L]]
+#' bestcut=BestCutNode(X,y,type='i-classification')
+#' print(bestcut)
+#' 
+#' @import Rcpp
+#' @export
+best.cut.node <- function(X, y, type='i-classification', weights=1, MinLeaf=ifelse(type=='regression',5,1),
+                          numLabels=ifelse(type=='regression',0,length(unique(y)))) {
+
+  X <- as.matrix(X)
+  if(type!="regression"){
+    y <- as.integer(as.factor(y));
+  }else{
+    y=c(y)
+  }
+  
+  
+  .Call('_ODRF_best_cut_node', PACKAGE = 'ODRF', strsplit(type,split = "")[[1]][1], X, y, weights, MinLeaf, numLabels)
+}
+

@@ -14,7 +14,6 @@
 #' \item \code{tree}: it is a matrix where each column contains prediction by a tree in the forest.
 #' } 
 #' 
-#'
 #' @seealso \code{\link{OORF}}
 #' 
 #' @references \itemize{
@@ -22,8 +21,6 @@
 #' }
 #' 
 #' @examples
-#' library(ODRF)
-#' 
 #' #Classification with Oblique Decision Tree
 #' data(seeds)
 #' set.seed(221212)

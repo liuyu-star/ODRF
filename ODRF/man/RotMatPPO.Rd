@@ -2,42 +2,60 @@
 % Please edit documentation in R/RotMat.R
 \name{RotMatPPO}
 \alias{RotMatPPO}
-\title{Create a Random Matrix: RandMatPPR}
+\title{Create a Projection Matrix: RotMatPPO}
 \usage{
 RotMatPPO(
-  x,
+  X,
   y,
-  numProj,
-  dimProj,
-  catLabel = NULL,
   model = "PPR",
   type = "i-classification",
-  weights = NULL
+  weights = NULL,
+  dimProj = min(ceiling(length(y)^0.4), ceiling(ncol(X) * 2/3)),
+  numProj = ifelse(dimProj == "Rand", max(5, sample(floor(ncol(X)/3), 1)), max(5,
+    ceiling(ncol(X)/dimProj))),
+  catLabel = NULL,
+  ...
 )
 }
 \arguments{
-\item{x}{an n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.}
+\item{X}{An n by d numeric matrix (preferable) or data frame.}
 
-\item{y}{an n length vector of class labels.  Class labels must be integer or numeric and be within the range 1 to the number of classes.}
+\item{y}{a n vector.}
 
-\item{catLabel}{a list specifying specifies which one-of-K encoded columns in X correspond to the same categorical feature.}
+\item{model}{model for projection pursuit.}
 
-\item{d}{the number of desired columns in the projection matrix.}
+\item{type}{The criterion used for splitting the variable. 'g-classification': gini impurity index (classification, default), 
+'i-classification': information gain (classification) or 'regression': mean square error (regression).}
+
+\item{weights}{A vector of length same as \code{data} that are positive weights. (default NULL)}
+
+\item{dimProj}{Number of variables to be projected, \code{dimProj=min(ceiling(n^0.4),ceiling(ncol(X)*2/3))} (default) or \code{dimProj="Rand"}: random from 1 to ncol(X).}
+
+\item{numProj}{the number of desired columns in the projection matrix, is also the number of projection directions.
+When dimProj="Rand" default \code{numProj=max(5,sample(floor(ncol(X)/3),1))} otherwise default \code{numProj=max(5, ceiling(p0/dimProj))}.}
+
+\item{catLabel}{A category labels of class \code{list} in prediction variables，for details see Examples of \code{\link{ODRF}}.}
 
 \item{...}{used to handle superfluous arguments passed in using paramList.}
 }
 \value{
-A random matrix to use in running \code{\link{RerF}}.
+\itemize{A random matrix to use in running \code{\link{ODT}}.
+\item{Variable: variables to be projected.} 
+\item{Number: Number of variables to be projected.}
+\item{Coefficient: Coefficients of the projection matrix.}
+}
 }
 \description{
-Create a Random Matrix: RandMatPPR
+Create a projection matrix using projection pursuit optimization (\code{\link{PPO}}).
 }
 \examples{
-
-x <- matrix(rnorm(200),20,10)
+X <- matrix(rnorm(200),20,10)
 y <- (rnorm(20)>0)+0
-d <- 3
-sparsity <- 0.25
 set.seed(220828)
-(a <- RandMatPPR(x,y,d,sparsity,catMap=NULL))
+(RotMat <- RotMatPPO(X,y))
+(RotMat <- RotMatPPO(X,y,dimProj="Rand"))
+(RotMat <- RotMatPPO(X,y,dimProj=10,numProj=5))
+}
+\seealso{
+\code{\link{RotMatMake}} \code{\link{RotMatRand}} \code{\link{RotMatRF}}
 }

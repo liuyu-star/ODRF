@@ -2,36 +2,37 @@
 % Please edit documentation in R/print_ODT.R
 \name{print.ODT}
 \alias{print.ODT}
-\title{Print PP.Tree.class result}
+\title{Print ODT result}
 \usage{
 \method{print}{ODT}(ppTree, projection = FALSE, cutvalue = FALSE, verbose = TRUE, ...)
 }
 \arguments{
+\item{ppTree}{an object of class \code{\link{ODT}}.}
+
+\item{projection}{print projection coefficients in each node ifTRUE}
+
+\item{cutvalue}{print cutoff values in each node if TRUE}
+
 \item{verbose}{print if TRUE, no output if FALSE}
 
 \item{...}{arguments to be passed to methods}
-
-\item{x}{PPtreeclass object}
-
-\item{coef.print}{print projection coefficients in each node ifTRUE}
-
-\item{cutoff.print}{print cutoff values in each node if TRUE}
 }
 \description{
-Print PP.Tree.class result
-}
-\details{
-Print the projection pursuit classification tree result
+Print the oblique decision tree result
 }
 \examples{
 data(iris)
-Tree.result <- PPTreeclass(Species~.,data = iris,"LDA")
-Tree.result
-print(Tree.result,coef.print=TRUE,cutoff.print=TRUE)tree
+tree <- ODT(Species~.,data = iris)
+tree
+print(tree,projection=TRUE,cutvalue=TRUE)
+
 }
 \references{
 Lee, EK(2017) 
 PPtreeViz: An R Package for Visualizing Projection Pursuit Classification 
 Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
+}
+\seealso{
+\code{\link{ODT}}
 }
 \keyword{tree}

@@ -23,13 +23,11 @@ RPE for regression). Then the same is done after permuting each predictor variab
 If the standard deviation of the differences is equal to 0 for a variable, the division is not done (but the average is almost always equal to 0 in that case).
 }
 \examples{
-library(ODRF)
-
 data(breast_cancer)
 forest = ODRF(diagnosis~.,seeds,type='i-classification')
 varimp=VarImp(forest,seeds)
 
 }
 \seealso{
-\code{ODRF} \code{plot.VarImp}
+\code{\link{ODRF}} \code{\link{plot.VarImp}}
 }

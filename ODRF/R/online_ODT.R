@@ -8,11 +8,9 @@
 #' 
 #' @return The same result as \code{ODT}.
 #'
-#' @seealso \code{ODT} \code{prune.ODT}
+#' @seealso \code{\link{ODT}} \code{\link{prune.ODT}}
 #' 
 #' @examples
-#' library(ODRF)
-#' 
 #' #Classification with Oblique Decision Tree
 #' data(seeds)
 #' set.seed(221212)
@@ -83,7 +81,7 @@ online.ODT=function(ppTree,data,weights=NULL)
   p = ncol(X);
 
   
-  if(!NodeRotateFun%in%ls("package:ODRF")){
+  if((!NodeRotateFun%in%ls("package:ODRF"))&(!RotMatFun%in%ls())){
     source(paste0(FunDir,"/",NodeRotateFun,".R"))
   }
   
@@ -155,7 +153,13 @@ online.ODT=function(ppTree,data,weights=NULL)
     #, as.character(ppTree$nodeLabel)
   }
   
-  paramList = ODRF:::defaults(paramList,p,catLabel,NodeRotateFun,type,weights)
+  if(NodeRotateFun=="RotMatPPO"){
+    if(is.null(paramList[[dimProj]]))
+      paramList$dimProj =min(ceiling(length(y)^0.4),ceiling(ncol(X)*2/3))
+    paramList$numProj=ifelse(paramList[[dimProj]]=="Rand",max(5,sample(floor(ncol(X)/3),1)),max(5, ceiling(ncol(X)/dimProj)))
+  }
+  paramList = ODRF:::defaults(paramList,type,p,weights,catLabel)
+  
   
   if(is.infinite(MaxDepth)) {
     numNode=max(numNode,sum(2^(0:ceiling(log2(n/MinLeaf))))) 
@@ -258,17 +262,9 @@ online.ODT=function(ppTree,data,weights=NULL)
     }
     
     if(NodeRotateFun=="RotMatPPO"){
-      sparseM=RotMatPPO(x=X[nodeXIndx[[currentNode]],],y=y[nodeXIndx[[currentNode]]],numProj=paramList$numProj,
-                        dimProj=paramList$dimProj,catLabel = paramList$catLabel,weights=paramList$weights,
-                        model = paramList$model,type=paramList$type)#"NNet"
-    }
-
-    if(NodeRotateFun=="PPO"){
-      sparseM=ppRF:::PPO(x=X[nodeXIndx[[currentNode]],],y=y[nodeXIndx[[currentNode]]],q = paramList$q,
-                         ppMethod = paramList$ppMethod,weight = paramList$weight,r = paramList$r,
-                         lambda = paramList$lambda,energy = paramList$energy,cooling = paramList$cooling,
-                         TOL = paramList$TOL,maxiter = paramList$maxiter)
-      sparseM=sparseM$projMat
+      sparseM=RotMatPPO(x=X[nodeXIndx[[currentNode]],],y=y[nodeXIndx[[currentNode]]],model = paramList$model,
+                        type=paramList$type,weights=paramList$weights,dimProj=paramList$dimProj,
+                        numProj=paramList$numProj,catLabel = paramList$catLabel)
     }
     
     numDr=unique(sparseM[,2]);

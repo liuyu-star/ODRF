@@ -28,8 +28,6 @@ Error of test data after each pruning, classification error rate for classificat
 Draw the error graph of class \code{ODT} at different number of split nodes.
 }
 \examples{
-library(ODRF)
-
 data(seeds)
 set.seed(221212)
 train = sample(1:209,100)
@@ -46,6 +44,6 @@ plot(tree)
 
 }
 \seealso{
-\code{ODT} \code{prune.ODRF}
+\code{\link{ODT}} \code{\link{prune.ODT}}
 }
 \keyword{tree}

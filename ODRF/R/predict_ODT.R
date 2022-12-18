@@ -12,15 +12,13 @@
 #' \item leafnode: the leaf node sequence number that the new data is partitioned.
 #' }
 #' 
-#' @seealso \code{\link{OOT}}
-#' 
 #' @references \itemize{
 #' \item{Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.}
 #' }
 #' 
-#' @examples
-#' library(ODRF)
+#' @seealso \code{\link{OOT}}
 #' 
+#' @examples
 #' #Classification with Oblique Decision Tree
 #' data(seeds)
 #' set.seed(221212)

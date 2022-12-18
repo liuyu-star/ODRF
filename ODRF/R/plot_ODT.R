@@ -12,7 +12,7 @@
 #' @references Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
 #' @keywords tree
 #' 
-#' @seealso \code{ODT} \code{\link{plot_ODT_depth}}
+#' @seealso \code{\link{ODT}} \code{\link{plot_ODT_depth}}
 #' 
 #' @examples
 #' data(iris)

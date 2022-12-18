@@ -28,8 +28,6 @@ OOB error and test error, classification error rate for classification or RPE(MS
 Draw the error graph of class \code{ODRF} at different number of trees.
 }
 \examples{
-library(ODRF)
-
 data(seeds)
 set.seed(221212)
 train = sample(1:209,100)
@@ -42,6 +40,6 @@ plot(error)
 
 }
 \seealso{
-\code{ODRF} \code{ODRF.error}
+\code{\link{ODRF}} \code{\link{ODRF.error}}
 }
 \keyword{forest}

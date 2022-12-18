@@ -41,8 +41,6 @@ OOB error and test error, classification error rate for classification or RPE(MS
 Draw the error graph of class \code{ODT} at different depths.
 }
 \examples{
-library(ODRF)
-
 data(body_fat)
 set.seed(221212)
 train = sample(1:252,100)
@@ -52,6 +50,6 @@ plot_ODT_depth(Density~.,train_data,test_data,type='regression')
 
 }
 \seealso{
-\code{ODT} \code{plot.ODT}
+\code{\link{ODT}} \code{\link{plot.ODT}}
 }
 \keyword{tree}

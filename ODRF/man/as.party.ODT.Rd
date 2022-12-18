@@ -2,39 +2,34 @@
 % Please edit documentation in R/as_party_ODT.R
 \name{as.party.ODT}
 \alias{as.party.ODT}
-\title{PPtree plot}
+\title{ODT as \code{party}}
 \usage{
 \method{as.party}{ODT}(ppTree, data, ...)
 }
 \arguments{
+\item{ppTree}{an object of class \code{\link{ODT}}.}
+
+\item{data}{Training data of class \code{data.frame} is used to convert the object of class \code{ODRF}. 
+and \code{data} must be the training data \code{data} in \code{\link{ODT}}.}
+
 \item{...}{arguments to be passed to methods}
-
-\item{x}{PPtreeclass object}
-
-\item{font.size}{font size of plot}
-
-\item{width.size}{size of eclipse in each node.}
-
-\item{main}{main title}
-
-\item{sub}{sub title}
 }
 \description{
-projection pursuit classification tree plot
-}
-\details{
-Draw projection pursuit classification tree with tree structure. It is 
-modified from a function in party library.
+Functions coercing \code{ODT} object to objects of class \code{party}.
 }
 \examples{
 data(iris)
-Tree.result <- PPTreeclass(Species~., data = iris,"LDA")
-Tree.result
-plot(Tree.result,xjust=3)
+tree <- ODT(Species~.,data = iris)
+tree
+party.tree<- as.party(tree,data = iris)
+party.tree
+plot(party.tree)
+
 }
 \references{
-Lee, EK(2017) 
-PPtreeViz: An R Package for Visualizing Projection Pursuit Classification 
-Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
+Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
+}
+\seealso{
+\code{\link{OOT}} \code{\link{party}}
 }
 \keyword{tree}
