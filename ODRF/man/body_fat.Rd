@@ -41,8 +41,6 @@ train = sample(1:252,100)
 train_data = data.frame(body_fat[train,])
 test_data = data.frame(body_fat[-train,])
 
-library(ODRF)
-
 rf = ODRF(Density~.,train_data,type='regression')
 pred <- predict(rf,test_data[,-1],weight = FALSE)$prediction
 #estimation error

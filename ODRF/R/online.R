@@ -7,7 +7,7 @@
 #' 
 #' @return object of class \code{ODT} or \code{ODRF}. 
 #'
-#' @seealso \code{ODT} \code{\link{OORF}} \code{online.ODT} \code{\link{online.OORF}}
+#' @seealso \code{\link{ODT}} \code{\link{ODRF}} \code{\link{online.ODT}} \code{\link{online.ODRF}}
 #' 
 #' @export
 online <- function(obj, ...)

@@ -108,7 +108,7 @@ An object of class ODT, which is a list with the following components:
 ODRF is the assembly of multiple ODTs, which can effectively reduce the overfitting of individual ODTs and improve the accuracy of classification and regression.
 }
 \examples{
-#Classification with Oblique Decision Tree
+#Classification with Oblique Decision Random Forest
 data(seeds)
 set.seed(221212)
 train = sample(1:209,100)
@@ -120,7 +120,7 @@ pred <- predict(tree,test_data[,-8])
 #estimation error
 (mean(pred!=test_data[,8]))
 
-#Regression with Oblique Decision Tree
+#Regression with Oblique Decision Random Forest
 data(body_fat)
 set.seed(221212)
 train = sample(1:252,100)
@@ -133,7 +133,7 @@ pred <- predict(tree,test_data[,-1])
 mean((pred-test_data[,1])^2)
 
 
-### Train ODT on one-of-K encoded categorical data ###
+### Train ODRF on one-of-K encoded categorical data ###
 Xcol1=sample(c("A","B","C"),100,replace = TRUE)
 Xcol2=sample(c("1","2","3","4","5"),100,replace = TRUE)
 Xcon=matrix(rnorm(100*3),100,3)
@@ -153,7 +153,8 @@ for (j in 1:length(Xcat)) {
   catMap <- (col.idx + 1L):(col.idx + numCat[j])
   # convert categorical feature to K dummy variables
   catLabel[[j]]=levels(as.factor(X[,Xcat[j]]))
-  X1[, catMap] <- (matrix(X[,Xcat[j]],nrow(X),numCat[j])==matrix(catLabel[[j]],nrow(X),numCat[j],byrow = TRUE))+0
+  X1[, catMap] <- (matrix(X[,Xcat[j]],nrow(X),numCat[j])==matrix(catLabel[[j]],nrow(X),
+  numCat[j],byrow = TRUE))+0
   col.idx <- col.idx + numCat[j]
 }
 X=cbind(X1,X[,-Xcat])
@@ -181,7 +182,7 @@ catLabel
 }
 }
 \seealso{
-\code{\link{predict.OORF}} \code{\link{print.OORF}} \code{\link{ODRF.error}} \code{\link{VarImp}}
+\code{\link{predict.ODRF}} \code{\link{print.ODRF}} \code{\link{ODRF.error}} \code{\link{VarImp}}
 }
 \author{
 YU Liu and Yingcun Xia

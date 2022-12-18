@@ -49,7 +49,7 @@
 #' \item{\code{forest}: The list of forest related parameters used to build the tree.}
 #' }
 #'
-#' @seealso \code{\link{predict.OORF}} \code{\link{print.OORF}} \code{\link{ODRF.error}} \code{\link{VarImp}}
+#' @seealso \code{\link{predict.ODRF}} \code{\link{print.ODRF}} \code{\link{ODRF.error}} \code{\link{VarImp}}
 #' 
 #' @author YU Liu and Yingcun Xia
 #' @references \itemize{
@@ -57,7 +57,7 @@
 #' \item{Tomita T M, Browne J, Shen C, et al. Sparse projection oblique randomer forests[J]. Journal of machine learning research, 2020, 21(104).}
 #' }
 #' @examples
-#' #Classification with Oblique Decision Tree
+#' #Classification with Oblique Decision Random Forest
 #' data(seeds)
 #' set.seed(221212)
 #' train = sample(1:209,100)
@@ -69,7 +69,7 @@
 #' #estimation error
 #' (mean(pred!=test_data[,8]))
 #' 
-#' #Regression with Oblique Decision Tree
+#' #Regression with Oblique Decision Random Forest
 #' data(body_fat)
 #' set.seed(221212)
 #' train = sample(1:252,100)
@@ -90,7 +90,7 @@
 #' Xcat=c(1,2)
 #' catLabel=NULL
 #' y=as.factor(sample(c(0,1),100,replace = TRUE))
-#' tree = ODRF(y~X,type='g-classification')
+#' tree = ODT(y~X,type='g-classification',Xcat = c(1,2))
 #' 
 #' numCat <- apply(X[,Xcat,drop = FALSE], 2, function(x) length(unique(x)))
 #' X1 <- matrix(0, nrow = nrow(X), ncol = sum(numCat)) # initialize training data matrix X
@@ -102,7 +102,8 @@
 #'   catMap <- (col.idx + 1L):(col.idx + numCat[j])
 #'   # convert categorical feature to K dummy variables
 #'   catLabel[[j]]=levels(as.factor(X[,Xcat[j]]))
-#'   X1[, catMap] <- (matrix(X[,Xcat[j]],nrow(X),numCat[j])==matrix(catLabel[[j]],nrow(X),numCat[j],byrow = TRUE))+0
+#'   X1[, catMap] <- (matrix(X[,Xcat[j]],nrow(X),numCat[j])==matrix(catLabel[[j]],nrow(X),
+#'   numCat[j],byrow = TRUE))+0
 #'   col.idx <- col.idx + numCat[j]
 #' }
 #' X=cbind(X1,X[,-Xcat])
@@ -123,7 +124,9 @@
 #' #[1] "1" "2" "3" "4" "5"
 #' 
 #' @useDynLib ODRF
-#' @import Rcpp doParallel foreach
+#' @import Rcpp 
+#' @import doParallel
+#' @import foreach
 #' @importFrom parallel detectCores makeCluster clusterSplit stopCluster
 #' @export
 ODRF = function(formula,data=NULL,type=NULL,NodeRotateFun="RotMatPPO",FunDir=getwd(),paramList=NULL,
@@ -191,7 +194,9 @@ ODRF = function(formula,data=NULL,type=NULL,NodeRotateFun="RotMatPPO",FunDir=get
       ppForest$Levels <- sort(unique(y))
       y <- as.integer(as.factor(y))
     } else {
-      stop("Incompatible X type. y must be of type factor or numeric.")
+      ppForest$Levels=levels(as.factor(y))
+      y <- as.integer(as.factor(y))
+      #stop("Incompatible X type. y must be of type factor or numeric.")
     }
     
     numClass <- length(ppForest$Levels)

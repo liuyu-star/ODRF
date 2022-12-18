@@ -37,8 +37,6 @@
 #' train_data = data.frame(breast_cancer[train,-1])
 #' test_data = data.frame(breast_cancer[-train,-1])
 #'
-#' library(ODRF)
-#' 
 #' rf = ODRF(diagnosis~.,train_data,type='i-classification')
 #' pred <- predict(rf,test_data[,-1],weight = FALSE)$prediction
 #' #estimation error

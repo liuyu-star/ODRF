@@ -18,5 +18,5 @@ an object of class \code{ODT} and \code{prune.ODT}.
 Prune \code{ODT} or \code{ODRF} from bottom to top with validation data based on prediction error. \code{prune} is a S3 method for class class \code{ODT} and \code{ODRF}.
 }
 \seealso{
-\code{ODT} \code{\link{OORF}} \code{prune.ODT} \code{\link{prune.OORF}}
+\code{ODT} \code{\link{ODRF}} \code{prune.ODT} \code{\link{prune.ODRF}}
 }

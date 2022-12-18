@@ -14,27 +14,29 @@
 #' @seealso \code{\link{ODRF}} \code{\link{prune.ODT}}
 #' 
 #' @examples
-#' #Classification with Oblique Decision Tree
+#' #Classification with Oblique Decision Random Forest
 #' data(seeds)
 #' set.seed(221212)
 #' train = sample(1:209,100)
 #' train_data = data.frame(seeds[train,])
 #' test_data = data.frame(seeds[-train,])
 #' 
-#' tree = ODRF(varieties_of_wheat~.,train_data[seq(floor(nrow(train_data)/2)),],type='i-classification')
+#' tree = ODRF(varieties_of_wheat~.,train_data[seq(floor(nrow(train_data)/2)),],
+#' type='i-classification')
 #' tree = prune(tree,train_data[-seq(floor(nrow(train_data)/2)),])
 #' pred <- predict(tree,test_data[,-8])
 #' #estimation error
 #' (mean(pred!=test_data[,8]))
 #' 
-#' #Regression with Oblique Decision Tree
+#' #Regression with Oblique Decision Random Forest
 #' data(body_fat)
 #' set.seed(221212)
 #' train = sample(1:252,100)
 #' train_data = data.frame(body_fat[train,])
 #' test_data = data.frame(body_fat[-train,])
 #' 
-#' tree = ODRF(Density~.,train_data[seq(floor(nrow(train_data)/2)),],type='regression')
+#' tree = ODRF(Density~.,train_data[seq(floor(nrow(train_data)/2)),],
+#' type='regression')
 #' tree = prune(tree,train_data[-seq(floor(nrow(train_data)/2)),])
 #' pred <- predict(tree,test_data[,-8])
 #' #estimation error

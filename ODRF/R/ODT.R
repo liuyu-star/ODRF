@@ -93,7 +93,8 @@
 #'   catMap <- (col.idx + 1L):(col.idx + numCat[j])
 #'   # convert categorical feature to K dummy variables
 #'   catLabel[[j]]=levels(as.factor(X[,Xcat[j]]))
-#'   X1[, catMap] <- (matrix(X[,Xcat[j]],nrow(X),numCat[j])==matrix(catLabel[[j]],nrow(X),numCat[j],byrow = TRUE))+0
+#'   X1[, catMap] <- (matrix(X[,Xcat[j]],nrow(X),numCat[j])==matrix(catLabel[[j]],nrow(X),
+#'   numCat[j],byrow = TRUE))+0
 #'   col.idx <- col.idx + numCat[j]
 #' }
 #' X=cbind(X1,X[,-Xcat])
@@ -154,11 +155,6 @@ ODT=function(formula,data=NULL,type=NULL,NodeRotateFun="RotMatPPO",FunDir=getwd(
   if (int > 0)
     X <- X[, -int, drop = FALSE]
   
-  #weights=c(weights,paramList$weights)
-  if(!is.null(weights))
-    X <- X * matrix(weights,length(y),ncol(X))
-  colnames(X)=varName
-  
   
   if(is.factor(y)&is.null(type)){
     type='i-classification'
@@ -173,7 +169,7 @@ ODT=function(formula,data=NULL,type=NULL,NodeRotateFun="RotMatPPO",FunDir=getwd(
   if(MinLeaf==5)
     MinLeaf=ifelse(type=='regression',5,1)
   
-  if((!NodeRotateFun%in%ls("package:ODRF"))&(!RotMatFun%in%ls())){
+  if((!NodeRotateFun%in%ls("package:ODRF"))&(!NodeRotateFun%in%ls())){
     source(paste0(FunDir,"/",NodeRotateFun,".R"))
   }
   
@@ -221,7 +217,12 @@ ODT=function(formula,data=NULL,type=NULL,NodeRotateFun="RotMatPPO",FunDir=getwd(
     rm(X1)
     p = ncol(X);
   }
+  varName=c(paste0(unlist(catLabel),varName))
   
+  #weights=c(weights,paramList$weights)
+  if(!is.null(weights))
+    X <- X * matrix(weights,length(y),ncol(X))
+  colnames(X)=varName
   
   #Variable scaling.
   minCol = NULL;maxminCol = NULL;
@@ -254,9 +255,9 @@ ODT=function(formula,data=NULL,type=NULL,NodeRotateFun="RotMatPPO",FunDir=getwd(
   }
   
   if(NodeRotateFun=="RotMatPPO"){
-    if(is.null(paramList[[dimProj]]))
+    if(is.null(paramList$dimProj))
       paramList$dimProj =min(ceiling(length(y)^0.4),ceiling(ncol(X)*2/3))
-    paramList$numProj=ifelse(paramList[[dimProj]]=="Rand",max(5,sample(floor(ncol(X)/3),1)),max(5, ceiling(ncol(X)/dimProj)))
+    paramList$numProj=ifelse(paramList$dimProj=="Rand",max(5,sample(floor(ncol(X)/3),1)),max(5, ceiling(ncol(X)/paramList$dimProj)))
   }
   paramList = ODRF:::defaults(paramList,type,p,weights,catLabel)
   
@@ -330,10 +331,10 @@ ODT=function(formula,data=NULL,type=NULL,NodeRotateFun="RotMatPPO",FunDir=getwd(
     }
     
     if(!NodeRotateFun%in%ls("package:ODRF")){
-      paramList$x =X[nodeXIndx[[currentNode]],];
+      paramList$X =X[nodeXIndx[[currentNode]],];
       paramList$y = y[nodeXIndx[[currentNode]]];
       sparseM <- do.call(FUN, paramList)
-      paramList$x = NULL;paramList$y = NULL;
+      paramList$X = NULL;paramList$y = NULL;
     }
     
     if(NodeRotateFun%in%c('RotMatRF','RotMatRand')){
@@ -341,7 +342,7 @@ ODT=function(formula,data=NULL,type=NULL,NodeRotateFun="RotMatPPO",FunDir=getwd(
     }
     
     if(NodeRotateFun=="RotMatPPO"){
-      sparseM=RotMatPPO(x=X[nodeXIndx[[currentNode]],],y=y[nodeXIndx[[currentNode]]],model = paramList$model,
+      sparseM=RotMatPPO(X=X[nodeXIndx[[currentNode]],],y=y[nodeXIndx[[currentNode]]],model = paramList$model,
                         type=paramList$type,weights=paramList$weights,dimProj=paramList$dimProj,
                         numProj=paramList$numProj,catLabel = paramList$catLabel)
     }

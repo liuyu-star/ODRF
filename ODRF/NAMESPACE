@@ -2,6 +2,7 @@
 
 S3method(as.party,ODT)
 S3method(online,ODRF)
+S3method(online,ODT)
 S3method(plot,ODRF.error)
 S3method(plot,ODT)
 S3method(plot,VarImp)

@@ -62,7 +62,8 @@ makePP=function(dimProj,prob,...){
  return(pp)
 }
 
-RotMat <- RotMatMake(RotMatFun="makeRotMat",PPFun="makePP",paramList=list(dimX=8,dimProj=5,numProj=4,prob=0.5))
+RotMat <- RotMatMake(RotMatFun="makeRotMat",PPFun="makePP",
+paramList=list(dimX=8,dimProj=5,numProj=4,prob=0.5))
 head(RotMat)
 #     Variable Number Coefficient
 #[1,]        3      1          -1

@@ -7,7 +7,7 @@
 #' 
 #' @return an object of class \code{ODT} and \code{prune.ODT}.
 #'
-#' @seealso \code{ODT} \code{\link{OORF}} \code{prune.ODT} \code{\link{prune.OORF}}
+#' @seealso \code{ODT} \code{\link{ODRF}} \code{prune.ODT} \code{\link{prune.ODRF}}
 #' 
 #' @export
 prune <- function(obj, ...)

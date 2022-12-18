@@ -14,7 +14,7 @@
 #' \item \code{tree}: it is a matrix where each column contains prediction by a tree in the forest.
 #' } 
 #' 
-#' @seealso \code{\link{OORF}}
+#' @seealso \code{\link{ODRF}}
 #' 
 #' @references \itemize{
 #' \item{Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.}

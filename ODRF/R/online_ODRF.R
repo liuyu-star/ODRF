@@ -11,7 +11,7 @@
 #' @seealso \code{\link{ODRF}} \code{\link{prune.ODRF}}
 #' 
 #' @examples
-#' #Classification with Oblique Decision Tree
+#' #Classification with Oblique Decision Random Forest
 #' data(seeds)
 #' set.seed(221212)
 #' train = sample(1:209,100)
@@ -24,7 +24,7 @@
 #' #estimation error
 #' (mean(pred!=test_data[,8]))
 #' 
-#' #Regression with Oblique Decision Tree
+#' #Regression with Oblique Decision Random Forest
 #' data(body_fat)
 #' set.seed(221212)
 #' train = sample(1:252,100)
@@ -91,7 +91,9 @@ online.ODRF = function(ppForest,data,weights=NULL)
       ppForest$Levels <- sort(unique(y))
       y <- as.integer(as.factor(y))
     } else {
-      stop("Incompatible X type. y must be of type factor or numeric.")
+      ppForest$Levels=levels(as.factor(y))
+      y <- as.integer(as.factor(y))
+      #stop("Incompatible X type. y must be of type factor or numeric.")
     }
     
     numClass <- length(ppForest$Levels)

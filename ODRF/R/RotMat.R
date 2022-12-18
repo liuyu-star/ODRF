@@ -389,7 +389,8 @@ RotMatPPO <- function(X, y, model="PPR",type='i-classification',weights=NULL,dim
 #'  return(pp)
 #' }
 #' 
-#' RotMat <- RotMatMake(RotMatFun="makeRotMat",PPFun="makePP",paramList=list(dimX=8,dimProj=5,numProj=4,prob=0.5))
+#' RotMat <- RotMatMake(RotMatFun="makeRotMat",PPFun="makePP",
+#' paramList=list(dimX=8,dimProj=5,numProj=4,prob=0.5))
 #' head(RotMat)
 #' #     Variable Number Coefficient
 #' #[1,]        3      1          -1
@@ -403,10 +404,10 @@ RotMatMake <- function(X=NULL, y=NULL, RotMatFun="RotMatPPO", PPFun="PPO", FunDi
   if(!is.null(X))
     X=as.matrix(X)
   
-  if(RotMatFun=="RotMatPPO"){
-    if(is.null(paramList[[dimProj]]))
+  if(NodeRotateFun=="RotMatPPO"){
+    if(is.null(paramList$dimProj))
       paramList$dimProj =min(ceiling(length(y)^0.4),ceiling(ncol(X)*2/3))
-    paramList$numProj=ifelse(paramList[[dimProj]]=="Rand",max(5,sample(floor(ncol(X)/3),1)),max(5, ceiling(ncol(X)/dimProj)))
+    paramList$numProj=ifelse(paramList$dimProj=="Rand",max(5,sample(floor(ncol(X)/3),1)),max(5, ceiling(ncol(X)/paramList$dimProj)))
   }
   paramList = defaults(paramList,dimX = ncol(X))
   

@@ -15,10 +15,10 @@ PPO(X, y, model = "PPR", type = "i-classification", weights = NULL, ...)
 \item{"PPR"(default): projection projection regression from \code{\link{ppr}}. When y is a category label, it is
 expanded to K binary features.}
 \item{"Log": logistic regression from \code{\link{nnet}}.}
-\item{"Rand": The random projection generated from {-1, 1}.}
-The following models can only be used for classification, i.e. the type must be 'i-classification' or 'g-classification'.
-\item{"LDA", "PDA", "Lr", "GINI", and "ENTROPY" from \code{\link{PPtreeViz}}.}
-\item{\itemize{The following models from \code{\link{PPtreeViz}}.
+\item{"Rand": The random projection generated from {-1, 1}. 
+The following models can only be used for classification, i.e. the type must be 'i-classification' or 'g-classification'.}
+\item{"LDA", "PDA", "Lr", "GINI", and "ENTROPY" from library \code{PPtreeViz}.}
+\item{\itemize{The following models from library \code{\link{Pursuit}}.
 \item{"holes": Holes index}
 \item{"cm": Central Mass index}
 \item{"holes": Holes index}

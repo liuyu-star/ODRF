@@ -55,5 +55,5 @@ mean((pred-test_data[,1])^2)
 }
 }
 \seealso{
-\code{\link{OOT}}
+\code{\link{ODT}}
 }

@@ -20,13 +20,12 @@
 #' 
 #' @examples
 #' ### Find the best split variable ###
-#' library(ppRF)
+#' data(iris)
 #' X=as.matrix(iris[, 1:4])
 #' y=iris[[5L]]
-#' bestcut=BestCutNode(X,y,type='i-classification')
+#' bestcut=best.cut.node(X,y,type='i-classification')
 #' print(bestcut)
 #' 
-#' @import Rcpp
 #' @export
 best.cut.node <- function(X, y, type='i-classification', weights=1, MinLeaf=ifelse(type=='regression',5,1),
                           numLabels=ifelse(type=='regression',0,length(unique(y)))) {

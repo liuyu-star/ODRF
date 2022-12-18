@@ -18,7 +18,8 @@
 #' train_data = data.frame(seeds[train,])
 #' test_data = data.frame(seeds[-train,])
 #' 
-#' tree = ODT(varieties_of_wheat~.,train_data[seq(floor(nrow(train_data)/2)),],type='i-classification')
+#' tree = ODT(varieties_of_wheat~.,train_data[seq(floor(nrow(train_data)/2)),],
+#' type='i-classification')
 #' tree = online(tree,train_data[-seq(floor(nrow(train_data)/2)),])
 #' pred <- predict(tree,test_data[,-8])
 #' #estimation error
@@ -31,16 +32,17 @@
 #' train_data = data.frame(body_fat[train,])
 #' test_data = data.frame(body_fat[-train,])
 #' 
-#' tree = ODT(Density~.,train_data[seq(floor(nrow(train_data)/2)),],type='regression')
+#' tree = ODT(Density~.,train_data[seq(floor(nrow(train_data)/2)),],
+#' type='regression')
 #' tree = online(tree,train_data[-seq(floor(nrow(train_data)/2)),])
 #' pred <- predict(tree,test_data[,-8])
 #' #estimation error
 #' mean((pred-test_data[,1])^2)
 #' 
 #' @import Rcpp
-#' @aliases online.ODRF
-#' @rdname online.ODRF
-#' @method online ODRF
+#' @aliases online.ODT
+#' @rdname online.ODT
+#' @method online ODT
 #' @export
 online.ODT=function(ppTree,data,weights=NULL)
 {
@@ -81,7 +83,7 @@ online.ODT=function(ppTree,data,weights=NULL)
   p = ncol(X);
 
   
-  if((!NodeRotateFun%in%ls("package:ODRF"))&(!RotMatFun%in%ls())){
+  if((!NodeRotateFun%in%ls("package:ODRF"))&(!NodeRotateFun%in%ls())){
     source(paste0(FunDir,"/",NodeRotateFun,".R"))
   }
   
@@ -154,9 +156,9 @@ online.ODT=function(ppTree,data,weights=NULL)
   }
   
   if(NodeRotateFun=="RotMatPPO"){
-    if(is.null(paramList[[dimProj]]))
+    if(is.null(paramList$dimProj))
       paramList$dimProj =min(ceiling(length(y)^0.4),ceiling(ncol(X)*2/3))
-    paramList$numProj=ifelse(paramList[[dimProj]]=="Rand",max(5,sample(floor(ncol(X)/3),1)),max(5, ceiling(ncol(X)/dimProj)))
+    paramList$numProj=ifelse(paramList$dimProj=="Rand",max(5,sample(floor(ncol(X)/3),1)),max(5, ceiling(ncol(X)/paramList$dimProj)))
   }
   paramList = ODRF:::defaults(paramList,type,p,weights,catLabel)
   

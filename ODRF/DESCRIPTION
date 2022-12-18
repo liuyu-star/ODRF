@@ -1,11 +1,12 @@
 Package: ODRF
 Type: Package
 Title: Oblique Decision Random Forest for Classification and Regression
-Version: 1.0
+Version: 1.0-1
 Date: 2022-09-21
 Author: Yu Liu <liuyuchina123@gmail.com>, Yingcun Xia <staxyc@nus.edu.sg>
 Maintainer: Yu Liu <liuyuchina123@gmail.com>
 Description: The oblique decision tree (ODT), which uses linear combinations of predictors as partitioning variables. Oblique Decision Random Forest (ODRF) is the assembly of multiple ODTs, which can effectively reduce the overfitting of individual ODTs and improve the accuracy of classification and regression.
+BugReports: https://github.com/liuyu-star/ODRF/issues
 License: GPL (>= 2)
 LazyData: yes
 NeedsCompilation: yes

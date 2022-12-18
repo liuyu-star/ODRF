@@ -16,7 +16,7 @@
 #' \item{Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.}
 #' }
 #' 
-#' @seealso \code{\link{OOT}}
+#' @seealso \code{\link{ODT}}
 #' 
 #' @examples
 #' #Classification with Oblique Decision Tree

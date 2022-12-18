@@ -133,7 +133,8 @@ for (j in 1:length(Xcat)) {
   catMap <- (col.idx + 1L):(col.idx + numCat[j])
   # convert categorical feature to K dummy variables
   catLabel[[j]]=levels(as.factor(X[,Xcat[j]]))
-  X1[, catMap] <- (matrix(X[,Xcat[j]],nrow(X),numCat[j])==matrix(catLabel[[j]],nrow(X),numCat[j],byrow = TRUE))+0
+  X1[, catMap] <- (matrix(X[,Xcat[j]],nrow(X),numCat[j])==matrix(catLabel[[j]],nrow(X),
+  numCat[j],byrow = TRUE))+0
   col.idx <- col.idx + numCat[j]
 }
 X=cbind(X1,X[,-Xcat])

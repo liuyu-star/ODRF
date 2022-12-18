@@ -51,5 +51,5 @@ mean((pred-test_data[,1])^2)
 
 }
 \seealso{
-\code{\link{ODT}} \code{\link{plot.prune.ODRF}}
+\code{\link{ODT}} \code{\link{plot.prune.ODT}}
 }

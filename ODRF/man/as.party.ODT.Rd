@@ -30,6 +30,6 @@ plot(party.tree)
 Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
 }
 \seealso{
-\code{\link{OOT}} \code{\link{party}}
+\code{\link{ODT}} \code{\link{party}}
 }
 \keyword{tree}

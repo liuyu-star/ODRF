@@ -41,10 +41,10 @@ Three criterion functions for splitting variables.
 }
 \examples{
 ### Find the best split variable ###
-library(ppRF)
+data(iris)
 X=as.matrix(iris[, 1:4])
 y=iris[[5L]]
-bestcut=BestCutNode(X,y,type='i-classification')
+bestcut=best.cut.node(X,y,type='i-classification')
 print(bestcut)
 
 }
