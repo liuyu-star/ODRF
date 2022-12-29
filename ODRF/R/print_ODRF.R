@@ -9,12 +9,12 @@
 #' 
 #' @examples
 #' data(iris)
-#' forest <- ODRF(Species~.,data = iris)
+#' forest <- ODRF(Species~.,data = iris,parallel=FALSE)
 #' forest
 #' 
 #' @keywords forest
-#' @aliases print.ODRF
 #' @rdname print.ODRF
+#' @aliases print.ODRF
 #' @method print ODRF
 #' @export
 print.ODRF <-function(ppForest, ...) {

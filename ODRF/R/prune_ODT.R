@@ -2,15 +2,17 @@
 #' 
 #' Prune \code{ODT} from bottom to top with validation data based on prediction error.
 #'
-#' @param obj an object of class \code{\link{ODT}}.
-#' @param data validation data of class \code{data.frame} is used to prune the object of class \code{ODT}.
+#' @param ppTree an object of class \code{ODT}.
+#' @param X An n by d numeric matrix (preferable) or data frame is used to prune the object of class \code{ODT}.
+#' @param y A response vector of length n.
 #' @param MaxDepth The maximum depth of the tree after pruning. (Default 1)
+#' @param ... optional parameters to be passed to the low level function.
 #' 
 #' @return \itemize{an object of class \code{ODT} and \code{prune.ODT}. 
 #' \item{\code{ppTree} The same result as \code{ODT}.}
-#' \item{\code{pruneError} Error of validation data after each pruning, classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.}
+#' \item{\code{pruneError} Error of validation data after each pruning, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 #'}
-#' @seealso \code{\link{ODT}} \code{\link{plot.prune.ODT}}
+#' @seealso \code{\link{ODT}} \code{\link{plot.prune.ODT}} \code{\link{prune.ODRF}} \code{\link{online.ODT}}
 #' 
 #' @examples
 #' #Classification with Oblique Decision Tree
@@ -19,12 +21,14 @@
 #' train = sample(1:209,100)
 #' train_data = data.frame(seeds[train,])
 #' test_data = data.frame(seeds[-train,])
+#' index=seq(floor(nrow(train_data)/2))
 #' 
-#' tree = ODT(varieties_of_wheat~.,train_data[seq(floor(nrow(train_data)/2)),],type='i-classification')
-#' tree = prune(tree,train_data[-seq(floor(nrow(train_data)/2)),])
+#' tree = ODT(varieties_of_wheat~.,train_data[index,],type='i-classification')
+#' tree = prune(tree,train_data[-index,-8],train_data[-index,8])
 #' pred <- predict(tree,test_data[,-8])
-#' #estimation error
+#' #classification error
 #' (mean(pred!=test_data[,8]))
+#' 
 #' 
 #' #Regression with Oblique Decision Tree
 #' data(body_fat)
@@ -32,19 +36,19 @@
 #' train = sample(1:252,100)
 #' train_data = data.frame(body_fat[train,])
 #' test_data = data.frame(body_fat[-train,])
+#' index=seq(floor(nrow(train_data)/2))
 #' 
-#' tree = ODT(Density~.,train_data[seq(floor(nrow(train_data)/2)),],type='regression')
-#' tree = prune(tree,train_data[-seq(floor(nrow(train_data)/2)),])
-#' pred <- predict(tree,test_data[,-8])
+#' tree = ODT(Density~.,train_data[index,],type='regression')
+#' tree = prune(tree,train_data[-index,-1],train_data[-index,1])
+#' pred <- predict(tree,test_data[,-1])
 #' #estimation error
 #' mean((pred-test_data[,1])^2)
 #'
-#' @import Rcpp
-#' @aliases prune.ODT
 #' @rdname prune.ODT
+#' @aliases prune.ODT
 #' @method prune ODT
 #' @export
-prune.ODT=function(ppTree,data,MaxDepth=1)
+prune.ODT=function(ppTree,X,y,MaxDepth=1,...)
 {
   structure=ppTree$structure
   if(!is.null(MaxDepth)){
@@ -52,19 +56,28 @@ prune.ODT=function(ppTree,data,MaxDepth=1)
   }
   numNode=length(structure$nodeCutValue)
   
-  vars=all.vars(ppTree$terms)
+  #vars=all.vars(ppTree$terms)
+  Xcat=ppTree$data$Xcat
+  catLabel=ppTree$data$catLabel
+  if(sum(Xcat)>0&is.null(catLabel)){
+    #vars=vars[-(1+seq(length(unlist(catLabel))))]
+    #}else{
+    stop("'Xcat!=0' however 'catLabel' does not exist!") 
+  }
   # address na values.
+  data=data.frame(y,X)
   if (any(is.na(data))) {
     data=ppTree$data$na.action(data.frame(data))
     warning("NA values exist in data matrix")
   }
   
-  ynew= data[,setdiff(colnames(data),vars[-1])]
-  Xnew= data[,vars[-1]]
+  #ynew= data[,setdiff(colnames(data),vars[-1])]
+  #Xnew= data[,vars[-1]]
+  ynew= data[,1]
+  Xnew= data[,-1]
   Xnew=as.matrix(Xnew) 
+  rm(data);rm(X);rm(y)
   
-  if(!is.null(ppTree$data$subset))
-    Xnew=Xnew[ppTree$data$subset,]
   #weights0=c(ppTree$data$weights,ppTree$paramList$weights)
   #if(!is.null(ppTree$data$weights))
   #  Xnew <- Xnew * matrix(weights,length(y),ncol(Xnew))
@@ -72,8 +85,6 @@ prune.ODT=function(ppTree,data,MaxDepth=1)
   p=ncol(Xnew)
   n=nrow(Xnew)
   
-  Xcat=ppTree$data$Xcat
-  catLabel=ppTree$data$catLabel
   numCat=0
   if(sum(Xcat)>0){
     xj=1
@@ -93,17 +104,22 @@ prune.ODT=function(ppTree,data,MaxDepth=1)
       xj=xj1
     }
     
-    Xnew=cbind(Xnew1,Xnew[,-Xcat]) 
+    Xnew=cbind(Xnew1,apply(Xnew[,-Xcat], 2, as.numeric)) 
     p=ncol(Xnew)
     numCat=length(unlist(catLabel))
     rm(Xnew1)
     rm(Xnewj)
   }
+  Xnew=as.matrix(Xnew)
+  colnames(Xnew)=ppTree$data$varName
+  
+  if(!is.null(ppTree$data$subset))
+    Xnew=Xnew[ppTree$data$subset,]
   
   #Variable scaling.
   if(ppTree$data$Xscale!="No"){
     indp=(numCat+1):p
-    Xnew[,indp]=(Xnew[,indp]-matrix(ppTree$data$minCol,n,length(indp),byrow = T))/
+    Xnew[,indp]=(Xnew[,indp,drop = FALSE]-matrix(ppTree$data$minCol,n,length(indp),byrow = T))/
       matrix(ppTree$data$maxminCol,n,length(indp),byrow = T)
   }
   
@@ -132,8 +148,8 @@ prune.ODT=function(ppTree,data,MaxDepth=1)
   if(ppTree$type!="regression"){
     err0 <- mean(prediction != ynew)
   }else{
-    e.0 = mean((ynew-mean(y))^2)
-    err0 <- mean((as.numeric(prediction)-ynew)^2)/e.0
+    #e.0 = mean((ynew-mean(y))^2)
+    err0 <- mean((as.numeric(prediction)-ynew)^2)#/e.0
     #structure$nodeLabel=as.numeric(structure$nodeLabel)
   }
   
@@ -239,7 +255,7 @@ prune.ODT=function(ppTree,data,MaxDepth=1)
     if(ppTree$type!="regression"){
       err <- mean(prediction != ynew)
     }else{
-      err <- mean((as.numeric(prediction)-ynew)^2)/e.0
+      err <- mean((as.numeric(prediction)-ynew)^2)#/e.0
     }
     pruneError[ncut,]=c(currentNode-1,length(nodeCutValue),max(structure$nodeDepth[-idx]),err)
     

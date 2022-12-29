@@ -2,22 +2,26 @@
 % Please edit documentation in R/online_ODT.R
 \name{online.ODT}
 \alias{online.ODT}
-\title{A machine learning algorithm for training class \code{ODT}.}
+\title{using training data to update an existing \code{ODT}.}
 \usage{
-\method{online}{ODT}(ppTree, data, weights = NULL)
+\method{online}{ODT}(ppTree, X = NULL, y = NULL, weights = NULL, ...)
 }
 \arguments{
-\item{data}{Training data of class \code{data.frame} is used to update the object of class \code{ODT}.}
+\item{ppTree}{an object of class \code{ODT}.}
 
-\item{weights}{A vector of length same as \code{data} that are positive weights. (default NULL)}
+\item{X}{An n by d numeric matrix (preferable) or data frame is used to update the object of class \code{ODT}.}
 
-\item{obj}{an object of class \code{ODT}.}
+\item{y}{A response vector of length n is used to update the object of class \code{ODT}.}
+
+\item{weights}{Vector of non-negative observational weights; fractional weights are allowed (default NULL).}
+
+\item{...}{optional parameters to be passed to the low level function.}
 }
 \value{
 The same result as \code{ODT}.
 }
 \description{
-The \code{\link{ODT}}is constantly updated by multiple batches of data to optimize the model.
+Update existing \code{\link{ODT}} using batches of data to improve the model.
 }
 \examples{
 #Classification with Oblique Decision Tree
@@ -26,13 +30,14 @@ set.seed(221212)
 train = sample(1:209,100)
 train_data = data.frame(seeds[train,])
 test_data = data.frame(seeds[-train,])
+index=seq(floor(nrow(train_data)/2))
 
-tree = ODT(varieties_of_wheat~.,train_data[seq(floor(nrow(train_data)/2)),],
-type='i-classification')
-tree = online(tree,train_data[-seq(floor(nrow(train_data)/2)),])
+tree = ODT(varieties_of_wheat~.,train_data[index,],type='i-classification')
+tree = online(tree,train_data[-index,-8],train_data[-index,8])
 pred <- predict(tree,test_data[,-8])
-#estimation error
+#classification error
 (mean(pred!=test_data[,8]))
+
 
 #Regression with Oblique Decision Tree
 data(body_fat)
@@ -40,15 +45,15 @@ set.seed(221212)
 train = sample(1:252,100)
 train_data = data.frame(body_fat[train,])
 test_data = data.frame(body_fat[-train,])
+index=seq(floor(nrow(train_data)/2))
 
-tree = ODT(Density~.,train_data[seq(floor(nrow(train_data)/2)),],
-type='regression')
-tree = online(tree,train_data[-seq(floor(nrow(train_data)/2)),])
-pred <- predict(tree,test_data[,-8])
+tree = ODT(Density~.,train_data[index,],type='regression')
+tree = online(tree,train_data[-index,-1],train_data[-index,1])
+pred <- predict(tree,test_data[,-1])
 #estimation error
 mean((pred-test_data[,1])^2)
 
 }
 \seealso{
-\code{\link{ODT}} \code{\link{prune.ODT}}
+\code{\link{ODT}} \code{\link{prune.ODT}} \code{\link{online.ODRF}}
 }

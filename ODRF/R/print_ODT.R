@@ -2,10 +2,10 @@
 #' 
 #' Print the oblique decision tree result
 #' @param ppTree an object of class \code{\link{ODT}}.
-#' @param projection print projection coefficients in each node ifTRUE
-#' @param cutvalue print cutoff values in each node if TRUE
-#' @param verbose print if TRUE, no output if FALSE
-#' @param ... arguments to be passed to methods
+#' @param projection print projection coefficients in each node if TRUE.
+#' @param cutvalue print cutoff values in each node if TRUE.
+#' @param verbose print if TRUE, no output if FALSE.
+#' @param ... arguments to be passed to methods.
 #' 
 #' @references Lee, EK(2017) 
 #' PPtreeViz: An R Package for Visualizing Projection Pursuit Classification 
@@ -20,8 +20,8 @@
 #' print(tree,projection=TRUE,cutvalue=TRUE)
 #' 
 #' @keywords tree
-#' @aliases print.ODT
 #' @rdname print.ODT
+#' @aliases print.ODT
 #' @method print ODT
 #' @export
 print.ODT<-function(ppTree,projection=FALSE,cutvalue=FALSE,verbose=TRUE,...){

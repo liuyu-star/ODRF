@@ -7,6 +7,7 @@
 \method{plot}{VarImp}(
   varImp,
   nvar = min(30, nrow(varImp$varImp)),
+  digits = NULL,
   main = paste0("Oblique ", ifelse(varImp$type == "regression", "Regression",
     "Classification"), " Forest"),
   ...
@@ -15,7 +16,9 @@
 \arguments{
 \item{varImp}{an object of class \code{\link{VarImp}}.}
 
-\item{nvar}{How many variables to show?}
+\item{nvar}{How many variables to show.}
+
+\item{digits}{integer indicating the number of decimal places (round) or significant digits (signif) to be used.}
 
 \item{main}{plot title.}
 
@@ -23,16 +26,21 @@
 }
 \value{
 A matrix of importance measure, first column for each predictor variable and second column is Increased error. 
-classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.
+Error is misclassification rate (MR) for classification or mean square error (MSE) for regression.
 }
 \description{
 Dotchart of variable importance as measured by a Oblique Decision Random Forest.
 }
 \examples{
 data(breast_cancer)
-forest = ODRF(diagnosis~.,seeds,type='i-classification')
-varimp=VarImp(forest,seeds)
-plot(varimp)
+set.seed(221212)
+train = sample(1:569,200)
+train_data = data.frame(breast_cancer[train,-1])
+test_data = data.frame(breast_cancer[-train,-1])
+
+forest = ODRF(diagnosis~.,train_data,type='i-classification',parallel=FALSE)
+(varimp=VarImp(forest,train_data[,-1],train_data[,1]))
+plot(varimp,digits = 0)
 
 }
 \seealso{

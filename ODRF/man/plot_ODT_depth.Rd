@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_ODT_depth.R
 \name{plot_ODT_depth}
 \alias{plot_ODT_depth}
-\title{oblique decision tree depth plot}
+\title{plot oblique decision tree depth}
 \usage{
 plot_ODT_depth(
   formula,
@@ -11,31 +11,35 @@ plot_ODT_depth(
   type = "i-classification",
   NodeRotateFun = "RotMatPPO",
   paramList = NULL,
-  main = paste0("Oblique ", ifelse(type == "regression", "Regression",
-    "Classification"), " Tree"),
+  digits = NULL,
+  main = paste0("Oblique ", ifelse(type == "regression", "Regression", "Classification"),
+    " Tree"),
   ...
 )
 }
 \arguments{
 \item{formula}{Object of class \code{formula} with a response but no interaction terms describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
 
-\item{data}{Training data of class \code{data.frame} in which to interpret the variables named in the formula.If data is missing it is obtained from the current environment by \code{formula}.}
+\item{data}{Training data of class \code{data.frame} in \code{\link{ODRF}} is used to calculate the OOB error.}
 
-\item{newdata}{A data frame or matrix containing new data.}
+\item{newdata}{A data frame or matrix containing new data is used to calculate the test error. If it is missing, let it be \code{data}.}
 
-\item{type}{The criterion used for splitting the nodes. g-classification': gini impurity index(default) and i-classification': information gain for classification; 'regression': mean square error for regression.}
+\item{type}{The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression. 
+'auto' (default): If the response in \code{data} is a factor, 'g-classification' is used, otherwise regression is assumed.}
 
-\item{NodeRotateFun}{Name of the function of class \code{character} that implements a linear combination of predictor variables in the split node. Default is "RotMatPPO" with model="PPR". (see \code{\link{RotMatPPO}}) 
-Users can define this function, for details see \code{\link{RotMatMake}}.}
+\item{NodeRotateFun}{Name of the function of class \code{character} that implements a linear combination of predictors in the split node. including "RotMatPPO": see \code{\link{RotMatPPO}} (default, model="PPR"),
+"RotMatRand": see \code{\link{RotMatRand}}, and "RotMatRF": see \code{\link{RotMatRF}}. Users can define this function, for details see \code{\link{RotMatMake}}.}
 
-\item{paramList}{Parameters in a named list to be used by \code{ODT}.}
+\item{paramList}{List of parameters used by the functions \code{NodeRotateFun}. If left unchanged, default values will be used, for details see \code{\link[ODRF]{defaults}}.}
+
+\item{digits}{integer indicating the number of decimal places (round) or significant digits (signif) to be used.}
 
 \item{main}{main title}
 
 \item{...}{arguments to be passed to methods.}
 }
 \value{
-OOB error and test error, classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.
+test error of \code{newdata}, misclassification rate (MR) for classification or mean square error (MSE) for regression.
 }
 \description{
 Draw the error graph of class \code{ODT} at different depths.

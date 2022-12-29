@@ -2,30 +2,37 @@
 % Please edit documentation in R/VarImp.R
 \name{VarImp}
 \alias{VarImp}
-\title{oblique decision random forest variable importance}
+\title{variable importance of oblique decision random forest}
 \usage{
-VarImp(ppForest, data)
+VarImp(ppForest, X, y)
 }
 \arguments{
 \item{ppForest}{an object of class \code{\link{ODRF}}.}
 
-\item{data}{Training data of class \code{data.frame} in which to interpret the variables named in the formula.If data is missing it is obtained from the current environment by \code{formula}.}
+\item{X}{An n by d numerical matrix (preferably) or data frame is used in the \code{ODRF}.}
+
+\item{y}{A response vector of length n is used in the \code{ODRF}.}
 }
 \value{
-A matrix of importance measure, first column for each predictor variable and second column is Increased error. classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.
+A matrix of importance measure, first column is the predictors and second column is Increased error. Misclassification rate (MR) for classification or mean square error (MSE) for regression.
 }
 \description{
-variable importance measure is computed from permuting OOB data.
+variable importance is computed from permuting OOB data.
 }
 \details{
-A note from \code{randomForest}, here are the definitions of the variable importance measures. The first measure is computed from permuting OOB data: For each tree, the prediction error on the out-of-bag portion of the data is recorded (error rate for classification, 
-RPE for regression). Then the same is done after permuting each predictor variable. The difference between the two are then averaged over all trees, and normalized by the standard deviation of the differences. 
+A note from \code{randomForest}, here are the definitions of the variable importance measures. The first measure is computed from permuting OOB data: For each tree, the prediction error on the out-of-bag portion of the data is recorded.
+Then the same is done after permuting each predictor variable. The difference between the two are then averaged over all trees, and normalized by the standard deviation of the differences. 
 If the standard deviation of the differences is equal to 0 for a variable, the division is not done (but the average is almost always equal to 0 in that case).
 }
 \examples{
 data(breast_cancer)
-forest = ODRF(diagnosis~.,seeds,type='i-classification')
-varimp=VarImp(forest,seeds)
+set.seed(221212)
+train = sample(1:569,200)
+train_data = data.frame(breast_cancer[train,-1])
+test_data = data.frame(breast_cancer[-train,-1])
+
+forest = ODRF(diagnosis~.,train_data,type='i-classification',parallel=FALSE)
+(varimp=VarImp(forest,train_data[,-1],train_data[,1]))
 
 }
 \seealso{

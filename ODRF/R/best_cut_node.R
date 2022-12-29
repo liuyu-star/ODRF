@@ -3,7 +3,7 @@
 #' Three criterion functions for splitting variables.
 #'
 #' @param X An n by d numeric matrix (preferable) or data frame.
-#' @param y a n vector.
+#' @param y A response vector of length n.
 #' @param type The criterion used for splitting the variable. 'i-classification': information gain (classification, default), 
 #' 'g-classification': gini impurity index (classification) or 'regression': mean square error (regression).
 #' @param MinLeaf the minimum amount of samples in a leaf.
@@ -22,7 +22,7 @@
 #' ### Find the best split variable ###
 #' data(iris)
 #' X=as.matrix(iris[, 1:4])
-#' y=iris[[5L]]
+#' y=iris[[5]]
 #' bestcut=best.cut.node(X,y,type='i-classification')
 #' print(bestcut)
 #' 

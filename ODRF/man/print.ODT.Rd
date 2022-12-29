@@ -9,13 +9,13 @@
 \arguments{
 \item{ppTree}{an object of class \code{\link{ODT}}.}
 
-\item{projection}{print projection coefficients in each node ifTRUE}
+\item{projection}{print projection coefficients in each node if TRUE.}
 
-\item{cutvalue}{print cutoff values in each node if TRUE}
+\item{cutvalue}{print cutoff values in each node if TRUE.}
 
-\item{verbose}{print if TRUE, no output if FALSE}
+\item{verbose}{print if TRUE, no output if FALSE.}
 
-\item{...}{arguments to be passed to methods}
+\item{...}{arguments to be passed to methods.}
 }
 \description{
 Print the oblique decision tree result

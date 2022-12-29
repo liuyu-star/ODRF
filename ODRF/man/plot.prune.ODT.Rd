@@ -2,11 +2,12 @@
 % Please edit documentation in R/plot_prune_ODT.R
 \name{plot.prune.ODT}
 \alias{plot.prune.ODT}
-\title{prune oblique decision tree plot}
+\title{to plot pruned oblique decision tree}
 \usage{
 \method{plot}{prune.ODT}(
   ppTree,
   position = "topleft",
+  digits = NULL,
   main = paste0("Oblique ", ifelse(ppTree$type == "regression", "Regression",
     "Classification"), " Tree"),
   ...
@@ -17,28 +18,30 @@
 
 \item{position}{Position of the curve label.}
 
+\item{digits}{integer indicating the number of decimal places (round) or significant digits (signif) to be used.}
+
 \item{main}{main title}
 
 \item{...}{arguments to be passed to methods.}
 }
 \value{
-Error of test data after each pruning, classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.
+Error of validation data after each pruning, misclassification rate (MR) for classification or mean square error (MSE) for regression.
 }
 \description{
-Draw the error graph of class \code{ODT} at different number of split nodes.
+Plot the error graph of the pruned oblique decision tree with different numbers of split nodes
 }
 \examples{
-data(seeds)
+data(body_fat)
 set.seed(221212)
-train = sample(1:209,100)
-train_data = data.frame(seeds[train,])
-test_data = data.frame(seeds[-train,])
+train = sample(1:252,100)
+train_data = data.frame(body_fat[train,])
+test_data = data.frame(body_fat[-train,])
 
-tree = ODT(varieties_of_wheat~.,train_data,type='i-classification')
-tree = prune(tree,train_data)
-#oblique decision tree plot (default)
+tree = ODT(Density~.,train_data,type='regression')
+tree = prune(tree,test_data[,-1],test_data[,1])
+#Plot pruned oblique decision tree structure (default)
 plot(tree)
-#prune oblique decision tree plot
+#Plot the error graph of the pruned oblique decision tree.
 class(tree)="prune.ODT"
 plot(tree)
 

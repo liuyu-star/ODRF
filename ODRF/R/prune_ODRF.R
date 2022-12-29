@@ -1,17 +1,19 @@
 #' Pruning of class \code{ODRF}.
 #' 
-#' Prune \code{ODRF} from bottom to top with validation data based on prediction error.
+#' Prune \code{ODRF} from bottom to top with test data based on prediction error.
 #'
-#' @param obj an object of class \code{\link{ODRF}}.
-#' @param data validation data of class \code{data.frame} is used to prune the object of class \code{ODRF}. Note that when \code{useOOB=TRUE}, \code{data} must be the training data \code{data} in \code{\link{ODRF}}
-#' @param MaxDepth The maximum depth of the tree after pruning. (Default 1)
-#' @param useOOB Whether to use OOB for pruning. (Default TRUE) 
+#' @param ppForest an object of class \code{\link{ODRF}}.
+#' @param X An n by d numeric matrix (preferable) or data frame is used to prune the object of class \code{ODRF}.
+#' @param y A response vector of length n.
+#' @param MaxDepth The maximum depth of the tree after pruning (Default 1).
+#' @param useOOB Whether to use OOB for pruning(Default TRUE). Note that when \code{useOOB=TRUE}, \code{X} and \code{y} must be the training data in \code{\link{ODRF}}.
+#' @param ... optional parameters to be passed to the low level function.
 #' 
 #' @return \itemize{an object of class \code{ODRF} and \code{prune.ODRF}. 
 #' \item{\code{ppForest} The same result as \code{ODRF}.}
-#' \item{\code{pruneError} Error of validation data or OOB () after each pruning in each tree, classification error rate for classification or mean square error for regression.}
+#' \item{\code{pruneError} Error of test data or OOB after each pruning in each tree, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 #'}
-#' @seealso \code{\link{ODRF}} \code{\link{prune.ODT}}
+#' @seealso \code{\link{ODRF}} \code{\link{online.ODRF}} \code{\link{prune.ODT}}
 #' 
 #' @examples
 #' #Classification with Oblique Decision Random Forest
@@ -20,13 +22,15 @@
 #' train = sample(1:209,100)
 #' train_data = data.frame(seeds[train,])
 #' test_data = data.frame(seeds[-train,])
+#' index=seq(floor(nrow(train_data)/2))
 #' 
-#' tree = ODRF(varieties_of_wheat~.,train_data[seq(floor(nrow(train_data)/2)),],
-#' type='i-classification')
-#' tree = prune(tree,train_data[-seq(floor(nrow(train_data)/2)),])
-#' pred <- predict(tree,test_data[,-8])
-#' #estimation error
+#' forest = ODRF(varieties_of_wheat~.,train_data[index,],type='i-classification'
+#' ,parallel=FALSE)
+#' forest = prune(forest,train_data[-index,-8],train_data[-index,8])
+#' pred <- predict(forest,test_data[,-8])
+#' #classification error
 #' (mean(pred!=test_data[,8]))
+#' 
 #' 
 #' #Regression with Oblique Decision Random Forest
 #' data(body_fat)
@@ -34,20 +38,19 @@
 #' train = sample(1:252,100)
 #' train_data = data.frame(body_fat[train,])
 #' test_data = data.frame(body_fat[-train,])
+#' index=seq(floor(nrow(train_data)/2))
 #' 
-#' tree = ODRF(Density~.,train_data[seq(floor(nrow(train_data)/2)),],
-#' type='regression')
-#' tree = prune(tree,train_data[-seq(floor(nrow(train_data)/2)),])
-#' pred <- predict(tree,test_data[,-8])
+#' forest = ODRF(Density~.,train_data[index,],type='regression',parallel=FALSE)
+#' forest = prune(forest,train_data[-index,-1],train_data[-index,1])
+#' pred <- predict(forest,test_data[,-1])
 #' #estimation error
 #' mean((pred-test_data[,1])^2)
-#'
-#' @import Rcpp
-#' @aliases prune.ODRF
+#' 
 #' @rdname prune.ODRF
+#' @aliases prune.ODRF
 #' @method prune ODRF
 #' @export
-prune.ODRF = function(ppForest,data,MaxDepth=1,useOOB=TRUE)
+prune.ODRF = function(ppForest,X,y,MaxDepth=1,useOOB=TRUE,...)
 {
   ppTrees=ppForest$ppTrees
   type=ppForest$type
@@ -57,31 +60,34 @@ prune.ODRF = function(ppForest,data,MaxDepth=1,useOOB=TRUE)
   replacement=ppForest$forest$replacement
   stratify=ppForest$forest$stratify
   numCores=ppForest$forest$numCores
+  parallel=ppForest$forest$parallel
   
   if ((!storeOOB)&useOOB) {
     stop("out-of-bag indices for each tree are not stored. ODRF must be called with storeOOB = TRUE.")
   }
-  if(useOOB){
-    warning("'data' must be the training data 'data' in class ODRF.")
-    if(prod(dim(data))!=ppForest$data$n*ppForest$data$p)
-      stop()
+  
+  Xcat=ppForest$data$Xcat
+  catLabel=ppForest$data$catLabel
+  #vars=all.vars(ppTree$terms)
+  if(sum(Xcat)>0&is.null(catLabel)){
+    #vars=vars[-(1+seq(length(unlist(catLabel))))]
+    #}else{
+    stop("'Xcat!=0' however 'catLabel' does not exist!") 
   }
-  
-  
-  
-  vars=all.vars(ppForest$terms)
+  #vars=all.vars(ppForest$terms)
   # address na values.
+  data=data.frame(y,X)
   if (any(is.na(data))) {
     data=ppForest$data$na.action(data.frame(data))
     warning("NA values exist in data frame")
   }
   
-  ynew= data[,setdiff(colnames(data),vars[-1])]
-  Xnew= data[,vars[-1]]
+  #ynew= data[,setdiff(colnames(data),vars[-1])]
+  #Xnew= data[,vars[-1]]
+  ynew= data[,1]
+  Xnew= data[,-1]
   Xnew=as.matrix(Xnew)
-  
-  if(!is.null(ppForest$data$subset))
-    Xnew=Xnew[ppForest$data$subset,]
+  rm(data);rm(X);rm(y)
   
   p=ncol(Xnew)
   n=nrow(Xnew)
@@ -99,8 +105,6 @@ prune.ODRF = function(ppForest,data,MaxDepth=1,useOOB=TRUE)
     }
   }
 
-  Xcat=ppForest$data$Xcat
-  catLabel=ppForest$data$catLabel
   numCat=0
   if(sum(Xcat)>0){
     xj=1
@@ -120,12 +124,23 @@ prune.ODRF = function(ppForest,data,MaxDepth=1,useOOB=TRUE)
       xj=xj1
     }
     
-    Xnew=cbind(Xnew1,Xnew[,-Xcat]) 
+    Xnew=cbind(Xnew1,apply(Xnew[,-Xcat], 2, as.numeric)) 
     p=ncol(Xnew)
     numCat=length(unlist(catLabel))
     rm(Xnew1)
     rm(Xnewj)
   }
+  Xnew=as.matrix(Xnew)
+  colnames(Xnew)=ppForest$data$varName
+  
+  if(useOOB){
+    if(prod(dim(Xnew))!=ppForest$data$n*ppForest$data$p){
+      stop("'data' must be the training data 'data' in class ODRF.")
+    }
+  }
+  
+  if(!is.null(ppForest$data$subset))
+    Xnew=Xnew[ppForest$data$subset,]
   
   #Variable scaling.
   if(ppForest$data$Xscale!="No"){
@@ -141,10 +156,10 @@ prune.ODRF = function(ppForest,data,MaxDepth=1,useOOB=TRUE)
     set.seed(seed+itree)
 
     if(useOOB){
-      data=data.frame(y=ynew[ppTree$oobIndex],Xnew[ppTree$oobIndex,])
-      colnames(data)=vars
+      #data=data.frame(y=ynew[ppTree$oobIndex],Xnew[ppTree$oobIndex,])
+      #colnames(data)=vars
       #weights1=weights[ppTree$oobIndex]
-      ppForestT=prune(ppTree,data,MaxDepth)#[seq(7)]
+      ppForestT=prune(ppTree,Xnew[ppTree$oobIndex,],ynew[ppTree$oobIndex],MaxDepth)#[seq(7)]
       ppTree=ppForestT[-length(ppForestT)]
     }else{
       TDindx0 <- seq(n)
@@ -172,10 +187,11 @@ prune.ODRF = function(ppForest,data,MaxDepth=1,useOOB=TRUE)
       }
       
       if ((numOOB>0)&storeOOB){ppTree=ppTree[-(length(ppTree)-c(2,1,0))]}
-      data=data.frame(y=ynew[TDindx],Xnew[TDindx,])
-      colnames(data)=vars
+      #data=data.frame(y=ynew[TDindx],Xnew[TDindx,])
+      #colnames(data)=vars
       #weights1=weights[TDindx]
-      ppTree=prune(ppTree,data,MaxDepth)
+      class(ppTree)="ODT"
+      ppTree=prune(ppTree,Xnew[TDindx,],ynew[TDindx],MaxDepth)
       ppTree=ppTree[-length(ppTree)]
       class(ppTree)="ODT"
   

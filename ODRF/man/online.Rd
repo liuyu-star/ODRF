@@ -2,7 +2,7 @@
 % Please edit documentation in R/online.R
 \name{online}
 \alias{online}
-\title{A machine learning algorithm for training class \code{ODT} and \code{ODRF}.}
+\title{online structure learning for class \code{ODT} and \code{ODRF}.}
 \usage{
 online(obj, ...)
 }
@@ -15,7 +15,7 @@ online(obj, ...)
 object of class \code{ODT} or \code{ODRF}.
 }
 \description{
-The \code{\link{ODT}} and \code{\link{ODRF}} are constantly updated by multiple batches of data to optimize the model. \code{online} is a S3 method for class class \code{ODT} and \code{ODRF}.
+The \code{\link{ODT}} and \code{\link{ODRF}} are constantly updated by multiple batches of data to optimize the model. \code{online} is a S3 method for class \code{ODT} and \code{ODRF}.
 }
 \seealso{
 \code{\link{ODT}} \code{\link{ODRF}} \code{\link{online.ODT}} \code{\link{online.ODRF}}

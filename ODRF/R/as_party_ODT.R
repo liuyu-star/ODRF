@@ -1,6 +1,6 @@
-#' ODT as \code{party}
+#' \code{ODT} as \code{party}
 #' 
-#' Functions coercing \code{ODT} object to objects of class \code{party}.
+#' To make \code{ODT} object to objects of class \code{party}.
 #' 
 #' @param ppTree an object of class \code{\link{ODT}}.
 #' @param data Training data of class \code{data.frame} is used to convert the object of class \code{ODRF}. 
@@ -15,6 +15,7 @@
 #' data(iris)
 #' tree <- ODT(Species~.,data = iris)
 #' tree
+#' plot(tree)
 #' party.tree<- as.party(tree,data = iris)
 #' party.tree
 #' plot(party.tree)

@@ -1,4 +1,4 @@
-#' oblique decision tree plot
+#' to plot an oblique decision tree
 #' 
 #' Draw oblique decision tree with tree structure. It is modified from a function in \code{PPtreeViz} library.
 #' 
@@ -12,15 +12,17 @@
 #' @references Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
 #' @keywords tree
 #' 
-#' @seealso \code{\link{ODT}} \code{\link{plot_ODT_depth}}
+#' @seealso \code{\link{ODT}} \code{\link{as.party}} \code{\link{plot_ODT_depth}} 
 #' 
 #' @examples
 #' data(iris)
 #' tree <- ODT(Species~., data = iris,type='i-classification')
 #' plot(tree)
 #' 
-#' @aliases plot.ODT
+#' @importFrom graphics abline axis dotchart legend matplot mtext par
+#' @import grid
 #' @rdname plot.ODT
+#' @aliases plot.ODT
 #' @method plot ODT
 #' @export
 plot.ODT<-function(ppTree,font.size=17,width.size=1,xadj=0,main=paste0("Oblique ",

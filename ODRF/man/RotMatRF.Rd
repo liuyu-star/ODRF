@@ -11,25 +11,29 @@ RotMatRF(dimX, numProj, catLabel = NULL, ...)
 
 \item{numProj}{the number of desired columns in the projection matrix, is also the number of projection directions.(default ceiling(sqrt(dimX)))}
 
-\item{catLabel}{A category labels of class \code{list} in prediction variables，for details see Examples of \code{\link{ODRF}}.}
+\item{catLabel}{A category labels of class \code{list} in predictors. (default NULL, for details see Examples of \code{\link{ODT}})}
 
 \item{...}{used to handle superfluous arguments passed in using paramList.}
 }
 \value{
-\itemize{A random matrix to use in running \code{\link{ODT}}.
-\item{Variable: variables to be projected.} 
-\item{Number: Number of variables to be projected.}
+A random matrix to use in running \code{\link{ODT}}.
+\itemize{
+\item{Variable: Variables to be projected.} 
+\item{Number: Number of projections.}
 \item{Coefficient: Coefficients of the projection matrix.}
 }
 }
 \description{
-Create a projection matrix with coefficient 1, so that ODRF (ODT) has the same partition variables as random forest (tree).
+Create a projection matrix with coefficient 1 such that the ODRF (ODT) has the same partition variables as the random forest (tree).
 }
 \examples{
 paramList <- list(dimX = 8, numProj= 3, catLabel=NULL)
 set.seed(2)
 (RotMat <- do.call(RotMatRF, paramList))
+
 }
 \seealso{
 \code{\link{RotMatPPO}} \code{\link{RotMatRand}} \code{\link{RotMatMake}}
 }
+\keyword{Forest}
+\keyword{Random}

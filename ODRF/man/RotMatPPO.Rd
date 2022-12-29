@@ -20,12 +20,12 @@ RotMatPPO(
 \arguments{
 \item{X}{An n by d numeric matrix (preferable) or data frame.}
 
-\item{y}{a n vector.}
+\item{y}{A response vector of length n.}
 
-\item{model}{model for projection pursuit.}
+\item{model}{model for projection pursuit (for details see \code{\link{PPO}}).}
 
-\item{type}{The criterion used for splitting the variable. 'g-classification': gini impurity index (classification, default), 
-'i-classification': information gain (classification) or 'regression': mean square error (regression).}
+\item{type}{The criterion used for splitting the variable. 'i-classification': information gain (classification, default), 
+'g-classification': gini impurity index (classification) or 'regression': mean square error (regression).}
 
 \item{weights}{A vector of length same as \code{data} that are positive weights. (default NULL)}
 
@@ -34,14 +34,15 @@ RotMatPPO(
 \item{numProj}{the number of desired columns in the projection matrix, is also the number of projection directions.
 When dimProj="Rand" default \code{numProj=max(5,sample(floor(ncol(X)/3),1))} otherwise default \code{numProj=max(5, ceiling(p0/dimProj))}.}
 
-\item{catLabel}{A category labels of class \code{list} in prediction variables，for details see Examples of \code{\link{ODRF}}.}
+\item{catLabel}{A category labels of class \code{list} in predictors. (default NULL, for details see Examples of \code{\link{ODT}})}
 
 \item{...}{used to handle superfluous arguments passed in using paramList.}
 }
 \value{
-\itemize{A random matrix to use in running \code{\link{ODT}}.
-\item{Variable: variables to be projected.} 
-\item{Number: Number of variables to be projected.}
+A random matrix to use in running \code{\link{ODT}}.
+\itemize{
+\item{Variable: Variables to be projected.} 
+\item{Number: Number of projections.}
 \item{Coefficient: Coefficients of the projection matrix.}
 }
 }
@@ -49,13 +50,28 @@ When dimProj="Rand" default \code{numProj=max(5,sample(floor(ncol(X)/3),1))} oth
 Create a projection matrix using projection pursuit optimization (\code{\link{PPO}}).
 }
 \examples{
-X <- matrix(rnorm(200),20,10)
-y <- (rnorm(20)>0)+0
 set.seed(220828)
+X <- matrix(rnorm(1000),100,10)
+y <- (rnorm(100)>0)+0
 (RotMat <- RotMatPPO(X,y))
 (RotMat <- RotMatPPO(X,y,dimProj="Rand"))
-(RotMat <- RotMatPPO(X,y,dimProj=10,numProj=5))
+(RotMat <- RotMatPPO(X,y,dimProj=6,numProj=4))
+
+#classification
+data(seeds)
+(PP <- RotMatPPO(seeds[,1:7],seeds[,8],model = "Log",type='i-classification'))
+(PP <- RotMatPPO(seeds[,1:7],seeds[,8],model = "PPR",type='i-classification'))
+(PP <- RotMatPPO(seeds[,1:7],seeds[,8],model = "LDA",type='i-classification'))
+
+#regression
+data(body_fat)
+(PP <- RotMatPPO(body_fat[,2:15],body_fat[,1],model = "Log",type='regression'))
+(PP <- RotMatPPO(body_fat[,2:15],body_fat[,1],model = "Rand",type='regression'))
+(PP <- RotMatPPO(body_fat[,2:15],body_fat[,1],model = "PPR",type='regression'))
+
 }
 \seealso{
-\code{\link{RotMatMake}} \code{\link{RotMatRand}} \code{\link{RotMatRF}}
+\code{\link{RotMatMake}} \code{\link{RotMatRand}} \code{\link{RotMatRF}} \code{\link{PPO}}
 }
+\keyword{projection}
+\keyword{pursuit}

@@ -1,38 +1,39 @@
-#' prune oblique decision tree plot
+#' to plot pruned oblique decision tree 
 #' 
-#' Draw the error graph of class \code{ODT} at different number of split nodes.
+#' Plot the error graph of the pruned oblique decision tree with different numbers of split nodes
 #' 
 #' @param ppTree an object of class \code{\link{prune.ODT}}.
 #' @param position Position of the curve label.
+#' @param digits integer indicating the number of decimal places (round) or significant digits (signif) to be used. 
 #' @param main main title
 #' @param ... arguments to be passed to methods.
 #' 
-#' @return Error of test data after each pruning, classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.
+#' @return  Error of validation data after each pruning, misclassification rate (MR) for classification or mean square error (MSE) for regression.
 #' 
 #' @keywords tree
 #' 
 #' @seealso \code{\link{ODT}} \code{\link{prune.ODT}}
 #' 
 #' @examples
-#' data(seeds)
+#' data(body_fat)
 #' set.seed(221212)
-#' train = sample(1:209,100)
-#' train_data = data.frame(seeds[train,])
-#' test_data = data.frame(seeds[-train,])
+#' train = sample(1:252,100)
+#' train_data = data.frame(body_fat[train,])
+#' test_data = data.frame(body_fat[-train,])
 #' 
-#' tree = ODT(varieties_of_wheat~.,train_data,type='i-classification')
-#' tree = prune(tree,train_data)
-#' #oblique decision tree plot (default)
+#' tree = ODT(Density~.,train_data,type='regression')
+#' tree = prune(tree,test_data[,-1],test_data[,1])
+#' #Plot pruned oblique decision tree structure (default)
 #' plot(tree)
-#' #prune oblique decision tree plot
+#' #Plot the error graph of the pruned oblique decision tree.
 #' class(tree)="prune.ODT"
 #' plot(tree)
 #' 
-#' @aliases plot.prune.ODT
 #' @rdname plot.prune.ODT
+#' @aliases plot.prune.ODT
 #' @method plot prune.ODT
 #' @export
-plot.prune.ODT=function(ppTree,position="topleft",main=paste0("Oblique ",
+plot.prune.ODT=function(ppTree,position="topleft",digits=NULL,main=paste0("Oblique ",
                         ifelse(ppTree$type=="regression","Regression","Classification")," Tree"),...){
   pruneError=ppTree$pruneError
   
@@ -42,11 +43,22 @@ plot.prune.ODT=function(ppTree,position="topleft",main=paste0("Oblique ",
   #par(adj=0.5)
   minLen=min(6,length(pruneError[,1]))
   x=seq(nrow(pruneError))
+  minErr=strsplit(as.character(min(pruneError[,4])),"")[[1]]
+  id=which(minErr=="e")
+  if(ppTree$type!="regression"){
+    digits=0
+  }else if(is.null(digits)){
+    if(length(id)>0){
+      digits=sum(as.numeric(paste0(minErr[c(id+2,length(minErr))]))*c(10,1))
+    }else{
+      digits=which(minErr[-seq(which(minErr=="."))]!=0)[2]
+    }
+  }
   
-  plot(x, pruneError[,4],pch = 21, bg = "skyblue", type = "b",lty=1, xlab="The number of split nodes", ylab="Error",main=main,xaxt="n",yaxt="n")#, col = c("black")
+  plot(x, pruneError[,4],pch = 21, bg = "skyblue", type = "b",lty=1, xlab="The number of split nodes", ylab=paste0("Error (*",10^-digits,")") ,main=main,xaxt="n",yaxt="n")#, col = c("black")
   #plot(x, pruneError[,4],pch = 21, bg = "skyblue", type = "p",lty=1, xlab="The number of split nodes", ylab="Error",main=main,xaxt="n",yaxt="n")#, col = c("black")
   axis(1, seq(min(x),max(x),length.out = minLen),round(seq(max(pruneError[,1]),min(pruneError[,1]),length.out = minLen)),cex.lab = 1.5,cex.axis = 1.25)
-  axis(2, seq(min(pruneError[,4]),max(pruneError[,4]),length.out = minLen),round(seq(min(pruneError[,4]),max(pruneError[,4]),length.out = minLen),2),cex.lab = 1.5,cex.axis = 1.25)
+  axis(2, seq(min(pruneError[,4]),max(pruneError[,4]),length.out = minLen),round(seq(min(pruneError[,4]),max(pruneError[,4]),length.out = minLen)*10^digits,2),cex.lab = 1.5,cex.axis = 1.25)
   abline(h=pruneError[1,4],lwd=1.5,lty=2,col="red")
   
   par(new = T) 
@@ -60,6 +72,5 @@ plot.prune.ODT=function(ppTree,position="topleft",main=paste0("Oblique ",
   
   legend(x=position, legend = c("Error", "Depth"),lty = c(1,2),pch = c(21,4), pt.bg = c("skyblue","black") ,col = c("black","black"),bty="n")
   
- 
   return(invisible(pruneError))
 }

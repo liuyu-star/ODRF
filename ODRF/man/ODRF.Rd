@@ -2,12 +2,44 @@
 % Please edit documentation in R/ODRF.R
 \name{ODRF}
 \alias{ODRF}
+\alias{ODRF.formula}
+\alias{ODRF.default}
 \title{Classification and Regression with Oblique Decision Random Forest}
 \usage{
-ODRF(
+ODRF(formula, ...)
+
+\method{ODRF}{formula}(
   formula,
   data = NULL,
-  type = NULL,
+  type = "auto",
+  NodeRotateFun = "RotMatPPO",
+  FunDir = getwd(),
+  paramList = NULL,
+  ntrees = 100,
+  storeOOB = TRUE,
+  replacement = TRUE,
+  stratify = TRUE,
+  numOOB = 1/3,
+  parallel = TRUE,
+  numCores = Inf,
+  seed = 220924,
+  MaxDepth = Inf,
+  numNode = Inf,
+  MinLeaf = 5,
+  subset = NULL,
+  weights = NULL,
+  na.action = na.fail,
+  catLabel = NULL,
+  Xcat = 0,
+  Xscale = "Min-max",
+  TreeRandRotate = FALSE,
+  ...
+)
+
+\method{ODRF}{default}(
+  X,
+  y,
+  type = "auto",
   NodeRotateFun = "RotMatPPO",
   FunDir = getwd(),
   paramList = NULL,
@@ -33,75 +65,81 @@ ODRF(
 )
 }
 \arguments{
-\item{formula}{Object of class \code{formula} with a response but no interaction terms describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
+\item{formula}{Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
 
-\item{data}{Training data of class \code{data.frame} in which to interpret the variables named in the formula.If data is missing it is obtained from the current environment by \code{formula}.}
+\item{...}{optional parameters to be passed to the low level function.}
 
-\item{type}{The criterion used for splitting the nodes. g-classification': gini impurity index(default) and i-classification': information gain for classification; 'regression': mean square error for regression.
-y is a factor then is a classification.}
+\item{data}{Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.}
 
-\item{NodeRotateFun}{Name of the function of class \code{character} that implements a linear combination of predictor variables in the split node. Default is "RotMatPPO" with model="PPR". (see \code{\link{RotMatPPO}}) 
-Users can define this function, for details see \code{\link{RotMatMake}}.}
+\item{type}{The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression. 
+'auto' (default): If the response in \code{data} or \code{y} is a factor, 'g-classification' is used, otherwise regression is assumed.}
 
-\item{FunDir}{The path to the \code{function} of the user-defined \code{NodeRotateFun}. (default current Workspace)}
+\item{NodeRotateFun}{Name of the function of class \code{character} that implements a linear combination of predictors in the split node. including "RotMatPPO": see \code{\link{RotMatPPO}} (default, model="PPR"),
+"RotMatRand": see \code{\link{RotMatRand}}, and "RotMatRF": see \code{\link{RotMatRF}}. Users can define this function, for details see \code{\link{RotMatMake}}.}
 
-\item{paramList}{Parameters in a named list to be used by \code{NodeRotateFun}.If left unchanged, default values will be populated, for details see \code{\link[ODRF]{defaults}}.}
+\item{FunDir}{The path to the \code{function} of the user-defined \code{NodeRotateFun} (default current working directory).}
 
-\item{ntrees}{The number of trees in the forest. (default 100)}
+\item{paramList}{List of parameters used by the functions \code{NodeRotateFun}. If left unchanged, default values will be used, for details see \code{\link[ODRF]{defaults}}.}
 
-\item{storeOOB}{if TRUE then the samples omitted during the creation of a tree are stored as part of the tree.}
+\item{ntrees}{The number of trees in the forest (default 100).}
 
-\item{replacement}{if TRUE then n samples are chosen, with replacement, from training data. (default TRUE)}
+\item{storeOOB}{if TRUE then the samples omitted during the creation of a tree are stored as part of the tree (default TRUE).}
 
-\item{stratify}{if TRUE then class sample proportions are maintained during the random sampling. Ignored if replacement = FALSE. (default TRUE)}
+\item{replacement}{if TRUE then n samples are chosen, with replacement, from training data (default TRUE).}
 
-\item{numOOB}{Ratio of 'out-of-bag'.}
+\item{stratify}{if TRUE then class sample proportions are maintained during the random sampling. Ignored if replacement = FALSE (default TRUE).}
 
-\item{parallel}{Parallel computing or not. (default TRUE)}
+\item{numOOB}{Ratio of 'out-of-bag' (default 1/3).}
 
-\item{numCores}{Number of cores to be used for parallel computing. (default Inf)}
+\item{parallel}{Parallel computing or not (default TRUE).}
+
+\item{numCores}{Number of cores to be used for parallel computing (default \code{Inf}).}
 
 \item{seed}{Random seeds in order to reproduce results.}
 
 \item{MaxDepth}{The maximum depth of the tree (default \code{Inf}).}
 
-\item{numNode}{The number of nodes used by the tree (default \code{Inf}).}
+\item{numNode}{Number of nodes that can be used by the tree (default \code{Inf}).}
 
 \item{MinLeaf}{Minimal node size. Default 1 for classification, 5 for regression.}
 
 \item{subset}{An index vector indicating which rows should be used. (NOTE: If given, this argument must be named.)}
 
-\item{weights}{A vector of length same as \code{data} that are positive weights.(default NULL)}
+\item{weights}{Vector of non-negative observational weights; fractional weights are allowed (default NULL).}
 
 \item{na.action}{A function to specify the action to be taken if NAs are found. (NOTE: If given, this argument must be named.)}
 
-\item{catLabel}{A category labels of class \code{list} in prediction variables. (for details see Details and Examples)}
+\item{catLabel}{A category labels of class \code{list} in predictors. (default NULL, for details see Examples)}
 
-\item{Xcat}{A class \code{vector} is used to indicate which variables are class variables. The default Xcat=0 means that no special treatment is given to category variables. 
-When Xcat=NULL, the variable x that satisfies the condition \code{(length(unique(x))<10) & (n>20)} is judged to be a category variable #' @param Xscale Predictor variable standardization methods." Min-max", "Quantile", "No" denote Min-max transformation, Quantile transformation and No transformation (default "Min-max"), respectively.}
+\item{Xcat}{A class \code{vector} is used to indicate which predictor is the categorical variable. The default Xcat=0 means that no special treatment is given to category variables. 
+When Xcat=NULL, the predictor x that satisfies the condition \code{(length(unique(x))<10) & (n>20)} is judged to be a category variable.}
 
-\item{TreeRandRotate}{If or not to randomly rotate the Training data before building the tree. (default FALSE)}
+\item{Xscale}{Predictor standardization methods. " Min-max" (default), "Quantile", "No" denote Min-max transformation, Quantile transformation and No transformation respectively.}
 
-\item{...}{optional parameters to be passed to the low level function.}
+\item{TreeRandRotate}{If or not to randomly rotate the Training data before building the tree (default FALSE).}
+
+\item{X}{An n by d numeric matrix (preferable) or data frame.}
+
+\item{y}{A response vector of length n.}
 }
 \value{
-An object of class ODT, which is a list with the following components:
+An object of class ODRF Containing a list components:
 \itemize{
-\item{\code{call}: The original call to ODT.}
+\item{\code{call}: The original call to ODRF.}
 \item{\code{terms}: An object of class \code{c("terms", "formula")} (see \code{\link{terms.object}}) summarizing the formula. Used by various methods, but typically not of direct relevance to users.}
 \item{\code{ppTrees}: Each tree used to build the forest. \itemize{
 \item{\code{oobErr}: 'out-of-bag' error for tree, classification error rate for classification or mean square error for regression.}
-\item{\code{oobIndex}: Which training data to use as 'out-of-bag'?}
+\item{\code{oobIndex}: Which training data to use as 'out-of-bag'.}
 \item{\code{oobPred}: Predicted value for 'out-of-bag'.}
 \item{\code{other}: For other tree-related values see \code{\link{ODT}}.}
 }}
-\item{\code{oobErr}: 'out-of-bag' error for forest, classification error rate for classification or mean square error for regression.}
+\item{\code{oobErr}: 'out-of-bag' error for forest, classification error rate for classification or mean squared error for regression.}
 \item{\code{oobConfusionMat}: 'out-of-bag' confusion matrix for forest.}
 \item{\code{type}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
 \item{\code{paramList}: Parameters in a named list to be used by \code{NodeRotateFun}.}
-\item{\code{data}: The list of data related parameters used to build the tree.}
+\item{\code{data}: The list of data related parameters used to build the forest.}
 \item{\code{tree}: The list of tree related parameters used to build the tree.}
-\item{\code{forest}: The list of forest related parameters used to build the tree.}
+\item{\code{forest}: The list of forest related parameters used to build the forest.}
 }
 }
 \description{
@@ -115,9 +153,10 @@ train = sample(1:209,100)
 train_data = data.frame(seeds[train,])
 test_data = data.frame(seeds[-train,])
 
-tree = ODRF(varieties_of_wheat~.,train_data,type='i-classification')
-pred <- predict(tree,test_data[,-8])
-#estimation error
+forest = ODRF(varieties_of_wheat~.,train_data,type='i-classification',
+parallel=FALSE)
+pred <- predict(forest,test_data[,-8])
+#classification error
 (mean(pred!=test_data[,8]))
 
 #Regression with Oblique Decision Random Forest
@@ -127,13 +166,14 @@ train = sample(1:252,100)
 train_data = data.frame(body_fat[train,])
 test_data = data.frame(body_fat[-train,])
 
-tree = ODRF(Density~.,train_data,type='regression')
-pred <- predict(tree,test_data[,-1])
+forest = ODRF(Density~.,train_data,type='regression',parallel=FALSE)
+pred <- predict(forest,test_data[,-1])
 #estimation error
 mean((pred-test_data[,1])^2)
 
 
 ### Train ODRF on one-of-K encoded categorical data ###
+set.seed(22)
 Xcol1=sample(c("A","B","C"),100,replace = TRUE)
 Xcol2=sample(c("1","2","3","4","5"),100,replace = TRUE)
 Xcon=matrix(rnorm(100*3),100,3)
@@ -141,49 +181,69 @@ X=data.frame(Xcol1,Xcol2,Xcon)
 Xcat=c(1,2)
 catLabel=NULL
 y=as.factor(sample(c(0,1),100,replace = TRUE))
-tree = ODRF(y~X,type='g-classification')
+forest = ODRF(y~X,type='i-classification',Xcat = NULL,parallel=FALSE)
+head(X)
+#   Xcol1 Xcol2         X1         X2          X3
+#1     B     5 -0.04178453  2.3962339 -0.01443979
+#2     A     4 -1.66084623 -0.4397486  0.57251733
+#3     B     2 -0.57973333 -0.2878683  1.24475578
+#4     B     1 -0.82075051  1.3702900  0.01716528
+#5     C     5 -0.76337897 -0.9620213  0.25846351
+#6     A     5 -0.37720294 -0.1853976  1.04872159
 
+# one-of-K encode each categorical feature and store in X1
 numCat <- apply(X[,Xcat,drop = FALSE], 2, function(x) length(unique(x)))
-X1 <- matrix(0, nrow = nrow(X), ncol = sum(numCat)) # initialize training data matrix X
+#initialize training data matrix X
+X1 <- matrix(0, nrow = nrow(X), ncol = sum(numCat))
 catLabel <- vector("list", length(Xcat))
 names(catLabel)<- colnames(X)[Xcat]
 col.idx <- 0L
-# one-of-K encode each categorical feature and store in X
+# convert categorical feature to K dummy variables
 for (j in 1:length(Xcat)) {
   catMap <- (col.idx + 1L):(col.idx + numCat[j])
-  # convert categorical feature to K dummy variables
   catLabel[[j]]=levels(as.factor(X[,Xcat[j]]))
-  X1[, catMap] <- (matrix(X[,Xcat[j]],nrow(X),numCat[j])==matrix(catLabel[[j]],nrow(X),
-  numCat[j],byrow = TRUE))+0
+  X1[, catMap] <- (matrix(X[,Xcat[j]],nrow(X),numCat[j])==matrix(catLabel[[j]],
+  nrow(X),numCat[j],byrow = TRUE))+0
   col.idx <- col.idx + numCat[j]
 }
 X=cbind(X1,X[,-Xcat])
+colnames(X)=c(paste(rep(seq(length(numCat)),numCat),unlist(catLabel),sep = "."),
+"X1","X2","X3")
 
-#Print the result after processing of category variables
-X
-#  1 2 3 4 5 6 7 8          X1         X2          X3
-#1 0 1 0 0 1 0 0 0 -0.81003483  0.7900958 -1.94504333
-#2 0 0 1 0 0 0 0 1 -0.02528851 -0.5143964 -0.18628226
-#3 1 0 0 1 0 0 0 0  1.15532067  2.0236020  1.02942500
-#4 1 0 0 0 0 1 0 0  1.18598589  1.0594630  0.42990019
-#5 1 0 0 1 0 0 0 0 -0.21695438  1.5145973  0.09316665
-#6 0 0 1 0 0 0 0 1 -1.11507717 -0.5775602  0.09918911
+#Print the result after processing of category variables.
+head(X)
+#  1.A 1.B 1.C 2.1 2.2 2.3 2.4 2.5          X1         X2          X3
+#1   0   1   0   0   0   0   0   1 -0.04178453  2.3962339 -0.01443979
+#2   1   0   0   0   0   0   1   0 -1.66084623 -0.4397486  0.57251733
+#3   0   1   0   0   1   0   0   0 -0.57973333 -0.2878683  1.24475578
+#4   0   1   0   1   0   0   0   0 -0.82075051  1.3702900  0.01716528
+#5   0   0   1   0   0   0   0   1 -0.76337897 -0.9620213  0.25846351
+#6   1   0   0   0   0   0   0   1 -0.37720294 -0.1853976  1.04872159
 catLabel
 #$Xcol1
 #[1] "A" "B" "C"
 #$Xcol2
 #[1] "1" "2" "3" "4" "5"
+forest = ODRF(X,y,type='g-classification',Xcat = c(1,2),catLabel=catLabel,
+parallel=FALSE)
 
 }
 \references{
-\itemize{
-\item{Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.}
-\item{Tomita T M, Browne J, Shen C, et al. Sparse projection oblique randomer forests[J]. Journal of machine learning research, 2020, 21(104).}
-}
+Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.
+
+Tomita T M, Browne J, Shen C, et al. Sparse projection oblique randomer forests[J]. Journal of machine learning research, 2020, 21(104).
 }
 \seealso{
-\code{\link{predict.ODRF}} \code{\link{print.ODRF}} \code{\link{ODRF.error}} \code{\link{VarImp}}
+\code{\link{online.ODRF}} \code{\link{prune.ODRF}} \code{\link{predict.ODRF}} \code{\link{print.ODRF}} \code{\link{ODRF_accuracy}} \code{\link{VarImp}}
 }
 \author{
-YU Liu and Yingcun Xia
+Yu Liu and Yingcun Xia
 }
+\keyword{CART}
+\keyword{decision}
+\keyword{forest}
+\keyword{oblique}
+\keyword{projection}
+\keyword{pursuit}
+\keyword{random}
+\keyword{tree}

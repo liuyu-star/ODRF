@@ -6,46 +6,44 @@
 #' @param Xnew an n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
 #' @param leafnode If or not output the leaf node sequence number that \code{Xnew} is partitioned. (default FALSE)
 #' 
-#' @return A set of vectors in the following list:
+#' @return A vector of the following:
 #' \itemize{
 #' \item prediction: the prediced response of the new data.
 #' \item leafnode: the leaf node sequence number that the new data is partitioned.
 #' }
 #' 
-#' @references \itemize{
-#' \item{Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.}
-#' }
+#' @references Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.
 #' 
-#' @seealso \code{\link{ODT}}
+#' @seealso \code{\link{ODT}} \code{\link{predict.ODRF}}
 #' 
 #' @examples
-#' #Classification with Oblique Decision Tree
+#' #Classification with Oblique Decision Tree.
 #' data(seeds)
 #' set.seed(221212)
 #' train = sample(1:209,100)
 #' train_data = data.frame(seeds[train,])
 #' test_data = data.frame(seeds[-train,])
-#' 
+#'
 #' tree = ODT(varieties_of_wheat~.,train_data,type='i-classification')
 #' pred <- predict(tree,test_data[,-8])
-#' #estimation error
+#' #classification error
 #' (mean(pred!=test_data[,8]))
 #' 
-#' #Regression with Oblique Decision Tree
+#' #Regression with Oblique Decision Tree.
 #' data(body_fat)
 #' set.seed(221212)
 #' train = sample(1:252,100)
 #' train_data = data.frame(body_fat[train,])
 #' test_data = data.frame(body_fat[-train,])
-#' 
+#'
 #' tree = ODT(Density~.,train_data,type='regression')
 #' pred <- predict(tree,test_data[,-1])
 #' #estimation error
 #' mean((pred-test_data[,1])^2)
 #' 
-#' @import Rcpp
-#' @aliases predict.ODT
+#' @importFrom stats aggregate as.formula na.action predict quantile runif
 #' @rdname predict.ODT
+#' @aliases predict.ODT
 #' @method predict ODT
 #' @export
 predict.ODT <- function(ppTree,Xnew,leafnode=FALSE){

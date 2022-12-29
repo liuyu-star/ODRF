@@ -11,9 +11,9 @@ A data frame with 569 rows and 30 covariate variables and 1 response variable
 \url{https://www.kaggle.com/datasets/yasserh/breast-cancer-dataset?select=breast-cancer.csv} and \url{https://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+(diagnostic)}
 }
 \description{
-Breast cancer is the most common cancer amongst women in the world. It accounts for 25% of all cancer cases, and affected over 2.1 Million people in 2015 alone. 
+Breast cancer is the most common cancer amongst women in the world. It accounts for \eqn{25\%} of all cancer cases, and affected over 2.1 Million people in 2015 alone. 
 It starts when cells in the breast begin to grow out of control. These cells usually form tumors that can be seen via X-ray or felt as lumps in the breast area.
-The key challenges against it’s detection is how to classify tumors into malignant (cancerous) or benign(non cancerous).
+The key challenges against it's detection is how to classify tumors into malignant (cancerous) or benign(non cancerous).
 }
 \details{
 The actual linear program used to obtain the separating plane in the 3-dimensional space is that described in:
@@ -35,25 +35,27 @@ The actual linear program used to obtain the separating plane in the 3-dimension
 }
 \examples{
 data(breast_cancer)
-
 set.seed(221212)
 train = sample(1:569,200)
 train_data = data.frame(breast_cancer[train,-1])
 test_data = data.frame(breast_cancer[-train,-1])
 
-rf = ODRF(diagnosis~.,train_data,type='i-classification')
-pred <- predict(rf,test_data[,-1],weight = FALSE)$prediction
-#estimation error
+forest = ODRF(diagnosis~.,train_data,type='i-classification',parallel=FALSE)
+pred <- predict(forest,test_data[,-1])
+#classification error
 (mean(pred!=test_data[,1]))
 
 tree = ODT(diagnosis~.,train_data,type='i-classification')
 pred <- predict(tree,test_data[,-1])
-#estimation error
+#classification error
 (mean(pred!=test_data[,1]))
 }
 \references{
 Wolberg WH, Street WN, Mangasarian OL. Machine learning techniques to diagnose breast cancer from image-processed nuclear features of fine needle aspirates. Cancer Lett. 1994 Mar 15;77(2-3):163-71.
 
 O.L. Mangasarian, W.N. Street and W.H. Wolberg. Breast cancer diagnosis and prognosis via linear programming. Operations Research, 43(4), pages 570-577, July-August 1995.
+}
+\seealso{
+\code{\link{body_fat}} \code{\link{seeds}}
 }
 \keyword{datasets}

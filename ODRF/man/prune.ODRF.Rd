@@ -4,25 +4,29 @@
 \alias{prune.ODRF}
 \title{Pruning of class \code{ODRF}.}
 \usage{
-\method{prune}{ODRF}(ppForest, data, MaxDepth = 1, useOOB = TRUE)
+\method{prune}{ODRF}(ppForest, X, y, MaxDepth = 1, useOOB = TRUE, ...)
 }
 \arguments{
-\item{data}{validation data of class \code{data.frame} is used to prune the object of class \code{ODRF}. Note that when \code{useOOB=TRUE}, \code{data} must be the training data \code{data} in \code{\link{ODRF}}}
+\item{ppForest}{an object of class \code{\link{ODRF}}.}
 
-\item{MaxDepth}{The maximum depth of the tree after pruning. (Default 1)}
+\item{X}{An n by d numeric matrix (preferable) or data frame is used to prune the object of class \code{ODRF}.}
 
-\item{useOOB}{Whether to use OOB for pruning. (Default TRUE)}
+\item{y}{A response vector of length n.}
 
-\item{obj}{an object of class \code{\link{ODRF}}.}
+\item{MaxDepth}{The maximum depth of the tree after pruning (Default 1).}
+
+\item{useOOB}{Whether to use OOB for pruning(Default TRUE). Note that when \code{useOOB=TRUE}, \code{X} and \code{y} must be the training data in \code{\link{ODRF}}.}
+
+\item{...}{optional parameters to be passed to the low level function.}
 }
 \value{
 \itemize{an object of class \code{ODRF} and \code{prune.ODRF}. 
 \item{\code{ppForest} The same result as \code{ODRF}.}
-\item{\code{pruneError} Error of validation data or OOB () after each pruning in each tree, classification error rate for classification or mean square error for regression.}
+\item{\code{pruneError} Error of test data or OOB after each pruning in each tree, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 }
 }
 \description{
-Prune \code{ODRF} from bottom to top with validation data based on prediction error.
+Prune \code{ODRF} from bottom to top with test data based on prediction error.
 }
 \examples{
 #Classification with Oblique Decision Random Forest
@@ -31,13 +35,15 @@ set.seed(221212)
 train = sample(1:209,100)
 train_data = data.frame(seeds[train,])
 test_data = data.frame(seeds[-train,])
+index=seq(floor(nrow(train_data)/2))
 
-tree = ODRF(varieties_of_wheat~.,train_data[seq(floor(nrow(train_data)/2)),],
-type='i-classification')
-tree = prune(tree,train_data[-seq(floor(nrow(train_data)/2)),])
-pred <- predict(tree,test_data[,-8])
-#estimation error
+forest = ODRF(varieties_of_wheat~.,train_data[index,],type='i-classification'
+,parallel=FALSE)
+forest = prune(forest,train_data[-index,-8],train_data[-index,8])
+pred <- predict(forest,test_data[,-8])
+#classification error
 (mean(pred!=test_data[,8]))
+
 
 #Regression with Oblique Decision Random Forest
 data(body_fat)
@@ -45,15 +51,15 @@ set.seed(221212)
 train = sample(1:252,100)
 train_data = data.frame(body_fat[train,])
 test_data = data.frame(body_fat[-train,])
+index=seq(floor(nrow(train_data)/2))
 
-tree = ODRF(Density~.,train_data[seq(floor(nrow(train_data)/2)),],
-type='regression')
-tree = prune(tree,train_data[-seq(floor(nrow(train_data)/2)),])
-pred <- predict(tree,test_data[,-8])
+forest = ODRF(Density~.,train_data[index,],type='regression',parallel=FALSE)
+forest = prune(forest,train_data[-index,-1],train_data[-index,1])
+pred <- predict(forest,test_data[,-1])
 #estimation error
 mean((pred-test_data[,1])^2)
 
 }
 \seealso{
-\code{\link{ODRF}} \code{\link{prune.ODT}}
+\code{\link{ODRF}} \code{\link{online.ODRF}} \code{\link{prune.ODT}}
 }

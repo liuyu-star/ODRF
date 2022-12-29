@@ -1,0 +1,516 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2022.3.14)  28 NOV 2022 17:59
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**User_Guild_of_Package_MAVE.tex
+(./User_Guild_of_Package_MAVE.tex
+LaTeX2e <2021-11-15> patch level 1
+L3 programming layer <2022-02-24>
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2021/10/04 v1.4n Standard LaTeX document class
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/base/size10.clo
+File: size10.clo 2021/10/04 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count185
+\c@section=\count186
+\c@subsection=\count187
+\c@subsubsection=\count188
+\c@paragraph=\count189
+\c@subparagraph=\count190
+\c@figure=\count191
+\c@table=\count192
+\abovecaptionskip=\skip47
+\belowcaptionskip=\skip48
+\bibindent=\dimen138
+)
+(d:/Program Files/R/R-4.1.3/share/texmf/tex/latex/Sweave.sty
+Package: Sweave 
+
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/base/ifthen.sty
+Package: ifthen 2020/11/24 v1.1c Standard LaTeX ifthen package (DPC)
+)
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks16
+)
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2021/03/04 v1.4d Standard LaTeX Graphics (DPC,SPQR)
+
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+)
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2020/10/05 v1.2a Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen139
+\Gin@req@width=\dimen140
+)
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
+Package: fancyvrb 2021/12/21 4.1b verbatim text (tvz,hv)
+\FV@CodeLineNo=\count193
+\FV@InFile=\read2
+\FV@TabBox=\box50
+\c@FancyVerbLine=\count194
+\FV@StepNumber=\count195
+\FV@OutFile=\write3
+)
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/base/textcomp.sty
+Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
+)
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+)
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/ae/ae.sty
+Package: ae 2001/02/12 1.3 Almost European Computer Modern
+
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+)))
+LaTeX Font Info:    Trying to load font information for T1+aer on input line 17
+.
+
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/ae/t1aer.fd
+File: t1aer.fd 1997/11/16 Font definitions for T1/aer.
+)
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/l3backend/l3backend-pdftex.
+def
+File: l3backend-pdftex.def 2022-02-07 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count196
+\l__pdf_internal_box=\box51
+)
+No file User_Guild_of_Package_MAVE.aux.
+\openout1 = `User_Guild_of_Package_MAVE.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
+LaTeX Font Info:    ... okay on input line 17.
+(d:/Program Files/texlive/2021/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count197
+\scratchdimen=\dimen141
+\scratchbox=\box52
+\nofMPsegments=\count198
+\nofMParguments=\count199
+\everyMPshowfont=\toks17
+\MPscratchCnt=\count266
+\MPscratchDim=\dimen142
+\MPnumerator=\count267
+\makeMPintoPDFobject=\count268
+\everyMPtoPDFconversion=\toks18
+)
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.
+sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+
+(d:/Program Files/texlive/2021/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/grfext/grfext.sty
+Package: grfext 2019/12/03 v1.3 Manage graphics extensions (HO)
+
+(d:/Program Files/texlive/2021/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys
+.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+))
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+Package: kvoptions 2020-10-07 v3.14 Key value format for package options (HO)
+
+(d:/Program Files/texlive/2021/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2020-05-10 v1.25 LaTeX kernel commands for general use (HO)
+)
+(d:/Program Files/texlive/2021/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty
+Package: kvsetkeys 2019/12/15 v1.18 Key value parser (HO)
+))
+(d:/Program Files/texlive/2021/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
+)
+(d:/Program Files/texlive/2021/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2022/02/03 v1.0f TeX engine tests
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+Package grfext Info: Graphics extension search list:
+(grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 504.
+
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cf
+g
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+)) (./User_Guild_of_Package_MAVE-concordance.tex)
+LaTeX Font Info:    Trying to load font information for T1+aess on input line 1
+9.
+
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/ae/t1aess.fd
+File: t1aess.fd 1997/11/16 Font definitions for T1/aess.
+)
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 19.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 19.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 19.
+
+
+LaTeX Warning: Citation `Xia2002' on page 1 undefined on input line 22.
+
+
+LaTeX Warning: Citation `Xia2007' on page 1 undefined on input line 22.
+
+
+LaTeX Warning: Citation `Xia2008' on page 1 undefined on input line 22.
+
+
+LaTeX Warning: Citation `Li1991' on page 1 undefined on input line 22.
+
+
+LaTeX Warning: Citation `Xia2002' on page 1 undefined on input line 22.
+
+
+LaTeX Warning: Citation `Cook1998' on page 1 undefined on input line 22.
+
+
+LaTeX Warning: Citation `Cook2002' on page 1 undefined on input line 22.
+
+
+LaTeX Warning: Citation `dr' on page 1 undefined on input line 22.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 28.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 28.
+LaTeX Font Info:    Trying to load font information for T1+aett on input line 2
+8.
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/ae/t1aett.fd
+File: t1aett.fd 1997/11/16 Font definitions for T1/aett.
+)
+Overfull \hbox (16.55933pt too wide) in paragraph at lines 28--29
+\T1/aett/m/n/10 compute. The default value is 10 meaning that it will only calc
+ulate
+ []
+
+
+Overfull \hbox (11.31934pt too wide) in paragraph at lines 28--29
+\T1/aett/m/n/10 dimension reduction spaces of dimension up to 10. It will help 
+user
+ []
+
+
+Overfull \hbox (16.55933pt too wide) in paragraph at lines 28--29
+\T1/aett/m/n/10 save computation time when the data is high dimensional. We wil
+l use
+ []
+
+[1
+
+{d:/Program Files/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+LaTeX Font Info:    Trying to load font information for TS1+aett on input line 
+40.
+(d:/Program Files/R/R-4.1.3/share/texmf/tex/latex/ts1aett.fd
+File: ts1aett.fd 
+)
+LaTeX Font Info:    Trying to load font information for TS1+cmtt on input line 
+40.
+
+(d:/Program Files/texlive/2021/texmf-dist/tex/latex/base/ts1cmtt.fd
+File: ts1cmtt.fd 2019/12/16 v2.5j Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `TS1/aett/m/sl' in size <10> not available
+(Font)              Font shape `TS1/cmtt/m/sl' tried instead on input line 40.
+
+Overfull \hbox (6.07935pt too wide) in paragraph at lines 50--52
+\T1/aett/m/n/10 The object returned by mave or mave.compute contains informatio
+n of
+ []
+
+
+Overfull \hbox (42.75928pt too wide) in paragraph at lines 50--52
+\T1/aett/m/n/10 call, data and basis matrices of dimension reduction spaces wit
+h different
+ []
+
+
+Overfull \hbox (6.07935pt too wide) in paragraph at lines 50--52
+\T1/aett/m/n/10 dimensions. The basis matrix of a given dimension, 2, for examp
+le,
+ []
+
+
+LaTeX Font Warning: Font shape `T1/aett/b/n' undefined
+(Font)              using `T1/aett/m/n' instead on input line 56.
+
+
+Overfull \hbox (0.83936pt too wide) in paragraph at lines 56--58
+\T1/aett/m/n/10 Then the reduced data is obtained from original data multiplied
+ by
+ []
+
+
+Overfull \hbox (11.31934pt too wide) in paragraph at lines 56--58
+\T1/aett/m/n/10 the basis matrix of dimension reduction space. The reduced data
+ can
+ []
+
+
+Overfull \hbox (21.79932pt too wide) in paragraph at lines 56--58
+\T1/aett/m/n/10 be calculated by mave.data. The following is an example to appl
+y mars
+ []
+
+
+Overfull \hbox (11.31934pt too wide) in paragraph at lines 70--72
+\T1/aett/m/n/10 For convenience, the package provides predict to implement the 
+above
+ []
+
+
+Overfull \hbox (21.79932pt too wide) in paragraph at lines 70--72
+\T1/aett/m/n/10 procedure with some modifications. The argument degree will be 
+passed
+ []
+
+
+Overfull \hbox (27.0393pt too wide) in paragraph at lines 70--72
+\T1/aett/m/n/10 to mars which specifies the maximum interaction degree. More ar
+guments
+ []
+
+
+Overfull \hbox (0.83936pt too wide) in paragraph at lines 70--72
+\T1/aett/m/n/10 like thresh or penalty can be passed to mars by placing them af
+ter
+ []
+
+
+LaTeX Warning: Reference `sec:cv' on page 2 undefined on input line 80.
+
+
+Overfull \hbox (27.0393pt too wide) in paragraph at lines 80--82
+\T1/aett/m/n/10 In MAVE package of version 1.3.8, mave function allows mutiple 
+reponse,
+ []
+
+
+Overfull \hbox (3.74405pt too wide) in paragraph at lines 80--82
+\T1/aett/m/n/10 which means that argument $\OML/cmm/m/it/10 y$ \T1/aett/m/n/10 
+can a $\OML/cmm/m/it/10 n \OMS/cmsy/m/n/10 ^^B \OML/cmm/m/it/10 q$ \T1/aett/m/n
+/10 matrix. mave.dim implements
+ []
+
+
+Overfull \hbox (10.2793pt too wide) in paragraph at lines 80--82
+\T1/aett/m/n/10 the selection of dimension of the CS or CMS discussed in sectio
+n [].
+ []
+
+
+Overfull \hbox (11.31934pt too wide) in paragraph at lines 80--82
+\T1/aett/m/n/10 It returns an object with additional information of cross-valid
+ation
+ []
+
+
+Overfull \hbox (32.2793pt too wide) in paragraph at lines 80--82
+\T1/aett/m/n/10 values of different dimensions. Below is a simple example to il
+lustrate
+ []
+
+[2]
+Overfull \hbox (21.79932pt too wide) in paragraph at lines 109--111
+\T1/aett/m/n/10 The code below can be used to find the selected dimension with 
+minimum
+ []
+
+
+Overfull \hbox (27.0393pt too wide) in paragraph at lines 118--120
+\T1/aett/m/n/10 From the result, the estimated dimension reduction space with d
+imension
+ []
+
+
+Overfull \hbox (21.79932pt too wide) in paragraph at lines 118--120
+\T1/aett/m/n/10 3 has the minimum cross-validation value. The estimated basis v
+ectors
+ []
+
+
+Overfull \hbox (21.79932pt too wide) in paragraph at lines 118--120
+\T1/aett/m/n/10 of CS of dimension 3 can be accessed by coef method. From the r
+esult,
+ []
+
+
+Overfull \hbox (50.6353pt too wide) in paragraph at lines 118--120
+\T1/aett/m/n/10 the estimated basis vector falls in the linear space generated 
+by ($\OML/cmm/m/it/10 ^^L[]; ^^L[]; ^^L[]$\T1/aett/m/n/10 )
+ []
+
+
+Overfull \hbox (11.31934pt too wide) in paragraph at lines 118--120
+\T1/aett/m/n/10 with small deviation. Although in this example, the estimated b
+asis
+ []
+
+
+Overfull \hbox (24.43535pt too wide) in paragraph at lines 118--120
+\T1/aett/m/n/10 vectors are close to ($\OML/cmm/m/it/10 ^^L[]; ^^L[]; ^^L[]$\T1
+/aett/m/n/10 ), we should note that the original basis
+ []
+
+
+Overfull \hbox (8.71538pt too wide) in paragraph at lines 118--120
+\T1/aett/m/n/10 vectors like ($\OML/cmm/m/it/10 ^^L[]; ^^L[]; ^^L[]$\T1/aett/m/
+n/10 ) are unidentifiable, only the space generated
+ []
+
+
+Overfull \hbox (6.07935pt too wide) in paragraph at lines 132--134
+\T1/aett/m/n/10 In MAVE package of version 1.3.8, we use screening method to se
+lect
+ []
+
+
+Overfull \hbox (47.99927pt too wide) in paragraph at lines 132--134
+\T1/aett/m/n/10 import variables in high dimensional data. The default number o
+f variables
+ []
+
+
+Overfull \hbox (29.7252pt too wide) in paragraph at lines 132--134
+\T1/aett/m/n/10 retained after screening is $\OML/cmm/m/it/10 n= []\OT1/cmr/m/n
+/10 (\OML/cmm/m/it/10 n\OT1/cmr/m/n/10 )$\T1/aett/m/n/10 . The following is an 
+example about
+ []
+
+[3]
+Underfull \hbox (badness 10000) in paragraph at lines 162--163
+[]\T1/aett/m/n/10 Li, K. C. (1991). Sliced inverse regression for dimension
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 162--163
+\T1/aett/m/n/10 reduction. \T1/aett/m/it/10 Jour-nal of the Amer-i-can Sta-tis-
+ti-cal As-so-ci-a-tion\T1/aett/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 166--167
+[]\T1/aett/m/n/10 Cook, R. D., and Li, B. (2002). Dimension reduction for
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 166--167
+\T1/aett/m/n/10 conditional mean in regression. \T1/aett/m/it/10 An-nals of Sta
+tis-tics\T1/aett/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 168--169
+[]\T1/aett/m/n/10 Xia, Y., Tong, H., Li, W. K., and Zhu, L. X. (2002). An
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 168--169
+\T1/aett/m/n/10 adaptive estimation of dimension reduction space. \T1/aett/m/it
+/10 Jour-nal
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 168--169
+\T1/aett/m/it/10 of the Royal Sta-tis-ti-cal So-ci-ety: Se-ries B (Sta-tis-ti-c
+al
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 170--171
+[]\T1/aett/m/n/10 Xia, Y. (2007) A constructive approach to the estimation of
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 170--171
+\T1/aett/m/n/10 dimension reduction directions. \T1/aett/m/it/10 An-nals of Sta
+tis-tics\T1/aett/m/n/10 , 35(3),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 172--175
+[]\T1/aett/m/n/10 Wang, H., and Xia, Y. (2008). Sliced regression for dimension
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 172--175
+\T1/aett/m/n/10 reduction. \T1/aett/m/it/10 Jour-nal of the Amer-i-can Sta-tis-
+ti-cal As-so-ci-a-tion\T1/aett/m/n/10 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 176--177
+[]\T1/aett/m/n/10 Weisberg, S. (2002). Dimension reduction regression in R.
+ []
+
+[4] [5] (./User_Guild_of_Package_MAVE.aux)
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
+Here is how much of TeX's memory you used:
+ 2829 strings out of 478276
+ 48543 string characters out of 5843469
+ 334561 words of memory out of 5000000
+ 20971 multiletter control sequences out of 15000+600000
+ 492913 words of font info for 74 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 70i,6n,76p,1186b,347s stack positions out of 5000i,500n,10000p,200000b,80000s
+{d:/Program Files/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t
+s1.enc}<d:/Program Files/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmb10.pfb><d:/Program Files/texlive/2021/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmitt10.pfb><d:/Program Files/texlive/2021/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmmi10.pfb><d:/Program Files/texlive/2021/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmr10.pfb><d:/Program Files/texlive/2021/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmr12.pfb><d:/Program Files/texlive/2021/texmf-dist/fonts/t
+ype1/public/amsfonts/cm/cmr17.pfb><d:/Program Files/texlive/2021/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmr7.pfb><d:/Program Files/texlive/2021/texmf-dist/
+fonts/type1/public/amsfonts/cm/cmsltt10.pfb><d:/Program Files/texlive/2021/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb><d:/Program Files/texlive/2021
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmss17.pfb><d:/Program Files/texlive
+/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><d:/Program Files/te
+xlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb><d:/Program Fil
+es/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfst1000.pfb>
+Output written on User_Guild_of_Package_MAVE.pdf (5 pages, 159944 bytes).
+PDF statistics:
+ 87 PDF objects out of 1000 (max. 8388607)
+ 52 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 5 words of extra memory for PDF output out of 10000 (max. 10000000)
+

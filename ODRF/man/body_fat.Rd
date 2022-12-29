@@ -41,8 +41,8 @@ train = sample(1:252,100)
 train_data = data.frame(body_fat[train,])
 test_data = data.frame(body_fat[-train,])
 
-rf = ODRF(Density~.,train_data,type='regression')
-pred <- predict(rf,test_data[,-1],weight = FALSE)$prediction
+forest = ODRF(Density~.,train_data,type='regression',parallel=FALSE)
+pred <- predict(forest,test_data[,-1])
 #estimation error
 mean((pred-test_data[,1])^2)
 
@@ -61,5 +61,8 @@ Siri, W.E. (1956), "Gross composition of the body", in Advances in Biological an
 Katch, Frank and McArdle, William (1977). Nutrition, Weight Control, and Exercise, Houghton Mifflin Co., Boston.
 
 Wilmore, Jack (1976). Athletic Training and Physical Fitness: Physiological Principles of the Conditioning Process, Allyn and Bacon, Inc., Boston.
+}
+\seealso{
+\code{\link{breast_cancer}} \code{\link{seeds}}
 }
 \keyword{datasets}

@@ -3,35 +3,55 @@
 #' Dotchart of variable importance as measured by a Oblique Decision Random Forest.
 #' 
 #' @param varImp an object of class \code{\link{VarImp}}.
-#' @param nvar How many variables to show?
+#' @param nvar How many variables to show.
+#' @param digits integer indicating the number of decimal places (round) or significant digits (signif) to be used.
 #' @param main plot title.
 #' @param ... arguments to be passed to methods.
 #' 
 #' @return A matrix of importance measure, first column for each predictor variable and second column is Increased error. 
-#' classification error rate for classification or RPE(MSE/mean((ytest-mean(y))^2)) for regression.
+#' Error is misclassification rate (MR) for classification or mean square error (MSE) for regression.
 #' 
 #' @seealso \code{\link{ODRF}} \code{\link{VarImp}}
 #' 
 #' @examples
 #' data(breast_cancer)
-#' forest = ODRF(diagnosis~.,seeds,type='i-classification')
-#' varimp=VarImp(forest,seeds)
-#' plot(varimp)
+#' set.seed(221212)
+#' train = sample(1:569,200)
+#' train_data = data.frame(breast_cancer[train,-1])
+#' test_data = data.frame(breast_cancer[-train,-1])
+#'
+#' forest = ODRF(diagnosis~.,train_data,type='i-classification',parallel=FALSE)
+#' (varimp=VarImp(forest,train_data[,-1],train_data[,1]))
+#' plot(varimp,digits = 0)
 #' 
-#' @aliases plot.VarImp
 #' @rdname plot.VarImp
+#' @aliases plot.VarImp
 #' @method plot VarImp
 #' @export
-plot.VarImp <- function(varImp,nvar=min(30, nrow(varImp$varImp)), main=paste0("Oblique ",
+plot.VarImp <- function(varImp,nvar=min(30, nrow(varImp$varImp)), digits=NULL,main=paste0("Oblique ",
                            ifelse(varImp$type=="regression","Regression","Classification")," Forest"), ...) {
   imp=varImp$varImp
   imp=imp[1:nvar,,drop = FALSE]
+  
+  minErr=strsplit(as.character(min(imp[,2])),"")[[1]]
+  id=which(minErr=="e")
+  if(varImp$type!="regression"){
+    digits=0
+  }else if(is.null(digits)){
+      if(length(id)>0){
+        digits=sum(as.numeric(paste0(minErr[c(id+2,length(minErr))]))*c(10,1))
+      }else{
+        digits=which(minErr[-seq(which(minErr=="."))]!=0)[2]
+      }
+    }
+  
+  
   ## If there are more than two columns, just use the last two columns.
-  op <- par(xaxs = "i")
-  dotchart(imp[,2], xlab="Increased error (%)", ylab="",main=main,xaxt="n",
+  op <- par(xaxs = "i")#*10^digits
+  dotchart(imp[,2], xlab=paste0("Increased error (*",10^-digits,")"), ylab="",main=main,xaxt="n",
            cex.lab = 1.5,cex.axis = 1.25, bg = "skyblue")
   axis(1, seq(min(imp[,2]),max(imp[,2]),length.out = min(6,nvar)),
-       round(seq(min(imp[,2]),max(imp[,2]),length.out = min(6,nvar))*100,ifelse(varImp$type=="regression",0,2)),
+       round(seq(min(imp[,2]),max(imp[,2]),length.out = min(6,nvar))*10^digits,2),
        cex.lab = 1.5,cex.axis = 1.25)
   par(op)
   

@@ -2,7 +2,7 @@
 % Please edit documentation in R/predict_ODRF.R
 \name{predict.ODRF}
 \alias{predict.ODRF}
-\title{predict method for ODRF objects}
+\title{predict based on ODRF objects}
 \usage{
 \method{predict}{ODRF}(ppForest, Xnew, type = "response", weight.tree = FALSE)
 }
@@ -27,35 +27,34 @@ A set of vectors in the following list:
 Prediction a oblique decision random forest based on an input matrix or data frame using \code{\link{ODRF}} function.
 }
 \examples{
-#Classification with Oblique Decision Tree
+#Classification with Oblique Decision Random Forest
 data(seeds)
 set.seed(221212)
 train = sample(1:209,100)
 train_data = data.frame(seeds[train,])
 test_data = data.frame(seeds[-train,])
 
-tree = ODRF(varieties_of_wheat~.,train_data,type='i-classification')
-pred <- predict(tree,test_data[,-8])
-#estimation error
+forest = ODRF(varieties_of_wheat~.,train_data,type='i-classification',
+parallel=FALSE)
+pred <- predict(forest,test_data[,-8])
+#classification error
 (mean(pred!=test_data[,8]))
 
-#Regression with Oblique Decision Tree
+#Regression with Oblique Decision Random Forest
 data(body_fat)
 set.seed(221212)
 train = sample(1:252,100)
 train_data = data.frame(body_fat[train,])
 test_data = data.frame(body_fat[-train,])
 
-tree = ODRF(Density~.,train_data,type='regression')
-pred <- predict(tree,test_data[,-1])
+forest = ODRF(Density~.,train_data,type='regression',parallel=FALSE)
+pred <- predict(forest,test_data[,-1])
 #estimation error
 mean((pred-test_data[,1])^2)
 }
 \references{
-\itemize{
-\item{Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.}
-}
+Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.
 }
 \seealso{
-\code{\link{ODRF}}
+\code{\link{ODRF}} \code{\link{predict.ODT}}
 }

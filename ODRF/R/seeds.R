@@ -23,6 +23,8 @@
 #' @references M. Charytanowicz, J. Niewczas, P. Kulczycki, P.A. Kowalski, S. Lukasik, S. Zak, 'A Complete Gradient Clustering Algorithm for Features Analysis of X-ray Images', in: Information Technologies in Biomedicine, Ewa Pietka, Jacek Kawa (eds.), Springer-Verlag, Berlin-Heidelberg, 2010, pp. 15-24.
 #' @name seeds
 #' 
+#' @seealso  \code{\link{body_fat}} \code{\link{breast_cancer}}
+#' 
 #' @examples
 #' data(seeds)
 #' set.seed(221212)
@@ -30,16 +32,15 @@
 #' train_data = data.frame(seeds[train,])
 #' test_data = data.frame(seeds[-train,])
 #'
-#' library(ODRF)
-#' 
-#' rf = ODRF(varieties_of_wheat~.,train_data,type='i-classification')
-#' pred <- predict(rf,test_data[,-8],weight = FALSE)$prediction
-#' #estimation error
+#' forest = ODRF(varieties_of_wheat~.,train_data,
+#' type='i-classification',parallel=FALSE)
+#' pred <- predict(forest,test_data[,-8])
+#' #classification error
 #' (mean(pred!=test_data[,8]))
 #' 
 #' tree = ODT(varieties_of_wheat~.,train_data,type='i-classification')
 #' pred <- predict(tree,test_data[,-8])
-#' #estimation error
+#' #classification error
 #' (mean(pred!=test_data[,8]))
 
 NULL

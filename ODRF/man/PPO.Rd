@@ -9,16 +9,18 @@ PPO(X, y, model = "PPR", type = "i-classification", weights = NULL, ...)
 \arguments{
 \item{X}{An n by d numeric matrix (preferable) or data frame.}
 
-\item{y}{a n vector.}
+\item{y}{A response vector of length n.}
 
-\item{model}{\itemize{model for projection pursuit.
+\item{model}{model for projection pursuit.
+\itemize{
 \item{"PPR"(default): projection projection regression from \code{\link{ppr}}. When y is a category label, it is
 expanded to K binary features.}
-\item{"Log": logistic regression from \code{\link{nnet}}.}
-\item{"Rand": The random projection generated from {-1, 1}. 
-The following models can only be used for classification, i.e. the type must be 'i-classification' or 'g-classification'.}
+\item{"Log": logistic based on \code{\link{nnet}}.}
+\item{"Rand": The random projection generated from \eqn{\{-1, 1\}}. 
+The following models can only be used for classification, i.e. the \code{type} must be 'i-classification' or 'g-classification'.}
 \item{"LDA", "PDA", "Lr", "GINI", and "ENTROPY" from library \code{PPtreeViz}.}
-\item{\itemize{The following models from library \code{\link{Pursuit}}.
+\item{The following models based on \code{\link{Pursuit}}.
+\itemize{
 \item{"holes": Holes index}
 \item{"cm": Central Mass index}
 \item{"holes": Holes index}
@@ -38,20 +40,22 @@ The following models can only be used for classification, i.e. the type must be 
 \item{type}{The criterion used for splitting the variable. 'g-classification': gini impurity index (classification, default), 
 'i-classification': information gain (classification) or 'regression': mean square error (regression).}
 
-\item{weights}{A vector of length same as \code{data} that are positive weights. (default NULL)}
+\item{weights}{Vector of non-negative observational weights; fractional weights are allowed (default NULL).}
+
+\item{...}{optional parameters to be passed to the low level function.}
 }
 \value{
 optimal projection direction.
 }
 \description{
-Find the optimal projection using various projectin pursuit indices with class information.
+Find the optimal projection using various projectin pursuit models.
 }
 \examples{
 #classification
-data(iris)
-(PP <- PPO(iris[,1:4],iris[,5],model = "Log",type='i-classification'))
-(PP <- PPO(iris[,1:4],iris[,5],model = "PPR",type='i-classification'))
-(PP <- PPO(iris[,1:4],iris[,5],model = "LDA",type='i-classification'))
+data(seeds)
+(PP <- PPO(seeds[,1:7],seeds[,8],model = "Log",type='i-classification'))
+(PP <- PPO(seeds[,1:7],seeds[,8],model = "PPR",type='i-classification'))
+(PP <- PPO(seeds[,1:7],seeds[,8],model = "LDA",type='i-classification'))
 
 #regression
 data(body_fat)
@@ -61,16 +65,16 @@ data(body_fat)
 
 }
 \references{
-Friedman, J. H. and Stuetzle, W. (1981). Projection pursuit regression. Journal of the American Statistical Association, 76, 817–823. doi: 10.2307/2287576.
+Friedman, J. H., & Stuetzle, W. (1981). Projection pursuit regression. Journal of the American statistical Association, 76(376), 817-823.
 
 Ripley, B. D. (1996) Pattern Recognition and Neural Networks. Cambridge.
 
 Lee, YD, Cook, D., Park JW, and Lee, EK(2013) PPtree: Projection Pursuit Classification Tree, Electronic Journal of Statistics, 7:1369-1386.
 
-COOK, D., LEE, E. K., BUJA, A., WICKHAM, H.. Grand tours, projection pursuit guided tours and manual controls. In Chen, Chunhouh, Hardle, Wolfgang, Unwin, e Antony (Eds.), Handbook of data Visualization, Springer Handbooks of Computational Statistics, chapter III.2, p. 295-314. Springer, 2008.
+Cook, D., Buja, A., Lee, E. K., & Wickham, H. (2008). Grand tours, projection pursuit guided tours, and manual controls. In Handbook of data visualization (pp. 295-314). Springer, Berlin, Heidelberg.
 }
 \seealso{
-\code{\link{RotMatMake}} \code{\link{RotMatRand}} \code{\link{RotMatRF}} \code{\link{RotMatMake}}
+\code{\link{RotMatPPO}}
 }
 \keyword{projection}
 \keyword{pursuit}

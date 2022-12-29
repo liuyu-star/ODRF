@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_ODT.R
 \name{plot.ODT}
 \alias{plot.ODT}
-\title{oblique decision tree plot}
+\title{to plot an oblique decision tree}
 \usage{
 \method{plot}{ODT}(
   ppTree,
@@ -43,6 +43,6 @@ plot(tree)
 Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
 }
 \seealso{
-\code{\link{ODT}} \code{\link{plot_ODT_depth}}
+\code{\link{ODT}} \code{\link{as.party}} \code{\link{plot_ODT_depth}}
 }
 \keyword{tree}

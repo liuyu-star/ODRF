@@ -2,7 +2,7 @@
 % Please edit documentation in R/prune.R
 \name{prune}
 \alias{prune}
-\title{Pruning of class \code{ODT} or \code{ODRF}.}
+\title{Prune \code{ODT} or \code{ODRF}.}
 \usage{
 prune(obj, ...)
 }
@@ -15,8 +15,8 @@ prune(obj, ...)
 an object of class \code{ODT} and \code{prune.ODT}.
 }
 \description{
-Prune \code{ODT} or \code{ODRF} from bottom to top with validation data based on prediction error. \code{prune} is a S3 method for class class \code{ODT} and \code{ODRF}.
+Prune \code{ODT} or \code{ODRF} from bottom to top with validation data based on prediction error. \code{prune} is a S3 method for class \code{ODT} and \code{ODRF}.
 }
 \seealso{
-\code{ODT} \code{\link{ODRF}} \code{prune.ODT} \code{\link{prune.ODRF}}
+\code{\link{ODT}} \code{\link{ODRF}} \code{\link{prune.ODT}} \code{\link{prune.ODRF}}
 }

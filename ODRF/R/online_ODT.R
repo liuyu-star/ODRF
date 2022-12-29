@@ -1,14 +1,16 @@
-#' A machine learning algorithm for training class \code{ODT}.
+#' using training data to update an existing \code{ODT}.
 #' 
-#' The \code{\link{ODT}}is constantly updated by multiple batches of data to optimize the model.
+#' Update existing \code{\link{ODT}} using batches of data to improve the model.
 #'
-#' @param obj an object of class \code{ODT}.
-#' @param data Training data of class \code{data.frame} is used to update the object of class \code{ODT}.
-#' @param weights A vector of length same as \code{data} that are positive weights. (default NULL)
+#' @param ppTree an object of class \code{ODT}.
+#' @param X An n by d numeric matrix (preferable) or data frame is used to update the object of class \code{ODT}.
+#' @param y A response vector of length n is used to update the object of class \code{ODT}.
+#' @param weights Vector of non-negative observational weights; fractional weights are allowed (default NULL).
+#' @param ... optional parameters to be passed to the low level function.
 #' 
 #' @return The same result as \code{ODT}.
 #'
-#' @seealso \code{\link{ODT}} \code{\link{prune.ODT}}
+#' @seealso \code{\link{ODT}} \code{\link{prune.ODT}} \code{\link{online.ODRF}}
 #' 
 #' @examples
 #' #Classification with Oblique Decision Tree
@@ -17,13 +19,14 @@
 #' train = sample(1:209,100)
 #' train_data = data.frame(seeds[train,])
 #' test_data = data.frame(seeds[-train,])
+#' index=seq(floor(nrow(train_data)/2))
 #' 
-#' tree = ODT(varieties_of_wheat~.,train_data[seq(floor(nrow(train_data)/2)),],
-#' type='i-classification')
-#' tree = online(tree,train_data[-seq(floor(nrow(train_data)/2)),])
+#' tree = ODT(varieties_of_wheat~.,train_data[index,],type='i-classification')
+#' tree = online(tree,train_data[-index,-8],train_data[-index,8])
 #' pred <- predict(tree,test_data[,-8])
-#' #estimation error
+#' #classification error
 #' (mean(pred!=test_data[,8]))
+#' 
 #' 
 #' #Regression with Oblique Decision Tree
 #' data(body_fat)
@@ -31,20 +34,19 @@
 #' train = sample(1:252,100)
 #' train_data = data.frame(body_fat[train,])
 #' test_data = data.frame(body_fat[-train,])
+#' index=seq(floor(nrow(train_data)/2))
 #' 
-#' tree = ODT(Density~.,train_data[seq(floor(nrow(train_data)/2)),],
-#' type='regression')
-#' tree = online(tree,train_data[-seq(floor(nrow(train_data)/2)),])
-#' pred <- predict(tree,test_data[,-8])
+#' tree = ODT(Density~.,train_data[index,],type='regression')
+#' tree = online(tree,train_data[-index,-1],train_data[-index,1])
+#' pred <- predict(tree,test_data[,-1])
 #' #estimation error
 #' mean((pred-test_data[,1])^2)
 #' 
-#' @import Rcpp
-#' @aliases online.ODT
 #' @rdname online.ODT
+#' @aliases online.ODT
 #' @method online ODT
 #' @export
-online.ODT=function(ppTree,data,weights=NULL)
+online.ODT=function(ppTree,X=NULL,y=NULL,weights=NULL,...)
 {
   weights0=weights
   Call=ppTree$call
@@ -62,28 +64,34 @@ online.ODT=function(ppTree,data,weights=NULL)
   }
   rm(ppTree)
   
-  vars=all.vars(Terms)
+  #vars=all.vars(Terms)
+  if(sum(Xcat)>0&is.null(catLabel)){
+    #vars=vars[-(1+seq(length(unlist(catLabel))))]
+  #}else{
+    stop("'Xcat!=0' however 'catLabel' does not exist!")
+  }
+    
+  #if(is.null(data)){
+    data=data.frame(y,X)
+  #  colnames(data)=vars
+  #}
   # address na values.
   if (any(is.na(data))) {
     data=na.action(data.frame(data))
     warning("NA values exist in data matrix")
   }
-  y= data[,setdiff(colnames(data),vars[-1])]
-  X= data[,vars[-1]]
-  X=as.matrix(X) 
-  
-  if(!is.null(subset))
-    X=X[subset,]
-  #weights=c(weights,paramList$weights)
-  if(!is.null(weights))
-    X <- X * matrix(weights0,length(y),ncol(X))
-  weights=weights0
+  #y= data[,setdiff(colnames(data),vars[-1])]
+  #X= data[,vars[-1]]
+  #X=as.matrix(X) 
+    
+  y= data[,1]
+  X= data[,-1]
+  rm(data)
   
   n = length(y);
   p = ncol(X);
-
   
-  if((!NodeRotateFun%in%ls("package:ODRF"))&(!NodeRotateFun%in%ls())){
+  if((!NodeRotateFun%in%ls("package:ODRF"))&(!NodeRotateFun%in%ls(envir = .GlobalEnv))){
     source(paste0(FunDir,"/",NodeRotateFun,".R"))
   }
   
@@ -131,12 +139,23 @@ online.ODT=function(ppTree,data,weights=NULL)
         xj=xj1
       }
       
-      X=cbind(X1,X[,-Xcat]) 
+      X=cbind(X1,apply(X[,-Xcat], 2, as.numeric))
       p=ncol(X)
       numCat=length(unlist(catLabel))
       rm(X1)
       rm(Xj)
     }
+    
+    X=as.matrix(X)
+    colnames(X)=varName
+    
+    if(!is.null(subset))
+      X=X[subset,]
+    
+    #weights=c(weights,paramList$weights)
+    if(!is.null(weights))
+      X <- X * matrix(weights0,length(y),ncol(X))
+    weights=weights0
     
     #Variable scaling.
     if(Xscale!="No"){
@@ -248,15 +267,15 @@ online.ODT=function(ppTree,data,weights=NULL)
     
     ##########################################
     if(NodeRotateFun=="RotMatMake"){
-      sparseM <- MakeRotMat(X[nodeXIndx[[currentNode]],], y[nodeXIndx[[currentNode]]], 
+      sparseM <- RotMatMake(X[nodeXIndx[[currentNode]],], y[nodeXIndx[[currentNode]]], 
                             paramList$RotMatFun, paramList$PPFun, FunDir, paramList)
     }
     
     if(!NodeRotateFun%in%ls("package:ODRF")){
-      paramList$x =X[nodeXIndx[[currentNode]],];
+      paramList$X =X[nodeXIndx[[currentNode]],];
       paramList$y = y[nodeXIndx[[currentNode]]];
       sparseM <- do.call(FUN, paramList)
-      paramList$x = NULL;paramList$y = NULL;
+      paramList$X = NULL;paramList$y = NULL;
     }
     
     if(NodeRotateFun%in%c('RotMatRF','RotMatRand')){
@@ -264,7 +283,7 @@ online.ODT=function(ppTree,data,weights=NULL)
     }
     
     if(NodeRotateFun=="RotMatPPO"){
-      sparseM=RotMatPPO(x=X[nodeXIndx[[currentNode]],],y=y[nodeXIndx[[currentNode]]],model = paramList$model,
+      sparseM=RotMatPPO(X=X[nodeXIndx[[currentNode]],],y=y[nodeXIndx[[currentNode]]],model = paramList$model,
                         type=paramList$type,weights=paramList$weights,dimProj=paramList$dimProj,
                         numProj=paramList$numProj,catLabel = paramList$catLabel)
     }
@@ -405,6 +424,7 @@ online.ODT=function(ppTree,data,weights=NULL)
   ppTree$structure=list(nodeRotaMat = nodeRotaMat,nodeNumLabel = nodeNumLabel,nodeCutValue =nodeCutValue[1:(currentNode-1)],
                         nodeCutIndex =nodeCutIndex[1:(currentNode-1)],childNode = childNode[1:(currentNode-1)],
                         nodeDepth=nodeDepth)
-  class(ppTree) <- "ODT"
+  #class(ppTree) <- "ODT"
+  class(ppTree) <- append(class(ppTree),"ODT")
   return(ppTree)
 }

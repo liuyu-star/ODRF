@@ -2,7 +2,7 @@
 % Please edit documentation in R/as_party_ODT.R
 \name{as.party.ODT}
 \alias{as.party.ODT}
-\title{ODT as \code{party}}
+\title{\code{ODT} as \code{party}}
 \usage{
 \method{as.party}{ODT}(ppTree, data, ...)
 }
@@ -15,12 +15,13 @@ and \code{data} must be the training data \code{data} in \code{\link{ODT}}.}
 \item{...}{arguments to be passed to methods}
 }
 \description{
-Functions coercing \code{ODT} object to objects of class \code{party}.
+To make \code{ODT} object to objects of class \code{party}.
 }
 \examples{
 data(iris)
 tree <- ODT(Species~.,data = iris)
 tree
+plot(tree)
 party.tree<- as.party(tree,data = iris)
 party.tree
 plot(party.tree)
