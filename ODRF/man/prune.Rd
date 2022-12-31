@@ -2,20 +2,20 @@
 % Please edit documentation in R/prune.R
 \name{prune}
 \alias{prune}
-\title{Prune \code{ODT} or \code{ODRF}.}
+\title{prune \code{ODT} or \code{ODRF}}
 \usage{
 prune(obj, ...)
 }
 \arguments{
-\item{obj}{an object of class \code{ODT} or \code{ODRF}.}
+\item{obj}{An object of class \code{ODT} or \code{ODRF}.}
 
 \item{...}{For other parameters related to class \code{obj}, see \code{\link{ODT}} or \code{\link{ODRF}}.}
 }
 \value{
-an object of class \code{ODT} and \code{prune.ODT}.
+An object of class \code{ODT} and \code{prune.ODT}.
 }
 \description{
-Prune \code{ODT} or \code{ODRF} from bottom to top with validation data based on prediction error. \code{prune} is a S3 method for class \code{ODT} and \code{ODRF}.
+Prune \code{ODT} or \code{ODRF} from bottom to top with validation data based on prediction error, and \code{prune} is a S3 method for class \code{ODT} and \code{ODRF}.
 }
 \seealso{
 \code{\link{ODT}} \code{\link{ODRF}} \code{\link{prune.ODT}} \code{\link{prune.ODRF}}

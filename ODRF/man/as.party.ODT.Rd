@@ -7,22 +7,22 @@
 \method{as.party}{ODT}(ppTree, data, ...)
 }
 \arguments{
-\item{ppTree}{an object of class \code{\link{ODT}}.}
+\item{ppTree}{An object of class \code{\link{ODT}}.}
 
-\item{data}{Training data of class \code{data.frame} is used to convert the object of class \code{ODRF}. 
+\item{data}{Training data of class \code{data.frame} is used to convert the object of class \code{ODRF}.
 and \code{data} must be the training data \code{data} in \code{\link{ODT}}.}
 
-\item{...}{arguments to be passed to methods}
+\item{...}{Arguments to be passed to methods}
 }
 \description{
 To make \code{ODT} object to objects of class \code{party}.
 }
 \examples{
 data(iris)
-tree <- ODT(Species~.,data = iris)
+tree <- ODT(Species ~ ., data = iris)
 tree
 plot(tree)
-party.tree<- as.party(tree,data = iris)
+party.tree <- as.party(tree, data = iris)
 party.tree
 plot(party.tree)
 

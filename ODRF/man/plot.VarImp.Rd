@@ -14,18 +14,18 @@
 )
 }
 \arguments{
-\item{varImp}{an object of class \code{\link{VarImp}}.}
+\item{varImp}{An object of class \code{\link{VarImp}}.}
 
 \item{nvar}{How many variables to show.}
 
-\item{digits}{integer indicating the number of decimal places (round) or significant digits (signif) to be used.}
+\item{digits}{Integer indicating the number of decimal places (round) or significant digits (signif) to be used.}
 
 \item{main}{plot title.}
 
-\item{...}{arguments to be passed to methods.}
+\item{...}{Arguments to be passed to methods.}
 }
 \value{
-A matrix of importance measure, first column for each predictor variable and second column is Increased error. 
+A matrix of importance measure, first column for each predictor variable and second column is Increased error.
 Error is misclassification rate (MR) for classification or mean square error (MSE) for regression.
 }
 \description{
@@ -34,13 +34,14 @@ Dotchart of variable importance as measured by a Oblique Decision Random Forest.
 \examples{
 data(breast_cancer)
 set.seed(221212)
-train = sample(1:569,200)
-train_data = data.frame(breast_cancer[train,-1])
-test_data = data.frame(breast_cancer[-train,-1])
+train <- sample(1:569, 200)
+train_data <- data.frame(breast_cancer[train, -1])
+test_data <- data.frame(breast_cancer[-train, -1])
 
-forest = ODRF(diagnosis~.,train_data,type='i-classification',parallel=FALSE)
-(varimp=VarImp(forest,train_data[,-1],train_data[,1]))
-plot(varimp,digits = 0)
+forest <- ODRF(diagnosis ~ ., train_data, 
+  type = "i-classification", parallel = FALSE)
+(varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
+plot(varimp, digits = 0)
 
 }
 \seealso{

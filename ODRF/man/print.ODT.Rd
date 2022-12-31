@@ -2,34 +2,34 @@
 % Please edit documentation in R/print_ODT.R
 \name{print.ODT}
 \alias{print.ODT}
-\title{Print ODT result}
+\title{print ODT result}
 \usage{
 \method{print}{ODT}(ppTree, projection = FALSE, cutvalue = FALSE, verbose = TRUE, ...)
 }
 \arguments{
-\item{ppTree}{an object of class \code{\link{ODT}}.}
+\item{ppTree}{An object of class \code{\link{ODT}}.}
 
-\item{projection}{print projection coefficients in each node if TRUE.}
+\item{projection}{Print projection coefficients in each node if TRUE.}
 
-\item{cutvalue}{print cutoff values in each node if TRUE.}
+\item{cutvalue}{Print cutoff values in each node if TRUE.}
 
-\item{verbose}{print if TRUE, no output if FALSE.}
+\item{verbose}{Print if TRUE, no output if FALSE.}
 
-\item{...}{arguments to be passed to methods.}
+\item{...}{Arguments to be passed to methods.}
 }
 \description{
-Print the oblique decision tree result
+Print the oblique decision tree structure.
 }
 \examples{
 data(iris)
-tree <- ODT(Species~.,data = iris)
+tree <- ODT(Species ~ ., data = iris)
 tree
-print(tree,projection=TRUE,cutvalue=TRUE)
+print(tree, projection = TRUE, cutvalue = TRUE)
 
 }
 \references{
-Lee, EK(2017) 
-PPtreeViz: An R Package for Visualizing Projection Pursuit Classification 
+Lee, EK(2017)
+PPtreeViz: An R Package for Visualizing Projection Pursuit Classification
 Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
 }
 \seealso{

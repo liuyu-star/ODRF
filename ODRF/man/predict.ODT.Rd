@@ -7,9 +7,9 @@
 \method{predict}{ODT}(ppTree, Xnew, leafnode = FALSE)
 }
 \arguments{
-\item{ppTree}{an object of class ODT, as that created by the function ODT.}
+\item{ppTree}{An object of class ODT, as that created by the function \code{\link{ODT}}.}
 
-\item{Xnew}{an n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.}
+\item{Xnew}{An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.}
 
 \item{leafnode}{If or not output the leaf node sequence number that \code{Xnew} is partitioned. (default FALSE)}
 }
@@ -21,32 +21,32 @@ A vector of the following:
 }
 }
 \description{
-Prediction a oblique decision tree based on an input matrix or data frame using \code{\link{ODT}} function.
+Prediction of ODT for an input matrix or data frame.
 }
 \examples{
-#Classification with Oblique Decision Tree.
+# Classification with Oblique Decision Tree.
 data(seeds)
 set.seed(221212)
-train = sample(1:209,100)
-train_data = data.frame(seeds[train,])
-test_data = data.frame(seeds[-train,])
+train <- sample(1:209, 100)
+train_data <- data.frame(seeds[train, ])
+test_data <- data.frame(seeds[-train, ])
 
-tree = ODT(varieties_of_wheat~.,train_data,type='i-classification')
-pred <- predict(tree,test_data[,-8])
-#classification error
-(mean(pred!=test_data[,8]))
+tree <- ODT(varieties_of_wheat ~ ., train_data, type = "i-classification")
+pred <- predict(tree, test_data[, -8])
+# classification error
+(mean(pred != test_data[, 8]))
 
-#Regression with Oblique Decision Tree.
+# Regression with Oblique Decision Tree.
 data(body_fat)
 set.seed(221212)
-train = sample(1:252,100)
-train_data = data.frame(body_fat[train,])
-test_data = data.frame(body_fat[-train,])
+train <- sample(1:252, 100)
+train_data <- data.frame(body_fat[train, ])
+test_data <- data.frame(body_fat[-train, ])
 
-tree = ODT(Density~.,train_data,type='regression')
-pred <- predict(tree,test_data[,-1])
-#estimation error
-mean((pred-test_data[,1])^2)
+tree <- ODT(Density ~ ., train_data, type = "regression")
+pred <- predict(tree, test_data[, -1])
+# estimation error
+mean((pred - test_data[, 1])^2)
 
 }
 \references{

@@ -14,36 +14,36 @@
 )
 }
 \arguments{
-\item{ppTree}{an object of class \code{\link{prune.ODT}}.}
+\item{ppTree}{An object of class \code{\link{prune.ODT}}.}
 
 \item{position}{Position of the curve label.}
 
-\item{digits}{integer indicating the number of decimal places (round) or significant digits (signif) to be used.}
+\item{digits}{Integer indicating the number of decimal places (round) or significant digits (signif) to be used.}
 
 \item{main}{main title}
 
-\item{...}{arguments to be passed to methods.}
+\item{...}{Arguments to be passed to methods.}
 }
 \value{
 Error of validation data after each pruning, misclassification rate (MR) for classification or mean square error (MSE) for regression.
 }
 \description{
-Plot the error graph of the pruned oblique decision tree with different numbers of split nodes
+Plot the error graph of the pruned oblique decision tree at different split nodes.
 }
 \examples{
 data(body_fat)
 set.seed(221212)
-train = sample(1:252,100)
-train_data = data.frame(body_fat[train,])
-test_data = data.frame(body_fat[-train,])
+train <- sample(1:252, 100)
+train_data <- data.frame(body_fat[train, ])
+test_data <- data.frame(body_fat[-train, ])
 
-tree = ODT(Density~.,train_data,type='regression')
-tree = prune(tree,test_data[,-1],test_data[,1])
-#Plot pruned oblique decision tree structure (default)
-plot(tree)
-#Plot the error graph of the pruned oblique decision tree.
-class(tree)="prune.ODT"
-plot(tree)
+tree <- ODT(Density ~ ., train_data, type = "regression")
+prune.tree <- prune(tree, test_data[, -1], test_data[, 1])
+# Plot pruned oblique decision tree structure (default)
+plot(prune.tree)
+# Plot the error graph of the pruned oblique decision tree.
+class(prune.tree) <- "prune.ODT"
+plot(prune.tree)
 
 }
 \seealso{

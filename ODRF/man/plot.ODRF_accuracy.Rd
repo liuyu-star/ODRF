@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_ODRF_accuracy.R
 \name{plot.ODRF_accuracy}
 \alias{plot.ODRF_accuracy}
-\title{Plot method for ODRF.accuracy objects}
+\title{plot method for \code{ODRF_accuracy} objects}
 \usage{
 \method{plot}{ODRF_accuracy}(
   Err,
@@ -16,29 +16,29 @@
 \arguments{
 \item{Err}{Object of class \code{\link{ODRF_accuracy}}.}
 
-\item{lty}{a vector of line types, see \code{\link{par}}.}
+\item{lty}{A vector of line types, see \code{\link{par}}.}
 
-\item{digits}{integer indicating the number of decimal places (round) or significant digits (signif) to be used.}
+\item{digits}{Integer indicating the number of decimal places (round) or significant digits (signif) to be used.}
 
 \item{main}{main title of the plot.}
 
-\item{...}{arguments to be passed to methods.}
+\item{...}{Arguments to be passed to methods.}
 }
 \value{
 OOB error and test error, misclassification rate (MR) for classification or mean square error (MSE) for regression.
 }
 \description{
-Draw the error graph of class \code{ODRF} at different number of trees.
+Draw the error graph of class \code{ODRF} at different tree sizes.
 }
 \examples{
 data(breast_cancer)
 set.seed(221212)
-train = sample(1:569,200)
-train_data = data.frame(breast_cancer[train,-1])
-test_data = data.frame(breast_cancer[-train,-1])
+train <- sample(1:569, 200)
+train_data <- data.frame(breast_cancer[train, -1])
+test_data <- data.frame(breast_cancer[-train, -1])
 
-forest = ODRF(diagnosis~.,train_data,type='i-classification',parallel=FALSE)
-(error=ODRF_accuracy(forest,train_data,test_data))
+forest <- ODRF(diagnosis ~ ., train_data, type = "i-classification", parallel = FALSE)
+(error <- ODRF_accuracy(forest, train_data, test_data))
 plot(error)
 
 }

@@ -17,17 +17,17 @@ ODRF_accuracy(ppForest, data, newdata = NULL)
 OOB error and test error, misclassification rate (MR) for classification or mean square error (MSE) for regression.
 }
 \description{
-The accuracy of class \code{ODRF} at different number of trees.
+Prediction accuracy of ODRF at different tree sizes.
 }
 \examples{
 data(breast_cancer)
 set.seed(221212)
-train = sample(1:569,200)
-train_data = data.frame(breast_cancer[train,-1])
-test_data = data.frame(breast_cancer[-train,-1])
+train <- sample(1:569, 200)
+train_data <- data.frame(breast_cancer[train, -1])
+test_data <- data.frame(breast_cancer[-train, -1])
 
-forest = ODRF(diagnosis~.,train_data,type='i-classification',parallel=FALSE)
-(error=ODRF_accuracy(forest,train_data,test_data))
+forest <- ODRF(diagnosis ~ ., train_data, type = "i-classification", parallel = FALSE)
+(error <- ODRF_accuracy(forest, train_data, test_data))
 
 }
 \seealso{

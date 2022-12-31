@@ -2,7 +2,7 @@
 % Please edit documentation in R/best_cut_node.R
 \name{best.cut.node}
 \alias{best.cut.node}
-\title{Find  best split variable and node.}
+\title{find best split variable and node.}
 \usage{
 best.cut.node(
   X,
@@ -18,33 +18,33 @@ best.cut.node(
 
 \item{y}{A response vector of length n.}
 
-\item{type}{The criterion used for splitting the variable. 'i-classification': information gain (classification, default), 
+\item{type}{One of three criteria, 'i-classification': information gain (classification, default),
 'g-classification': gini impurity index (classification) or 'regression': mean square error (regression).}
 
-\item{weights}{a vector of values which weigh the samples when considering a split.}
+\item{weights}{A vector of values which weigh the samples when considering a split.}
 
-\item{MinLeaf}{the minimum amount of samples in a leaf.}
+\item{MinLeaf}{The minimum amount of samples in a leaf.}
 
-\item{numLabels}{the number of categories.}
+\item{numLabels}{The number of categories.}
 }
 \value{
-a list which contains:
+A list which contains:
 \itemize{
-\item BestCutVar: the best split variable.
-\item BestCutVal: the best split point for the best split variable.
+\item BestCutVar: The best split variable.
+\item BestCutVal: The best split point for the best split variable.
 \item BestIndex: Each variable corresponds to the min gini impurity index(method='g-classification'),
 the max information gain(method='i-classification') or the min squared error(method='regression').
 }
 }
 \description{
-Three criterion functions for splitting variables.
+A function to select the splitting variables and nodes using one of three criteria.
 }
 \examples{
 ### Find the best split variable ###
 data(iris)
-X=as.matrix(iris[, 1:4])
-y=iris[[5]]
-bestcut=best.cut.node(X,y,type='i-classification')
+X <- as.matrix(iris[, 1:4])
+y <- iris[[5]]
+bestcut <- best.cut.node(X, y, type = "i-classification")
 print(bestcut)
 
 }

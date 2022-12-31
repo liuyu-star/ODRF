@@ -24,35 +24,34 @@ The same result as \code{ODRF}.
 Update existing \code{\link{ODRF}} using batches of data to improve the model.
 }
 \examples{
-#Classification with Oblique Decision Random Forest
+# Classification with Oblique Decision Random Forest
 data(seeds)
 set.seed(221212)
-train = sample(1:209,100)
-train_data = data.frame(seeds[train,])
-test_data = data.frame(seeds[-train,])
-index=seq(floor(nrow(train_data)/2))
+train <- sample(1:209, 100)
+train_data <- data.frame(seeds[train, ])
+test_data <- data.frame(seeds[-train, ])
+index <- seq(floor(nrow(train_data) / 2))
+forest <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
+  type = "i-classification",parallel = FALSE)
+online.forest <- online(forest, train_data[-index, -8], train_data[-index, 8])
+pred <- predict(online.forest, test_data[, -8])
+# classification error
+(mean(pred != test_data[, 8]))
 
-forest = ODRF(varieties_of_wheat~.,train_data[index,],type='i-classification'
-,parallel=FALSE)
-forest = online(forest,train_data[-index,-8],train_data[-index,8])
-pred <- predict(forest,test_data[,-8])
-#classification error
-(mean(pred!=test_data[,8]))
-
-
-#Regression with Oblique Decision Random Forest
+# Regression with Oblique Decision Random Forest
 data(body_fat)
 set.seed(221212)
-train = sample(1:252,100)
-train_data = data.frame(body_fat[train,])
-test_data = data.frame(body_fat[-train,])
-index=seq(floor(nrow(train_data)/2))
-
-forest = ODRF(Density~.,train_data[index,],type='regression',parallel=FALSE)
-forest = online(forest,train_data[-index,-1],train_data[-index,1])
-pred <- predict(forest,test_data[,-1])
-#estimation error
-mean((pred-test_data[,1])^2)
+train <- sample(1:252, 100)
+train_data <- data.frame(body_fat[train, ])
+test_data <- data.frame(body_fat[-train, ])
+index <- seq(floor(nrow(train_data) / 2))
+forest <- ODRF(Density ~ ., train_data[index, ],
+ type = "regression", parallel = FALSE)
+online.forest <- online(online.forest, train_data[-index, -1],
+ train_data[-index, 1])
+pred <- predict(online.forest, test_data[, -1])
+# estimation error
+mean((pred - test_data[, 1])^2)
 
 }
 \seealso{

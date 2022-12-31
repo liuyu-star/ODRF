@@ -16,11 +16,11 @@
 )
 }
 \arguments{
-\item{ppTree}{an object of class \code{\link{ODT}}.}
+\item{ppTree}{An object of class \code{\link{ODT}}.}
 
-\item{font.size}{font size of plot}
+\item{font.size}{Font size of plot}
 
-\item{width.size}{size of eclipse in each node.}
+\item{width.size}{Size of eclipse in each node.}
 
 \item{xadj}{The size of the left and right movement.}
 
@@ -28,14 +28,14 @@
 
 \item{sub}{sub title}
 
-\item{...}{arguments to be passed to methods.}
+\item{...}{Arguments to be passed to methods.}
 }
 \description{
 Draw oblique decision tree with tree structure. It is modified from a function in \code{PPtreeViz} library.
 }
 \examples{
 data(iris)
-tree <- ODT(Species~., data = iris,type='i-classification')
+tree <- ODT(Species ~ ., data = iris, type = "i-classification")
 plot(tree)
 
 }

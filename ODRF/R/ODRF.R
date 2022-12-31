@@ -1,21 +1,26 @@
 #' Classification and Regression with Oblique Decision Random Forest
-#' 
-#' ODRF is the assembly of multiple ODTs, which can effectively reduce the overfitting of individual ODTs and improve the accuracy of classification and regression.
+#'
+#' Classification and regression implemented by the oblique decision random forest. It is an extension of random forest and include random forest as a special case. It usually produces more accurate predictions, but needs a long computation time.
 #'
 #' @param formula Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})
 #' @param data Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.
 #' @param X An n by d numeric matrix (preferable) or data frame.
 #' @param y A response vector of length n.
-#' @param type The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression. 
+#' @param type The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression.
 #' 'auto' (default): If the response in \code{data} or \code{y} is a factor, 'g-classification' is used, otherwise regression is assumed.
-#' @param NodeRotateFun Name of the function of class \code{character} that implements a linear combination of predictors in the split node. including "RotMatPPO": see \code{\link{RotMatPPO}} (default, model="PPR"),
-#' "RotMatRand": see \code{\link{RotMatRand}}, and "RotMatRF": see \code{\link{RotMatRF}}. Users can define this function, for details see \code{\link{RotMatMake}}.
+#' @param NodeRotateFun Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
+#' including \itemize{
+#' \item{"RotMatPPO": projection pursuit optimization model (\code{\link{PPO}}), see \code{\link{RotMatPPO}} (default, model="PPR").}
+#' \item{"RotMatRF": single feature similar to random forest, see \code{\link{RotMatRF}}.}
+#' \item{"RotMatRand": random rotation, see \code{\link{RotMatRand}}.}
+#' \item{"RotMatMake": users can define this function, for details see \code{\link{RotMatMake}}.}
+#' }
 #' @param FunDir The path to the \code{function} of the user-defined \code{NodeRotateFun} (default current working directory).
 #' @param paramList List of parameters used by the functions \code{NodeRotateFun}. If left unchanged, default values will be used, for details see \code{\link[ODRF]{defaults}}.
 #' @param ntrees The number of trees in the forest (default 100).
-#' @param storeOOB if TRUE then the samples omitted during the creation of a tree are stored as part of the tree (default TRUE).
+#' @param storeOOB If TRUE then the samples omitted during the creation of a tree are stored as part of the tree (default TRUE).
 #' @param replacement if TRUE then n samples are chosen, with replacement, from training data (default TRUE).
-#' @param stratify if TRUE then class sample proportions are maintained during the random sampling. Ignored if replacement = FALSE (default TRUE).
+#' @param stratify If TRUE then class sample proportions are maintained during the random sampling. Ignored if replacement = FALSE (default TRUE).
 #' @param numOOB  Ratio of 'out-of-bag' (default 1/3).
 #' @param parallel Parallel computing or not (default TRUE).
 #' @param numCores Number of cores to be used for parallel computing (default \code{Inf}).
@@ -27,23 +32,23 @@
 #' @param weights Vector of non-negative observational weights; fractional weights are allowed (default NULL).
 #' @param na.action A function to specify the action to be taken if NAs are found. (NOTE: If given, this argument must be named.)
 #' @param catLabel A category labels of class \code{list} in predictors. (default NULL, for details see Examples)
-#' @param Xcat A class \code{vector} is used to indicate which predictor is the categorical variable. The default Xcat=0 means that no special treatment is given to category variables. 
-#' When Xcat=NULL, the predictor x that satisfies the condition \code{(length(unique(x))<10) & (n>20)} is judged to be a category variable. 
+#' @param Xcat A class \code{vector} is used to indicate which predictor is the categorical variable, the default \code{Xcat}=0 means that no special treatment is given to category variables.
+#' When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))<10) & (n>20) is judged to be a category variable.
 #' @param Xscale Predictor standardization methods. " Min-max" (default), "Quantile", "No" denote Min-max transformation, Quantile transformation and No transformation respectively.
 #' @param TreeRandRotate If or not to randomly rotate the Training data before building the tree (default FALSE).
-#' @param ... optional parameters to be passed to the low level function.
-#' 
+#' @param ... Optional parameters to be passed to the low level function.
+#'
 #' @return An object of class ODRF Containing a list components:
 #' \itemize{
 #' \item{\code{call}: The original call to ODRF.}
 #' \item{\code{terms}: An object of class \code{c("terms", "formula")} (see \code{\link{terms.object}}) summarizing the formula. Used by various methods, but typically not of direct relevance to users.}
 #' \item{\code{ppTrees}: Each tree used to build the forest. \itemize{
-#' \item{\code{oobErr}: 'out-of-bag' error for tree, classification error rate for classification or mean square error for regression.}
+#' \item{\code{oobErr}: 'out-of-bag' error for tree, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 #' \item{\code{oobIndex}: Which training data to use as 'out-of-bag'.}
 #' \item{\code{oobPred}: Predicted value for 'out-of-bag'.}
-#' \item{\code{other}: For other tree-related values see \code{\link{ODT}}.}
+#' \item{\code{other}: For other tree related values \code{\link{ODT}}.}
 #' }}
-#' \item{\code{oobErr}: 'out-of-bag' error for forest, classification error rate for classification or mean squared error for regression.}
+#' \item{\code{oobErr}: 'out-of-bag' error for forest, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 #' \item{\code{oobConfusionMat}: 'out-of-bag' confusion matrix for forest.}
 #' \item{\code{type}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
 #' \item{\code{paramList}: Parameters in a named list to be used by \code{NodeRotateFun}.}
@@ -53,7 +58,7 @@
 #' }
 #'
 #' @seealso \code{\link{online.ODRF}} \code{\link{prune.ODRF}} \code{\link{predict.ODRF}} \code{\link{print.ODRF}} \code{\link{ODRF_accuracy}} \code{\link{VarImp}}
-#' 
+#'
 #' @author Yu Liu and Yingcun Xia
 #' @references Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.
 #' @references Tomita T M, Browne J, Shen C, et al. Sparse projection oblique randomer forests[J]. Journal of machine learning research, 2020, 21(104).
@@ -61,89 +66,88 @@
 #' @keywords oblique decision tree
 #' @keywords random forest
 #' @keywords projection pursuit
-#' 
+#'
 #' @examples
-#' #Classification with Oblique Decision Random Forest
+#' # Classification with Oblique Decision Randome Forest.
 #' data(seeds)
 #' set.seed(221212)
-#' train = sample(1:209,100)
-#' train_data = data.frame(seeds[train,])
-#' test_data = data.frame(seeds[-train,])
+#' train <- sample(1:209, 100)
+#' train_data <- data.frame(seeds[train, ])
+#' test_data <- data.frame(seeds[-train, ])
+#' forest <- ODRF(varieties_of_wheat ~ ., train_data,type = "i-classification",
+#'   parallel = FALSE)
+#' pred <- predict(forest, test_data[, -8])
+#' # classification error
+#' (mean(pred != test_data[, 8]))
 #'
-#' forest = ODRF(varieties_of_wheat~.,train_data,type='i-classification',
-#' parallel=FALSE)
-#' pred <- predict(forest,test_data[,-8])
-#' #classification error
-#' (mean(pred!=test_data[,8]))
-#' 
-#' #Regression with Oblique Decision Random Forest
+#' # Regression with Oblique Decision Randome Forest.
 #' data(body_fat)
 #' set.seed(221212)
-#' train = sample(1:252,100)
-#' train_data = data.frame(body_fat[train,])
-#' test_data = data.frame(body_fat[-train,])
+#' train <- sample(1:252, 100)
+#' train_data <- data.frame(body_fat[train, ])
+#' test_data <- data.frame(body_fat[-train, ])
+#' forest <- ODRF(Density ~ ., train_data, type = "regression", parallel = FALSE)
+#' pred <- predict(forest, test_data[, -1])
+#' # estimation error
+#' mean((pred - test_data[, 1])^2)
 #'
-#' forest = ODRF(Density~.,train_data,type='regression',parallel=FALSE)
-#' pred <- predict(forest,test_data[,-1])
-#' #estimation error
-#' mean((pred-test_data[,1])^2)
-#' 
-#' 
 #' ### Train ODRF on one-of-K encoded categorical data ###
 #' set.seed(22)
-#' Xcol1=sample(c("A","B","C"),100,replace = TRUE)
-#' Xcol2=sample(c("1","2","3","4","5"),100,replace = TRUE)
-#' Xcon=matrix(rnorm(100*3),100,3)
-#' X=data.frame(Xcol1,Xcol2,Xcon)
-#' Xcat=c(1,2)
-#' catLabel=NULL
-#' y=as.factor(sample(c(0,1),100,replace = TRUE))
-#' forest = ODRF(y~X,type='i-classification',Xcat = NULL,parallel=FALSE)
+#' Xcol1 <- sample(c("A", "B", "C"), 100, replace = TRUE)
+#' Xcol2 <- sample(c("1", "2", "3", "4", "5"), 100, replace = TRUE)
+#' Xcon <- matrix(rnorm(100 * 3), 100, 3)
+#' X <- data.frame(Xcol1, Xcol2, Xcon)
+#' Xcat <- c(1, 2)
+#' catLabel <- NULL
+#' y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
+#' forest <- ODRF(y ~ X, type = "i-classification", Xcat = NULL, parallel = FALSE)
 #' head(X)
-#' #   Xcol1 Xcol2         X1         X2          X3
-#' #1     B     5 -0.04178453  2.3962339 -0.01443979
-#' #2     A     4 -1.66084623 -0.4397486  0.57251733
-#' #3     B     2 -0.57973333 -0.2878683  1.24475578
-#' #4     B     1 -0.82075051  1.3702900  0.01716528
-#' #5     C     5 -0.76337897 -0.9620213  0.25846351
-#' #6     A     5 -0.37720294 -0.1853976  1.04872159
-#' 
+#' #>   Xcol1 Xcol2          X1         X2          X3
+#' #> 1     B     5 -0.04178453  2.3962339 -0.01443979
+#' #> 2     A     4 -1.66084623 -0.4397486  0.57251733
+#' #> 3     B     2 -0.57973333 -0.2878683  1.24475578
+#' #> 4     B     1 -0.82075051  1.3702900  0.01716528
+#' #> 5     C     5 -0.76337897 -0.9620213  0.25846351
+#' #> 6     A     5 -0.37720294 -0.1853976  1.04872159
+#'
 #' # one-of-K encode each categorical feature and store in X1
-#' numCat <- apply(X[,Xcat,drop = FALSE], 2, function(x) length(unique(x)))
-#' #initialize training data matrix X
+#' numCat <- apply(X[, Xcat, drop = FALSE], 2, function(x) length(unique(x)))
+#' # initialize training data matrix X
 #' X1 <- matrix(0, nrow = nrow(X), ncol = sum(numCat))
 #' catLabel <- vector("list", length(Xcat))
-#' names(catLabel)<- colnames(X)[Xcat]
+#' names(catLabel) <- colnames(X)[Xcat]
 #' col.idx <- 0L
 #' # convert categorical feature to K dummy variables
-#' for (j in 1:length(Xcat)) {
-#'   catMap <- (col.idx + 1L):(col.idx + numCat[j])
-#'   catLabel[[j]]=levels(as.factor(X[,Xcat[j]]))
-#'   X1[, catMap] <- (matrix(X[,Xcat[j]],nrow(X),numCat[j])==matrix(catLabel[[j]],
-#'   nrow(X),numCat[j],byrow = TRUE))+0
+#' for (j in seq_along(Xcat)) {
+#'   catMap <- (col.idx + 1):(col.idx + numCat[j])
+#'   catLabel[[j]] <- levels(as.factor(X[, Xcat[j]]))
+#'   X1[, catMap] <- (matrix(X[, Xcat[j]], nrow(X), numCat[j]) == 
+#'   matrix(catLabel[[j]],nrow(X), numCat[j], byrow = TRUE)) + 0
 #'   col.idx <- col.idx + numCat[j]
 #' }
-#' X=cbind(X1,X[,-Xcat])
-#' colnames(X)=c(paste(rep(seq(length(numCat)),numCat),unlist(catLabel),sep = "."),
-#' "X1","X2","X3")
-#' 
-#' #Print the result after processing of category variables.
+#' X <- cbind(X1, X[, -Xcat])
+#' colnames(X) <- c(paste(rep(seq_along(numCat), numCat), unlist(catLabel),
+#'   sep = "."), "X1", "X2", "X3")
+#'
+#' # Print the result after processing of category variables.
 #' head(X)
-#' #  1.A 1.B 1.C 2.1 2.2 2.3 2.4 2.5          X1         X2          X3
-#' #1   0   1   0   0   0   0   0   1 -0.04178453  2.3962339 -0.01443979
-#' #2   1   0   0   0   0   0   1   0 -1.66084623 -0.4397486  0.57251733
-#' #3   0   1   0   0   1   0   0   0 -0.57973333 -0.2878683  1.24475578
-#' #4   0   1   0   1   0   0   0   0 -0.82075051  1.3702900  0.01716528
-#' #5   0   0   1   0   0   0   0   1 -0.76337897 -0.9620213  0.25846351
-#' #6   1   0   0   0   0   0   0   1 -0.37720294 -0.1853976  1.04872159
+#' #>   1.A 1.B 1.C 2.1 2.2 2.3 2.4 2.5          X1         X2          X3
+#' #> 1   0   1   0   0   0   0   0   1 -0.04178453  2.3962339 -0.01443979
+#' #> 2   1   0   0   0   0   0   1   0 -1.66084623 -0.4397486  0.57251733
+#' #> 3   0   1   0   0   1   0   0   0 -0.57973333 -0.2878683  1.24475578
+#' #> 4   0   1   0   1   0   0   0   0 -0.82075051  1.3702900  0.01716528
+#' #> 5   0   0   1   0   0   0   0   1 -0.76337897 -0.9620213  0.25846351
+#' #> 6   1   0   0   0   0   0   0   1 -0.37720294 -0.1853976  1.04872159
 #' catLabel
-#' #$Xcol1
-#' #[1] "A" "B" "C"
-#' #$Xcol2
-#' #[1] "1" "2" "3" "4" "5"
-#' forest = ODRF(X,y,type='g-classification',Xcat = c(1,2),catLabel=catLabel,
-#' parallel=FALSE)
-#' 
+#' #> $Xcol1
+#' #> [1] "A" "B" "C"
+#' #>
+#' #> $Xcol2
+#' #> [1] "1" "2" "3" "4" "5"
+#'
+#' forest <- ODRF(X, y, type = "g-classification", Xcat = c(1, 2),
+#'   catLabel = catLabel, parallel = FALSE)
+#'
 #' @useDynLib ODRF
 #' @import MAVE mda
 #' @import Rcpp
@@ -152,9 +156,8 @@
 #' @importFrom parallel detectCores makeCluster clusterSplit stopCluster
 #' @importFrom stats model.frame model.extract model.matrix na.fail
 #' @export
-ODRF <- function(formula,...)
-{
-  UseMethod("ODRF",formula)
+ODRF <- function(formula, ...) {
+  UseMethod("ODRF", formula)
 }
 
 
@@ -162,37 +165,38 @@ ODRF <- function(formula,...)
 #' @method ODRF formula
 #' @aliases ODRF.formula
 #' @export
-ODRF.formula <- function(formula,data=NULL,type='auto',NodeRotateFun="RotMatPPO",FunDir=getwd(),paramList=NULL,
-                        ntrees=100,storeOOB = TRUE,replacement = TRUE, stratify = TRUE,numOOB=1/3,parallel=TRUE,
-                        numCores=Inf,seed=220924, MaxDepth=Inf,numNode=Inf,MinLeaf=5,subset=NULL,weights=NULL,
-                        na.action=na.fail,catLabel=NULL,Xcat=0,Xscale="Min-max",TreeRandRotate=FALSE,...)
-{
-  Call<-match.call()
-  indx<-match(c("formula", "data","subset", "na.action"),names(Call),nomatch=0L)#, "weights"
-  if (indx[[1]]==0){
+ODRF.formula <- function(formula, data = NULL, type = "auto", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
+                         ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, numOOB = 1 / 3, parallel = TRUE,
+                         numCores = Inf, seed = 220924, MaxDepth = Inf, numNode = Inf, MinLeaf = 5, subset = NULL, weights = NULL,
+                         na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
+  Call <- match.call()
+  indx <- match(c("formula", "data", "subset", "na.action"), names(Call), nomatch = 0L) # , "weights"
+  if (indx[[1]] == 0) {
     stop("A 'formula' or 'X', 'y' argument is required")
-  }else if (indx[[2]]==0){
-    #stop("a 'data' argument is required")
-    #data <- environment(formula)
-    X=eval(formula[[3]])
-    y=eval(formula[[2]])
-    varName <-colnames(X)
-    data <- data.frame(y,X)
-    colnames(data) <-c(as.character(formula[[2]]),varName)
-    formula <-as.formula(paste0(as.character(formula[[2]]),"~."))
-    Call$formula=formula
-    Call$data=quote(data)
-  }else{
-    varName=setdiff(colnames(data),as.character(formula[[2]]))
-    X=data[,varName]
-    y=data[,as.character(formula[[2]])]
-    Call$data=quote(data)
+  } else if (indx[[2]] == 0) {
+    # stop("a 'data' argument is required")
+    # data <- environment(formula)
+    X <- eval(formula[[3]])
+    y <- eval(formula[[2]])
+    varName <- colnames(X)
+    data <- data.frame(y, X)
+    colnames(data) <- c(as.character(formula[[2]]), varName)
+    formula <- as.formula(paste0(as.character(formula[[2]]), "~."))
+    Call$formula <- formula
+    Call$data <- quote(data)
+  } else {
+    varName <- setdiff(colnames(data), as.character(formula[[2]]))
+    X <- data[, varName]
+    y <- data[, as.character(formula[[2]])]
+    Call$data <- quote(data)
   }
-  
-  ODRF.compute(formula,Call,varName,X,y,type,NodeRotateFun,FunDir,paramList,
-               ntrees,storeOOB,replacement, stratify,numOOB,parallel,
-               numCores,seed, MaxDepth,numNode,MinLeaf,subset,weights,
-               na.action,catLabel,Xcat,Xscale,TreeRandRotate)
+
+  ODRF.compute(
+    formula, Call, varName, X, y, type, NodeRotateFun, FunDir, paramList,
+    ntrees, storeOOB, replacement, stratify, numOOB, parallel,
+    numCores, seed, MaxDepth, numNode, MinLeaf, subset, weights,
+    na.action, catLabel, Xcat, Xscale, TreeRandRotate
+  )
 }
 
 
@@ -200,67 +204,70 @@ ODRF.formula <- function(formula,data=NULL,type='auto',NodeRotateFun="RotMatPPO"
 #' @method ODRF default
 #' @aliases ODRF.default
 #' @export
-ODRF.default <- function(X,y,type='auto',NodeRotateFun="RotMatPPO",FunDir=getwd(),paramList=NULL,
-                        ntrees=100,storeOOB = TRUE,replacement = TRUE, stratify = TRUE,numOOB=1/3,parallel=TRUE,
-                        numCores=Inf,seed=220924, MaxDepth=Inf,numNode=Inf,MinLeaf=5,subset=NULL,weights=NULL,
-                        na.action=na.fail,catLabel=NULL,Xcat=0,Xscale="Min-max",TreeRandRotate=FALSE,...)
-{
-  Call<-match.call()
-  indx<-match(c("X","y","subset", "na.action"),names(Call),nomatch=0L)#, "weights"
-  if (indx[[1]]==0|indx[[2]]==0){
+ODRF.default <- function(X, y, type = "auto", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
+                         ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, numOOB = 1 / 3, parallel = TRUE,
+                         numCores = Inf, seed = 220924, MaxDepth = Inf, numNode = Inf, MinLeaf = 5, subset = NULL, weights = NULL,
+                         na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
+  Call <- match.call()
+  indx <- match(c("X", "y", "subset", "na.action"), names(Call), nomatch = 0L) # , "weights"
+  if (indx[[1]] == 0 || indx[[2]] == 0) {
     stop("A 'formula' or 'X', 'y' argument is required")
-  }else{
-    data <- data.frame(y=y,X)
-    formula=y~.
-    Call$formula=formula
-    Call$data=quote(data)
-    varName=colnames(X)
-    Call$X=NULL
-    Call$y=NULL
+  } else {
+    data <- data.frame(y = y, X)
+    formula <- y~.
+    Call$formula <- formula
+    Call$data <- quote(data)
+    varName <- colnames(X)
+    Call$X <- NULL
+    Call$y <- NULL
   }
-  
-  ODRF.compute(formula,Call,varName,X,y,type,NodeRotateFun,FunDir,paramList,
-               ntrees,storeOOB,replacement, stratify,numOOB,parallel,
-               numCores,seed, MaxDepth,numNode,MinLeaf,subset,weights,
-               na.action,catLabel,Xcat,Xscale,TreeRandRotate)
+
+  ODRF.compute(
+    formula, Call, varName, X, y, type, NodeRotateFun, FunDir, paramList,
+    ntrees, storeOOB, replacement, stratify, numOOB, parallel,
+    numCores, seed, MaxDepth, numNode, MinLeaf, subset, weights,
+    na.action, catLabel, Xcat, Xscale, TreeRandRotate
+  )
 }
 
 
-ODRF.compute = function(formula,Call,varName,X,y,type,NodeRotateFun,FunDir,paramList,
-                        ntrees,storeOOB,replacement, stratify,numOOB,parallel,
-                        numCores,seed, MaxDepth,numNode,MinLeaf,subset,weights,
-                        na.action,catLabel,Xcat,Xscale,TreeRandRotate,...)
-{
-  
-  if(is.factor(y)&type=="auto"){
-    type='i-classification'
+ODRF.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDir, paramList,
+                         ntrees, storeOOB, replacement, stratify, numOOB, parallel,
+                         numCores, seed, MaxDepth, numNode, MinLeaf, subset, weights,
+                         na.action, catLabel, Xcat, Xscale, TreeRandRotate, ...) {
+  if (is.factor(y) && (type == "auto")) {
+    type <- "i-classification"
     warning("You are creating a forest for classification")
   }
-  if(is.numeric(y)&type=="auto"){
-    type='regression'
+  if (is.numeric(y) && (type == "auto")) {
+    type <- "regression"
     warning("You are creating a forest for regression")
   }
-  if(is.factor(y)&type=='regression')
-    stop(paste0("When ",formula[[2]]," is a factor type, 'type' cannot take 'regression'."))
-  if(MinLeaf==5)
-    MinLeaf=ifelse(type=='regression',5,1)
-  
-  ppForest <- list(call=Call,terms=NULL,type=type,Levels = NULL,
-                   NodeRotateFun=NodeRotateFun,paramList=paramList,oobErr=NULL,oobConfusionMat=NULL)
-  if(type!="regression"){
+  if (is.factor(y) && (type == "regression")) {
+    stop(paste0("When ", formula[[2]], " is a factor type, 'type' cannot take 'regression'."))
+  }
+  if (MinLeaf == 5) {
+    MinLeaf <- ifelse(type == "regression", 5, 1)
+  }
+
+  ppForest <- list(
+    call = Call, terms = NULL, type = type, Levels = NULL,
+    NodeRotateFun = NodeRotateFun, paramList = paramList, oobErr = NULL, oobConfusionMat = NULL
+  )
+  if (type != "regression") {
     # adjust y to go from 1 to numClass if needed
     if (is.factor(y)) {
-      ppForest$Levels <-levels(y)
+      ppForest$Levels <- levels(y)
       y <- as.integer(y)
     } else if (is.numeric(y)) {
       ppForest$Levels <- sort(unique(y))
       y <- as.integer(as.factor(y))
     } else {
-      ppForest$Levels=levels(as.factor(y))
+      ppForest$Levels <- levels(as.factor(y))
       y <- as.integer(as.factor(y))
-      #stop("Incompatible X type. y must be of type factor or numeric.")
+      # stop("Incompatible X type. y must be of type factor or numeric.")
     }
-    
+
     numClass <- length(ppForest$Levels)
     classCt <- cumsum(table(y))
     if (stratify) {
@@ -270,90 +277,103 @@ ODRF.compute = function(formula,Call,varName,X,y,type,NodeRotateFun,FunDir,param
       }
     }
   }
-  
-  Levels=ppForest$Levels
-  n=length(y);p=ncol(X);
-  
-  if(is.null(Xcat)){
-    Xcat=which(apply(X, 2, function(x){(length(unique(x))<10)&(n>20)}))
+
+  Levels <- ppForest$Levels
+  n <- length(y)
+  p <- ncol(X)
+
+  if (is.null(Xcat)) {
+    Xcat <- which(apply(X, 2, function(x) {
+      (length(unique(x)) < 10) & (n > 20)
+    }))
   }
-  
-  numCat=0
-  if((sum(Xcat)>0)&(is.null(catLabel))){
-    warning(paste0("The categorical variable ", paste(Xcat,collapse = ", ")," has been transformed into an one-of-K encode variables!"))
-    numCat <- apply(X[,Xcat,drop = FALSE], 2, function(x) length(unique(x)))
+
+  numCat <- 0
+  if ((sum(Xcat) > 0) && (is.null(catLabel))) {
+    warning(paste0("The categorical variable ", paste(Xcat, collapse = ", "), " has been transformed into an one-of-K encode variables!"))
+    numCat <- apply(X[, Xcat, drop = FALSE], 2, function(x) length(unique(x)))
     X1 <- matrix(0, nrow = n, ncol = sum(numCat)) # initialize training data matrix X
     catLabel <- vector("list", length(Xcat))
-    names(catLabel)<- colnames(X)[Xcat]
+    names(catLabel) <- colnames(X)[Xcat]
     col.idx <- 0L
     # one-of-K encode each categorical feature and store in X
-    for (j in 1:length(Xcat)) {
+    for (j in seq_along(Xcat)) {
       catMap <- (col.idx + 1L):(col.idx + numCat[j])
       # convert categorical feature to K dummy variables
-      catLabel[[j]]=levels(as.factor(X[,Xcat[j]]))
-      X1[, catMap] <- (matrix(X[,Xcat[j]],n,numCat[j])==matrix(catLabel[[j]],n,numCat[j],byrow = TRUE))+0
+      catLabel[[j]] <- levels(as.factor(X[, Xcat[j]]))
+      X1[, catMap] <- (matrix(X[, Xcat[j]], n, numCat[j]) == matrix(catLabel[[j]], n, numCat[j], byrow = TRUE)) + 0
       col.idx <- col.idx + numCat[j]
     }
-    X=cbind(X1,X[,-Xcat]) 
-    varName=c(paste(rep(seq(length(numCat)),numCat),unlist(catLabel),sep = "."),varName[-Xcat])
+    X <- cbind(X1, X[, -Xcat])
+    varName <- c(paste(rep(seq_along(numCat), numCat), unlist(catLabel), sep = "."), varName[-Xcat])
     rm(X1)
-    p = ncol(X);
+    p <- ncol(X)
   }
-  X=as.matrix(X)
-  colnames(X)=varName
-  
-  if(all(apply(X, 2, is.character))&(sum(Xcat)>0))
+  X <- as.matrix(X)
+  colnames(X) <- varName
+
+  if (all(apply(X, 2, is.character)) && (sum(Xcat) > 0)) {
     stop("The training data 'data' contains categorical variables, so that 'Xcal=NULL' can be automatically transformed into an one-of-K encode variables.")
-  
+  }
+
   # address na values.
   if (any(is.na(as.list(data)))) {
     warning("NA values exist in data frame")
   }
-  data <- data.frame(y,X)
-  colnames(data)=c(as.character(formula[[2]]),varName)
-  indx<-match(c("formula", "data", "subset", "na.action"),names(Call),nomatch=0L)
-  temp<-Call[c(1L,indx)]
-  temp[[1L]]<-quote(stats::model.frame)
+  data <- data.frame(y, X)
+  colnames(data) <- c(as.character(formula[[2]]), varName)
+  indx <- match(c("formula", "data", "subset", "na.action"), names(Call), nomatch = 0L)
+  temp <- Call[c(1L, indx)]
+  temp[[1L]] <- quote(stats::model.frame)
   temp$drop.unused.levels <- TRUE
-  temp <- eval(temp)#, parent.frame()
-  Terms<-attr(temp, "terms")
-  ppForest$terms=Terms
-  
+  temp <- eval(temp) # , parent.frame()
+  Terms <- attr(temp, "terms")
+  ppForest$terms <- Terms
+
   rm(data)
-  
-  #Variable scaling.
-  minCol = NULL;maxminCol = NULL;
-  if(Xscale!="No"){
-    indp=(sum(numCat)+1):p
-    if(Xscale=="Min-max"){
-      minCol=apply(X[,indp],2,min)
-      maxminCol=apply(X[,indp],2,function(x){max(x)-min(x)})
+
+  # Variable scaling.
+  minCol <- NULL
+  maxminCol <- NULL
+  if (Xscale != "No") {
+    indp <- (sum(numCat) + 1):p
+    if (Xscale == "Min-max") {
+      minCol <- apply(X[, indp], 2, min)
+      maxminCol <- apply(X[, indp], 2, function(x) {
+        max(x) - min(x)
+      })
     }
-    if(Xscale=="Quantile"){
-      minCol=apply(X[,indp],2,quantile,0.05)
-      maxminCol=apply(X[,indp],2,function(x){quantile(x,0.95)-quantile(x,0.05)})
+    if (Xscale == "Quantile") {
+      minCol <- apply(X[, indp], 2, quantile, 0.05)
+      maxminCol <- apply(X[, indp], 2, function(x) {
+        quantile(x, 0.95) - quantile(x, 0.05)
+      })
     }
-    X[,indp]=(X[,indp]-matrix(minCol,n,length(indp),byrow = T))/matrix(maxminCol,n,length(indp),byrow = T)
+    X[, indp] <- (X[, indp] - matrix(minCol, n, length(indp), byrow = T)) / matrix(maxminCol, n, length(indp), byrow = T)
   }
-  
-  ppForest$data=list(subset=subset,weights=weights,na.action=na.action,n=n,p=p,varName=varName,
-                     Xscale=Xscale,minCol=minCol,maxminCol=maxminCol,Xcat=Xcat,catLabel=catLabel);
-  ppForest$tree=list(FunDir=FunDir,MaxDepth=MaxDepth,MinLeaf=MinLeaf,numNode=numNode,TreeRandRotate=TreeRandRotate);
-  ppForest$forest=list(ntrees=ntrees,numOOB=numOOB,storeOOB = storeOOB,replacement=replacement,stratify=stratify,
-                       parallel=parallel,numCores=numCores,seed=seed)
-  
-  #Weights=weights
-  vars=all.vars(Terms)
-  PPtree=function(itree,...){
-    set.seed(seed+itree)
-    
+
+  ppForest$data <- list(
+    subset = subset, weights = weights, na.action = na.action, n = n, p = p, varName = varName,
+    Xscale = Xscale, minCol = minCol, maxminCol = maxminCol, Xcat = Xcat, catLabel = catLabel
+  )
+  ppForest$tree <- list(FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode, TreeRandRotate = TreeRandRotate)
+  ppForest$forest <- list(
+    ntrees = ntrees, numOOB = numOOB, storeOOB = storeOOB, replacement = replacement, stratify = stratify,
+    parallel = parallel, numCores = numCores, seed = seed
+  )
+
+  # Weights=weights
+  # vars=all.vars(Terms)
+  PPtree <- function(itree, ...) {
+    set.seed(seed + itree)
+
     TDindx0 <- seq(n)
-    TDindx<-TDindx0
+    TDindx <- TDindx0
     if (replacement) {
       go <- TRUE
       while (go) {
         # make sure each class is represented in proportion to classes in initial dataset
-        if (stratify&(type!='regression')) {
+        if (stratify && (type != "regression")) {
           if (classCt[1L] != 0L) {
             TDindx[1:classCt[1L]] <- sample(Cindex[[1L]], classCt[1L], replace = TRUE)
           }
@@ -368,110 +388,114 @@ ODRF.compute = function(formula,Call,varName,X,y,type,NodeRotateFun,FunDir,param
         go <- all(TDindx0 %in% TDindx)
       }
     } else {
-      TDindx <- sample(TDindx0, n*(1-numOOB), replace = FALSE)
+      TDindx <- sample(TDindx0, n * (1 - numOOB), replace = FALSE)
     }
-    
-    
-    #data=data.frame(y[TDindx],X[TDindx,])
-    #colnames(data)=vars
-    weights1=weights[TDindx]
-    ppForestT=ODT.compute(formula,Call,varName,X=X[TDindx,],y=y[TDindx],type,NodeRotateFun,FunDir,paramList,MaxDepth,numNode,
-                          MinLeaf,Levels,subset=NULL,weights=weights1,na.action=NULL,catLabel,Xcat=0L,Xscale="No",TreeRandRotate)
-    
-    if ((numOOB>0)&storeOOB){
-      oobErr=1
-      NTD = setdiff(TDindx0,TDindx);
-      pred = predict(ppForestT,X[NTD,]);
-      
-      if(type!="regression"){
-        oobErr=mean(pred!=Levels[y[NTD]]);
-      }else{
-        oobErr=mean((pred-y[NTD])^2);
+
+
+    # data=data.frame(y[TDindx],X[TDindx,])
+    # colnames(data)=vars
+    weights1 <- weights[TDindx]
+    ppForestT <- ODT.compute(formula, Call, varName,
+      X = X[TDindx, ], y = y[TDindx], type, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
+      MinLeaf, Levels, subset = NULL, weights = weights1, na.action = NULL, catLabel, Xcat = 0L, Xscale = "No", TreeRandRotate
+    )
+
+    if ((numOOB > 0) && storeOOB) {
+      oobErr <- 1
+      NTD <- setdiff(TDindx0, TDindx)
+      pred <- predict(ppForestT, X[NTD, ])
+
+      if (type != "regression") {
+        oobErr <- mean(pred != Levels[y[NTD]])
+      } else {
+        oobErr <- mean((pred - y[NTD])^2)
       }
-      
-      ppForestT=c(ppForestT,list(oobErr=oobErr,oobIndex=NTD,oobPred=pred))
+
+      ppForestT <- c(ppForestT, list(oobErr = oobErr, oobIndex = NTD, oobPred = pred))
     }
-    
+
     return(ppForestT)
   }
-  
-  
+
+
   if (parallel) {
-    #RNGkind("L'Ecuyer-CMRG")
+    # RNGkind("L'Ecuyer-CMRG")
     if (is.infinite(numCores)) {
       # Use all but 1 core if numCores=0.
-      numCores <- parallel::detectCores()- 1L #logical = FALSE
+      numCores <- parallel::detectCores() - 1L # logical = FALSE
     }
     numCores <- min(numCores, ntrees)
     gc()
-    
-    #cl <- parallel::makePSOCKcluster(num.cores)
-    #library("ODRF1")
-    #library(foreach)
-    #foreach::registerDoSEQ()
-    cl <- parallel::makeCluster(numCores,type = ifelse(.Platform$OS.type == "windows","PSOCK","FORK"))
-    chunks <- parallel::clusterSplit(cl,seq(ntrees))
-    doParallel::registerDoParallel(cl,numCores)
-    #set.seed(seed)
-    ppForestT = foreach::foreach(icore=seq(length(chunks)),.combine=list,.multicombine = TRUE,
-                                 .packages = c("ODRF"),.noexport ="ppForest")%dopar%{
-                                   lapply(chunks[[icore]], PPtree)
-                                 }
+
+    # cl <- parallel::makePSOCKcluster(num.cores)
+    # library("ODRF1")
+    # library(foreach)
+    # foreach::registerDoSEQ()
+    cl <- parallel::makeCluster(numCores, type = ifelse(.Platform$OS.type == "windows", "PSOCK", "FORK"))
+    chunks <- parallel::clusterSplit(cl, seq_len(ntrees))
+    doParallel::registerDoParallel(cl, numCores)
+    # set.seed(seed)
+    ppForestT <- foreach::foreach(
+      icore = seq_along(chunks), .combine = list, .multicombine = TRUE,
+      .packages = c("ODRF"), .noexport = "ppForest"
+    ) %dopar% {
+      lapply(chunks[[icore]], PPtree)
+    }
     doParallel::stopImplicitCluster()
     parallel::stopCluster(cl)
-    
-    #do.call(rbind.fill,list1)
-    ppForest$ppTrees=do.call("c",ppForestT)
-    #ppForest$ppTrees=NULL
-    #for (i in 1:numCores) {
-    #  ppForest$ppTrees=c(ppForest$ppTrees,ppForestT[[i]]) 
-    #}
+
+    # do.call(rbind.fill,list1)
+    ppForest$ppTrees <- do.call("c", ppForestT)
+    # ppForest$ppTrees=NULL
+    # for (i in 1:numCores) {
+    #  ppForest$ppTrees=c(ppForest$ppTrees,ppForestT[[i]])
+    # }
   } else {
     # Use just one core.
     ppForest$ppTrees <- lapply(1:ntrees, PPtree)
   }
-  
+
   ####################################
-  if ((numOOB>0)&storeOOB){
-    oobVotes=matrix(NA,n,ntrees)
+  if ((numOOB > 0) && storeOOB) {
+    oobVotes <- matrix(NA, n, ntrees)
     for (t in 1:ntrees) {
-      oobVotes[ppForest$ppTrees[[t]]$oobIndex,t]=ppForest$ppTrees[[t]]$oobPred
+      oobVotes[ppForest$ppTrees[[t]]$oobIndex, t] <- ppForest$ppTrees[[t]]$oobPred
     }
-    idx=which(rowSums(is.na(oobVotes))<ntrees) 
-    oobVotes=oobVotes[idx,,drop = FALSE]
-    yy=y[idx]
-    
-    if(type!="regression"){
-      ny=length(yy)
-      nC=numClass
-      tree_weights=rep(1,ny*ntrees)
-      Votes=factor(c(t(oobVotes)),levels =Levels)
-      Votes=as.integer(Votes)+nC*rep(0:(ny-1),rep(ntrees,ny));
-      Votes=aggregate(c(rep(0,ny*nC),tree_weights), by=list(c(1:(ny*nC),Votes)),sum)[,2];
-      
-      prob=matrix(Votes,ny,nC,byrow = TRUE);
-      pred=max.col(prob) ## "random"
-      oobPred=Levels[pred]
-      ppForest$oobErr=mean(Levels[yy]!=oobPred)
-      
-      #oobPred=rep(NA,noob)
-      #for (i in 1:noob) {
+    idx <- which(rowSums(is.na(oobVotes)) < ntrees)
+    oobVotes <- oobVotes[idx, , drop = FALSE]
+    yy <- y[idx]
+
+    if (type != "regression") {
+      ny <- length(yy)
+      nC <- numClass
+      tree_weights <- rep(1, ny * ntrees)
+      Votes <- factor(c(t(oobVotes)), levels = Levels)
+      Votes <- as.integer(Votes) + nC * rep(0:(ny - 1), rep(ntrees, ny))
+      Votes <- aggregate(c(rep(0, ny * nC), tree_weights), by = list(c(1:(ny * nC), Votes)), sum)[, 2]
+
+      prob <- matrix(Votes, ny, nC, byrow = TRUE)
+      pred <- max.col(prob) ## "random"
+      oobPred <- Levels[pred]
+      ppForest$oobErr <- mean(Levels[yy] != oobPred)
+
+      # oobPred=rep(NA,noob)
+      # for (i in 1:noob) {
       #  oobTable = table(oobVotes[i,])
       #  oobPred[i]=names(oobTable)[which.max(oobTable)];
-      #}
-      
-      #oobErr=mean(oobPred!=Levels[y[idx]]);
-      XConfusionMat=table(oobPred,Levels[yy])
-      class_error=(rowSums(XConfusionMat)-diag(XConfusionMat))/rowSums(XConfusionMat)
-      XConfusionMat=cbind(XConfusionMat,class_error)
-      ppForest$oobConfusionMat=XConfusionMat
-    }else{
-      oobPred=rowMeans(oobVotes,na.rm = TRUE);
-      ppForest$oobErr=mean((oobPred-yy)^2)/mean((yy-mean(y))^2);
+      # }
+
+      # oobErr=mean(oobPred!=Levels[y[idx]]);
+      XConfusionMat <- table(oobPred, Levels[yy])
+      class_error <- (rowSums(XConfusionMat) - diag(XConfusionMat)) / rowSums(XConfusionMat)
+      XConfusionMat <- cbind(XConfusionMat, class_error)
+      ppForest$oobConfusionMat <- XConfusionMat
+    } else {
+      oobPred <- rowMeans(oobVotes, na.rm = TRUE)
+      ppForest$oobErr <- mean((oobPred - yy)^2) / mean((yy - mean(y))^2)
     }
   }
-  
-  class(ppForest) <- append(class(ppForest),"ODRF")
-  #class(ppForest) <- "ODRF"
+
+  class(ppForest) <- append(class(ppForest), "ODRF")
+  # class(ppForest) <- "ODRF"
   return(ppForest)
 }

@@ -7,11 +7,11 @@
 \method{predict}{ODRF}(ppForest, Xnew, type = "response", weight.tree = FALSE)
 }
 \arguments{
-\item{ppForest}{an object of class ODRF, as that created by the function \code{ODRF}.}
+\item{ppForest}{An object of class ODRF, as that created by the function \code{\link{ODRF}}.}
 
-\item{Xnew}{an n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.}
+\item{Xnew}{An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.}
 
-\item{type}{one of \code{response}, \code{prob} or \code{tree}, indicating the type of output: predicted values, matrix of class probabilities or predicted value for each tree.}
+\item{type}{One of \code{response}, \code{prob} or \code{tree}, indicating the type of output: predicted values, matrix of class probabilities or predicted value for each tree.}
 
 \item{weight.tree}{Whether to weight the tree, if \code{TRUE} then use the out-of-bag error of the tree as the weight. (default \code{FALSE})}
 }
@@ -24,33 +24,32 @@ A set of vectors in the following list:
 }
 }
 \description{
-Prediction a oblique decision random forest based on an input matrix or data frame using \code{\link{ODRF}} function.
+Prediction of ODRF for an input matrix or data frame.
 }
 \examples{
-#Classification with Oblique Decision Random Forest
+# Classification with Oblique Decision Random Forest
 data(seeds)
 set.seed(221212)
-train = sample(1:209,100)
-train_data = data.frame(seeds[train,])
-test_data = data.frame(seeds[-train,])
+train <- sample(1:209, 100)
+train_data <- data.frame(seeds[train, ])
+test_data <- data.frame(seeds[-train, ])
+forest <- ODRF(varieties_of_wheat ~ ., train_data,
+  type = "i-classification",parallel = FALSE)
+pred <- predict(forest, test_data[, -8])
+# classification error
+(mean(pred != test_data[, 8]))
 
-forest = ODRF(varieties_of_wheat~.,train_data,type='i-classification',
-parallel=FALSE)
-pred <- predict(forest,test_data[,-8])
-#classification error
-(mean(pred!=test_data[,8]))
-
-#Regression with Oblique Decision Random Forest
+# Regression with Oblique Decision Random Forest
 data(body_fat)
 set.seed(221212)
-train = sample(1:252,100)
-train_data = data.frame(body_fat[train,])
-test_data = data.frame(body_fat[-train,])
+train <- sample(1:252, 100)
+train_data <- data.frame(body_fat[train, ])
+test_data <- data.frame(body_fat[-train, ])
+forest <- ODRF(Density ~ ., train_data, type = "regression", parallel = FALSE)
+pred <- predict(forest, test_data[, -1])
+# estimation error
+mean((pred - test_data[, 1])^2)
 
-forest = ODRF(Density~.,train_data,type='regression',parallel=FALSE)
-pred <- predict(forest,test_data[,-1])
-#estimation error
-mean((pred-test_data[,1])^2)
 }
 \references{
 Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.

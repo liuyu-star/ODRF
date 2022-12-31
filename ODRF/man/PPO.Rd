@@ -11,12 +11,12 @@ PPO(X, y, model = "PPR", type = "i-classification", weights = NULL, ...)
 
 \item{y}{A response vector of length n.}
 
-\item{model}{model for projection pursuit.
+\item{model}{Model for projection pursuit.
 \itemize{
 \item{"PPR"(default): projection projection regression from \code{\link{ppr}}. When y is a category label, it is
 expanded to K binary features.}
 \item{"Log": logistic based on \code{\link{nnet}}.}
-\item{"Rand": The random projection generated from \eqn{\{-1, 1\}}. 
+\item{"Rand": The random projection generated from \eqn{\{-1, 1\}}.
 The following models can only be used for classification, i.e. the \code{type} must be 'i-classification' or 'g-classification'.}
 \item{"LDA", "PDA", "Lr", "GINI", and "ENTROPY" from library \code{PPtreeViz}.}
 \item{The following models based on \code{\link{Pursuit}}.
@@ -37,7 +37,7 @@ The following models can only be used for classification, i.e. the \code{type} m
 }}
 }}
 
-\item{type}{The criterion used for splitting the variable. 'g-classification': gini impurity index (classification, default), 
+\item{type}{The criterion used for splitting the variable. 'g-classification': gini impurity index (classification, default),
 'i-classification': information gain (classification) or 'regression': mean square error (regression).}
 
 \item{weights}{Vector of non-negative observational weights; fractional weights are allowed (default NULL).}
@@ -45,23 +45,23 @@ The following models can only be used for classification, i.e. the \code{type} m
 \item{...}{optional parameters to be passed to the low level function.}
 }
 \value{
-optimal projection direction.
+Optimal projection direction.
 }
 \description{
 Find the optimal projection using various projectin pursuit models.
 }
 \examples{
-#classification
+# classification
 data(seeds)
-(PP <- PPO(seeds[,1:7],seeds[,8],model = "Log",type='i-classification'))
-(PP <- PPO(seeds[,1:7],seeds[,8],model = "PPR",type='i-classification'))
-(PP <- PPO(seeds[,1:7],seeds[,8],model = "LDA",type='i-classification'))
+(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "Log", type = "i-classification"))
+(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "PPR", type = "i-classification"))
+(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = "i-classification"))
 
-#regression
+# regression
 data(body_fat)
-(PP <- PPO(body_fat[,2:15],body_fat[,1],model = "Log",type='regression'))
-(PP <- PPO(body_fat[,2:15],body_fat[,1],model = "Rand",type='regression'))
-(PP <- PPO(body_fat[,2:15],body_fat[,1],model = "PPR",type='regression'))
+(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "regression"))
+(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", type = "regression"))
+(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", type = "regression"))
 
 }
 \references{

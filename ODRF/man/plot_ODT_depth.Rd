@@ -18,28 +18,33 @@ plot_ODT_depth(
 )
 }
 \arguments{
-\item{formula}{Object of class \code{formula} with a response but no interaction terms describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
+\item{formula}{Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
 
-\item{data}{Training data of class \code{data.frame} in \code{\link{ODRF}} is used to calculate the OOB error.}
+\item{data}{Training data of class \code{data.frame} in \code{\link{ODT}} is used to calculate the OOB error.}
 
 \item{newdata}{A data frame or matrix containing new data is used to calculate the test error. If it is missing, let it be \code{data}.}
 
-\item{type}{The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression. 
+\item{type}{The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression.
 'auto' (default): If the response in \code{data} is a factor, 'g-classification' is used, otherwise regression is assumed.}
 
-\item{NodeRotateFun}{Name of the function of class \code{character} that implements a linear combination of predictors in the split node. including "RotMatPPO": see \code{\link{RotMatPPO}} (default, model="PPR"),
-"RotMatRand": see \code{\link{RotMatRand}}, and "RotMatRF": see \code{\link{RotMatRF}}. Users can define this function, for details see \code{\link{RotMatMake}}.}
+\item{NodeRotateFun}{Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
+including \itemize{
+\item{"RotMatPPO": projection pursuit optimization model (\code{\link{PPO}}), see \code{\link{RotMatPPO}} (default, model="PPR").}
+\item{"RotMatRF": single feature similar to random forest, see \code{\link{RotMatRF}}.}
+\item{"RotMatRand": random rotation, see \code{\link{RotMatRand}}.}
+\item{"RotMatMake": Users can define this function, for details see \code{\link{RotMatMake}}.}
+}}
 
 \item{paramList}{List of parameters used by the functions \code{NodeRotateFun}. If left unchanged, default values will be used, for details see \code{\link[ODRF]{defaults}}.}
 
-\item{digits}{integer indicating the number of decimal places (round) or significant digits (signif) to be used.}
+\item{digits}{Integer indicating the number of decimal places (round) or significant digits (signif) to be used.}
 
 \item{main}{main title}
 
-\item{...}{arguments to be passed to methods.}
+\item{...}{Arguments to be passed to methods.}
 }
 \value{
-test error of \code{newdata}, misclassification rate (MR) for classification or mean square error (MSE) for regression.
+OOB error and test error of \code{newdata}, misclassification rate (MR) for classification or mean square error (MSE) for regression.
 }
 \description{
 Draw the error graph of class \code{ODT} at different depths.
@@ -47,10 +52,10 @@ Draw the error graph of class \code{ODT} at different depths.
 \examples{
 data(body_fat)
 set.seed(221212)
-train = sample(1:252,100)
-train_data = data.frame(body_fat[train,])
-test_data = data.frame(body_fat[-train,])
-plot_ODT_depth(Density~.,train_data,test_data,type='regression')
+train <- sample(1:252, 100)
+train_data <- data.frame(body_fat[train, ])
+test_data <- data.frame(body_fat[-train, ])
+plot_ODT_depth(Density ~ ., train_data, test_data, type = "regression")
 
 }
 \seealso{

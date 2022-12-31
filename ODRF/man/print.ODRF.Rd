@@ -2,21 +2,21 @@
 % Please edit documentation in R/print_ODRF.R
 \name{print.ODRF}
 \alias{print.ODRF}
-\title{Print ODRF}
+\title{print ODRF}
 \usage{
 \method{print}{ODRF}(ppForest, ...)
 }
 \arguments{
-\item{ppForest}{an object of class \code{\link{ODRF}}.}
+\item{ppForest}{An object of class \code{\link{ODRF}}.}
 
-\item{...}{arguments to be passed to methods}
+\item{...}{Arguments to be passed to methods.}
 }
 \description{
 Print contents of ODRF object.
 }
 \examples{
 data(iris)
-forest <- ODRF(Species~.,data = iris,parallel=FALSE)
+forest <- ODRF(Species ~ ., data = iris, parallel = FALSE)
 forest
 
 }

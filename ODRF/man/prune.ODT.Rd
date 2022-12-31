@@ -2,7 +2,7 @@
 % Please edit documentation in R/prune_ODT.R
 \name{prune.ODT}
 \alias{prune.ODT}
-\title{Pruning of class \code{ODT}.}
+\title{pruning of class \code{ODT}}
 \usage{
 \method{prune}{ODT}(ppTree, X, y, MaxDepth = 1, ...)
 }
@@ -15,10 +15,10 @@
 
 \item{MaxDepth}{The maximum depth of the tree after pruning. (Default 1)}
 
-\item{...}{optional parameters to be passed to the low level function.}
+\item{...}{Optional parameters to be passed to the low level function.}
 }
 \value{
-\itemize{an object of class \code{ODT} and \code{prune.ODT}. 
+\itemize{An object of class \code{ODT} and \code{prune.ODT}.
 \item{\code{ppTree} The same result as \code{ODT}.}
 \item{\code{pruneError} Error of validation data after each pruning, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 }
@@ -27,34 +27,31 @@
 Prune \code{ODT} from bottom to top with validation data based on prediction error.
 }
 \examples{
-#Classification with Oblique Decision Tree
+# Classification with Oblique Decision Tree
 data(seeds)
 set.seed(221212)
-train = sample(1:209,100)
-train_data = data.frame(seeds[train,])
-test_data = data.frame(seeds[-train,])
-index=seq(floor(nrow(train_data)/2))
+train <- sample(1:209, 100)
+train_data <- data.frame(seeds[train, ])
+test_data <- data.frame(seeds[-train, ])
+index <- seq(floor(nrow(train_data) / 2))
+tree <- ODT(varieties_of_wheat ~ ., train_data[index, ], type = "i-classification")
+prune.tree <- prune(tree, train_data[-index, -8], train_data[-index, 8])
+pred <- predict(prune.tree, test_data[, -8])
+# classification error
+(mean(pred != test_data[, 8]))
 
-tree = ODT(varieties_of_wheat~.,train_data[index,],type='i-classification')
-tree = prune(tree,train_data[-index,-8],train_data[-index,8])
-pred <- predict(tree,test_data[,-8])
-#classification error
-(mean(pred!=test_data[,8]))
-
-
-#Regression with Oblique Decision Tree
+# Regression with Oblique Decision Tree
 data(body_fat)
 set.seed(221212)
-train = sample(1:252,100)
-train_data = data.frame(body_fat[train,])
-test_data = data.frame(body_fat[-train,])
-index=seq(floor(nrow(train_data)/2))
-
-tree = ODT(Density~.,train_data[index,],type='regression')
-tree = prune(tree,train_data[-index,-1],train_data[-index,1])
-pred <- predict(tree,test_data[,-1])
-#estimation error
-mean((pred-test_data[,1])^2)
+train <- sample(1:252, 100)
+train_data <- data.frame(body_fat[train, ])
+test_data <- data.frame(body_fat[-train, ])
+index <- seq(floor(nrow(train_data) / 2))
+tree <- ODT(Density ~ ., train_data[index, ], type = "regression")
+prune.tree <- prune(tree, train_data[-index, -1], train_data[-index, 1])
+pred <- predict(prune.tree, test_data[, -1])
+# estimation error
+mean((pred - test_data[, 1])^2)
 
 }
 \seealso{

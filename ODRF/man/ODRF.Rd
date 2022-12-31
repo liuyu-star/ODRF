@@ -67,15 +67,20 @@ ODRF(formula, ...)
 \arguments{
 \item{formula}{Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
 
-\item{...}{optional parameters to be passed to the low level function.}
+\item{...}{Optional parameters to be passed to the low level function.}
 
 \item{data}{Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.}
 
-\item{type}{The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression. 
+\item{type}{The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression.
 'auto' (default): If the response in \code{data} or \code{y} is a factor, 'g-classification' is used, otherwise regression is assumed.}
 
-\item{NodeRotateFun}{Name of the function of class \code{character} that implements a linear combination of predictors in the split node. including "RotMatPPO": see \code{\link{RotMatPPO}} (default, model="PPR"),
-"RotMatRand": see \code{\link{RotMatRand}}, and "RotMatRF": see \code{\link{RotMatRF}}. Users can define this function, for details see \code{\link{RotMatMake}}.}
+\item{NodeRotateFun}{Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
+including \itemize{
+\item{"RotMatPPO": projection pursuit optimization model (\code{\link{PPO}}), see \code{\link{RotMatPPO}} (default, model="PPR").}
+\item{"RotMatRF": single feature similar to random forest, see \code{\link{RotMatRF}}.}
+\item{"RotMatRand": random rotation, see \code{\link{RotMatRand}}.}
+\item{"RotMatMake": users can define this function, for details see \code{\link{RotMatMake}}.}
+}}
 
 \item{FunDir}{The path to the \code{function} of the user-defined \code{NodeRotateFun} (default current working directory).}
 
@@ -83,11 +88,11 @@ ODRF(formula, ...)
 
 \item{ntrees}{The number of trees in the forest (default 100).}
 
-\item{storeOOB}{if TRUE then the samples omitted during the creation of a tree are stored as part of the tree (default TRUE).}
+\item{storeOOB}{If TRUE then the samples omitted during the creation of a tree are stored as part of the tree (default TRUE).}
 
 \item{replacement}{if TRUE then n samples are chosen, with replacement, from training data (default TRUE).}
 
-\item{stratify}{if TRUE then class sample proportions are maintained during the random sampling. Ignored if replacement = FALSE (default TRUE).}
+\item{stratify}{If TRUE then class sample proportions are maintained during the random sampling. Ignored if replacement = FALSE (default TRUE).}
 
 \item{numOOB}{Ratio of 'out-of-bag' (default 1/3).}
 
@@ -111,8 +116,8 @@ ODRF(formula, ...)
 
 \item{catLabel}{A category labels of class \code{list} in predictors. (default NULL, for details see Examples)}
 
-\item{Xcat}{A class \code{vector} is used to indicate which predictor is the categorical variable. The default Xcat=0 means that no special treatment is given to category variables. 
-When Xcat=NULL, the predictor x that satisfies the condition \code{(length(unique(x))<10) & (n>20)} is judged to be a category variable.}
+\item{Xcat}{A class \code{vector} is used to indicate which predictor is the categorical variable, the default \code{Xcat}=0 means that no special treatment is given to category variables.
+When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))<10) & (n>20) is judged to be a category variable.}
 
 \item{Xscale}{Predictor standardization methods. " Min-max" (default), "Quantile", "No" denote Min-max transformation, Quantile transformation and No transformation respectively.}
 
@@ -128,12 +133,12 @@ An object of class ODRF Containing a list components:
 \item{\code{call}: The original call to ODRF.}
 \item{\code{terms}: An object of class \code{c("terms", "formula")} (see \code{\link{terms.object}}) summarizing the formula. Used by various methods, but typically not of direct relevance to users.}
 \item{\code{ppTrees}: Each tree used to build the forest. \itemize{
-\item{\code{oobErr}: 'out-of-bag' error for tree, classification error rate for classification or mean square error for regression.}
+\item{\code{oobErr}: 'out-of-bag' error for tree, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 \item{\code{oobIndex}: Which training data to use as 'out-of-bag'.}
 \item{\code{oobPred}: Predicted value for 'out-of-bag'.}
-\item{\code{other}: For other tree-related values see \code{\link{ODT}}.}
+\item{\code{other}: For other tree related values \code{\link{ODT}}.}
 }}
-\item{\code{oobErr}: 'out-of-bag' error for forest, classification error rate for classification or mean squared error for regression.}
+\item{\code{oobErr}: 'out-of-bag' error for forest, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 \item{\code{oobConfusionMat}: 'out-of-bag' confusion matrix for forest.}
 \item{\code{type}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
 \item{\code{paramList}: Parameters in a named list to be used by \code{NodeRotateFun}.}
@@ -143,89 +148,88 @@ An object of class ODRF Containing a list components:
 }
 }
 \description{
-ODRF is the assembly of multiple ODTs, which can effectively reduce the overfitting of individual ODTs and improve the accuracy of classification and regression.
+Classification and regression implemented by the oblique decision random forest. It is an extension of random forest and include random forest as a special case. It usually produces more accurate predictions, but needs a long computation time.
 }
 \examples{
-#Classification with Oblique Decision Random Forest
+# Classification with Oblique Decision Randome Forest.
 data(seeds)
 set.seed(221212)
-train = sample(1:209,100)
-train_data = data.frame(seeds[train,])
-test_data = data.frame(seeds[-train,])
+train <- sample(1:209, 100)
+train_data <- data.frame(seeds[train, ])
+test_data <- data.frame(seeds[-train, ])
+forest <- ODRF(varieties_of_wheat ~ ., train_data,type = "i-classification",
+  parallel = FALSE)
+pred <- predict(forest, test_data[, -8])
+# classification error
+(mean(pred != test_data[, 8]))
 
-forest = ODRF(varieties_of_wheat~.,train_data,type='i-classification',
-parallel=FALSE)
-pred <- predict(forest,test_data[,-8])
-#classification error
-(mean(pred!=test_data[,8]))
-
-#Regression with Oblique Decision Random Forest
+# Regression with Oblique Decision Randome Forest.
 data(body_fat)
 set.seed(221212)
-train = sample(1:252,100)
-train_data = data.frame(body_fat[train,])
-test_data = data.frame(body_fat[-train,])
-
-forest = ODRF(Density~.,train_data,type='regression',parallel=FALSE)
-pred <- predict(forest,test_data[,-1])
-#estimation error
-mean((pred-test_data[,1])^2)
-
+train <- sample(1:252, 100)
+train_data <- data.frame(body_fat[train, ])
+test_data <- data.frame(body_fat[-train, ])
+forest <- ODRF(Density ~ ., train_data, type = "regression", parallel = FALSE)
+pred <- predict(forest, test_data[, -1])
+# estimation error
+mean((pred - test_data[, 1])^2)
 
 ### Train ODRF on one-of-K encoded categorical data ###
 set.seed(22)
-Xcol1=sample(c("A","B","C"),100,replace = TRUE)
-Xcol2=sample(c("1","2","3","4","5"),100,replace = TRUE)
-Xcon=matrix(rnorm(100*3),100,3)
-X=data.frame(Xcol1,Xcol2,Xcon)
-Xcat=c(1,2)
-catLabel=NULL
-y=as.factor(sample(c(0,1),100,replace = TRUE))
-forest = ODRF(y~X,type='i-classification',Xcat = NULL,parallel=FALSE)
+Xcol1 <- sample(c("A", "B", "C"), 100, replace = TRUE)
+Xcol2 <- sample(c("1", "2", "3", "4", "5"), 100, replace = TRUE)
+Xcon <- matrix(rnorm(100 * 3), 100, 3)
+X <- data.frame(Xcol1, Xcol2, Xcon)
+Xcat <- c(1, 2)
+catLabel <- NULL
+y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
+forest <- ODRF(y ~ X, type = "i-classification", Xcat = NULL, parallel = FALSE)
 head(X)
-#   Xcol1 Xcol2         X1         X2          X3
-#1     B     5 -0.04178453  2.3962339 -0.01443979
-#2     A     4 -1.66084623 -0.4397486  0.57251733
-#3     B     2 -0.57973333 -0.2878683  1.24475578
-#4     B     1 -0.82075051  1.3702900  0.01716528
-#5     C     5 -0.76337897 -0.9620213  0.25846351
-#6     A     5 -0.37720294 -0.1853976  1.04872159
+#>   Xcol1 Xcol2          X1         X2          X3
+#> 1     B     5 -0.04178453  2.3962339 -0.01443979
+#> 2     A     4 -1.66084623 -0.4397486  0.57251733
+#> 3     B     2 -0.57973333 -0.2878683  1.24475578
+#> 4     B     1 -0.82075051  1.3702900  0.01716528
+#> 5     C     5 -0.76337897 -0.9620213  0.25846351
+#> 6     A     5 -0.37720294 -0.1853976  1.04872159
 
 # one-of-K encode each categorical feature and store in X1
-numCat <- apply(X[,Xcat,drop = FALSE], 2, function(x) length(unique(x)))
-#initialize training data matrix X
+numCat <- apply(X[, Xcat, drop = FALSE], 2, function(x) length(unique(x)))
+# initialize training data matrix X
 X1 <- matrix(0, nrow = nrow(X), ncol = sum(numCat))
 catLabel <- vector("list", length(Xcat))
-names(catLabel)<- colnames(X)[Xcat]
+names(catLabel) <- colnames(X)[Xcat]
 col.idx <- 0L
 # convert categorical feature to K dummy variables
-for (j in 1:length(Xcat)) {
-  catMap <- (col.idx + 1L):(col.idx + numCat[j])
-  catLabel[[j]]=levels(as.factor(X[,Xcat[j]]))
-  X1[, catMap] <- (matrix(X[,Xcat[j]],nrow(X),numCat[j])==matrix(catLabel[[j]],
-  nrow(X),numCat[j],byrow = TRUE))+0
+for (j in seq_along(Xcat)) {
+  catMap <- (col.idx + 1):(col.idx + numCat[j])
+  catLabel[[j]] <- levels(as.factor(X[, Xcat[j]]))
+  X1[, catMap] <- (matrix(X[, Xcat[j]], nrow(X), numCat[j]) == 
+  matrix(catLabel[[j]],nrow(X), numCat[j], byrow = TRUE)) + 0
   col.idx <- col.idx + numCat[j]
 }
-X=cbind(X1,X[,-Xcat])
-colnames(X)=c(paste(rep(seq(length(numCat)),numCat),unlist(catLabel),sep = "."),
-"X1","X2","X3")
+X <- cbind(X1, X[, -Xcat])
+colnames(X) <- c(paste(rep(seq_along(numCat), numCat), unlist(catLabel),
+  sep = "."), "X1", "X2", "X3")
 
-#Print the result after processing of category variables.
+# Print the result after processing of category variables.
 head(X)
-#  1.A 1.B 1.C 2.1 2.2 2.3 2.4 2.5          X1         X2          X3
-#1   0   1   0   0   0   0   0   1 -0.04178453  2.3962339 -0.01443979
-#2   1   0   0   0   0   0   1   0 -1.66084623 -0.4397486  0.57251733
-#3   0   1   0   0   1   0   0   0 -0.57973333 -0.2878683  1.24475578
-#4   0   1   0   1   0   0   0   0 -0.82075051  1.3702900  0.01716528
-#5   0   0   1   0   0   0   0   1 -0.76337897 -0.9620213  0.25846351
-#6   1   0   0   0   0   0   0   1 -0.37720294 -0.1853976  1.04872159
+#>   1.A 1.B 1.C 2.1 2.2 2.3 2.4 2.5          X1         X2          X3
+#> 1   0   1   0   0   0   0   0   1 -0.04178453  2.3962339 -0.01443979
+#> 2   1   0   0   0   0   0   1   0 -1.66084623 -0.4397486  0.57251733
+#> 3   0   1   0   0   1   0   0   0 -0.57973333 -0.2878683  1.24475578
+#> 4   0   1   0   1   0   0   0   0 -0.82075051  1.3702900  0.01716528
+#> 5   0   0   1   0   0   0   0   1 -0.76337897 -0.9620213  0.25846351
+#> 6   1   0   0   0   0   0   0   1 -0.37720294 -0.1853976  1.04872159
 catLabel
-#$Xcol1
-#[1] "A" "B" "C"
-#$Xcol2
-#[1] "1" "2" "3" "4" "5"
-forest = ODRF(X,y,type='g-classification',Xcat = c(1,2),catLabel=catLabel,
-parallel=FALSE)
+#> $Xcol1
+#> [1] "A" "B" "C"
+#>
+#> $Xcol2
+#> [1] "1" "2" "3" "4" "5"
+
+forest <- ODRF(X, y, type = "g-classification", Xcat = c(1, 2),
+  catLabel = catLabel, parallel = FALSE)
 
 }
 \references{
