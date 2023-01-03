@@ -4,8 +4,8 @@ Title: Oblique Decision Random Forest for Classification and Regression
 Version: 1.0.2
 Date: 2022-09-21
 Authors@R: c(
-    person("Yu", "Liu", , "liuyuchina123@gmail.com", role = c("aut", "cre", "cph")),
-    person("Yingcun", "Xia", , "staxyc@nus.edu.sg", role = "aut")
+    person(given = "Yu", family = "Liu", email = "liuyuchina123@gmail.com", role = c("aut", "cre", "cph")),
+    person(given = "Yingcun", family = "Xia", email = "staxyc@nus.edu.sg", role = "aut")
   )
 Author: Yu Liu [aut, cre, cph], Yingcun Xia [aut]
 Maintainer: Yu Liu <liuyuchina123@gmail.com>

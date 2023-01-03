@@ -166,7 +166,7 @@ pred <- predict(forest, test_data[, -8])
 (mean(pred != test_data[, 8]))
 
 # Regression with Oblique Decision Randome Forest.
-data(body_fat)
+\dontest{data(body_fat)
 set.seed(221212)
 train <- sample(1:252, 80)
 train_data <- data.frame(body_fat[train, ])
@@ -174,7 +174,7 @@ test_data <- data.frame(body_fat[-train, ])
 forest <- ODRF(Density ~ ., train_data, type = "regression", parallel = FALSE)
 pred <- predict(forest, test_data[, -1])
 # estimation error
-mean((pred - test_data[, 1])^2)
+mean((pred - test_data[, 1])^2)}
 
 ### Train ODRF on one-of-K encoded categorical data ###
 set.seed(22)
@@ -185,7 +185,7 @@ X <- data.frame(Xcol1, Xcol2, Xcon)
 Xcat <- c(1, 2)
 catLabel <- NULL
 y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
-forest <- ODRF(y ~ X, type = "i-classification", Xcat = NULL, parallel = FALSE)
+\dontest{forest <- ODRF(y ~ X, type = "i-classification", Xcat = NULL, parallel = FALSE)}
 head(X)
 #>   Xcol1 Xcol2          X1         X2          X3
 #> 1     B     5 -0.04178453  2.3962339 -0.01443979
@@ -231,10 +231,10 @@ catLabel
 #> $Xcol2
 #> [1] "1" "2" "3" "4" "5"
 
-forest <- ODRF(X, y,
+\dontest{forest <- ODRF(X, y,
   type = "g-classification", Xcat = c(1, 2),
   catLabel = catLabel, parallel = FALSE
-)
+)}
 
 }
 \references{

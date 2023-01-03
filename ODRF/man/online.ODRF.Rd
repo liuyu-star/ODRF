@@ -40,6 +40,7 @@ pred <- predict(online_forest, test_data[, -8])
 (mean(pred != test_data[, 8]))
 
 # Regression with Oblique Decision Random Forest
+\dontest{
 data(body_fat)
 set.seed(221212)
 train <- sample(1:252, 80)
@@ -55,7 +56,7 @@ online_forest <- online(
 )
 pred <- predict(online_forest, test_data[, -1])
 # estimation error
-mean((pred - test_data[, 1])^2)
+mean((pred - test_data[, 1])^2)}
 
 }
 \seealso{
