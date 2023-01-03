@@ -32,6 +32,7 @@
 #' (mean(pred != test_data[, 8]))
 #'
 #' # Regression with Oblique Decision Random Forest
+#' \dontrun{
 #' data(body_fat)
 #' set.seed(221212)
 #' train <- sample(1:252, 100)
@@ -43,6 +44,7 @@
 #' pred <- predict(prune_forest, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
+#' }
 #'
 #' @rdname prune.ODRF
 #' @aliases prune.ODRF

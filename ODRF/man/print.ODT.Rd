@@ -17,6 +17,9 @@
 
 \item{...}{Arguments to be passed to methods.}
 }
+\value{
+The oblique decision tree structure.
+}
 \description{
 Print the oblique decision tree structure.
 }

@@ -14,6 +14,9 @@ and \code{data} must be the training data \code{data} in \code{\link{ODT}}.}
 
 \item{...}{Arguments to be passed to methods}
 }
+\value{
+An objects of class \code{party}.
+}
 \description{
 To make \code{ODT} object to objects of class \code{party}.
 }

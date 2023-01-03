@@ -9,6 +9,8 @@
 #' @param main main title
 #' @param sub sub title
 #' @param ... Arguments to be passed to methods.
+#' 
+#' @return Tree Structure.
 #'
 #' @references Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
 #' @keywords tree

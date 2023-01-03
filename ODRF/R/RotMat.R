@@ -504,6 +504,7 @@ RotMatMake <- function(X = NULL, y = NULL, RotMatFun = "RotMatPPO", PPFun = "PPO
 #' (RandRot(1000))
 #' 
 #' @importFrom stats rnorm
+#' @noRd
 RandRot <- function(p) {
   RotMat <- qr.Q(qr(matrix(stats::rnorm(p^2), p, p)))
   if (det(RotMat) < 0) {

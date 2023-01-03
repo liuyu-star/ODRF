@@ -11,6 +11,9 @@
 
 \item{...}{Arguments to be passed to methods.}
 }
+\value{
+OOB error, misclassification rate (MR) for classification or mean square error (MSE) for regression.
+}
 \description{
 Print contents of ODRF object.
 }

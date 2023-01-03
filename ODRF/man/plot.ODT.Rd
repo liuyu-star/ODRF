@@ -21,6 +21,9 @@
 
 \item{...}{Arguments to be passed to methods.}
 }
+\value{
+Tree Structure.
+}
 \description{
 Draw oblique decision tree with tree structure. It is modified from a function in \code{PPtreeViz} library.
 }

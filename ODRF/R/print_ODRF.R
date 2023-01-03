@@ -5,6 +5,8 @@
 #' @param x An object of class \code{\link{ODRF}}.
 #' @param ... Arguments to be passed to methods.
 #'
+#' @return OOB error, misclassification rate (MR) for classification or mean square error (MSE) for regression.
+#'
 #' @seealso \code{\link{ODRF}}
 #'
 #' @examples

@@ -1,13 +1,13 @@
 Type: Package
 Package: ODRF
 Title: Oblique Decision Random Forest for Classification and Regression
-Version: 1.0-1
+Version: 1.0.2
 Date: 2022-09-21
 Authors@R: c(
-    person("Yu", "Liu", , "liuyuchina123@gmail.com", role = c("aut", "cre")),
+    person("Yu", "Liu", , "liuyuchina123@gmail.com", role = c("aut", "cre", "cph")),
     person("Yingcun", "Xia", , "staxyc@nus.edu.sg", role = "aut")
   )
-Author: Yu Liu [aut, cre], Yingcun Xia [aut]
+Author: Yu Liu [aut, cre, cph], Yingcun Xia [aut]
 Maintainer: Yu Liu <liuyuchina123@gmail.com>
 Description: The oblique decision tree (ODT) uses linear combinations of
     predictors as partitioning variables in a decision tree. Oblique

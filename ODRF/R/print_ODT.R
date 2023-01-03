@@ -6,7 +6,8 @@
 #' @param cutvalue Print cutoff values in each node if TRUE.
 #' @param verbose Print if TRUE, no output if FALSE.
 #' @param ... Arguments to be passed to methods.
-#'
+#' 
+#' @return The oblique decision tree structure.
 #' @references Lee, EK(2017)
 #' PPtreeViz: An R Package for Visualizing Projection Pursuit Classification
 #' Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>

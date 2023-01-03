@@ -83,15 +83,17 @@
 #' (mean(pred != test_data[, 8]))
 #'
 #' # Regression with Oblique Decision Randome Forest.
+#' \donttest{
 #' data(body_fat)
 #' set.seed(221212)
-#' train <- sample(1:252, 100)
+#' train <- sample(1:252, 80)
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #' forest <- ODRF(Density ~ ., train_data, type = "regression", parallel = FALSE)
 #' pred <- predict(forest, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
+#' }
 #'
 #' ### Train ODRF on one-of-K encoded categorical data ###
 #' set.seed(22)
