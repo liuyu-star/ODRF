@@ -1,7 +1,7 @@
 #' print ODT result
 #'
 #' Print the oblique decision tree structure.
-#' @param ppTree An object of class \code{\link{ODT}}.
+#' @param x An object of class \code{\link{ODT}}.
 #' @param projection Print projection coefficients in each node if TRUE.
 #' @param cutvalue Print cutoff values in each node if TRUE.
 #' @param verbose Print if TRUE, no output if FALSE.
@@ -24,7 +24,9 @@
 #' @aliases print.ODT
 #' @method print ODT
 #' @export
-print.ODT <- function(ppTree, projection = FALSE, cutvalue = FALSE, verbose = TRUE, ...) {
+print.ODT <- function(x, projection = FALSE, cutvalue = FALSE, verbose = TRUE, ...) {
+  ppTree <- x
+  rm(x)
   numNode <- length(ppTree$structure$nodeCutValue)
   cutNode <- which(ppTree$structure$nodeCutValue != 0)
 

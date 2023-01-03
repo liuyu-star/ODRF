@@ -95,7 +95,7 @@ PPO <- function(X, y, model = "PPR", type = "i-classification", weights = NULL, 
       PP <- nnet(X, Y, weights = weights, size = 1, linout = TRUE, trace = FALSE)$wts[2:(1 + p)] #
       # }
     } else if (model %in% c("LDA", "PDA", "Lr", "GINI", "ENTROPY")) {
-      PP <- ODRF:::ppOptCpp(y, X, q = 1, PPmethod = model, weight = TRUE, r = 1, lambda = 0.1, energy = 0, cooling = 0.9, TOL = 0.0001, maxiter = 1000L)$projbest
+      PP <- ppOptCpp(y, X, q = 1, PPmethod = model, weight = TRUE, r = 1, lambda = 0.1, energy = 0, cooling = 0.9, TOL = 0.0001, maxiter = 1000L)$projbest
     } else {
       PP <- PP_Optimizer(
         data = X, class = y, findex = model,

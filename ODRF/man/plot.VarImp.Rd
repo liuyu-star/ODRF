@@ -4,17 +4,10 @@
 \alias{plot.VarImp}
 \title{Variable Importance Plot}
 \usage{
-\method{plot}{VarImp}(
-  varImp,
-  nvar = min(30, nrow(varImp$varImp)),
-  digits = NULL,
-  main = paste0("Oblique ", ifelse(varImp$type == "regression", "Regression",
-    "Classification"), " Forest"),
-  ...
-)
+\method{plot}{VarImp}(x, nvar = 30, digits = NULL, main = NULL, ...)
 }
 \arguments{
-\item{varImp}{An object of class \code{\link{VarImp}}.}
+\item{x}{An object of class \code{\link{VarImp}}.}
 
 \item{nvar}{How many variables to show.}
 
@@ -38,8 +31,9 @@ train <- sample(1:569, 200)
 train_data <- data.frame(breast_cancer[train, -1])
 test_data <- data.frame(breast_cancer[-train, -1])
 
-forest <- ODRF(diagnosis ~ ., train_data, 
-  type = "i-classification", parallel = FALSE)
+forest <- ODRF(diagnosis ~ ., train_data,
+  type = "i-classification", parallel = FALSE
+)
 (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
 plot(varimp, digits = 0)
 

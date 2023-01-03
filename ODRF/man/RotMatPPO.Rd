@@ -31,7 +31,7 @@ RotMatPPO(
 
 \item{dimProj}{Number of variables to be projected, \code{dimProj}=min(ceiling(n^0.4),ceiling(ncol(X)*2/3)) (default) or dimProj="Rand": random from 1 to ncol(X).}
 
-\item{numProj}{The number of projection directions, when dimProj="Rand" default 
+\item{numProj}{The number of projection directions, when dimProj="Rand" default
 numProj = sample(ceiling(ncol(X)/3),1) otherwise default numProj=ceiling(p0/dimProj).}
 
 \item{catLabel}{A category labels of class \code{list} in predictors. (default NULL, for details see Examples of \code{\link{ODT}})}

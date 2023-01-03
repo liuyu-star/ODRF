@@ -4,16 +4,18 @@
 \alias{predict.ODRF}
 \title{predict based on ODRF objects}
 \usage{
-\method{predict}{ODRF}(ppForest, Xnew, type = "response", weight.tree = FALSE)
+\method{predict}{ODRF}(object, Xnew, type = "response", weight.tree = FALSE, ...)
 }
 \arguments{
-\item{ppForest}{An object of class ODRF, as that created by the function \code{\link{ODRF}}.}
+\item{object}{An object of class ODRF, as that created by the function \code{\link{ODRF}}.}
 
 \item{Xnew}{An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.}
 
 \item{type}{One of \code{response}, \code{prob} or \code{tree}, indicating the type of output: predicted values, matrix of class probabilities or predicted value for each tree.}
 
 \item{weight.tree}{Whether to weight the tree, if \code{TRUE} then use the out-of-bag error of the tree as the weight. (default \code{FALSE})}
+
+\item{...}{Arguments to be passed to methods.}
 }
 \value{
 A set of vectors in the following list:
@@ -34,7 +36,8 @@ train <- sample(1:209, 100)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
-  type = "i-classification",parallel = FALSE)
+  type = "i-classification", parallel = FALSE
+)
 pred <- predict(forest, test_data[, -8])
 # classification error
 (mean(pred != test_data[, 8]))

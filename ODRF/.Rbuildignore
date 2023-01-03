@@ -1,3 +1,13 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
+^\.github$
+^codecov\.yml$
+^\.gitlab-ci\.yml$
+^cran-comments\.md$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^README\.Rmd$
+^revdep$
+^ODRF\.Rproj$

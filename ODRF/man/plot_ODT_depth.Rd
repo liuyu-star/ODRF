@@ -12,8 +12,7 @@ plot_ODT_depth(
   NodeRotateFun = "RotMatPPO",
   paramList = NULL,
   digits = NULL,
-  main = paste0("Oblique ", ifelse(type == "regression", "Regression", "Classification"),
-    " Tree"),
+  main = NULL,
   ...
 )
 }

@@ -58,8 +58,8 @@ library(nnet)
 makeRotMat <- function(dimX, dimProj, numProj, ...) {
   RotMat <- matrix(1, dimProj * numProj, 3)
   for (np in seq(numProj)) {
-    RotMat[(dimProj * (np - 1) + 1):(dimProj * np), 1] <- 
-    sample(1:dimX, dimProj, replace = FALSE)
+    RotMat[(dimProj * (np - 1) + 1):(dimProj * np), 1] <-
+      sample(1:dimX, dimProj, replace = FALSE)
     RotMat[(dimProj * (np - 1) + 1):(dimProj * np), 2] <- np
   }
   return(RotMat)
@@ -84,12 +84,18 @@ head(RotMat)
 #> [6,]        6      2           1
 
 # train ODT with defined projection matrix function
-tree <- ODT(X, y, type = "i-classification", NodeRotateFun = "makeRotMat",
-  paramList = list(dimX = ncol(X), dimProj = 5, numProj = 4))
+tree <- ODT(X, y,
+  type = "i-classification", NodeRotateFun = "makeRotMat",
+  paramList = list(dimX = ncol(X), dimProj = 5, numProj = 4)
+)
 # train ODT with defined projection matrix function and projection optimization model function
-tree <- ODT(X, y, type = "i-classification", NodeRotateFun = "RotMatMake", paramList =
-  list(RotMatFun = "makeRotMat", PPFun = "makePP", 
-  dimX = ncol(X), dimProj = 5, numProj = 4, prob = 0.5))
+tree <- ODT(X, y,
+  type = "i-classification", NodeRotateFun = "RotMatMake", paramList =
+    list(
+      RotMatFun = "makeRotMat", PPFun = "makePP",
+      dimX = ncol(X), dimProj = 5, numProj = 4, prob = 0.5
+    )
+)
 
 }
 \seealso{

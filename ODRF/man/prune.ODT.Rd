@@ -4,10 +4,10 @@
 \alias{prune.ODT}
 \title{pruning of class \code{ODT}}
 \usage{
-\method{prune}{ODT}(ppTree, X, y, MaxDepth = 1, ...)
+\method{prune}{ODT}(obj, X, y, MaxDepth = 1, ...)
 }
 \arguments{
-\item{ppTree}{an object of class \code{ODT}.}
+\item{obj}{an object of class \code{ODT}.}
 
 \item{X}{An n by d numeric matrix (preferable) or data frame is used to prune the object of class \code{ODT}.}
 
@@ -35,8 +35,8 @@ train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 tree <- ODT(varieties_of_wheat ~ ., train_data[index, ], type = "i-classification")
-prune.tree <- prune(tree, train_data[-index, -8], train_data[-index, 8])
-pred <- predict(prune.tree, test_data[, -8])
+prune_tree <- prune(tree, train_data[-index, -8], train_data[-index, 8])
+pred <- predict(prune_tree, test_data[, -8])
 # classification error
 (mean(pred != test_data[, 8]))
 
@@ -48,8 +48,8 @@ train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 tree <- ODT(Density ~ ., train_data[index, ], type = "regression")
-prune.tree <- prune(tree, train_data[-index, -1], train_data[-index, 1])
-pred <- predict(prune.tree, test_data[, -1])
+prune_tree <- prune(tree, train_data[-index, -1], train_data[-index, 1])
+pred <- predict(prune_tree, test_data[, -1])
 # estimation error
 mean((pred - test_data[, 1])^2)
 

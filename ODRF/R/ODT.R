@@ -113,13 +113,14 @@
 #' for (j in seq_along(Xcat)) {
 #'   catMap <- (col.idx + 1):(col.idx + numCat[j])
 #'   catLabel[[j]] <- levels(as.factor(X[, Xcat[j]]))
-#'   X1[, catMap] <- (matrix(X[, Xcat[j]], nrow(X), numCat[j]) == 
-#'   matrix(catLabel[[j]],nrow(X), numCat[j], byrow = TRUE)) + 0
+#'   X1[, catMap] <- (matrix(X[, Xcat[j]], nrow(X), numCat[j]) ==
+#'     matrix(catLabel[[j]], nrow(X), numCat[j], byrow = TRUE)) + 0
 #'   col.idx <- col.idx + numCat[j]
 #' }
 #' X <- cbind(X1, X[, -Xcat])
 #' colnames(X) <- c(paste(rep(seq_along(numCat), numCat), unlist(catLabel),
-#'   sep = "."), "X1", "X2", "X3")
+#'   sep = "."
+#' ), "X1", "X2", "X3")
 #'
 #' # Print the result after processing of category variables.
 #' head(X)
@@ -139,13 +140,14 @@
 #'
 #' tree <- ODT(X, y, type = "g-classification", Xcat = c(1, 2), catLabel = catLabel)
 #'
+#' @useDynLib ODRF
 #' @import Rcpp
 #' @importFrom stats model.frame model.extract model.matrix na.fail
 #' @export
-ODT <- function(formula, ...) {
-  UseMethod("ODT", formula)
+ODT <- function(X, ...) {
+  UseMethod("ODT")
+  # formula X
 }
-
 
 #' @rdname ODT
 #' @method ODT formula
@@ -156,6 +158,7 @@ ODT.formula <- function(formula, data = NULL, type = "auto", NodeRotateFun = "Ro
                         catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
   Call <- match.call()
   indx <- match(c("formula", "data", "subset", "na.action"), names(Call), nomatch = 0L) # , "weights"
+  # formula=X
   if (indx[[1]] == 0) {
     stop("A 'formula' or 'X', 'y' argument is required")
   } else if (indx[[2]] == 0) {
@@ -185,15 +188,21 @@ ODT.formula <- function(formula, data = NULL, type = "auto", NodeRotateFun = "Ro
 
   nodeRotaMat <- ppTree$structure$nodeRotaMat
   cutNode <- unique(nodeRotaMat[, 2][nodeRotaMat[, 1] != 0])
-  projections <- matrix(0, length(cutNode), ppTree$data$p)
-  for (cn in seq_along(cutNode)) {
-    idx <- which(nodeRotaMat[, 2] == cutNode[cn])
-    projections[cn, nodeRotaMat[idx, 1]] <- nodeRotaMat[idx, 3]
+  projections <- NULL
+  if (length(cutNode) > 0) {
+    projections <- matrix(0, length(cutNode), ppTree$data$p)
+    for (cn in seq_along(cutNode)) {
+      idx <- which(nodeRotaMat[, 2] == cutNode[cn])
+      projections[cn, nodeRotaMat[idx, 1]] <- nodeRotaMat[idx, 3]
+    }
+    colnames(projections) <- ppTree$data$varName
+    rownames(projections) <- paste("proj", seq_along(cutNode), sep = "")
   }
-  colnames(projections) <- ppTree$data$varName
-  rownames(projections) <- paste("proj", seq_along(nrow(projections)), sep = "")
 
-  return(c(ppTree[seq(5)], list(projections = projections), ppTree[-seq(5)]))
+  ppTree <- c(ppTree[seq(5)], list(projections = projections), ppTree[-seq(5)])
+  class(ppTree) <- append(class(ppTree), "ODT")
+
+  return(ppTree)
 }
 
 
@@ -229,20 +238,26 @@ ODT.default <- function(X, y, type = "auto", NodeRotateFun = "RotMatPPO", FunDir
 
   nodeRotaMat <- ppTree$structure$nodeRotaMat
   cutNode <- unique(nodeRotaMat[, 2][nodeRotaMat[, 1] != 0])
-  projections <- matrix(0, length(cutNode), ppTree$data$p)
-  for (cn in seq_along(cutNode)) {
-    idx <- which(nodeRotaMat[, 2] == cutNode[cn])
-    projections[cn, nodeRotaMat[idx, 1]] <- nodeRotaMat[idx, 3]
+  projections <- NULL
+  if (length(cutNode) > 0) {
+    projections <- matrix(0, length(cutNode), ppTree$data$p)
+    for (cn in seq_along(cutNode)) {
+      idx <- which(nodeRotaMat[, 2] == cutNode[cn])
+      projections[cn, nodeRotaMat[idx, 1]] <- nodeRotaMat[idx, 3]
+    }
+    colnames(projections) <- ppTree$data$varName
+    rownames(projections) <- paste("proj", seq_along(cutNode), sep = "")
   }
-  colnames(projections) <- ppTree$data$varName
-  rownames(projections) <- paste("proj", seq_len(nrow(projections)), sep = "")
 
-  return(c(ppTree[seq(5)], list(projections = projections), ppTree[-seq(5)]))
+  ppTree <- c(ppTree[seq(5)], list(projections = projections), ppTree[-seq(5)])
+  class(ppTree) <- append(class(ppTree), "ODT")
+
+  return(ppTree)
 }
 
 
 ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
-                        MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate, ...) {
+                        MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
   if (is.factor(y) && (type == "auto")) {
     type <- "i-classification"
     warning("You are creating a forest for classification")

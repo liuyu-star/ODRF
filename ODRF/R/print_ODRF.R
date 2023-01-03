@@ -2,7 +2,7 @@
 #'
 #' Print contents of ODRF object.
 #'
-#' @param ppForest An object of class \code{\link{ODRF}}.
+#' @param x An object of class \code{\link{ODRF}}.
 #' @param ... Arguments to be passed to methods.
 #'
 #' @seealso \code{\link{ODRF}}
@@ -17,22 +17,22 @@
 #' @aliases print.ODRF
 #' @method print ODRF
 #' @export
-print.ODRF <- function(ppForest, ...) {
-  cat("\nCall:\n", deparse(ppForest$call), "\n")
+print.ODRF <- function(x, ...) {
+  cat("\nCall:\n", deparse(x$call), "\n")
   cat("               Type of oblique decision random forest: ",
-    ifelse(ppForest$type == "regression", "regression", "classification"), "\n",
+    ifelse(x$type == "regression", "regression", "classification"), "\n",
     sep = ""
   )
-  cat("                                      Number of trees: ", ppForest$forest$ntrees, "\n", sep = "")
+  cat("                                      Number of trees: ", x$forest$ntrees, "\n", sep = "")
   # cat("No. of variables tried at each split: ", x$mtrforest, "\n\n", sep="")
-  if (ppForest$forest$numOOB == 0) {
+  if (x$forest$numOOB == 0) {
     cat("The number of OOBs is 0")
   }
-  if (!is.null(ppForest$oobErr)) {
-    cat("                           OOB estimate of error rate: ", round(ppForest$oobErr * 100, 2), "%\n", sep = "")
+  if (!is.null(x$oobErr)) {
+    cat("                           OOB estimate of error rate: ", round(x$oobErr * 100, 2), "%\n", sep = "")
   }
-  if (!is.null(ppForest$oobConfusionMat)) {
+  if (!is.null(x$oobConfusionMat)) {
     cat("Confusion matrix:\n")
-    print(ppForest$oobConfusionMat)
+    print(x$oobConfusionMat)
   }
 }

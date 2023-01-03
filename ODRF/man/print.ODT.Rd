@@ -4,10 +4,10 @@
 \alias{print.ODT}
 \title{print ODT result}
 \usage{
-\method{print}{ODT}(ppTree, projection = FALSE, cutvalue = FALSE, verbose = TRUE, ...)
+\method{print}{ODT}(x, projection = FALSE, cutvalue = FALSE, verbose = TRUE, ...)
 }
 \arguments{
-\item{ppTree}{An object of class \code{\link{ODT}}.}
+\item{x}{An object of class \code{\link{ODT}}.}
 
 \item{projection}{Print projection coefficients in each node if TRUE.}
 

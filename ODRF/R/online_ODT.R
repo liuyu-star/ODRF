@@ -2,7 +2,7 @@
 #'
 #' Update existing \code{\link{ODT}} using batches of data to improve the model.
 #'
-#' @param ppTree an object of class \code{ODT}.
+#' @param obj an object of class \code{ODT}.
 #' @param X An n by d numeric matrix (preferable) or data frame is used to update the object of class \code{ODT}.
 #' @param y A response vector of length n is used to update the object of class \code{ODT}.
 #' @param weights Vector of non-negative observational weights; fractional weights are allowed (default NULL).
@@ -21,9 +21,10 @@
 #' test_data <- data.frame(seeds[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
 #' tree <- ODT(varieties_of_wheat ~ ., train_data[index, ],
-#'  type = "i-classification")
-#' online.tree <- online(tree, train_data[-index, -8], train_data[-index, 8])
-#' pred <- predict(online.tree, test_data[, -8])
+#'   type = "i-classification"
+#' )
+#' online_tree <- online(tree, train_data[-index, -8], train_data[-index, 8])
+#' pred <- predict(online_tree, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
 #'
@@ -35,8 +36,8 @@
 #' test_data <- data.frame(body_fat[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
 #' tree <- ODT(Density ~ ., train_data[index, ], type = "regression")
-#' online.tree <- online(tree, train_data[-index, -1], train_data[-index, 1])
-#' pred <- predict(online.tree, test_data[, -1])
+#' online_tree <- online(tree, train_data[-index, -1], train_data[-index, 1])
+#' pred <- predict(online_tree, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
 #'
@@ -44,7 +45,9 @@
 #' @aliases online.ODT
 #' @method online ODT
 #' @export
-online.ODT <- function(ppTree, X = NULL, y = NULL, weights = NULL, ...) {
+online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
+  ppTree <- obj
+  rm(obj)
   weights0 <- weights
   Call <- ppTree$call
   Terms <- ppTree$terms
@@ -52,16 +55,25 @@ online.ODT <- function(ppTree, X = NULL, y = NULL, weights = NULL, ...) {
   Levels <- ppTree$Levels
   NodeRotateFun <- ppTree$NodeRotateFun
   paramList <- ppTree$paramList
-  ppTree <- ppTree[-seq(6)]
+  ppTree <- ppTree[-seq(5)]
   if ("projections" %in% names(ppTree)) {
     projections <- ppTree$projections
+    ppTree <- ppTree[-1]
   }
+  ppTree <- ppTree[-1]
+
+  subset <- weights <- na.action <- n <- p <- varName <- Xscale <- minCol <- maxminCol <- NULL
+  Xcat <- catLabel <- TreeRandRotate <- rotdims <- rotmat <- NULL
+  FunDir <- MaxDepth <- MinLeaf <- numNode <- NULL
+  nodeRotaMat <- nodeNumLabel <- nodeCutValue <- nodeCutIndex <- childNode <- nodeDepth <- NULL
+
   ppTreeVar <- c(names(ppTree$data), names(ppTree$tree), names(ppTree$structure))
   ppTree <- do.call("c", ppTree)
-  nameTree <- names(ppTree)
+  # nameTree <- names(ppTree)
 
+  # env <- new.env()
   for (v in seq_along(ppTreeVar)) {
-    assign(ppTreeVar[v], ppTree[[v]])
+    assign(ppTreeVar[v], ppTree[[v]]) # ,envir = env)
   }
   rm(ppTree)
 

@@ -2,7 +2,7 @@
 #'
 #' Draw the error graph of class \code{ODRF} at different tree sizes.
 #'
-#' @param Err Object of class \code{\link{ODRF_accuracy}}.
+#' @param x Object of class \code{\link{ODRF_accuracy}}.
 #' @param lty A vector of line types, see \code{\link{par}}.
 #' @param digits Integer indicating the number of decimal places (round) or significant digits (signif) to be used.
 #' @param main main title of the plot.
@@ -29,10 +29,11 @@
 #' @aliases plot.ODRF_accuracy
 #' @method plot ODRF_accuracy
 #' @export
-plot.ODRF_accuracy <- function(Err, lty = 1, digits = NULL, main = paste0(
-                                 "Oblique ",
-                                 ifelse(Err$type == "regression", "Regression", "Classification"), " Forest"
-                               ), ...) {
+plot.ODRF_accuracy <- function(x, lty = 1, digits = NULL, main = NULL, ...) {
+  if (is.null(main)) {
+    main <- paste0("Oblique ", ifelse(x$type == "regression", "Regression", "Classification"), " Forest")
+  }
+  Err <- x
   err <- cbind(Err$err.oob, Err$err.test)
 
   minErr <- strsplit(as.character(min(err)), "")[[1]]

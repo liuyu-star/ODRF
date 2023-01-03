@@ -6,7 +6,7 @@
 \alias{ODRF.default}
 \title{Classification and Regression with Oblique Decision Random Forest}
 \usage{
-ODRF(formula, ...)
+ODRF(X, ...)
 
 \method{ODRF}{formula}(
   formula,
@@ -65,9 +65,11 @@ ODRF(formula, ...)
 )
 }
 \arguments{
-\item{formula}{Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
+\item{X}{An n by d numeric matrix (preferable) or data frame.}
 
 \item{...}{Optional parameters to be passed to the low level function.}
+
+\item{formula}{Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
 
 \item{data}{Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.}
 
@@ -123,8 +125,6 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))<
 
 \item{TreeRandRotate}{If or not to randomly rotate the Training data before building the tree (default FALSE).}
 
-\item{X}{An n by d numeric matrix (preferable) or data frame.}
-
 \item{y}{A response vector of length n.}
 }
 \value{
@@ -157,8 +157,10 @@ set.seed(221212)
 train <- sample(1:209, 100)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
-forest <- ODRF(varieties_of_wheat ~ ., train_data,type = "i-classification",
-  parallel = FALSE)
+forest <- ODRF(varieties_of_wheat ~ ., train_data,
+  type = "i-classification",
+  parallel = FALSE
+)
 pred <- predict(forest, test_data[, -8])
 # classification error
 (mean(pred != test_data[, 8]))
@@ -204,13 +206,14 @@ col.idx <- 0L
 for (j in seq_along(Xcat)) {
   catMap <- (col.idx + 1):(col.idx + numCat[j])
   catLabel[[j]] <- levels(as.factor(X[, Xcat[j]]))
-  X1[, catMap] <- (matrix(X[, Xcat[j]], nrow(X), numCat[j]) == 
-  matrix(catLabel[[j]],nrow(X), numCat[j], byrow = TRUE)) + 0
+  X1[, catMap] <- (matrix(X[, Xcat[j]], nrow(X), numCat[j]) ==
+    matrix(catLabel[[j]], nrow(X), numCat[j], byrow = TRUE)) + 0
   col.idx <- col.idx + numCat[j]
 }
 X <- cbind(X1, X[, -Xcat])
 colnames(X) <- c(paste(rep(seq_along(numCat), numCat), unlist(catLabel),
-  sep = "."), "X1", "X2", "X3")
+  sep = "."
+), "X1", "X2", "X3")
 
 # Print the result after processing of category variables.
 head(X)
@@ -228,8 +231,10 @@ catLabel
 #> $Xcol2
 #> [1] "1" "2" "3" "4" "5"
 
-forest <- ODRF(X, y, type = "g-classification", Xcat = c(1, 2),
-  catLabel = catLabel, parallel = FALSE)
+forest <- ODRF(X, y,
+  type = "g-classification", Xcat = c(1, 2),
+  catLabel = catLabel, parallel = FALSE
+)
 
 }
 \references{

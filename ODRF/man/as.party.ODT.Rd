@@ -4,10 +4,10 @@
 \alias{as.party.ODT}
 \title{\code{ODT} as \code{party}}
 \usage{
-\method{as.party}{ODT}(ppTree, data, ...)
+\method{as.party}{ODT}(obj, data, ...)
 }
 \arguments{
-\item{ppTree}{An object of class \code{\link{ODT}}.}
+\item{obj}{An object of class \code{\link{ODT}}.}
 
 \item{data}{Training data of class \code{data.frame} is used to convert the object of class \code{ODRF}.
 and \code{data} must be the training data \code{data} in \code{\link{ODT}}.}

@@ -2,7 +2,7 @@
 #'
 #' Draw oblique decision tree with tree structure. It is modified from a function in \code{PPtreeViz} library.
 #'
-#' @param ppTree An object of class \code{\link{ODT}}.
+#' @param x An object of class \code{\link{ODT}}.
 #' @param font.size Font size of plot
 #' @param width.size Size of eclipse in each node.
 #' @param xadj The size of the left and right movement.
@@ -26,10 +26,12 @@
 #' @aliases plot.ODT
 #' @method plot ODT
 #' @export
-plot.ODT <- function(ppTree, font.size = 17, width.size = 1, xadj = 0, main = paste0(
-                       "Oblique ",
-                       ifelse(ppTree$type == "regression", "Regression", "Classification"), " Tree"
-                     ), sub = NULL, ...) {
+plot.ODT <- function(x, font.size = 17, width.size = 1, xadj = 0, main = NULL, sub = NULL, ...) {
+  ppTree <- x
+  if (is.null(main)) {
+    main <- paste0("Oblique ", ifelse(ppTree$type == "regression", "Regression", "Classification"), " Tree")
+  }
+
   numNode <- length(ppTree$structure$nodeCutValue)
   cutNode <- which(ppTree$structure$nodeCutValue != 0)
 

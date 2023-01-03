@@ -4,14 +4,16 @@
 \alias{predict.ODT}
 \title{predict method for ODT objects}
 \usage{
-\method{predict}{ODT}(ppTree, Xnew, leafnode = FALSE)
+\method{predict}{ODT}(object, Xnew, leafnode = FALSE, ...)
 }
 \arguments{
-\item{ppTree}{An object of class ODT, as that created by the function \code{\link{ODT}}.}
+\item{object}{An object of class ODT, as that created by the function \code{\link{ODT}}.}
 
 \item{Xnew}{An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.}
 
 \item{leafnode}{If or not output the leaf node sequence number that \code{Xnew} is partitioned. (default FALSE)}
+
+\item{...}{Arguments to be passed to methods.}
 }
 \value{
 A vector of the following:

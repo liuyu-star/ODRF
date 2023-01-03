@@ -74,8 +74,10 @@
 #' train <- sample(1:209, 100)
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
-#' forest <- ODRF(varieties_of_wheat ~ ., train_data,type = "i-classification",
-#'   parallel = FALSE)
+#' forest <- ODRF(varieties_of_wheat ~ ., train_data,
+#'   type = "i-classification",
+#'   parallel = FALSE
+#' )
 #' pred <- predict(forest, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
@@ -121,13 +123,14 @@
 #' for (j in seq_along(Xcat)) {
 #'   catMap <- (col.idx + 1):(col.idx + numCat[j])
 #'   catLabel[[j]] <- levels(as.factor(X[, Xcat[j]]))
-#'   X1[, catMap] <- (matrix(X[, Xcat[j]], nrow(X), numCat[j]) == 
-#'   matrix(catLabel[[j]],nrow(X), numCat[j], byrow = TRUE)) + 0
+#'   X1[, catMap] <- (matrix(X[, Xcat[j]], nrow(X), numCat[j]) ==
+#'     matrix(catLabel[[j]], nrow(X), numCat[j], byrow = TRUE)) + 0
 #'   col.idx <- col.idx + numCat[j]
 #' }
 #' X <- cbind(X1, X[, -Xcat])
 #' colnames(X) <- c(paste(rep(seq_along(numCat), numCat), unlist(catLabel),
-#'   sep = "."), "X1", "X2", "X3")
+#'   sep = "."
+#' ), "X1", "X2", "X3")
 #'
 #' # Print the result after processing of category variables.
 #' head(X)
@@ -145,10 +148,12 @@
 #' #> $Xcol2
 #' #> [1] "1" "2" "3" "4" "5"
 #'
-#' forest <- ODRF(X, y, type = "g-classification", Xcat = c(1, 2),
-#'   catLabel = catLabel, parallel = FALSE)
+#' forest <- ODRF(X, y,
+#'   type = "g-classification", Xcat = c(1, 2),
+#'   catLabel = catLabel, parallel = FALSE
+#' )
 #'
-#' @useDynLib ODRF
+#' @useDynLib ODRF, .registration = TRUE
 #' @import MAVE mda
 #' @import Rcpp
 #' @import doParallel
@@ -156,8 +161,8 @@
 #' @importFrom parallel detectCores makeCluster clusterSplit stopCluster
 #' @importFrom stats model.frame model.extract model.matrix na.fail
 #' @export
-ODRF <- function(formula, ...) {
-  UseMethod("ODRF", formula)
+ODRF <- function(X, ...) {
+  UseMethod("ODRF")
 }
 
 
@@ -191,12 +196,15 @@ ODRF.formula <- function(formula, data = NULL, type = "auto", NodeRotateFun = "R
     Call$data <- quote(data)
   }
 
-  ODRF.compute(
+  forest <- ODRF.compute(
     formula, Call, varName, X, y, type, NodeRotateFun, FunDir, paramList,
     ntrees, storeOOB, replacement, stratify, numOOB, parallel,
     numCores, seed, MaxDepth, numNode, MinLeaf, subset, weights,
     na.action, catLabel, Xcat, Xscale, TreeRandRotate
   )
+
+  # class(forest) = append(class(forest),"ODRF.formula")
+  return(forest)
 }
 
 
@@ -234,7 +242,7 @@ ODRF.default <- function(X, y, type = "auto", NodeRotateFun = "RotMatPPO", FunDi
 ODRF.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDir, paramList,
                          ntrees, storeOOB, replacement, stratify, numOOB, parallel,
                          numCores, seed, MaxDepth, numNode, MinLeaf, subset, weights,
-                         na.action, catLabel, Xcat, Xscale, TreeRandRotate, ...) {
+                         na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
   if (is.factor(y) && (type == "auto")) {
     type <- "i-classification"
     warning("You are creating a forest for classification")
@@ -435,6 +443,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunD
     chunks <- parallel::clusterSplit(cl, seq_len(ntrees))
     doParallel::registerDoParallel(cl, numCores)
     # set.seed(seed)
+    icore <- NULL
     ppForestT <- foreach::foreach(
       icore = seq_along(chunks), .combine = list, .multicombine = TRUE,
       .packages = c("ODRF"), .noexport = "ppForest"

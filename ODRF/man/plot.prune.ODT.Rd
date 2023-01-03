@@ -4,17 +4,10 @@
 \alias{plot.prune.ODT}
 \title{to plot pruned oblique decision tree}
 \usage{
-\method{plot}{prune.ODT}(
-  ppTree,
-  position = "topleft",
-  digits = NULL,
-  main = paste0("Oblique ", ifelse(ppTree$type == "regression", "Regression",
-    "Classification"), " Tree"),
-  ...
-)
+\method{plot}{prune.ODT}(x, position = "topleft", digits = NULL, main = NULL, ...)
 }
 \arguments{
-\item{ppTree}{An object of class \code{\link{prune.ODT}}.}
+\item{x}{An object of class \code{\link{prune.ODT}}.}
 
 \item{position}{Position of the curve label.}
 
@@ -38,12 +31,12 @@ train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 
 tree <- ODT(Density ~ ., train_data, type = "regression")
-prune.tree <- prune(tree, test_data[, -1], test_data[, 1])
+prune_tree <- prune(tree, test_data[, -1], test_data[, 1])
 # Plot pruned oblique decision tree structure (default)
-plot(prune.tree)
+plot(prune_tree)
 # Plot the error graph of the pruned oblique decision tree.
-class(prune.tree) <- "prune.ODT"
-plot(prune.tree)
+class(prune_tree) <- "prune.ODT"
+plot(prune_tree)
 
 }
 \seealso{

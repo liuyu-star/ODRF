@@ -35,10 +35,11 @@
 #'
 #' @export
 plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, type = "i-classification", NodeRotateFun = "RotMatPPO",
-                           paramList = NULL, digits = NULL, main = paste0(
-                             "Oblique ",
-                             ifelse(type == "regression", "Regression", "Classification"), " Tree"
-                           ), ...) {
+                           paramList = NULL, digits = NULL, main = NULL, ...) {
+  if (is.null(main)) {
+    main <- paste0("Oblique ", ifelse(type == "regression", "Regression", "Classification"), " Tree")
+  }
+
   set.seed(221109)
   if (is.null(data)) {
     data <- data.frame(y = eval(formula[[2]]), eval(formula[[3]]))

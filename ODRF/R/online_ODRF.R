@@ -2,7 +2,7 @@
 #'
 #' Update existing \code{\link{ODRF}} using batches of data to improve the model.
 #'
-#' @param ppForest An object of class \code{ODRF}.
+#' @param obj An object of class \code{ODRF}.
 #' @param X An n by d numeric matrix (preferable) or data frame is used to update the object of class \code{ODRF}.
 #' @param y A response vector of length n is used to update the object of class \code{ODRF}.
 #' @param weights Vector of non-negative observational weights; fractional weights are allowed (default NULL).
@@ -21,9 +21,10 @@
 #' test_data <- data.frame(seeds[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
-#'   type = "i-classification",parallel = FALSE)
-#' online.forest <- online(forest, train_data[-index, -8], train_data[-index, 8])
-#' pred <- predict(online.forest, test_data[, -8])
+#'   type = "i-classification", parallel = FALSE
+#' )
+#' online_forest <- online(forest, train_data[-index, -8], train_data[-index, 8])
+#' pred <- predict(online_forest, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
 #'
@@ -35,10 +36,13 @@
 #' test_data <- data.frame(body_fat[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
 #' forest <- ODRF(Density ~ ., train_data[index, ],
-#'  type = "regression", parallel = FALSE)
-#' online.forest <- online(online.forest, train_data[-index, -1],
-#'  train_data[-index, 1])
-#' pred <- predict(online.forest, test_data[, -1])
+#'   type = "regression", parallel = FALSE
+#' )
+#' online_forest <- online(
+#'   forest, train_data[-index, -1],
+#'   train_data[-index, 1]
+#' )
+#' pred <- predict(online_forest, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
 #'
@@ -46,7 +50,9 @@
 #' @aliases online.ODRF
 #' @method online ODRF
 #' @export
-online.ODRF <- function(ppForest, X, y, weights = NULL, ...) {
+online.ODRF <- function(obj, X, y, weights = NULL, ...) {
+  ppForest <- obj
+  rm(obj)
   weights0 <- weights
   ppTrees <- ppForest$ppTrees
   Levels <- ppForest$Levels
@@ -56,14 +62,20 @@ online.ODRF <- function(ppForest, X, y, weights = NULL, ...) {
   Terms <- ppForest$terms
   paramList <- ppForest$paramList
 
+  subset <- weights <- na.action <- n <- p <- varName <- Xscale <- minCol <- maxminCol <- Xcat <- catLabel <- NULL
+  FunDir <- MaxDepth <- MinLeaf <- numNode <- TreeRandRotate <- NULL
+  ntrees <- numOOB <- storeOOB <- replacement <- stratify <- parallel <- numCores <- seed <- NULL
+
   ppForest <- ppForest[c(9, 10, 11)]
   ppForestVar <- c(names(ppForest$data), names(ppForest$tree), names(ppForest$forest))
   ppForest <- do.call("c", ppForest)
 
+  # env <- new.env()
   for (v in seq_along(ppForestVar)) {
-    assign(ppForestVar[v], ppForest[[v]])
+    assign(ppForestVar[v], ppForest[[v]]) # ,envir = env)
   }
   rm(ppForest)
+  # utils::globalVariables(ppForestVar)
 
   # vars=all.vars(Terms)
   if (sum(Xcat) > 0 && is.null(catLabel)) {
@@ -187,7 +199,7 @@ online.ODRF <- function(ppForest, X, y, weights = NULL, ...) {
     class(ppTree) <- "ODT"
     set.seed(seed + itree)
 
-    TDindx0 <- seq(n)
+    TDindx0 <- seq_len(n)
     TDindx <- TDindx0
     if (replacement) {
       go <- TRUE
@@ -250,6 +262,7 @@ online.ODRF <- function(ppForest, X, y, weights = NULL, ...) {
     chunks <- parallel::clusterSplit(cl, seq_len(ntrees))
     doParallel::registerDoParallel(cl, numCores)
     # set.seed(seed)
+    icore <- NULL
     ppForestT <- foreach::foreach(
       icore = seq_along(chunks), .combine = list, .multicombine = TRUE,
       .packages = "ODRF", .noexport = "ppForest"

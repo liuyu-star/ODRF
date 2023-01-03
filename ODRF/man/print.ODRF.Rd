@@ -4,10 +4,10 @@
 \alias{print.ODRF}
 \title{print ODRF}
 \usage{
-\method{print}{ODRF}(ppForest, ...)
+\method{print}{ODRF}(x, ...)
 }
 \arguments{
-\item{ppForest}{An object of class \code{\link{ODRF}}.}
+\item{x}{An object of class \code{\link{ODRF}}.}
 
 \item{...}{Arguments to be passed to methods.}
 }

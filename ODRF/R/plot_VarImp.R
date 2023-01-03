@@ -2,7 +2,7 @@
 #'
 #' Dotchart of variable importance as measured by a Oblique Decision Random Forest.
 #'
-#' @param varImp An object of class \code{\link{VarImp}}.
+#' @param x An object of class \code{\link{VarImp}}.
 #' @param nvar How many variables to show.
 #' @param digits Integer indicating the number of decimal places (round) or significant digits (signif) to be used.
 #' @param main plot title.
@@ -20,8 +20,9 @@
 #' train_data <- data.frame(breast_cancer[train, -1])
 #' test_data <- data.frame(breast_cancer[-train, -1])
 #'
-#' forest <- ODRF(diagnosis ~ ., train_data, 
-#'   type = "i-classification", parallel = FALSE)
+#' forest <- ODRF(diagnosis ~ ., train_data,
+#'   type = "i-classification", parallel = FALSE
+#' )
 #' (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
 #' plot(varimp, digits = 0)
 #'
@@ -29,16 +30,19 @@
 #' @aliases plot.VarImp
 #' @method plot VarImp
 #' @export
-plot.VarImp <- function(varImp, nvar = min(30, nrow(varImp$varImp)), digits = NULL, main = paste0(
-                          "Oblique ",
-                          ifelse(varImp$type == "regression", "Regression", "Classification"), " Forest"
-                        ), ...) {
-  imp <- varImp$varImp
+plot.VarImp <- function(x, nvar = 30, digits = NULL, main = NULL, ...) {
+  imp <- x$varImp
   imp <- imp[1:nvar, , drop = FALSE]
+
+  nvar <- min(nvar, nrow(x$varImp))
+
+  if (is.null(main)) {
+    main <- paste0("Oblique ", ifelse(x$type == "regression", "Regression", "Classification"), " Forest")
+  }
 
   minErr <- strsplit(as.character(min(imp[, 2])), "")[[1]]
   id <- which(minErr == "e")
-  if (varImp$type != "regression") {
+  if (x$type != "regression") {
     digits <- 0
   } else if (is.null(digits)) {
     if (length(id) > 0) {

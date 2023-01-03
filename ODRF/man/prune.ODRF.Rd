@@ -4,10 +4,10 @@
 \alias{prune.ODRF}
 \title{Pruning of class \code{ODRF}.}
 \usage{
-\method{prune}{ODRF}(ppForest, X, y, MaxDepth = 1, useOOB = TRUE, ...)
+\method{prune}{ODRF}(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...)
 }
 \arguments{
-\item{ppForest}{An object of class \code{\link{ODRF}}.}
+\item{obj}{An object of class \code{\link{ODRF}}.}
 
 \item{X}{An n by d numeric matrix (preferable) or data frame is used to prune the object of class \code{ODRF}.}
 
@@ -37,9 +37,10 @@ train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 forest <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
-type = "i-classification",parallel = FALSE)
-prune.forest <- prune(forest, train_data[-index, -8], train_data[-index, 8])
-pred <- predict(prune.forest, test_data[, -8])
+  type = "i-classification", parallel = FALSE
+)
+prune_forest <- prune(forest, train_data[-index, -8], train_data[-index, 8])
+pred <- predict(prune_forest, test_data[, -8])
 # classification error
 (mean(pred != test_data[, 8]))
 
@@ -51,8 +52,8 @@ train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 forest <- ODRF(Density ~ ., train_data[index, ], type = "regression", parallel = FALSE)
-prune.forest <- prune(forest, train_data[-index, -1], train_data[-index, 1])
-pred <- predict(prune.forest, test_data[, -1])
+prune_forest <- prune(forest, train_data[-index, -1], train_data[-index, 1])
+pred <- predict(prune_forest, test_data[, -1])
 # estimation error
 mean((pred - test_data[, 1])^2)
 

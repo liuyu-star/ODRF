@@ -2,7 +2,7 @@
 #'
 #' Prune \code{ODT} from bottom to top with validation data based on prediction error.
 #'
-#' @param ppTree an object of class \code{ODT}.
+#' @param obj an object of class \code{ODT}.
 #' @param X An n by d numeric matrix (preferable) or data frame is used to prune the object of class \code{ODT}.
 #' @param y A response vector of length n.
 #' @param MaxDepth The maximum depth of the tree after pruning. (Default 1)
@@ -23,8 +23,8 @@
 #' test_data <- data.frame(seeds[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
 #' tree <- ODT(varieties_of_wheat ~ ., train_data[index, ], type = "i-classification")
-#' prune.tree <- prune(tree, train_data[-index, -8], train_data[-index, 8])
-#' pred <- predict(prune.tree, test_data[, -8])
+#' prune_tree <- prune(tree, train_data[-index, -8], train_data[-index, 8])
+#' pred <- predict(prune_tree, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
 #'
@@ -36,8 +36,8 @@
 #' test_data <- data.frame(body_fat[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
 #' tree <- ODT(Density ~ ., train_data[index, ], type = "regression")
-#' prune.tree <- prune(tree, train_data[-index, -1], train_data[-index, 1])
-#' pred <- predict(prune.tree, test_data[, -1])
+#' prune_tree <- prune(tree, train_data[-index, -1], train_data[-index, 1])
+#' pred <- predict(prune_tree, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
 #'
@@ -45,7 +45,9 @@
 #' @aliases prune.ODT
 #' @method prune ODT
 #' @export
-prune.ODT <- function(ppTree, X, y, MaxDepth = 1, ...) {
+prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
+  ppTree <- obj
+  rm(obj)
   structure <- ppTree$structure
   if (!is.null(MaxDepth)) {
     MaxDepth <- min(MaxDepth, max(structure$nodeDepth))
@@ -304,6 +306,6 @@ prune.ODT <- function(ppTree, X, y, MaxDepth = 1, ...) {
     ppTree$projections <- projections
   }
 
-  class(ppTree) <- c("ODT", "prune.ODT")
+  class(ppTree) <- append(class(ppTree), "prune.ODT")
   return(ppTree)
 }

@@ -4,17 +4,10 @@
 \alias{plot.ODRF_accuracy}
 \title{plot method for \code{ODRF_accuracy} objects}
 \usage{
-\method{plot}{ODRF_accuracy}(
-  Err,
-  lty = 1,
-  digits = NULL,
-  main = paste0("Oblique ", ifelse(Err$type == "regression", "Regression",
-    "Classification"), " Forest"),
-  ...
-)
+\method{plot}{ODRF_accuracy}(x, lty = 1, digits = NULL, main = NULL, ...)
 }
 \arguments{
-\item{Err}{Object of class \code{\link{ODRF_accuracy}}.}
+\item{x}{Object of class \code{\link{ODRF_accuracy}}.}
 
 \item{lty}{A vector of line types, see \code{\link{par}}.}
 

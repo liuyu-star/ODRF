@@ -2,7 +2,7 @@
 #'
 #' To make \code{ODT} object to objects of class \code{party}.
 #'
-#' @param ppTree An object of class \code{\link{ODT}}.
+#' @param obj An object of class \code{\link{ODT}}.
 #' @param data Training data of class \code{data.frame} is used to convert the object of class \code{ODRF}.
 #' and \code{data} must be the training data \code{data} in \code{\link{ODT}}.
 #' @param ... Arguments to be passed to methods
@@ -26,10 +26,12 @@
 #' @rdname as.party.ODT
 #' @method as.party ODT
 #' @export
-as.party.ODT <- function(ppTree, data, ...) {
+as.party.ODT <- function(obj, data, ...) {
   # if(is.null(data)){
   #  data <- data.frame(y=eval(formula[[2]]),eval(formula[[3]]))
   # }
+  ppTree <- obj
+  rm(obj)
 
   vars <- all.vars(ppTree$terms)
   y <- data[, setdiff(colnames(data), vars[-1])]

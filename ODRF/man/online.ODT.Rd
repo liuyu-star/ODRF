@@ -4,10 +4,10 @@
 \alias{online.ODT}
 \title{using training data to update an existing \code{ODT}.}
 \usage{
-\method{online}{ODT}(ppTree, X = NULL, y = NULL, weights = NULL, ...)
+\method{online}{ODT}(obj, X = NULL, y = NULL, weights = NULL, ...)
 }
 \arguments{
-\item{ppTree}{an object of class \code{ODT}.}
+\item{obj}{an object of class \code{ODT}.}
 
 \item{X}{An n by d numeric matrix (preferable) or data frame is used to update the object of class \code{ODT}.}
 
@@ -32,9 +32,10 @@ train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 tree <- ODT(varieties_of_wheat ~ ., train_data[index, ],
- type = "i-classification")
-online.tree <- online(tree, train_data[-index, -8], train_data[-index, 8])
-pred <- predict(online.tree, test_data[, -8])
+  type = "i-classification"
+)
+online_tree <- online(tree, train_data[-index, -8], train_data[-index, 8])
+pred <- predict(online_tree, test_data[, -8])
 # classification error
 (mean(pred != test_data[, 8]))
 
@@ -46,8 +47,8 @@ train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 tree <- ODT(Density ~ ., train_data[index, ], type = "regression")
-online.tree <- online(tree, train_data[-index, -1], train_data[-index, 1])
-pred <- predict(online.tree, test_data[, -1])
+online_tree <- online(tree, train_data[-index, -1], train_data[-index, 1])
+pred <- predict(online_tree, test_data[, -1])
 # estimation error
 mean((pred - test_data[, 1])^2)
 

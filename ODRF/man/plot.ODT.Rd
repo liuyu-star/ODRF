@@ -4,19 +4,10 @@
 \alias{plot.ODT}
 \title{to plot an oblique decision tree}
 \usage{
-\method{plot}{ODT}(
-  ppTree,
-  font.size = 17,
-  width.size = 1,
-  xadj = 0,
-  main = paste0("Oblique ", ifelse(ppTree$type == "regression", "Regression",
-    "Classification"), " Tree"),
-  sub = NULL,
-  ...
-)
+\method{plot}{ODT}(x, font.size = 17, width.size = 1, xadj = 0, main = NULL, sub = NULL, ...)
 }
 \arguments{
-\item{ppTree}{An object of class \code{\link{ODT}}.}
+\item{x}{An object of class \code{\link{ODT}}.}
 
 \item{font.size}{Font size of plot}
 

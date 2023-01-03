@@ -2,9 +2,10 @@
 #'
 #' Prediction of ODT for an input matrix or data frame.
 #'
-#' @param ppTree An object of class ODT, as that created by the function \code{\link{ODT}}.
+#' @param object An object of class ODT, as that created by the function \code{\link{ODT}}.
 #' @param Xnew An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
 #' @param leafnode If or not output the leaf node sequence number that \code{Xnew} is partitioned. (default FALSE)
+#' @param ... Arguments to be passed to methods.
 #'
 #' @return A vector of the following:
 #' \itemize{
@@ -46,7 +47,7 @@
 #' @aliases predict.ODT
 #' @method predict ODT
 #' @export
-predict.ODT <- function(ppTree, Xnew, leafnode = FALSE) {
+predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
   # ppTreeVar=c("type",names(ppTree$structure),names(ppTree$data),names(ppTree$tree))
   # ppTree=do.call("c",ppTree)
   # assign("Levels", as.vector(unlist(ppTree[c(2,3)])))
@@ -56,6 +57,8 @@ predict.ODT <- function(ppTree, Xnew, leafnode = FALSE) {
   # }
   # rm(ppTree)
   # address na values.
+
+  ppTree <- object
   if (any(is.na(Xnew))) {
     Xnew <- ppTree$data$na.action(data.frame(Xnew))
     warning("NA values exist in data matrix")

@@ -177,7 +177,7 @@ RotMatRF <- function(dimX, numProj, catLabel = NULL, ...) {
 #' 'g-classification': gini impurity index (classification) or 'regression': mean square error (regression).
 #' @param weights A vector of length same as \code{data} that are positive weights. (default NULL)
 #' @param dimProj Number of variables to be projected, \code{dimProj}=min(ceiling(n^0.4),ceiling(ncol(X)*2/3)) (default) or dimProj="Rand": random from 1 to ncol(X).
-#' @param numProj The number of projection directions, when dimProj="Rand" default 
+#' @param numProj The number of projection directions, when dimProj="Rand" default
 #' numProj = sample(ceiling(ncol(X)/3),1) otherwise default numProj=ceiling(p0/dimProj).
 #' @param catLabel A category labels of class \code{list} in predictors. (default NULL, for details see Examples of \code{\link{ODT}})
 #' @param ... Used to handle superfluous arguments passed in using paramList.
@@ -404,8 +404,8 @@ RotMatPPO <- function(X, y, model = "PPR", type = "i-classification", weights = 
 #' makeRotMat <- function(dimX, dimProj, numProj, ...) {
 #'   RotMat <- matrix(1, dimProj * numProj, 3)
 #'   for (np in seq(numProj)) {
-#'     RotMat[(dimProj * (np - 1) + 1):(dimProj * np), 1] <- 
-#'     sample(1:dimX, dimProj, replace = FALSE)
+#'     RotMat[(dimProj * (np - 1) + 1):(dimProj * np), 1] <-
+#'       sample(1:dimX, dimProj, replace = FALSE)
 #'     RotMat[(dimProj * (np - 1) + 1):(dimProj * np), 2] <- np
 #'   }
 #'   return(RotMat)
@@ -430,12 +430,18 @@ RotMatPPO <- function(X, y, model = "PPR", type = "i-classification", weights = 
 #' #> [6,]        6      2           1
 #'
 #' # train ODT with defined projection matrix function
-#' tree <- ODT(X, y, type = "i-classification", NodeRotateFun = "makeRotMat",
-#'   paramList = list(dimX = ncol(X), dimProj = 5, numProj = 4))
+#' tree <- ODT(X, y,
+#'   type = "i-classification", NodeRotateFun = "makeRotMat",
+#'   paramList = list(dimX = ncol(X), dimProj = 5, numProj = 4)
+#' )
 #' # train ODT with defined projection matrix function and projection optimization model function
-#' tree <- ODT(X, y, type = "i-classification", NodeRotateFun = "RotMatMake", paramList =
-#'   list(RotMatFun = "makeRotMat", PPFun = "makePP", 
-#'   dimX = ncol(X), dimProj = 5, numProj = 4, prob = 0.5))
+#' tree <- ODT(X, y,
+#'   type = "i-classification", NodeRotateFun = "RotMatMake", paramList =
+#'     list(
+#'       RotMatFun = "makeRotMat", PPFun = "makePP",
+#'       dimX = ncol(X), dimProj = 5, numProj = 4, prob = 0.5
+#'     )
+#' )
 #'
 #' @export
 RotMatMake <- function(X = NULL, y = NULL, RotMatFun = "RotMatPPO", PPFun = "PPO", FunDir = getwd(), paramList = NULL, ...) {

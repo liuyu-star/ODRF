@@ -2,10 +2,11 @@
 #'
 #' Prediction of ODRF for an input matrix or data frame.
 #'
-#' @param ppForest An object of class ODRF, as that created by the function \code{\link{ODRF}}.
+#' @param object An object of class ODRF, as that created by the function \code{\link{ODRF}}.
 #' @param Xnew An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
 #' @param type One of \code{response}, \code{prob} or \code{tree}, indicating the type of output: predicted values, matrix of class probabilities or predicted value for each tree.
 #' @param weight.tree Whether to weight the tree, if \code{TRUE} then use the out-of-bag error of the tree as the weight. (default \code{FALSE})
+#' @param ... Arguments to be passed to methods.
 #'
 #' @return A set of vectors in the following list:
 #' \itemize{
@@ -26,7 +27,8 @@
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data,
-#'   type = "i-classification",parallel = FALSE)
+#'   type = "i-classification", parallel = FALSE
+#' )
 #' pred <- predict(forest, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
@@ -41,12 +43,15 @@
 #' pred <- predict(forest, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
-#' 
+#'
 #' @rdname predict.ODRF
 #' @aliases predict.ODRF
 #' @method predict ODRF
 #' @export
-predict.ODRF <- function(ppForest, Xnew, type = "response", weight.tree = FALSE) {
+predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, ...) {
+  ppForest <- object
+  rm(object)
+
   if (any(is.na(Xnew))) {
     Xnew <- ppForest$data$na.action(data.frame(Xnew))
     warning("NA values exist in data matrix")

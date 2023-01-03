@@ -2,7 +2,7 @@
 #'
 #' Prune \code{ODRF} from bottom to top with test data based on prediction error.
 #'
-#' @param ppForest An object of class \code{\link{ODRF}}.
+#' @param obj An object of class \code{\link{ODRF}}.
 #' @param X An n by d numeric matrix (preferable) or data frame is used to prune the object of class \code{ODRF}.
 #' @param y A response vector of length n.
 #' @param MaxDepth The maximum depth of the tree after pruning (Default 1).
@@ -24,9 +24,10 @@
 #' test_data <- data.frame(seeds[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
-#' type = "i-classification",parallel = FALSE)
-#' prune.forest <- prune(forest, train_data[-index, -8], train_data[-index, 8])
-#' pred <- predict(prune.forest, test_data[, -8])
+#'   type = "i-classification", parallel = FALSE
+#' )
+#' prune_forest <- prune(forest, train_data[-index, -8], train_data[-index, 8])
+#' pred <- predict(prune_forest, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
 #'
@@ -38,8 +39,8 @@
 #' test_data <- data.frame(body_fat[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
 #' forest <- ODRF(Density ~ ., train_data[index, ], type = "regression", parallel = FALSE)
-#' prune.forest <- prune(forest, train_data[-index, -1], train_data[-index, 1])
-#' pred <- predict(prune.forest, test_data[, -1])
+#' prune_forest <- prune(forest, train_data[-index, -1], train_data[-index, 1])
+#' pred <- predict(prune_forest, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
 #'
@@ -47,7 +48,9 @@
 #' @aliases prune.ODRF
 #' @method prune ODRF
 #' @export
-prune.ODRF <- function(ppForest, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
+prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
+  ppForest <- obj
+  rm(obj)
   ppTrees <- ppForest$ppTrees
   type <- ppForest$type
   numOOB <- ppForest$forest$numOOB
@@ -235,7 +238,10 @@ prune.ODRF <- function(ppForest, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
     cl <- parallel::makeCluster(numCores, type = ifelse(.Platform$OS.type == "windows", "PSOCK", "FORK"))
     chunks <- parallel::clusterSplit(cl, seq(ntrees))
     doParallel::registerDoParallel(cl, numCores)
+
+
     # set.seed(seed)
+    icore <- NULL
     ppForestT <- foreach::foreach(
       icore = seq_along(chunks), .combine = list, .multicombine = TRUE,
       .packages = "ODRF", .noexport = "ppForest"

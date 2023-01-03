@@ -2,7 +2,7 @@
 #'
 #' Plot the error graph of the pruned oblique decision tree at different split nodes.
 #'
-#' @param ppTree An object of class \code{\link{prune.ODT}}.
+#' @param x An object of class \code{\link{prune.ODT}}.
 #' @param position Position of the curve label.
 #' @param digits Integer indicating the number of decimal places (round) or significant digits (signif) to be used.
 #' @param main main title
@@ -22,22 +22,25 @@
 #' test_data <- data.frame(body_fat[-train, ])
 #'
 #' tree <- ODT(Density ~ ., train_data, type = "regression")
-#' prune.tree <- prune(tree, test_data[, -1], test_data[, 1])
+#' prune_tree <- prune(tree, test_data[, -1], test_data[, 1])
 #' # Plot pruned oblique decision tree structure (default)
-#' plot(prune.tree)
+#' plot(prune_tree)
 #' # Plot the error graph of the pruned oblique decision tree.
-#' class(prune.tree) <- "prune.ODT"
-#' plot(prune.tree)
+#' class(prune_tree) <- "prune.ODT"
+#' plot(prune_tree)
 #'
 #' @rdname plot.prune.ODT
 #' @aliases plot.prune.ODT
 #' @method plot prune.ODT
 #' @export
-plot.prune.ODT <- function(ppTree, position = "topleft", digits = NULL, main = paste0(
-                             "Oblique ",
-                             ifelse(ppTree$type == "regression", "Regression", "Classification"), " Tree"
-                           ), ...) {
+plot.prune.ODT <- function(x, position = "topleft", digits = NULL, main = NULL, ...) {
+  ppTree <- x
+  rm(x)
   pruneError <- ppTree$pruneError
+
+  if (is.null(main)) {
+    main <- paste0("Oblique ", ifelse(ppTree$type == "regression", "Regression", "Classification"), " Tree")
+  }
 
   # par(mfrow = c(1,2))
   par(plt = c(0.2, 0.8, 0.2, 0.90))
