@@ -123,7 +123,7 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))<
 
 \item{Xscale}{Predictor standardization methods. " Min-max" (default), "Quantile", "No" denote Min-max transformation, Quantile transformation and No transformation respectively.}
 
-\item{TreeRandRotate}{If or not to randomly rotate the Training data before building the tree (default FALSE).}
+\item{TreeRandRotate}{If or not to randomly rotate the Training data before building the tree (default FALSE, see \code{\link[ODRF]{RandRot}}).}
 
 \item{y}{A response vector of length n.}
 }

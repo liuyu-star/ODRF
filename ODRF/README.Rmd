@@ -34,7 +34,7 @@ devtools::install_github("liuyu-star/ODRF")
 This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
-library(ODRF)
+#library(ODRF)
 ## basic example code
 ```
 

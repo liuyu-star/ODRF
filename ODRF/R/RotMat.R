@@ -487,4 +487,29 @@ RotMatMake <- function(X = NULL, y = NULL, RotMatFun = "RotMatPPO", PPFun = "PPO
   return(sparseM)
 }
 
+
+#' Samples a p x p uniformly random rotation matrix
+#'
+#' Samples a p x p uniformly random rotation matrix via QR decomposition 
+#' of a matrix with elements sampled iid from a standard normal distribution.
+#'
+#' @param p The columns of an n by p numeric matrix or data frame.
+#'
+#' @return A p x p uniformly random rotation matrix.
+#'
+#' @seealso \code{\link{RotMatPPO}} \code{\link{RotMatRand}} \code{\link{RotMatRF}} \code{\link{RotMatMake}}
+#'
+#' @examples
+#' set.seed(220828)
+#' (RandRot(1000))
+#' 
+#' @importFrom stats rnorm
+RandRot <- function(p) {
+  RotMat <- qr.Q(qr(matrix(stats::rnorm(p^2), p, p)))
+  if (det(RotMat) < 0) {
+    RotMat[, 1] <- -RotMat[, 1]
+  }
+  return(RotMat)
+}
+
 # roxygen2::roxygenise()
