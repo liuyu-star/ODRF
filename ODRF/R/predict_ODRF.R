@@ -34,7 +34,7 @@
 #' (mean(pred != test_data[, 8]))
 #'
 #' # Regression with Oblique Decision Random Forest
-#' data(body_fat)
+#' \dontest{data(body_fat)
 #' set.seed(221212)
 #' train <- sample(1:252, 80)
 #' train_data <- data.frame(body_fat[train, ])
@@ -42,7 +42,7 @@
 #' forest <- ODRF(Density ~ ., train_data, type = "regression", parallel = FALSE)
 #' pred <- predict(forest, test_data[, -1])
 #' # estimation error
-#' mean((pred - test_data[, 1])^2)
+#' mean((pred - test_data[, 1])^2)}
 #'
 #' @rdname predict.ODRF
 #' @aliases predict.ODRF

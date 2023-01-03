@@ -35,8 +35,6 @@
 #' set.seed(1)
 #' paramList <- list(dimX = 8, numProj = 3, sparsity = 0.25, prob = 0.5)
 #' (paramList <- ODRF:::defaults(paramList, type = "i-classification"))
-#' 
-#' @noRd
 defaults <- function(paramList, type = "i-classification", dimX = NULL, weights = NULL, catLabel = NULL) {
   # public parameter.
   if (is.null(paramList[["dimX"]])) {

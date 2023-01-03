@@ -34,7 +34,7 @@
 #' @examples
 #' data(body_fat)
 #' set.seed(221212)
-#' train <- sample(1:252, 100)
+#' train <- sample(1:252, 80)
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #'

@@ -207,7 +207,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
 
   numNode0 <- length(nodeCutValue)
   nodeX <- sort(unique(Nodes))
-  nodeXIndx <- vector("list", numNode - numNode0 + 1)
+  nodeXIndx <- vector("list", numNode + 1)
   nodeXIndx[seq(numNode0)] <- NA
   for (nx in nodeX) {
     nodeXIndx[[nx]] <- which(Nodes == nx)

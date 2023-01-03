@@ -47,7 +47,7 @@ pred <- predict(prune_forest, test_data[, -8])
 # Regression with Oblique Decision Random Forest
 data(body_fat)
 set.seed(221212)
-train <- sample(1:252, 100)
+train <- sample(1:252, 80)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
