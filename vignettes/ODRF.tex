@@ -73,36 +73,9 @@
 
 %% - \Abstract{} almost as usual
 \Abstract{
-%	\emph{CART} and Random Forest (\emph{RF}) have been widely used for data analysis, including prediction and classification. The use of linear combinations of predictors as a splitting variable is one of the most popular improvements to \emph{CART}. The method became known as the oblique decision tree (\emph{ODT}) and ODT-based random forests (\emph{ODRF}). There have been many related research achievements in theory, however, a complete and efficient package is still not available in computation. Therefore, to fill the current gap, we developed \pkg{ODRF} \proglang{R} package for prediction and classification, and provided online structure learning algorithms for \code{ODT} and \code{ODRF}. The main computational part of \code{ODT} is executed using \pkg{Rcpp} package and \code{ODRF} uses parallel computation, which significantly improves the computational efficiency. In the numerical experiments, \code{ODT} and \code{ODRF} are compared with other decision trees and forests, respectively, and the experimental results are shown that \code{ODT} and \code{ODRF}  has a noticeable overall improvement.
-	
-\emph{CART} and Random Forest (\emph{RF}) are arguably the most popular methods in statistical data analysis and forecasting. The use of linear combinations of predictors as splitting variables is one of the important extensions of \emph{CART} and is known as Oblique Decision Trees (\emph{ODT}) and ODT-based Random Forests (\emph{ODRF}). Recent studies have also shown the theoretical advantages of \emph{ODT} and \emph{ODRF} over \emph{CART} and \emph{RF}. However, there is still no integrated and efficient software package that can demonstrate the numerical advantages of \emph{ODT} and \emph{ODRF}. To fill this gap, we developed an \pkg{ODRF} \proglang{R} package for both \code{ODT} and \code{ODRF}, and provided online structure learning algorithms. The main computational part of \code{ODT} is executed using the \pkg{Rcpp} package, and \code{ODRF} allows parallel computation. Through numerical experiments, our package was compared with other packages for decision trees and forests, showing a clear overall improvement.%, and provided online structure learning algorithms
-	
-	%Abstract: %As a remedy  for the deficiencies of the standard classification regression tree (CART), \cite{breiman1984classification} suggested using linear combinations of predictors as splitting variables. The method became known as the oblique decision tree (ODT) and has received much attention. ODT has better performance than CART, requiring fewer splits and therefore smaller trees than CART; the linear combination also makes ODT easy to interpret in data analysis. In this paper, we further show that ODT is also a remedy for the statistical consistency problem that CART cannot solve, in that ODT is consistent for general regression functions or classification problems. We also study the consistency of ODT-based random forests, hereafter referred to as ODRF. We introduce an algorithm for ODRF, and show through extensive experiments that ODRF generally yields better performance than existing decision forests.
-	
-%The oblique decision tree is a popular choice in the machine learning domain for improving the performance of traditional decision tree algorithms. In contrast to the traditional decision tree, which uses an axis-parallel split point to determine whether a data point should be assigned to the left or right branch of a decision tree, the oblique decision tree uses a hyper-plane based on all data point features.
-%Numerous works in the machine learning domain have shown that oblique decision trees can achieve exceptional performance in a wide range of domains. However, there is still a lack of a package that has implemented oblique decision tree algorithms, which stymies the development of this domain. As a result, the goal of this project is to solve this problem by implementing some well-known algorithms in this domain. We hope that by doing so, these algorithms will serve as a baseline for machine learning practitioners to compare newly designed algorithms to existing algorithms.
+\emph{CART} and Random Forest (\emph{RF}) are arguably the most popular methods in statistical data analysis and forecasting. The use of linear combinations of predictors as splitting variables is one of the important extensions of \emph{CART} and is known as Oblique Decision Trees (\emph{ODT}) and ODT-based Random Forests (\emph{ODRF}). Recent studies have also shown the theoretical advantages of \emph{ODT} and \emph{ODRF} over \emph{CART} and \emph{RF}. However, there is still no integrated and efficient software package that can demonstrate the numerical advantages of \emph{ODT} and \emph{ODRF}. To fill this gap, we developed an \pkg{ODRF} \proglang{R} package for both \code{ODT} and \code{ODRF}, and provided online structure learning algorithms. The main computational part of \code{ODT} is executed using the \pkg{Rcpp} package, and \code{ODRF} allows parallel computation. Through numerical experiments, our package was compared with other packages for decision trees and forests, showing a clear overall improvement.
 
 
-%\emph{CART} and Random Forest (\emph{RF}) have been widely used for data analysis, including prediction and classification. The use of linear combinations of predictors as a splitting variable is one of the most popular improvements to \emph{CART}. The method became known as the oblique decision tree (\emph{ODT}) and ODT-based random forests (\emph{ODRF}). There have been many related research achievements in theory, however, a complete and efficient package is still not available in computation. Therefore, to fill the current gap, we developed \pkg{ODRF} \proglang{R} package for prediction and classification, and provided online structure learning algorithms for \code{ODT} and \code{ODRF}. The main computational part of \code{ODT} is executed using \pkg{Rcpp} package and \code{ODRF} uses parallel computation, which significantly improves the computational efficiency. In the numerical experiments, \code{ODT} and \code{ODRF} are compared with other decision trees and forests, respectively, and the experimental results are shown that \code{ODT} and \code{ODRF}  has a noticeable overall improvement.
-
-	%Abstract: %As a remedy  for the deficiencies of the standard classification regression tree (CART), \cite{breiman1984classification} suggested using linear combinations of predictors as splitting variables. The method became known as the oblique decision tree (ODT) and has received much attention. ODT has better performance than CART, requiring fewer splits and therefore smaller trees than CART; the linear combination also makes ODT easy to interpret in data analysis. In this paper, we further show that ODT is also a remedy for the statistical consistency problem that CART cannot solve, in that ODT is consistent for general regression functions or classification problems. We also study the consistency of ODT-based random forests, hereafter referred to as ODRF. We introduce an algorithm for ODRF, and show through extensive experiments that ODRF generally yields better performance than existing decision forests.
-	
-	%The classification and regression tree (CART) and Random Forest (RF) are arguably the most popular pair of statistical learning methods. However, their statistical consistency can only be proved under very restrictive assumption on the underlying regression function. As an extension of the standard CART, \cite{breiman1984classification} suggested using linear combinations of predictors as splitting variables. The method became known as the oblique decision tree (ODT) and has received lots of attention. ODT tends to perform better than CART and requires fewer partitions. In this paper, we further show that ODT is consistent for very general regression functions as long as they are continuous. We also prove the consistency of ODT-based random forests (ODRF) that uses either fixed-size or random-size subset of features in the features bagging, the latter of which is also guaranteed to be consistent for general regression functions, but the former is consistent only for functions with specific structures.  After refining the existing computer packages according to the established theory, our numerical experiments also show that ODRF has a noticeable overall improvement over RF and other decision forests.
-	%The classification and regression tree (CART) and Random Forest (RF) are arguably the most popular pair of statistical learning methods. However, their statistical consistency can only be proved under very restrictive assumption on the underlying regression function. As an extension of standard CART, the oblique decision tree (ODT), which uses linear combinations of predictors as partitioning variables, has received much attention. ODT tends to perform numerically better than CART and requires fewer partitions. In this paper, we further show that ODT is consistent for very general regression functions as long as they are continuous. We also prove the consistency of ODT-based random forests (ODRF) that uses either fixed-size or random-size subset of features in the features bagging, the latter of which is also guaranteed to be consistent for general regression functions, and the former is consistent only for functions with specific structures.  After refining the existing computer packages according to the established theory, our numerical experiments also show that ODRF has a noticeable overall improvement over RF and other decision forests.
-	
-	% letter:
-	%CART and random forests (RF) have been a hot research topic in statistics and machine learning for many years. Recently, Scornet et al. (2015, AOS) have made a milestone progress in statistical consistency, bringing a new phase of research in related topics. However, the consistency further confirms the theoretical weaknesses of standard CART and RF. This motivates us to study the consistency of the oblique decision trees (ODT), a generalization of CART.
-	%In this paper, we establish a complete theory for ODT and introduce new feature bagging methods, resulting in new random forests. We also implement the new random forests and further demonstrate the numerical advantages of ODT and its random forests over the standard RF.
-	%I would appreciate if you could consider publishing this paper in Bernoulli.
-	
-	%while the existing consistency result of RF is a corollary of our consistency results.
-	
-	%We present an algorithm for ODRF, and demonstrate through extensive experiments that ODRF generally yields better performance than existing decision forests.
-	
-	%\vspace{0.2cm}
-	
-	%CART and Random Forest (RF) have been widely used for data analysis, including prediction and classification. However, their statistical consistency can only be proved under very restrictive model assumptions. In addition to technical difficulties, their own limitations are another reason for the lack of consistency guarantees. This problem was already observed when CART was proposed by \cite{breiman1984classification}, who suggested using linear combinations of predictors as splitting variables as a remedy. This idea was later intensively studied, called Oblique Decision Tree (ODT), and has demonstrated better performance than CART or RF. This paper aims to provide the theory for ODT and ODT-based random forest (ODRF) to be consistent for general models without requiring strong assumptions. We also propose a way to build the linear combinations of randomly selected features as splitting variables to implement ODRF. Extensive experiments show that ODRF typically yields improved performance over existing decision forests.
-	
   %This short article illustrates how to write a manuscript for the
  % \emph{Journal of Statistical Software} (JSS) using its {\LaTeX} style files.
  % Generally, we ask to follow JSS's style guide and FAQs precisely. Also,
@@ -119,24 +92,6 @@
 %% - Should be comma-separated and in sentence case.
 \Keywords{CART, oblique decision tree, random forest, projection pursuit, \proglang{R}}
 \Plainkeywords{CART, oblique decision tree, random forest, projection pursuit, R}
-
-%% - \Address{} of at least one author
-%% - May contain multiple affiliations for each author
-%%   (in extra lines, separated by \emph{and}\\).
-%% - May contain multiple authors for the same affiliation
-%%   (in the same first line, separated by comma).
-%%\Address{
-%%  Achim Zeileis\\
-%%  Journal of Statistical Software\\
-%%  \emph{and}\\
-%%  Department of Statistics\\
-%%  Faculty of Economics and Statistics\\
-%%  Universit\"at Innsbruck\\
-%%  Universit\"atsstr.~15\\
-%%  6020 Innsbruck, Austria\\
-%%  E-mail: \email{Achim.Zeileis@R-project.org}\\
-%%  URL: \url{https://www.zeileis.org/}
-%%}
 
 \Address{
   Yu Liu\\
@@ -167,38 +122,14 @@
 %%   of Statistical Software" above) they should be in sentence case (like
 %%   "generalized linear models" below).
 
+
 \section{Introduction} \label{sec:intro}
-
-%\begin{leftbar}
-%The introduction is in principle ``as usual''. However, it should usually embed
-%both the implemented \emph{methods} and the \emph{software} into the respective
-%relevant literature. For the latter both competing and complementary software
-%should be discussed (within the same software environment and beyond), bringing
-%out relative (dis)advantages. All software mentioned should be properly
-%\verb|\cite{}|d. (See also Appendix~\ref{app:bibtex} for more details on
-%\textsc{Bib}{\TeX}.)
-
-%For writing about software JSS requires authors to use the markup
-%\verb|\proglang{}| (programming languages and large programmable systems),
-%\verb|\pkg{}| (software packages), \verb|\code{}| (functions, commands,
-%arguments, etc.). If there is such markup in (sub)section titles (as above), a
-%plain text version has to be provided in the {\LaTeX} command as well. Below we
-%also illustrate how abbrevations should be introduced and citation commands can
-%%\end{leftbar}
-
-
-%The Classification and Regression Tree (CART) proposed by Professor Leo Brieman (1984) has attracted a great deal of attention from statisticians and data analysts from other disciplines. The method is widely used because it is easy to train and the resulting tree makes the analysis results visual and easy to interpret. On the other hand, attention has been paid to the algorithm and many improvements have been proposed.
-
-%In practical studies, many of the problems we experience are always complex, and the relationship between individual features is usually nonlinear. Decision trees have an important advantage for handling heterogeneous data with ease when different features come from different sources , and are widely employed methods for classification and regression. This makes decision trees a popular “off-the-shelf” machine learning method that can be readily applied to any data without much tuning \citep{2014Learning}. Classification and regression trees (\emph{CART}) \cite{quinlan1987decision} and \emph{C4.5} \cite{quinlan1993program} are the most commonly used decision trees with different partition criteria.
-
-%The Classification and Regression Tree (\emph{CART}) proposed by \cite{quinlan1987decision} has attracted a great deal of attention from statisticians and data analysts from other disciplines. The method is widely used because it is easy to train and the resulting tree makes the analysis results visual and easy to interpret. On the other hand, attention has been paid to the algorithm and many improvements have been proposed, including mainly Evolutionary Learning of Globally Optimal Classification and Regression Trees (\emph{EVT}) \cite{Grubinger2014ectree},  Conditional Inference Trees (\emph{CT}) \cite{hothorn2006unbiased}, Extremely randomized trees (\emph{ERT}) \cite{2006Extremely}, Model-Based Recursive Partitioning (\emph{MOB}) \cite{zeileis2015parties}, bayesian additive regression trees (\emph{BART}) \cite{maia2022gp} and generalized linear mixed-model trees (\emph{glmertree}) \cite{2020Generalized}. Over the last two decades, ensemble methods have risen to prominence as the stateof-the-art for general-purpose machine learning tasks. One of the most popular and consistently strong ensemble methods is Random Forests (\emph{RF}) \cite{breiman2001random}, which uses decision trees \emph{CART} as the base learners \citep{tomita2020sparse}. In addition, there are many decision tree based ensemble methods. For example, Conditional Random Forests (\emph{cforest}) \cite{hothorn2006unbiased}, Learning Nonlinear Functions Using Regularized Greedy Forest (\emph{RGF}) \cite{2014Learning}, Generalized Random Forest (\emph{GRF}) \cite{athey2019generalized} and extreme gradient boosting (\emph{XGB}) \cite{chen2016xgboost}.
 
 The Classification and Regression Tree (CART) proposed by Professor Leo Brieman (1984) has attracted a great deal of attention from statisticians and data analysts of other disciplines. The method is widely used because it is easy to train and the resulting tree makes the analysis results visual and easy to interpret \citep{2014Learning}. On the other hand, much attention has been paid to the algorithm and many improvements have been proposed. Classification and regression trees  \cite[CART]{quinlan1987decision} and \emph{C4.5} \cite{quinlan1993program} are the most commonly used decision trees. There is a long list of other decision trees, including the Evolutionary Learning of Globally Optimal Classification and Regression Trees (\emph{EVT}) \cite{Grubinger2014ectree},  Conditional Inference Trees (\emph{CT}) \cite{hothorn2006unbiased}, Extremely randomized trees (\emph{ERT}) \cite{2006Extremely}, Model-Based Recursive Partitioning (\emph{MOB}) \cite{zeileis2015parties}, bayesian additive regression trees (\emph{BART}) \cite{maia2022gp} and generalized linear mixed-model trees (\emph{glmertree}) \cite{2020Generalized}.  The Random Forests \citep[RF]{breiman2001random}, which is an ensemble of CARTS by either feature bagging or boosting,   is arguably the most efficient machine method especially for the tabular data \cite{tabularDATA}. Again, there are many ensemble methods that based on different decision trees. For example, Conditional Random Forests (\emph{cforest}) \cite{hothorn2006unbiased}, Learning Nonlinear Functions Using Regularized Greedy Forest (\emph{RGF}) \cite{2014Learning}, Generalized Random Forest (\emph{GRF}) \cite{athey2019generalized} and extreme gradient boosting (\emph{XGB}) \cite{chen2016xgboost}.
 
 
 One of the most appealing extensions to CART is the use of linear combinations of the predictors as splitting variables that is known as the Oblique Decision tree \cite{Heath93inductionof}. Recently, \cite{zhan2022consistency} proved the consistency of The Oblique Decision Tree (\emph{ODT}) and Its Random Forest for very general regression functions as long as they are continuous, while CART or RF are consistency mainly for regressions with special structures such as additive structure.  Again, ensemle can be made based on ODT resulting the Oblique-type Random Forests, including Random Rotation Random Forest (\emph{RR-RF}) of \cite{blaser2016random}, Random Projection Forests (\emph{RPFs}) of \cite{lee2015fast} and Sparse Projection Oblique Random Forests (\emph{SPORF}) of \cite{tomita2020sparse}. Another type is the model-based oblique decision forest,  including mainly Canonical Correlation Forests (\emph{CCF}) with classic correlation analysis \cite{rainforth2015canonical},  projection pursuit forest (\emph{PPF}) with linear discriminant analysis \cite{silva2021projection}, oblique random forests (\emph{ORF}) with ridge regression \cite{menze2011oblique}, oblique random survival forests (\emph{ORSF}) \cite{jaeger2022accelerated} and Heterogeneous oblique random forest (\emph{HORF}) \cite{katuwal2020heterogeneous}.
 
-%However, all the ensemble methods mentioned above are ensembles of "axis-aligned" decision trees, restricting the ensemble decision surfaces to be piecewise axis-aligned, even when there is little evidence for this in the data. To address this, \cite{breiman2001random} also proposed and characterized Forest-RC (\emph{F-RC}), which splits on linear combinations of coordinates rather than individual coordinates. These so-called “oblique” ensembles include the axis-aligned ensembles as a special case, and therefore have better numerical performance and requires fewer partitions. Therefore, it has also aroused widely interest and numerous other oblique decision forest methods have been proposed. There are two main types: one is the random ensemble forest similar to \emph{F-RC}, including mainly Random Rotation Random Forest (\emph{RR-RF}) of \cite{blaser2016random}, Random Projection Forests (\emph{RPFs}) of \cite{lee2015fast} and Sparse Projection Oblique Random Forests (\emph{SPORF}) of \cite{tomita2020sparse}; Another type is the model-based oblique decision forest,  including mainly Canonical Correlation Forests (\emph{CCF}) with classic correlation analysis \cite{rainforth2015canonical},  projection pursuit forest (\emph{PPforest}) with linear discriminant analysis \cite{silva2021projection}, oblique random forests (\emph{obliqueRF}) with ridge regression \cite{menze2011oblique}, oblique random survival forests (\emph{ORSF}) \cite{jaeger2022accelerated} and Heterogeneous oblique random forest (\emph{HORF})\cite{katuwal2020heterogeneous}. \cite{zhan2022consistency} proof the consistency of The Oblique Decision Tree (\emph{ODT}) and Its Random Forest. we further show that \emph{ODT} is consistent for very general regression functions as long as they are continuous. we also prove the consistency of ODT-based random forests (\emph{ODRF}) that uses either fixed-size or random-size subset of features in the features bagging. \cite{biau2008consistency} proposed a binary classification problem for which Breiman's \emph{RF} is inconsistent. \emph{ODRF} and other oblique methods are empirically more consistent on at least some settings on which \emph{RF} is neither empirically or theoretically consistent.
 
 Although the theoretical advantages of oblique decision trees and their random forests have been well understood, the existing packages implementing those extensions only show their better numerical performance in some special cases, and thus not commonly received and have not got as much as popularity as they deserve. As a consequence, the conventional CART and RF are still the most commonly used packages.    The main difficulty in implementing \emph{ODT} or \emph{ODRF} is the estimation of the coefficient, $ \theta $, for the linear combinations, which is also one of the main differences amongst all the existing packages. The estimation methods  of $ \theta $ include random projection, logistic regression, dimension reduction and many others. For example, the functions \fct{RerF} in \pkg{rerf} package \cite{tomita2020sparse} use random projections, the functions \fct{baggtree} in \pkg{PPforest} package \cite{silva2021projection} uses  \code{"LDA"} model to estimate the projection directions, and they also provide the  \code{"PDA"}, \code{"GINI"} and  \code{"ENTROPY"} models in parameter \code{PPmethod}; the functions \fct{obliqueRF} in \pkg{obliqueRF} package \cite{menze2011oblique} uses \code{"ridge"} for fast ridge regression using SVD (default), \code{"pls"} for partial least squares regression, \code{"svm"} for a linear support vector machine, \code{"log"} for logistic regression and \code{"rnd"} for a random hyperplane in parameter \code{training\_method}. %However, all existing \proglang{R} packages can only be used for classification and are very time consuming to compute.
 Some of the \proglang{R} packages have been taken off from the Comprehensive \proglang{R} Archive Network (CRAN) at \url{https://CRAN.R-project.org/} by \citep{R} due to some problems and have not been modified.
@@ -206,7 +137,7 @@ Some of the \proglang{R} packages have been taken off from the Comprehensive \pr
 
 We refine the existing computer  \proglang{R} \citep{R} packages according to the established theory in the article of \cite{zhan2022consistency}. Our package, called \pkg{ODRF}, is modified from several existing \proglang{R} packages.
 In \pkg{ODRF}, the projection pursuit regression function is used to find $ \theta $ for each set of $ q $ predictors, but other options are also provided in the package. Of course many \proglang{R}  packages have been developed  to implement \emph{ODT} and \emph{ODRF}.
-Our \pkg{ODRF} \proglang{R} package can be used for classification and regression, and the computational time consumption and estimation accuracy are better than the competitive \proglang{R} package. Comparing with , our advantages
+Our \pkg{ODRF} \proglang{R} package can be used for classification and regression, and the computational time consumption and estimation accuracy are better than the competitive \proglang{R} package. Comparing with the existing forests, the advantages of \pkg{ODRF} are as follows.
 \begin{itemize}
 
 \item Both the tree and forests of \pkg{ODRF} have better overall accuracy than existing trees and forests, including traditional CART and RF, in both classification and regression prediction, respectively.
@@ -222,17 +153,7 @@ Our \pkg{ODRF} \proglang{R} package can be used for classification and regressio
 \end{itemize}
 
 
-The remainder of this paper is organized as follows: Section \ref{sec:models}, shows the model or algorithm details of the main functions in the \pkg{ODRF} package, so that the user has a clear understanding of the relevant principles. In Section \ref{sec:functions}, Introduce the usage of \pkg{ODRF} package. In Section {sec:examples}, use the \pkg{ODRF} package to compare the predictive effects in classification and regression with other \proglang{R} packages and showcase the specific application of the ODRF package in practice by two data sets with continuous and categorical responses. The summary in Section \ref{sec:summary} gives concluding remarks about the implementation and the performance of the new algorithm; further technical details are presented in the appendix.
-
-	%We compare two different random rotation ensemble oblique tree methods, the first one is Blaser and Fryzlewicz\cite{blaser2016random} proposed the Random Rotation Random Forest (RotRF) method, which uniformly randomly rotates the data prior to inducing each tree. Trees are then learned via the typical axis-aligned procedure on the rotated data. The second one is Tomita et al.\cite{tomita2020sparse} proposed Sparse Projection Oblique Randomer Forests (SPORF) use the procedure laid out in Blaser and Fryzlewicz\cite{blaser2016random} based on a QR decomposition of independent draws from a unit Gaussian. Note that, SPORF unlike RotRF, the random rotation in SPORF is carried out at separately each node, as opposed to using a single rotation for the whole tree. SPORF unlike also F-RC of Breiman\cite{breiman2001random}, one key difference between the random projection distribution of SPORF and F-RC is that F-RC requires that a hyperparameter be specified to fix the sparsity of the sampled univariate projections (i.e., individual linear combinations). SPORF is more robust to the choice of sparsity level than F-RC\cite{tomita2020sparse}.
-	
-%Extremely randomized trees
-%Generalized linear mixed-model (GLMM) trees
-% Extremely randomized trees (extraTrees)
-%An Introduction to Recursive Partitioning Using the RPART Routines
-%Partykit: a modular toolkit for recursive partytioning in R
-%Package ‘logicDT???
-%Conditional Inference Trees
+The remainder of this paper is organized as follows: Section \ref{sec:models}, shows the model or algorithm details of the main functions in the \pkg{ODRF} package, so that the user has a clear understanding of the relevant principles. In Section \ref{sec:functions}, Introduce the usage of \pkg{ODRF} package. In Section {sec:examples}, use the \pkg{ODRF} package to compare the predictive effects in classification and regression with other \proglang{R} packages and showcase the specific application of the ODRF package in practice by two data sets with continuous and categorical responses. The summary in Section \ref{sec:summary} gives concluding remarks about the implementation and the performance of the new algorithm.
 
 
 %% -- Manuscript ---------------------------------------------------------------
@@ -255,18 +176,45 @@ The remainder of this paper is organized as follows: Section \ref{sec:models}, s
 %\subsection{Basic algorithm}
 %\subsection{program developments}
 
+Suppose $ Y = (y_1, ..., y_q) $ is the response vector of interest and $ X: p \times 1 $ is the predictor.  We allow $ Y$ to be multiple to accommodate the categorical response. That is if $ Y$ has $q$ classes, then it is represented by $ q $ dummy variables with each taking values 0 and 1.
 
-The main step in the ODT or ODRF is the estimation and selection of the lienar combinations. Although many methods have been proposed, we find the projection pursuit regression is still the most efficient and is used. Suppose the $ Y_1, ..., Y_q $ are the responses. Typically, if $ q = 1$ then  $ Y_1 $ is continuous response or two classes denoted by 0 and 1; if $ q > 1$, it means there are $ q+1 $ classes denoted by $ (0, ..., 1, ...0)    $
+\subsection{Create ODT}
+With observations $ \mathbb{A}^0_0 = \{(X_i, Y_i), i = 1, ...., n \}$, where $ Y_i = (y_{i1}, ..., y_{ip}) $,
+%Suppose the $ (Y_1, ..., Y_q) $ are the responses. Typically, if $ q = 1$ then  $ Y_1 $ is continuous response or categorical response with two classes denoted by 0 and 1; if $ q > 1$, it means there are $ q+1 $ classes denoted by $ (0, ..., 1, ...0)    $ where $ i$th element is one and others are 0 representing the subject is from ith class.
+an ODT is illustrated by the following diagram. For ease of exposition, even if a node will not be split further, we still rewrite it in the next layer.   For any node
+$\mathbb{A}_k^\tau $, where the subscript $ k $ represent the layer and superscript the number of nodes in the layer, the splitting is as follows. Given any p-dimensional vector  $\theta$ and a splitting value $ c $, define the daughter nodes
+  $$
+    \mathbb{A}_{k+1}^{\tau'} = \{ X_i: X_i \in \mathbb{A}_k^\tau, \ \theta^\top X_i \le c\}, \ \
+    \mathbb{A}_{k+1}^{\tau''} = \{ X_i: X_i \in \mathbb{A}_k^\tau, \ \theta^\top X_i > c\}.
+  $$
+Define objective function
+$$
+  \Delta(c| \mathbb{A}_k^\tau, \theta)=  \sum_{j=1}^q \sum_{X_i \in \mathbb{A}_k^{\tau'}} (y_{ij} - \bar y_{.j})^2  + \sum_{j=1}^q \sum_{X_i \in \mathbb{A}_k^{\tau''}} (y_{ij} - \bar y_{.j})^2.
+$$
+When $ \theta $ is given, the splitting value $ c$ should minimize $ \Delta(c|\theta,  \mathbb{A}_k^\tau)$. If $Y$ is one dimensional quantitative response, then this is the criterion for regression of CART. If $Y$ is categorical, $ \Delta(c|\theta, \mathbb{A}_k^\tau) $ is different from the Gini impurity. However, the Gini impurity can also be used and is one option in \pkg{ODRF}.
 
+To determine whether the above split is necessary, the CV method is used as follows. For any set $ \mathbb{A} $, the CV is value
+$$
+  CV(A) = \sum_{j=1}^q\sum_{X_i \in A} ( y_{ij} - \hat y^i_{.j})^2 = \Big(\frac{\#A}{\#A -1}\Big)^2 \sum_{j=1}^q\sum_{X_i \in A} ( y_{ij} - \hat y_{.j})^2.
+$$
+If $ CV(\mathbb{A}_k^\tau ) \le CV(\mathbb{A}_{k+1}^{\tau'}) + CV(\mathbb{A}_{k+1}^{\tau''}) $ then $ \mathbb{A}_k^\tau $ is a leave and no longer be divided; otherwise, it will be split and in to $ \mathbb{A}_{k+1}^{\tau'} $ and $ \mathbb{A}_{k+1}^{\tau''} $.
 
-\begin{figure}[t!]
+Let $\{\mathbb{A}^j\}_{j=1}^{t_n}$ be all the leaves (or the nodes in the last layer) of above generated tree. Then, $m(x)$ is estimated by
+$$m_{n}(x)=\sum_{j=1}^{t_n}{\mathbb{I}(x\in \mathbb{A}^j)\cdot \bar{Y}_{\mathbb{A}_L^j}},$$
+where
+$$ \bar{Y}_{\mathbb{A}_L^j} = \sum_{X_i\in \mathbb{A}_L^j} (y_{i1}, ...,  y_{iq})/\# \mathbb{A}_L^j $$
+is the average of the $ Y_i $ in $ \mathbb{A}_L^j$. Note that if $ Y$ is categorical,  $ m_{n}(x) $ is the probability of each class.
+
+%In \pkg{ODRF}, other methods of selecting $\theta$ are also provided. See \code{NodeRotateFun}
+
+\begin{figure}[ht!]
     \centering
     %\includegraphics{}
    % \resizebox{8cm}{!}{%
  \begin{tikzpicture}[node distance=1cm,scale=0.6,
- 	edge from parent/.style={black,thick,draw},	
+ 	edge from parent/.style={black,thick,draw},
  	edge from parent path={(\tikzparentnode) -| (\tikzchildnode)}]
- 	
+
  	%ODT1
  	\node (S01) [process] {$\mathbb{A}_0^1$};
  	\node (N01) [process,below of=S01] {};
@@ -297,7 +245,7 @@ The main step in the ODT or ODRF is the estimation and selection of the lienar c
  				%				\node (S32) [process] {$\mathbb{A}_3^2$}
  				%			}
  		}
- 		child [missing] {}	
+ 		child [missing] {}
  		child [missing] {}
  		child [missing] {}
  		child {
@@ -311,10 +259,10 @@ The main step in the ODT or ODRF is the estimation and selection of the lienar c
  				\node (S33) [process] {$\mathbb{A}_3^2$}
  			}
  		}
- 	}		
- 	child [missing] {}	
+ 	}
  	child [missing] {}
- 	child [missing] {}	
+ 	child [missing] {}
+ 	child [missing] {}
  	child [missing] {}
  	child [missing] {}
  	child {
@@ -339,7 +287,7 @@ The main step in the ODT or ODRF is the estimation and selection of the lienar c
  				\node (S35) [process, xshift=-0.5cm] {$\mathbb{A}_3^4$}
  			}
  		}
- 		child [missing] {}	
+ 		child [missing] {}
  		child [missing] {}
  		child [missing] {}
  		child {
@@ -360,107 +308,82 @@ The main step in the ODT or ODRF is the estimation and selection of the lienar c
  				% 			}
  		}
  	};
- 	
- 	
+
+
  	%ODT2
  	\node (input1) [process,right of=S12,xshift=4cm]{$\mathbb{A}_k^\tau$};
  	\node (decision1) [process,below of=input1,yshift=-1cm] {$ \tilde \theta^\top X  \leq \tilde c$};
  	\node (out1) [process,left of=decision1,xshift=-0.5cm,yshift=-1.5cm] {$\mathbb{A}_k^{\tau'}$};
  	\node (out2) [process,right of =decision1,xshift=0.5cm,yshift=-1.5cm]{$\mathbb{A}_k^{\tau''}$};
- 	
+
  	\draw [arrow] (input1) -- node {\bf $(\tilde \theta, \tilde c)=\mathop{\arg\max_{\theta\in\Theta^p, c\in\mathbb{R}}} {\Delta(\theta,c| \mathbb{A}_k^\tau)}$} (decision1);%\hspace{4.5cm}
  	%\draw [arrow] (decision1) -| node[above=0.1mm]{yes} (out1);
  	%\draw [arrow] (decision1) -| node[above=0.01mm]{no} (out2);
  	\draw [arrow] (decision1) -| node {\color{blue} yes  \ \ \ \ } (out1);%\Large
- 	\draw [arrow] (decision1) -| node {\color{blue}\ \ \ \ no} (out2);%\Large 
+ 	\draw [arrow] (decision1) -| node {\color{blue}\ \ \ \ no} (out2);%\Large
  \end{tikzpicture}
 %}
-\caption{\label{fig:subtree} The tree structure}
 \end{figure}
 
-\subsection{Estimation of the linear combination and ODT}
-In any node $ A $,  The estimation of the projection. We
+
+%\subsection{Estimation of the linear combination and ODT}
+
+Thus, the main step in the ODT or ODRF is the estimation of the projection $ \theta $ or the selection of the linear combinations. Although many methods have been proposed, we find the projection pursuit regression is still the most efficient and is used in \pkg{ODRF}. The estimation is as follows. In any node $ \mathbb{A} $, define loss function
 $$
- \theta = arg \min_\theta \sum_{i=1}^q \sum_{j=1}^b \{y_{ij} - m_i(\theta^\top X_j)\}^2
+ \Delta(\theta) =  \sum_{j=1}^q \sum_{X_i \in \mathbb{A}} \{y_{ij} - m_i(\theta^\top X_j)\}^2
 $$
-where $ y_{ij} $ and $ m_i $
+where  $ m_i $ is a nonparametric smoothing of the regression that minimizes  $\sum_{j=1}^b \{y_{ij} - m_i(\theta^\top X_j)\}^2$ with $ \theta $ given.  The nonparametric smoothing can be either the spline representation, or kernel smoothing, or the ``supsmu" of \pkg{ppr}.
 
-\begin{itemize}
-  \item Oblique Decision Tree uses a linear combination of predictors as split variable.
-
-  \item Estimation of the projection $ \theta $
-
-  \begin{itemize}
-
-  \item for each pair of $ \theta,c $, define
-  $$
-    \mathbb{A}_k^{\tau'} = \{ (X, y): X \in \mathbb{A}_k^\tau, \theta^\top X \le c\}, \ \
-    \mathbb{A}_k^{\tau''} = \{ (X, y): X \in \mathbb{A}_k^\tau, \theta^\top X > c\},
-  $$
-
-  \item define objective function
-  $$
-  \Delta(\theta,c| \mathbb{A}_k^\tau)= cov(Y|\mathbb{A}_k^\tau) - P(\mathbb{A}_k^{\tau'})cov(Y|\mathbb{A}_k^{\tau'}) - P(\mathbb{A}_k^{\tau''})cov(Y|\mathbb{A}_k^{\tau''})
-   $$
-
-
-\end{itemize}
-
-
-
-%  \item number of leaves, $ t_n $, which can be specified in advance, and  plays a role as the bandwidth or number of knots in polynomial splines
-
-
-\end{itemize}
-
-
-Let $\{\mathbb{A}_\L^j\}_{j=1}^{t_n}$ be the set of leaves of above generated tree $T_{\mathcal{D}_n,t_n}$. Estimate $m(x)$ by
-$$m_{n,\L}(x)=\sum_{j=1}^{t_n}{\mathbb{I}(x\in \mathbb{A}_\L^j)\cdot \bar{Y}_{\mathbb{A}_\L^j}}, x\in[0,1]^p$$.
 
 \subsection{Build an ODRF }
 
-For ease of exposition, we introduce several notations that are often used in this part. Denote by $\mathcal{S}$ a (random) subset of $ \Omega=\{ 1, ..., p\} $,  and by $\mathcal{S}_\tau,\ \tau=1, 2, ...,$  a sequence of such subsets that may differ from one another. Let $ X_\S $ be a sub-vector of $ X $ consisting of coordinates indexed by elements of $\mathcal{S}$.  Let  $\Omega =\cup_{j=1}^p\Omega _j$, where $\Omega _j$ is the collection of subsets with cardinality $j$. Let $q$ be a random number uniformly chosen from $\{1,\ldots,p\}$. Because given $q$ any element in $\Omega _q$ will be selected with equal probability, $\Omega $ is also a sample space equipped with probability
-$$\P(\S)=\frac{1}{p}\cdot\frac{1}{\binom{n}{Card(\S)}}$$
-for each $\S\subseteq \Omega $. Thus, $ \S_\tau, \tau\geq 1 $, can be regarded as a (random) sample of $ \Omega  $. Let $\Xi_{t_n-1}=(\S_1,\ldots, \S_{t_n-1})$  with  $t_n\geq 2$, which can be regarded as a random element in the product of probability spaces, $ \Omega  ^{\otimes t_n-1} $.
-
-First, we introduce random ODT as follows. In Algorithm \ref{Algorithm.ODTtreereg}, we replace \textbf{lines 13-14} with following steps
-\begin{itemize}
-	\item In the $\tau$-th division ($1\le \tau\le t_n-1$) of node $A$, randomly choose $\S_\tau\in\Omega $ with  $Card(\S_\tau)=q$;
-	\item $(\hat{\theta}_{A},\hat{s}_A)=\argmax_{\theta_{\S_\tau}\in\Theta^q,s\in\mathbb{R}}{\Delta_{A,q}({\theta}_{\S_\tau},s)}$, where $\Delta_{A,q}$ is defined in the same way as $\Delta_{A}$ except that only  $\{(X_{i,\S_\tau},Y_i)\}_{i=1}^n$ are used in the calculation of $\Delta_{A,q}$;
-	\item Partition the node $A$ into $A^+_{\hat{\theta}_A,\hat{s}_A}=\{x\in A: \hat{\theta}_A^T\cdot x_{\S_\tau}\le \hat{s}_A\}$ and  $A^-_{\hat{\theta}_A,\hat{s}_A}=\{x\in A: \hat{\theta}_A^T\cdot x_{\S_\tau}> \hat{s}_A\}$.
-\end{itemize}
-
-
-
+\pkg{ODRF} builds the random forest in a slightly different ways from the existing forests. The detail is as follows.
+Denote by $ X_{[q]} = (x_1', ..., x_q')$ a (random) subset of $ X  = (x_1, ..., x_p $ where $ q < p$ and $ \{x_1', ..., x_q'\} \subset \{x_1, ..., x_p\} $, and thus  by $X_{[q], r},\ r=1, 2, ...,$  a sequence of such subsets that may differ from one another.  In other words, with the same $ q $ and $ r$,  set $X_{[q], r}$ changes from place to place.
+%Because given $q$ any element in $\Omega _q$ will be selected with equal probability, $\Omega $ is also a sample space equipped with probability
+%$$\P(\S)=\frac{1}{p}\cdot\frac{1}{\binom{n}{Card(\S)}}$$
+%for each $\S\subseteq \Omega $. Thus, $ \S_\tau, \tau\geq 1 $, can be regarded as a (random) sample of $ \Omega  $. Let $\Xi_{t_n-1}=(\S_1,\ldots, \S_{t_n-1})$  with  $t_n\geq 2$, which can be regarded as a random element in the product of probability spaces, $ \Omega  ^{\otimes t_n-1} $.
+Using the idea of feature bagging, We first define $B$  random ODTs as follows.  %In Algorithm \ref{Algorithm.ODTtreereg}, we replace \textbf{lines 13-14} with following steps
+%\begin{itemize}
+%	\item For each node $A$, randomly choose $\S_\tau\in\Omega $ with  $Card(\S_\tau)=q$;
+%	\item $(\hat{\theta}_{A},\hat{s}_A)=\argmax_{\theta_{\S_\tau}\in\Theta^q,s\in\mathbb{R}}{\Delta_{A,q}({\theta}_{\S_\tau},s)}$, where $\Delta_{A,q}$ is defined in the same way as $\Delta_{A}$ except that only  $\{(X_{i,\S_\tau},Y_i)\}_{i=1}^n$ are used in the calculation of $\Delta_{A,q}$;
+%	\item Partition the node $A$ into $A^+_{\hat{\theta}_A,\hat{s}_A}=\{x\in A: \hat{\theta}_A^T\cdot x_{\S_\tau}\le \hat{s}_A\}$ and  $A^-_{\hat{\theta}_A,\hat{s}_A}=\{x\in A: \hat{\theta}_A^T\cdot x_{\S_\tau}> \hat{s}_A\}$.
+%\end{itemize}
 \begin{itemize}
 
-\item Random splitting and random tree
-\begin{itemize}
+  \item For each node $\mathbb{A}_k^\tau$, randomly select $q$, e.g. $INT(p/3)$, find variables $  X_{[q], r} = (x_1', ..., x_q') \subset X $, where $ r = 1, ..., R $ denotes $R$ random sets of variables.
 
-  \item Randomly select $q$, e.g. $[p/3]$, variables $  X_{(q), r} \subset X $.   For each pair of $ \theta_{(q)},c_{(q)} $, define the partition
+  \item Find $$ \tilde \theta_{r} = arg \min_{\theta} \sum_{j=1}^q \sum_{X_i \in \mathbb{A}} \{y_{ij} - m_j(\theta^\top X_{[q],r, i})\}^2  $$
+  where $ X_{[q],r, i} = (x_{i1}', ..., x_{iq}') $.
+%  For each pair of $ \theta_{[q]},c_{(q)} $, define the partition
+%  $$
+%    \mathbb{A}_{k}^{\tau'} = \{ (X, y): X \in \mathbb{A}_k^\tau, \theta_{(q)}^\top X_{(q)}^r \le c_{(q)}\}, \ \
+%    \mathbb{A}_{k}^{\tau''} = \{ (X, y): X \in \mathbb{A}_k^\tau, \theta_{(q)}^\top X_{(q)}^r > c_{(q)}\},
+%  $$
+%  $$
+%  \Delta(\theta_{(q)},c_{(q)}, r| \mathbb{A}_k^\tau)= cov(Y|\mathbb{A}_k^\tau) - P(\mathbb{A}_k^{\tau'})cov(Y|\mathbb{A}_k^{\tau'}) - P(\mathbb{A}_k^{\tau''})cov(Y|\mathbb{A}_k^{\tau''})
+%   $$
+\item Define
   $$
-    \mathbb{A}_{k}^{\tau'} = \{ (X, y): X \in \mathbb{A}_k^\tau, \theta_{(q)}^\top X_{(q)}^r \le c_{(q)}\}, \ \
-    \mathbb{A}_{k}^{\tau''} = \{ (X, y): X \in \mathbb{A}_k^\tau, \theta_{(q)}^\top X_{(q)}^r > c_{(q)}\},
+    \mathbb{A}_{k,r}^{\tau'} = \{ X_i: X_i \in \mathbb{A}_k^\tau, \  \theta_{(q)}^\top X_{[q],r, i} \le c_{(q)}\}, \ \
+    \mathbb{A}_{k,r}^{\tau''} = \{ X_i: X_i \in \mathbb{A}_k^\tau, \theta_{(q)}^\top X_{[q],r, i} > c_{(q)}\},
   $$
-  $$
-  \Delta(\theta_{(q)},c_{(q)}, r| \mathbb{A}_k^\tau)= cov(Y|\mathbb{A}_k^\tau) - P(\mathbb{A}_k^{\tau'})cov(Y|\mathbb{A}_k^{\tau'}) - P(\mathbb{A}_k^{\tau''})cov(Y|\mathbb{A}_k^{\tau''})
-   $$
  \item  calculate
    $$
-    (\tilde \theta_{(q)}, \tilde c_{(q)}, \tilde r) =arg  \min_{ \theta, c, r=1,..., R} \Delta(\theta,c, r| \mathbb{A}_k^\tau)
+     (\tilde c_{(q)}, \tilde r) =arg  \min_{ c, r=1,..., R} \sum_{j=1}^q \sum_{X_i \in \mathbb{A}_{k,r}^{\tau'}} (y_{ij} - \bar y_{.j})^2  + \sum_{j=1}^q \sum_{X_i \in \mathbb{A}_{k, r}^{\tau''}} (y_{ij} - \bar y_{.j})^2.
    $$
- \item Split the node with $ (\tilde \theta_{(q)}, \tilde c_{(q)}, \tilde r) $
-\end{itemize}
+ \item Split the node with $ (\tilde \theta_{\tilde r}, \tilde c_{\tilde r}, \tilde r) $, and the daughter nodes
+\begin{center}
+ $\mathbb{A}_{k+1}^{\tau'} = \mathbb{A}_{k+1,\tilde r}^{\tau'}$ and $\mathbb{A}_{k+1}^{\tau''} = \mathbb{A}_{k+1,\tilde r}^{\tau''}$.
+\end{center}
 
-  \item each tree produces one estimator $ \hat m_{n, \tilde r} (x) $
 
-  \item estimator by the forest is
-  $$
-    \hat m_{ODRF}(x) = B^{-1} \sum_{\tilde r=1}^B \hat m_{n, \tilde r} (x)
-  $$
-
+  \item each tree produces one estimator $ \hat m_{n, b} (x) $
 
 \end{itemize}
+Finally, the ODR forest (ODRF) estimator is
+  $$
+    \hat m_{ODRF}(x) = B^{-1} \sum_{\tilde r=1}^B \hat m_{n, b} (x).
+  $$
 
 
 %% -- Illustrations ------------------------------------------------------------
@@ -480,10 +403,7 @@ First, we introduce random ODT as follows. In Algorithm \ref{Algorithm.ODTtreere
 
 %Implementation and application in practice
 \section{Overview of the functions} \label{sec:functions}
-%\section{Illustrations} \label{sec:illustrations}
-%Package evtree provides an efficient implementation of an evolutionary algorithm that builds classification trees in R. CPU- and memory-intensive tasks are fully computed in C++, while the user interfaces and plot functions are written in R. The .C() interface (Chambers 2008) was used to pass arguments between the two languages. evtree depends on the partykit package (Hothorn and Zeileis 2014), which provides an infrastructure for representing, sum-marizing, and visualizing tree-structured models.
- %In this section we introduce the general approach to perform kernel smoothing using the FKSUM package. Illustrations using the general purpose function $fk_sum()$, which provides The implementation is based on the method of Hofmeyr (2021), which uses kernels which can be expressed in the form
- %In this chapter, we explore how to construct the projection pursuit classification tree using PPtreeViz. A projection pursuit classification tree (Lee et al. 2013) is a type of classification tree that uses projection pursuit indices with class information. The usual tree-structured classification finds the rule used to separate data into two groups using impurity measures that determine the degree of purity of two groups in terms of classes. In contrast, the projection pursuit classification tree finds the rule used to separate classes into two groups. This rule uses the best projection to separate two groups of classes with various projection pursuit indices with class information. One class is assigned to only one final node and the maximum depth of the projection pursuit classification tree is the number of classes. Therefore, the projection pursuit classification tree constructs a simple but more understandable tree for classification. The projection coefficients for each node represent the importance of the variable in separating the classes in each node, and the behaviors of these coefficients are useful to explore how classes
+
  In this section, we introduce \pkg{ODRF} package main function implementation in \proglang{R}. We use some \proglang{R}'s \code{S3} method, including the base \proglang{R} functions \fct{print}, \fct{predict} and \fct{plot} in the \pkg{base} \citep{R} package, the transform function \fct{as.part} in the \pkg{partykit} \citep{2015Partykit} package and our self-defined functions  \fct{ODT}, \fct{ODRF}, \fct{online}, \fct{prune} in the \pkg{ODRF} package. In the \pkg{ODRF} package, the function \fct{best.cut.node} to find the optimal split variables and split nodes and the projection pursuit function \fct{PPO} to estimate the projection direction. They both make \proglang{R} interact with \proglang{C++} by the \pkg{Rcpp} package, which greatly speeds up the the computation time to our program. The details of the function usage are described below.
 \subsection[print the tree structure of ODT and the estimation error of ODRF]{\code{print} the tree structure of \code{ODT} and the estimation error of \code{ODRF}}
 Functions \fct{ODT} and \fct{ODRF} are the two main functions of the \pkg{ODRF} package, \fct{ODRF} is ODT-based random forests. They can both be used for classification and regression and are similar in usage. We provide two data input ways for these two \code{S3} methods.
@@ -491,10 +411,10 @@ Functions \fct{ODT} and \fct{ODRF} are the two main functions of the \pkg{ODRF} 
 The first way is \code{formula = y ~ .,data = data.frame(X, y = y)} or \code{formula = y ~ X} with class \code{formula}, and usage are
 \begin{Code}
 ## S3 method for class 'formula'
-ODT(formula, data = NULL, type = "auto", NodeRotateFun = "RotMatPPO", 
-  FunDir = getwd(), paramList =NULL, MaxDepth = Inf, numNode = Inf, 
+ODT(formula, data = NULL, type = "auto", NodeRotateFun = "RotMatPPO",
+  FunDir = getwd(), paramList =NULL, MaxDepth = Inf, numNode = Inf,
   MinLeaf = 5, Levels = NULL, subset = NULL, weights = NULL,
-  na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "Min-max", 
+  na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "Min-max",
   TreeRandRotate = FALSE, ...)
 ODRF(formula, data = NULL, type = "auto", NodeRotateFun = "RotMatPPO",
   FunDir = getwd(), paramList = NULL, ntrees = 100, storeOOB = TRUE,
@@ -516,7 +436,7 @@ Arguments
 	\item \code{catLabel}: A category labels of class \code{list} in predictors. (default NULL, for details see the following examples)
 	\item \code{other arguments}: Other arguments we do not introduce here, users can see \code{?ODT} and \code{?ODRF}. These arguments are defaulted to the optimal values, so that the user does not need to modify them except for special needs.
 \end{itemize}
-where \code{formula} plus \code{data} is the now standard way of specifying relationships in \proglang{R}. The remaining arguments in the first line (\code{subset}, \code{na.action}, and \code{weights}) are also standard for setting up formula-based models in \proglang{R}. 
+where \code{formula} plus \code{data} is the now standard way of specifying relationships in \proglang{R}. The remaining arguments in the first line (\code{subset}, \code{na.action}, and \code{weights}) are also standard for setting up formula-based models in \proglang{R}.
 
 Before classification or regression, it is necessary to do some pre-processing to the data. In addition to the standard arguments \code{subset}, \code{na.action}, and \code{weights}, we also provide \code{Xscale} for the predictors to be normalized. Any feature $x$ of predictor $X$ were scaled to $[0,1]$ using the maximal or quantile value of the in-sample, that is $\frac{x-x_{L}}{x_{U}-x_{L}}$.
 %\begin{equation} \label{eq:scale}
@@ -524,44 +444,6 @@ Before classification or regression, it is necessary to do some pre-processing t
 %\end{equation}
 Where $x_{U}$ and $x_{L}$ denote the upper and lower bounds of $x$, respectively. When using minima (defaulte \code{Xscale = "Min-max"}), $x_{U}$ = \code{max(x)}, $x_{L}$ = \code{min(x)}, when using quantile (\code{Xscale = "Quantile"}), $x_{U}$ = \code{quantile(x, 0.95)}, $x_{L}$ = \code{quantile(x, 0.05)}.
 Sometimes the predictor $X$ has category variables that must be transformed into dummy variables. The arguments \code{catLabel} and \code{Xcat} in our program can automatically deal with category variables. The user can enter the ordinal number of the category variable with \code{Xcat} and let \code{catLabel = NULL}. It even is allowed to let \code{Xcat = NULL}, we will use the condition \code{(length( unique( x )) < 10) \& (n > 20)} to judge which one is the category variable, and for details see examples of \code{ODT} or \code{ODRF}.%The example is as follows.
-%
-%We generate a data set containing 2 categorical variables and show how our program deals with this data, and finally train ODT on one-of-K encoded categorical data.5
-%
-%<<one-of-K encoded categorical data>>=
-%### Train ODT on one-of-K encoded categorical data ###
-%set.seed(22)
-%Xcol1 <- sample(c("A", "B", "C"), 100, replace = TRUE)
-%Xcol2 <- sample(c("1", "2", "3", "4", "5"), 100, replace = TRUE)
-%Xcon <- matrix(rnorm(100 * 3), 100, 3)
-%X <- data.frame(Xcol1, Xcol2, Xcon)
-%Xcat <- c(1, 2)
-%catLabel <- NULL
-%y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
-%tree <- ODT(y ~ X, type = "g-classification", Xcat = NULL)
-%head(X)
-%# one-of-K encode each categorical feature and store in X1
-%numCat <- apply(X[, Xcat, drop = FALSE], 2, function(x) length(unique(x)))
-%X1 <- matrix(0, nrow = nrow(X), ncol = sum(numCat))
-%catLabel <- vector("list", length(Xcat))
-%names(catLabel) <- colnames(X)[Xcat]
-%col.idx <- 0L
-%# convert categorical feature to K dummy variables
-%for (j in 1:length(Xcat)) {
-%  catMap <- (col.idx + 1L):(col.idx + numCat[j])
-%  catLabel[[j]] <- levels(as.factor(X[, Xcat[j]]))
-%  X1[, catMap] <- (matrix(X[, Xcat[j]], nrow(X), numCat[j])
-%  == matrix(catLabel[[j]], nrow(X), numCat[j], byrow = TRUE)) + 0
-%  col.idx <- col.idx + numCat[j]
-%}
-%X <- cbind(X1, X[, -Xcat])
-%colnames(X) <- c(paste(rep(seq(length(numCat)), numCat),unlist(catLabel),
-%  sep = "."), "X1", "X2", "X3")
-%# Print the result after processing of category variables.
-%head(X)
-%catLabel
-%tree <- ODT(X, y, type = "g-classification", Xcat = c(1, 2), catLabel = catLabel)
-%@
-
 %
 Print the tree structure of class \code{ODT} and \code{party}, and the model estimation error of class \code{ODRF}.
 %
@@ -582,8 +464,8 @@ Oblique Classification Tree structure
       node4)  proj2*X < 0.69
          node6)# proj3*X < 0.67 -> (leaf2 = versicolor)
          node7)  proj3*X >= 0.67
-            node10)# proj5*X < 0.74 -> (leaf5 = virginica)
-            node11)# proj5*X >= 0.74 -> (leaf6 = virginica)
+            node10)# proj5*X < 0.6 -> (leaf5 = virginica)
+            node11)# proj5*X >= 0.6 -> (leaf6 = versicolor)
       node5)  proj2*X >= 0.69
          node8)# proj4*X < 0.65 -> (leaf3 = virginica)
          node9)# proj4*X >= 0.65 -> (leaf4 = virginica)
@@ -604,8 +486,8 @@ Fitted party:
 |   |   |   [5] proj4X < 0.65254: virginica (n = 3, err = 33.3%)
 |   |   [6] proj2X < 0.6875
 |   |   |   [7] proj3X >= 0.66949
-|   |   |   |   [8] proj5X >= 0.73729: virginica (n = 2, err = 0.0%)
-|   |   |   |   [9] proj5X < 0.73729: versicolor (n = 4, err = 50.0%)
+|   |   |   |   [8] proj5X >= 0.60417: versicolor (n = 3, err = 33.3%)
+|   |   |   |   [9] proj5X < 0.60417: virginica (n = 3, err = 0.0%)
 |   |   |   [10] proj3X < 0.66949: versicolor (n = 48, err = 2.1%)
 |   [11] proj1X < 0.24576: setosa (n = 50, err = 0.0%)
 
@@ -729,7 +611,7 @@ R> print(c(
 As shown in the classification and regression results above, the training data \code{train_data} is divided into two batches equally, then the first batch is used to train \code{ODT} and \code{ODRF}, and the second batch is used to update the model by \fct{online}. The error after the model update is significantly smaller than that of one batch of data alone, and the model is also pruned by \fct{prune} and the same effect is achieved.
 
 \subsection[Create a projection matrix with the RotMat* function]{Create a projection matrix with the \code{RotMat*} function}
-We provide the functions \fct{RotMatPPO}, \fct{RotMatRand} and \fct{RotMatRF} for creating rotation matrix by projection pursuit optimization model (\emph{PPO}) \cite{cook2008grand}, same random rotation as \fct{RandMatBinary} in \pkg{rerf} package and single feature similar to random forest, respectively. The function \fct{PPO} is to find the best projection using various projectin pursuit models, including \code{"PPR"} (default): projection projection regression from \fct{ppr} in \pkg{stats} package \cite{friedman1981projection}, \code{"Log"}: logistic based on \fct{nnet} in \pkg{nnet} package \cite{nnet}, \code{"Rand"}: The random projection generated from $\{-1, 1\}$, argument \code{PPmethod} of function \fct{PPopt} in \pkg{PPtreeViz} package, and argument \code{findex} of function \fct{PP\_Optimizer} in \pkg{Pursuit} package \cite{Pursuit}. Note that \pkg{PPtreeViz} and \pkg{Pursuit} are only available for classification. The generated rotation matrix has three columns, the first column (\code{Variable}). Variable to be projected, the second column (\code{Number}): Number of projections, and the third column (\code{Coefficient}): the coefficient of the projected matrix. In addition, the user can define a projection matrix function, see the \pkg{ODRF} help file for more details on usage.%,We provide a several examples as follows, just let the argument \code{RotMatFun} be the name of the defined function and let the argument \code{paramList} be the arguments used in the defined function, or use the function \fct{RotMatMake} to define the projection matrix by the following way. 
+We provide the functions \fct{RotMatPPO}, \fct{RotMatRand} and \fct{RotMatRF} for creating rotation matrix by projection pursuit optimization model (\emph{PPO}) \cite{cook2008grand}, same random rotation as \fct{RandMatBinary} in \pkg{rerf} package and single feature similar to random forest, respectively. The function \fct{PPO} is to find the best projection using various projectin pursuit models, including \code{"PPR"} (default): projection projection regression from \fct{ppr} in \pkg{stats} package \cite{friedman1981projection}, \code{"Log"}: logistic based on \fct{nnet} in \pkg{nnet} package \cite{nnet}, \code{"Rand"}: The random projection generated from $\{-1, 1\}$, argument \code{PPmethod} of function \fct{PPopt} in \pkg{PPtreeViz} package, and argument \code{findex} of function \fct{PP\_Optimizer} in \pkg{Pursuit} package \cite{Pursuit}. Note that \pkg{PPtreeViz} and \pkg{Pursuit} are only available for classification. The generated rotation matrix has three columns, the first column (\code{Variable}). Variable to be projected, the second column (\code{Number}): Number of projections, and the third column (\code{Coefficient}): the coefficient of the projected matrix. In addition, the user can define a projection matrix function, see the \pkg{ODRF} help file for more details on usage.%,We provide a several examples as follows, just let the argument \code{RotMatFun} be the name of the defined function and let the argument \code{paramList} be the arguments used in the defined function, or use the function \fct{RotMatMake} to define the projection matrix by the following way.
 \begin{Code}
 RotMatPPO(X,y,model = "PPR",type = "i-classification",weights = NULL,
   dimProj,numProj,catLabel = NULL, ...)
@@ -820,132 +702,26 @@ R> (RotMat <- do.call(RotMatRF, paramList))
 [3,]        5      3           1
 \end{Soutput}
 \end{Schunk}
-%# define projection matrix function and projection optimization model function.
-%# Note that (,...) is necessary.
-%makeRotMat <- function(dimX, dimProj, numProj, ...) {
-%  RotMat <- matrix(1, dimProj * numProj, 3)
-%  for (np in seq(numProj)) {
-%    RotMat[(dimProj * (np - 1) + 1):(dimProj * np), 1] <-
-%      sample(1:dimX, dimProj, replace = FALSE)
-%    RotMat[(dimProj * (np - 1) + 1):(dimProj * np), 2] <- np
- % }
-%  return(RotMat)
-%}
-%makePP <- function(dimProj, prob, ...) {
-%  pp <- sample(c(1L, -1L), dimProj, replace = TRUE, prob = c(prob, 1 - prob))
-%  return(pp)
-%}
-%RotMat <- RotMatMake(
-%  RotMatFun = "makeRotMat", PPFun = "makePP",
-%  paramList = list(dimX = 8, dimProj = 5, numProj = 4, prob = 0.5)
-%)
-%head(RotMat)
-%# train ODT with defined projection matrix function.
-%tree <- ODT(X, y, type = "i-classification", NodeRotateFun = "makeRotMat",
-%  paramList = list(dimX = ncol(X), dimProj = 5, numProj = 4))
-%# train ODT with function RotMatMake.
-%tree <- ODT(X, y, type = "i-classification", NodeRotateFun = "RotMatMake",
-%  paramList = list(RotMatFun = "makeRotMat", PPFun = "makePP",
-%  dimX = ncol(X), dimProj = 5, numProj = 4, prob = 0.5))
-%As a first model for the \code{quine} data, we fit the basic Poisson regression
-%model. (Note that JSS prefers when the second line of code is indented by two
-%spaces.)
 
 \section{Real examples} \label{sec:examples}
 In this section, we compare ODT with other axis-aligned and oblique tree methods in a more rigorous benchmark comparison. the tree algorithms are compared on 52 real data sets with continuous and categorical response. In addition, we add the forest methods and consider the time consumption and tree complexity. The rest of the section describes how to use our ODRF package in real data, and we explain the use of two data sets with continuous and categorical response.
-%In this section, we compare evtree with rpart, ctree, and J48 in a more rigorous benchmark comparison.
-%In the first part of the analysis (Section 5.1) the tree algorithms are compared on 14 benchmark datasets that are publicly available and 3 real-world datasets from the Austrian Diagnosis Related Group (DRG) system (Bundesministerium fur Gesundheit ¨ 2010).
-%As J48 can only be used for classification, the algorithm is only employed for the 12 classification datasets. The analysis is based on the evaluation of 250 bootstrap samples for each of the datasets. The misclassification rate on the out-of-bag samples is used as a measure of predictive accuracy (Hothorn, Leisch, Zeileis, and Hornik 2005). Furthermore, the complexity is estimated by the number of terminal nodes. The results are summarized by the mean differences of the 250 runs – each corresponding to one of the 250 different bootstrap samples. For the assessment of significant differences in predictive accuracy and complexity, respectively, Dunnett’s correction from R package multcomp (Hothorn, Bretz, and Westfall 2008) was used for calculating simultaneous 95\% confidence intervals on the individual datasets. Confidence intervals that do not encompass the zero-line indicate significant differences at the 5\% level.
 
 \subsection{Performance comparison}
 we follow the experimental design of \cite{zhan2022consistency}, where we show the performance of  \code{ODRF}, but in this article we show the performance of \code{ODT}. We use 26 real data sets with continuous responses  and 26 data sets with categorical response for regression prediction and classification respectively. Where the data set has categorical responses, seeds, breast tissue and waveforms dataset are triple, six and triple category responses respectively, and all other data are binary category responses (0 and 1). Our data are mainly obtained from the UCI machine learning database (A) \url{https://archive.ics.uci.edu/ml/datasets}, the kaggle database (B) \url{https://www.kaggle.com}, and Rainforth and Wood \cite{rainforth2015canonical} Collection Datasets (C) \url{https://github.com/twgr/ccfs/}.
 If there are any missing values in a data, the corresponding samples are removed from the data. In the calculation, Each predictor is scaled to [0, 1] using the minima method of Section \ref{sec:print} proposed.
-%In particular, Rainforth and Wood\cite{rainforth2015canonical} Collection Datasets (B) are formatted datasets, which are mainly from the UCI machine learning database, the WEKA dataset \url{http://www.cs.waikato.ac.nz/ml/weka/ datasets.html} and the Luis Torgo Collection datasets \url{http://www.dcc.fc.up.pt/˜ltorgo/Regression/DataSets.html}.
-%Of course, for the above data we need to do some preprocessing. For the data with missing values, we simply remove the missing data and normalize each feature. Specifically, the numeric values of the jth feature $x_{.j}$ were scaled to $[0,1]$ using the in-sample min and max values, that is $x_{.j}=\min (1, \max (0,(x_{.j}-\min (x_{.j} )) /(\max(x_{.j})-\min(x_{.j}))))$.  %This scaling method deals with scale but only avoids out-of-sample outliers. %Outliers are dealt with in a relatively crude fashion by applying a fixed cutoff.
 
-%DATA PREPROCESSING
-%For unordered categorical features xc 2 S, where S represents the space of arbitrary qualitative attributes, we use a 1-of-K encoding such that the feature is converted into K binary features. To ensure equal probability of selecting categorical and numerical features, the expanded binary array of each categorical feature is still treated as a single feature during the random subspacing
-
-%A second preprocessing step is to centre and rescale the input data so that it has zero mean and unit variance for each dimension (ignoring any missing data).
-%The final preprocessing step is to deal with missing data. Here we take the simple approach
-%of randomly assigning each missing value in X to a random draw from a unit Gaussian (noting that we have previously ensure that each feature has zero mean and unit variance).
-
-%STOPPING CRITERIA AND OTHER PARAMETER SETTINGS
-
-%In the random forest frame-work a large number of trees are combined. Two hyper-parameters control the generation of the decision trees in this ensemble: subspace dimensionality mtry and ensemble size ntree. Parameter mtry determines the number of features sam-pled randomly at each individual node and the degree of randomness in the model generation. Parameter mtry has to be chosen to obtain a \suient" variability of the trees in the forest, ensuring that correlation between individual trees is as low as possible.[Sporf]
-
-%As previously stated, the CCF training algorithm has four parameters of note: the number of trees L, the number of features to sub-sample at each node q, the impurity measure g, and the stopping criteria c. We reiterate that all of these parameters are common to RFs.
-%We take L = 500 as a default value as compromise between speed and accuracy,Though a number of possible stopping criteria exist (Criminisi et al., 2011), the main two used
-%in practice are a maximum tree depth, beyond which all nodes are assigned as leaves (our default is 1), a minimum number of contained datapoints for which a node is allowed to split (our default is 2 for classification and 6 for regression).
-
-%PPforest Natalia da Silva, Dianne Cook & Eun-Kyung Lee (2021) A Projection Pursuit Forest Algorithm for Supervised Classification, Journal of Computational and Graphical Statistics,30:4, 1168-1180, DOI: 10.1080/10618600.2020.1870480
-%obliqueRF Menze BH, Kelm BM, Splitthoff DN, Koethe U, Hamprecht FA. On oblique random forests. Proc ECML/PKDD 2011. LNCS 6911, 453-469 http://people.csail.mit.edu/menze/papers/menze_11_oblique.pdf.
-%F-RC RF
-%In the random forest frame-work a large number of trees are combined. Two hyper-parameters control the generation of the decision trees in this ensemble: subspace dimensionality mtry and ensemble size ntree.  However, for Oblique forests, the two hyperparameters are mainly considered. The first parameter tuned is d, the number of candidate split directions evaluated at each split node. The second hyperparameter tuned is q, the dimension  of candidate split directions  at each split node.  For Our ppRF , the first parameter d=5 and the second parameter q are randomly selected from 1 to the data dimension p.
-%Our ppRF and RF have the same settings. The ensemble tree size ntree=500, the split objective is to minimize Gini impurity (classification) or MSE (regression), when Gini impurity (MSE) or node number of datapoints reaches the specified value then the split is stopped and trees are fully grown unpruned. the main two used in practice are a maximum tree depth, beyond which all nodes are assigned as leaves (our default is 1), a minimum number of contained datapoints for which a node is allowed to split (our default is 2 for classification and 6 for regression). 
-
-%SPORF unlike also F-RC of Breiman\cite{breiman2001random}, one key difference between the random projection distribution of SPORF and F-RC is that F-RC requires that a hyperparameter be specified to fix the sparsity of the sampled univariate projections (i.e., individual linear combinations). SPORF is more robust to the choice of sparsity level than F-RC\cite{tomita2020sparse}.
-%Classification and regression trees (\emph{CART}) \cite{quinlan1987decision} and \emph{C4.5} \cite{quinlan1993program} are the most commonly used decision trees with different partition criteria. In addition, there are Evolutionary Learning of Globally Optimal Classification and Regression Trees (\emph{evtree}) \cite{Grubinger2014ectree},  Conditional Inference Trees (\emph{ctree}) \cite{hothorn2006unbiased}, Extremely randomized trees (\emph{extraTrees}) \cite{2006Extremely}, Model-Based Recursive Partitioning (\emph{MOB}) \cite{zeileis2015parties}, bayesian additive regression trees (\emph{BART}) \cite{maia2022gp} and generalized linear mixed-model trees (\emph{glmertree}) \cite{2020Generalized}. Over the last two decades, ensemble methods have risen to prominence as the stateof-the-art for general-purpose machine learning tasks. One of the most popular and consistently strong ensemble methods is Random Forests (\emph{RF}) \cite{breiman2001random}, which uses decision trees \emph{CART} as the base learners \citep{tomita2020sparse}. In addition, there are many decision tree based ensemble methods. For example, Conditional Random Forests (\emph{cforest}) \cite{hothorn2006unbiased}, Learning Nonlinear Functions Using Regularized Greedy Forest (\emph{RGF}) \cite{2014Learning}, Generalized Random Forest (\emph{GRF}) \cite{athey2019generalized} and extreme gradient boosting (\emph{XGB}) \cite{chen2016xgboost}.
 We compare two different random rotation oblique tree methods, Blaser and Fryzlewicz\cite{blaser2016random} proposed the Random Rotation Random Forest (\emph{RotRF}), and Tomita et al.\cite{tomita2020sparse} proposed Sparse Projection Oblique Randomer Forests (\emph{SPORF}). Note that, SPORF unlike RotRF, the random rotation in SPORF is carried out at separately each node, as opposed to using a single rotation for the whole tree. We use single trees and denote as \emph{RotT} and \emph{SPOT} respectively, and we use function \fct{ODT} in \pkg{ODRF} package to implement RotT and  SPOT. In additition, there are two oblique decision tree methods used for classification, projection pursuit classification trees (PPT) \cite{lee2018pptreeviz} with function \fct{PPTreeclass} in \pkg{PPtreeViz} package and Oblique Trees for Classification Data (OT)  \cite{truong2009fast} with function \fct{oblique.tree} in \pkg{oblique.tree} package. To show the performance of ODT, we also compare four axis-aligned tree methods  in Section \ref{sec:intro}, including \emph{CART} with function \fct{rpart} in \pkg{rpart} package, \emph{ERT} with function \fct{RLT} in \pkg{RLT} package, \emph{EVT} with function \fct{evtree} in \pkg{evtree} package, and \emph{CT} with function \fct{ctree} in \pkg{partykit} package.
 	For all the R functions  and  packages, their default values of tuning parameters are used. Note that because \emph{PPT} and \emph{OT} cannot do the regression, we only report the classification results. In order to improve speed, this portion of code was implemented in C++ and integrated into R using the Rcpp package. Further speedup is achieved through multicore parallelization of tree construction and byte-compilation via the R compiler package.%\cite{tomita2020sparse}.
-	% Due to the success of extreme gradient boosting (XGB) in many data science applications, we compare XGB implementation to our methods.
-%For regression, we compare ePPR with the original PPR, the support vector machine (SVM), the random forest (RF), the generalized random forest (GRF), the reinforcement learning trees (RLT) and the extreme gradient boosting (XGB). For classification, we compare ePPR with PPR, SVM, RF, GRF, RLT, XGB, the adaptive boosting (Ada) and artificial neural network (ANN). To apply PPR, GRF and ePPR to classification, as they were developed for regression, we simply treat classes $0$ and $1$ as values and apply the methods directly to predict the response,  $ \hat y $, then classify the data according to $1(\hat y>0.5)$, where $ 1(.) $ is the indicator function. Extension to multiclass classification can be easily made.
 
-%The following functions and packages in R are used for the calculation of the methods: \texttt{randomForest} \citep{breiman2001random} for RF,  \texttt{regression\_forest} and  \texttt{Classification\_forest} in package \texttt{grf} \citep{athey2019generalized} for GRF,  \texttt{RLT} \citep{zhu2015reinforcement} for ERT,  \texttt{xgboost} \citep{chen2016xgboost} for XGB , \texttt{PPF} \citep{silva2021projection} for PPforest and \texttt{ORF} \cite{menze2011oblique} for obliqueRF. For all the R functions  and  packages, their default values of tuning parameters are used. We use our own R implementation for evaluations of RotRF and  SPORF, and all parameters are set the same as ppRF. Note that because \texttt{PPF} and \texttt{ORF} cannot do the regression, we only report the classification results. In order to improve speed, this portion of code was implemented in C++ and integrated into R using the Rcpp package. Further speedup is achieved through multicore parallelization of tree construction and byte-compilation via the R compiler package\cite{tomita2020sparse}.
-%
-%For each dataset, 15 different 10-fold cross-validation tests were performed, results from which are given in Table 2. We used the same partitions which were a mix of 4-fold cross validations and predefined train/ test splits.6 1-of-K encoding was used for non-ordinal features for rotation forests (note rotation forests do not then treat them differently to ordinal variables),
 For each data set, we randomly partition it into training set and test set. The training set consists of $n=\min(\lfloor 2N/3\rfloor,2000)$ randomly selected observations, where $N$ is the number of observations in the original data sets, and the remaining observations form the test set. For regression, the relative prediction error, defined as
 $$RPE=\sum_{i\in \text{test set}}(\hat{y}_i-y_i)^2/\sum_{i\in \text{test set}}(\bar{y}_{\text{train}}-y_i)^2,$$
 where $\bar{y}_{\text{train}}$ is naive predictions based on the average of $y$ in the training sets, is used to measure the performance of a method. For classification, the misclassification rate, defined as
 $$MR=\sum_{i\in \text{test set}} 1(\hat{y}_i \neq y_i) /(N-n),$$
 is used to measure the performance. For each data set, the random partition is repeated 100 times,  and averages of the RPEs or MRs are calculated to compare different methods. The calculation results are listed in Table~\ref{Table1} and Table~\ref{Table2}. The smallest RPE or MR for each data set is highlighted in \textbf{bold} font.
-%\subsection{Regression Experiments} \label{sec:Regression}
-%Classification with Oblique Decision Random Forest
-%\subsubsection{seeds data}
-%data(seeds)
-%\subsubsection{Numerical Performance in Real Data} %\label{secReal}
-%plot1
-%\section{Simulated Data Empirical Performance}\label{secSimu}
-%CONSISTANt
-%F-RC has been known to perform much better than RF on the sparse parity problem [10].
-%\begin{table}[t!]
-%	\centering
-%	\begin{tabular}{lllp{7.4cm}}
-%		\hline
-%		Type           & Distribution & Method   & Description \\ \hline
-%		GLM            & Poisson      & ML       & Poisson regression: classical GLM,
-%		estimated by maximum likelihood (ML) \\
-%		&              & Quasi    & ``Quasi-Poisson regression'':
-%		same mean function, estimated by
-%		quasi-ML (QML) or equivalently
-%		generalized estimating equations (GEE),
-%		inference adjustment via estimated
-%		dispersion parameter \\
-%		&              & Adjusted & ``Adjusted Poisson regression'':
-%		same mean function, estimated by
-%		sandwich covariances\\
-%		& NB           & ML       & NB regression: extended GLM,
-%		estimated by ML including additional
-%		shape parameter \\ \hline
-%		Zero-augmented & Poisson      & ML       & Zero-inflated Poisson (ZIP),
-%		hurdle Poisson \\
-%%		& NB           & ML       & Zero-inflated NB (ZINB),
-%		hurdle NB \\ \hline
-%	\end{tabular}
-%	\caption{\label{tab:overview1} Overview of various count regression models. The
-%		table is usually placed at the top of the page (\texttt{[t!]}), centered
-%		(\texttt{centering}), has a caption below the table, column headers and captions
-%		are in sentence style, and if possible vertical lines should be avoided.}
-%\end{table}
-%\subsection{Classification Experiments} \label{sec:Classification}
-%Classification with Oblique Decision Random Forest
-%\subsubsection{body fat data}
-%data(seeds)
-%Classification with Oblique Decision Random Forest
-%\subsubsection{Numerical Performance in Real Data} %\label{secReal}
+
 \begin{table}[t!]
 \centering
-%\begin{center} 
+%\begin{center}
 \begin{minipage}{\textwidth}
 \setlength{\tabcolsep}{1.0mm}{
   \begin{tabular}{@{\extracolsep{\fill}}lrrccccccc@{\extracolsep{\fill}}}%{lrrrrrrrrr}% {\textwidth}{@{\extracolsep{\fill}}lrrrrrrrrr@{\extracolsep{\fill}}}%{lrrrrrrrrr{7.4cm}}%
@@ -992,15 +768,10 @@ is used to measure the performance. For each data set, the random partition is r
 %	\end{center}
 \caption{Regression: average RPE based on 100 random partitions of each data set into training and test sets}\label{Table1}%
 \end{table}
-%\subsection{Classification Experiments} \label{sec:Classification}
-%Classification with Oblique Decision Random Forest
-%\subsubsection{body fat data}
-%data(seeds)
-%Classification with Oblique Decision Random Forest
-%\subsubsection{Numerical Performance in Real Data} %\label{secReal}
+
 \begin{table}[t!]
 \centering
-%\begin{center} 
+%\begin{center}
 \begin{minipage}{\textwidth}
 \setlength{\tabcolsep}{0.05mm}{
   \begin{tabular}{@{\extracolsep{\fill}}lrrrrrrrrrrr@{\extracolsep{\fill}}}%{lrrrrrrrrr}% {\textwidth}{@{\extracolsep{\fill}}lrrrrrrrrr@{\extracolsep{\fill}}}%{lrrrrrrrrr{7.4cm}}%
@@ -1048,14 +819,7 @@ is used to measure the performance. For each data set, the random partition is r
 \caption{Classification: average MR (\%) based on 100 random partitions of each data set into training and test sets}\label{Table2}%
 \end{table}
 By comparing the prediction errors, both the RPE of regression and MR of classification, our ODT is generally smaller than other methods. ODT is quite stable and attains the smallest RPE and MR in most data sets as indicated in Table~\ref{Table1} and Table~\ref{Table2}. The competency of ODT is also verified by the fact that it has the smallest average of RPEs (or MSs) across all the data sets amongst all the methods. \textit{no. of bests} denotes the number of datasets in which a method performs best among all competitors. This suggests that ODT outperforms other methods for regression in most datasets, and PPT outperforms other methods for classification in most datasets. However, the Average RPE of PPT is lower than that of ODT because PPT performs especially bad on several datasets such as Financial indicators and Hill valley, i.e., ODT performs more consistently than PPT.
- %Specifically, we first look at the oblique tree method, for regression, only RotRF has a slightly smaller average of RPE than ppRF with Basketball dataset, other in addition, ppRF has the smallest average of RPE. For classification, the average of MR of the oblique tree methods is generally smaller than  Axis-aligned tree methods, and ODT is still the smallest at this time. Let's look at other ensemble Axis-aligned tree methods. In general, GRF, ERT and XGB are greater than RF for both RPE and MR, while at this time our ppRF is the smallest. However, in the regression dataset (Servo and Parkinsons) and the classification dataset (Financial indicators of US stocks and Human activity recognition). ppRF performs poorly as other methods, and XGB has the best performance.
 
-%By comparing the prediction errors, RPEs or MRs, of all the methods, we have the following observations. The classical methods RF and XGB have reasonably good performance on nearly all the data sets in comparison with LM and PPR. In particular, RF has been commonly recognized as the most robust and efficient learning method, especially for tabular data; our extensive calculation also supports the recognition. The recent variants of RF, such as GRF and RLT, also show their effectiveness in the prediction.
-%Although PPR has good performance on some data sets, it is unstable and has much bigger prediction errors than the other methods for most the data sets.  This could be the reason why PPR is not popularly received in practice. 
-
-%It is also noticed that RF has good performance for high dimensional data \citep{caruana2006empirical, caruana2008empirical}. To see the performance of ePPR in high dimension, we add randomly generated i.i.d. normal variables, called augmented variables, to the original data  so that all together there are $p=10000$ predictors,  and then compare all the methods. Since PPR, Ada and ANN require huge memory with big $ p $, they are not included for comparison in {Table~\ref{Table3}}. For the other methods, the overall performance across all the data sets are listed in {Table~\ref{Table3}}. We can see that ePPR still has the best performance in most of the data sets for both regression and classification. Although all methods suffer from the high dimension, ePPR is less influenced: compared to RF, ePPR has about 9\% improvement in prediction and 15\% improvement in classification in Table~\ref{Table1} and Table~\ref{Table2} respectively, while ePPR is about 12\% or 30\% respectively better than RF in {Table~\ref{Table3}}, indicating that the relative improvement increases  with the dimension of the data.  The number of data sets for which ePPR outperforms the competitors,  \textit{no. of bests}, also increases with the dimension of the data.
-
-%Based on the above discussions, we can draw the conclusion that ePPR improves the existing PPR methods dramatically and shows strong capacity in both regression and classification.
 Next, we compare the performance of ODT, ODRF and the competitors for classification and regression in three aspects, including prediction error (MR or RPR), time consumption (Time) and the number of terminal nodes (Complexity) for the tree method only. We still use the above dataset, but the other oblique tree and forest related R packages cannot be used for regression, \pkg{rotationForest} package can only be used for binary classification, and the \pkg{PPforest} package has an error and cannot be calculated for 5 binary classification datasets such as Company bankruptcy and MAGIC Gamma telescope. So Table~\ref{tab:camp} shows the average based on 23 and 18 binary classification datasets for tree and forest motheds respectively, and 26 regression datasets. To be fair, all methods are implemented with own R package. Specifically, RotT with function \fct{rotationForest} in \pkg{rotationForest} package, RotT and RotRF with function \fct{rotationForest} in \pkg{rotationForest} package, \emph{SPOT} and \emph{SPORF} with function \fct{RerF} in \pkg{rerf} package, \emph{RF} with function \fct{randomForest} in \pkg{randomForest} package, \emph{GRF} with functions \fct{regression\_forest} and  \fct{Classification\_forest} in package \pkg{grf}, \emph{XGB} with function \fct{xgboost} in \pkg{xgboost} package, \emph{ORF} with function  \fct{obliqueRF} in \pkg{obliqueRF} package and \emph{PPF} with function \fct{PPforest} in \pkg{PPforest} package. The details of these methods are shown in Section \ref{sec:intro}.
 \begin{table}[t!]
 	\centering
@@ -1103,21 +867,7 @@ As shown by Table\ref{tab:camp}, our ODT and ODRF are generally smaller than oth
 %data(breast\_cancer,package = "ODRF")
 %data(BreastCancer,package = "mlbench")
 Breast cancer is the most common cancer amongst women in the world. or 25\% of all cancer cases, and affected over 2.1 Million people in 2015 alone. It starts when cells in the breast begin to grow out of control. These cells usually form tumors that can be seen via X-ray or felt as lumps in the breast area. This data was obtained from the ODRF package by code{data(breast\_cancer,package = "ODRF")}. The predictors contain three cell nuclei, mean, se and worst, and each cell nucleus accounts for ten real-valued features of radius, texture, perimeter, area, smoothness, compactness, depression, dimple, symmetry and fractal dimension. The key challenges against it's detection is how to classify tumors into malignant (M,cancerous) or benign(B,noncancerous).
-%
-%Print the tree structure of class ODT and party, and the model estimation error of class ODRF.
-%#(mr.tree=mean(pred != test_data[, 1]))
-%#tree$projections
-%#(mr.forest = mean(pred != test_data[, 1]))
-%#t(tree$projections[,which(colSums(abs(tree$projections)<0.1)<3)])
-%#xi=which(colSums(abs(tree$projections)<0.1)<3)
-%#proj=round(tree$projections[,xi],3)
-%#colnames(proj)=paste0(paste0("x",xi),": ",colnames(proj))
-%#rownames(proj)=c("varibles",rownames(proj))
-%#write.table(t(proj), file="breast_cancer_projections.csv",sep = ",",append=TRUE,row.names = TRUE,col.names = TRUE)
-%#party.tree=as.party(tree,data = train_data)
-%#pred <- predict(tree, test_data[, -1])
-%#forest <- ODRF(diagnosis ~ ., train_data, type = "i-classification", parallel = FALSE)
-%#pred <- predict(forest, test_data[, -1])
+
 \begin{Schunk}
 \begin{Soutput}
 ============================================================= 
