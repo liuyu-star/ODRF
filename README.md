@@ -1,12 +1,46 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ODRF
+# ODRF <a href='https://dplyr.tidyverse.org'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
+
+[![Codecov test
+coverage](https://codecov.io/gh/liuyu-star/ODRF/branch/main/graph/badge.svg)](https://app.codecov.io/gh/liuyu-star/ODRF?branch=main)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/ODRF)](https://CRAN.R-project.org/package=ODRF)
+[![R-CMD-check](https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml)
+[![CircleCI build
+status](https://circleci.com/gh/liuyu-star/ODRF.svg?style=svg)](https://circleci.com/gh/liuyu-star/ODRF)
 <!-- badges: end -->
 
-The goal of ODRF is to …
+The goal of ODRF is to supplement classical CART and random forests for
+classification and regression. The use of linear combinations of
+predictors as splitting variables is one of the important extensions of
+CART and is known as Oblique Decision Trees (ODT) and ODT-based Random
+Forests (ODRF).
+
+## Overview
+
+The ODRF [R Package](https://cran.r-project.org/) consists of the S3
+method as follows:
+
+- `ODT()` classification and regression using an ODT in which each node
+  is split by a linear combination of predictors.
+- `ODRF()` classification and regression implemented by the ODRF. It’s
+  an extension of random forest and include random forest as a special
+  case.
+- `Online()` online structural training to update existing `ODT` and
+  `ODRF` by using batches of data.
+- `prune()` prune `ODT` from bottom to top with validation data based on
+  prediction error.
+- `print()`, `predict()` and `plot()` the base R functions in the base R
+  Package to class `ODT` and `ODRF`.
+
+The ODRF R package allows users to define their own functions to find
+the projections of at each node, which is essential to the performance
+of the forests. We also provide a complete comparison and analysis for
+other ODT and ODRF. You can learn more about them in `vignette("ODRF")`.
 
 ## Installation
 
@@ -18,113 +52,160 @@ You can install the development version of ODRF from
 devtools::install_github("liuyu-star/ODRF")
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-#library(ODRF)
-## basic example code
-```
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-**NOTE: This is a toy package created for expository purposes, for the
-second edition of [R Packages](https://r-pkgs.org). It is not meant to
-actually be useful. If you want a package for factor handling, please
-see [stringr](https://stringr.tidyverse.org),
-[stringi](https://stringi.gagolewski.com/),
-[rex](https://cran.r-project.org/package=rex), and
-[rematch2](https://cran.r-project.org/package=rematch2).**
-
-# regexcite
-
-<!-- badges: start -->
-<!-- badges: end -->
-
-The goal of regexcite is to make regular expressions more exciting! It
-provides convenience functions to make some common tasks with string
-manipulation and regular expressions a bit easier.
-
-## Installation
-
-You can install the development version of regexcite from
-[GitHub](https://github.com/) with:
-
-``` r
-# install.packages("devtools")
-devtools::install_github("jennybc/regexcite")
-```
-
 ## Usage
 
-A fairly common task when dealing with strings is the need to split a
-single string into many parts. This is what `base::strplit()` and
-`stringr::str_split()` do.
+We show how to use the ODRF package with examples.
+
+### Classification and regression with functions `ODT()` and `ODRF()`
+
+Classification with Oblique Decision Tree.
 
 ``` r
-(x <- "alfa,bravo,charlie,delta")
-#> [1] "alfa,bravo,charlie,delta"
-strsplit(x, split = ",")
-#> [[1]]
-#> [1] "alfa"    "bravo"   "charlie" "delta"
-stringr::str_split(x, pattern = ",")
-#> [[1]]
-#> [1] "alfa"    "bravo"   "charlie" "delta"
+library(ODRF)
+#> 载入需要的程辑包：partykit
+#> 载入需要的程辑包：grid
+#> 载入需要的程辑包：libcoin
+#> 载入需要的程辑包：mvtnorm
+data(seeds, package = "ODRF")
+set.seed(18)
+train <- sample(1:209, 120)
+train_data <- data.frame(seeds[train, ])
+test_data <- data.frame(seeds[-train, ])
+index <- seq(floor(nrow(train_data) / 2))
+
+forest <- ODRF(varieties_of_wheat ~ ., train_data,
+  type = "i-classification", parallel = FALSE
+)
+pred <- predict(forest, test_data[, -8])
+e.forest <- mean(pred != test_data[, 8])
+forest1 <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
+  type = "i-classification", parallel = FALSE
+)
+pred <- predict(forest1, test_data[, -8])
+e.forest.1 <- mean(pred != test_data[, 8])
+forest2 <- ODRF(varieties_of_wheat ~ ., train_data[-index, ],
+  type = "i-classification", parallel = FALSE
+)
+pred <- predict(forest2, test_data[, -8])
+e.forest.2 <- mean(pred != test_data[, 8])
+
+forest.online <- online(
+  forest1, train_data[-index, -8],
+  train_data[-index, 8]
+)
+pred <- predict(forest.online, test_data[, -8])
+e.forest.online <- mean(pred != test_data[, 8])
+forest.prune <- prune(forest1, train_data[-index, -8],
+  train_data[-index, 8],
+  useOOB = FALSE
+)
+pred <- predict(forest.prune, test_data[, -8])
+e.forest.prune <- mean(pred != test_data[, 8])
+print(c(
+  forest = e.forest, forest1 = e.forest.1, forest2 = e.forest.2,
+  forest.online = e.forest.online, forest.prune = e.forest.prune
+))
+#>        forest       forest1       forest2 forest.online  forest.prune 
+#>    0.03370787    0.07865169    0.08988764    0.04494382    0.06741573
 ```
 
-Notice how the return value is a **list** of length one, where the first
-element holds the character vector of parts. Often the shape of this
-output is inconvenient, i.e. we want the un-listed version.
-
-That’s exactly what `regexcite::str_split_one()` does.
+Regression with Oblique Decision Randome Forest.
 
 ``` r
-library(regexcite)
+data(body_fat, package = "ODRF")
+set.seed(9)
+train <- sample(1:252, 120)
+train_data <- data.frame(body_fat[train, ])
+test_data <- data.frame(body_fat[-train, ])
+index <- seq(floor(nrow(train_data) / 2))
 
-str_split_one(x, pattern = ",")
-#> [1] "alfa"    "bravo"   "charlie" "delta"
+tree <- ODT(Density ~ ., train_data, type = "regression")
+pred <- predict(tree, test_data[, -1])
+e.tree <- mean((pred - test_data[, 1])^2)
+tree1 <- ODT(Density ~ ., train_data[index, ], type = "regression")
+pred <- predict(tree1, test_data[, -1])
+e.tree.1 <- mean((pred - test_data[, 1])^2)
+tree2 <- ODT(Density ~ ., train_data[-index, ], type = "regression")
+pred <- predict(tree2, test_data[, -1])
+e.tree.2 <- mean((pred - test_data[, 1])^2)
+
+tree.online <- online(tree1, train_data[-index, -1], train_data[-index, 1])
+pred <- predict(tree.online, test_data[, -1])
+e.tree.online <- mean((pred - test_data[, 1])^2)
+tree.prune <- prune(tree1, train_data[-index, -1], train_data[-index, 1])
+pred <- predict(tree.prune, test_data[, -1])
+e.tree.prune <- mean((pred - test_data[, 1])^2)
+print(c(
+  tree = e.tree, tree1 = e.tree.1, tree2 = e.tree.2,
+  tree.online = e.tree.online, tree.prune = e.tree.prune
+))
+#>         tree        tree1        tree2  tree.online   tree.prune 
+#> 2.730683e-05 4.576357e-05 4.330298e-05 4.191764e-05 3.595299e-05
 ```
 
-Use `str_split_one()` when the input is known to be a single string. For
-safety, it will error if its input has length greater than one.
+As shown in the classification and regression results above, the
+training data `train_data` is divided into two batches equally, then the
+first batch is used to train `ODT` and `ODRF`, and the second batch is
+used to update the model by `online()`. The error after the model update
+is significantly smaller than that of one batch of data alone, and the
+model is also pruned by `prune()` and the same effect is achieved.
 
-`str_split_one()` is built on `stringr::str_split()`, so you can use its
-`n` argument and stringr’s general interface for describing the
-`pattern` to be matched.
+### Print the tree structure of class `ODT` and the model estimation error of class `ODRF`
 
 ``` r
-str_split_one(x, pattern = ",", n = 2)
-#> [1] "alfa"                "bravo,charlie,delta"
-
-y <- "192.168.0.1"
-str_split_one(y, pattern = stringr::fixed("."))
-#> [1] "192" "168" "0"   "1"
+data(iris, package = "datasets")
+tree <- ODT(Species ~ ., data = iris)
+#> Warning in ODT.compute(formula, Call, varName, X, y, type, NodeRotateFun, : You
+#> are creating a forest for classification
+tree
+#> ============================================================= 
+#> Oblique Classification Tree structure 
+#> =============================================================
+#> 
+#> 1) root
+#>    node2)# proj1*X < 0.25 -> (leaf1 = setosa)
+#>    node3)  proj1*X >= 0.25
+#>       node4)  proj2*X < 0.69
+#>          node6)# proj3*X < 0.67 -> (leaf2 = versicolor)
+#>          node7)  proj3*X >= 0.67
+#>             node10)# proj5*X < 0.6 -> (leaf5 = virginica)
+#>             node11)# proj5*X >= 0.6 -> (leaf6 = versicolor)
+#>       node5)  proj2*X >= 0.69
+#>          node8)# proj4*X < 0.65 -> (leaf3 = virginica)
+#>          node9)# proj4*X >= 0.65 -> (leaf4 = virginica)
+forest <- ODRF(Species ~ ., data = iris, parallel = FALSE)
+#> Warning in ODRF.compute(formula, Call, varName, X, y, type, NodeRotateFun, : You
+#> are creating a forest for classification
+forest
+#> 
+#> Call:
+#>  ODRF.formula(formula = Species ~ ., data = data, parallel = FALSE) 
+#>                Type of oblique decision random forest: classification
+#>                                       Number of trees: 100
+#>                            OOB estimate of error rate: 4.67%
+#> Confusion matrix:
+#>            setosa versicolor virginica class_error
+#> setosa         50          0         0  0.00000000
+#> versicolor      0         46         3  0.06122449
+#> virginica       0          4        47  0.07843137
 ```
+
+### Plot the tree structure of class `ODT`
+
+``` r
+plot(tree)
+```
+
+<img src="man/figures/README-plot-1.png" width="100%" />
+
+## Getting help
+
+If you encounter a clear bug, please file an issue with a minimal
+reproducible example on
+[GitHub](https://github.com/liuyu-star/ODRF/issues).
+
+------------------------------------------------------------------------
+
+Please note that this project is released with a [Contributor Code of
+Conduct](https://dplyr.tidyverse.org/CODE_OF_CONDUCT). By participating
+in this project you agree to abide by its terms.

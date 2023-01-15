@@ -55,3 +55,4 @@ paramList <- list(dimX = 8, numProj = 3, sparsity = 0.25, prob = 0.5)
 \code{\link{RotMatPPO}} \code{\link{RotMatRand}} \code{\link{RotMatRF}} \code{\link{RotMatMake}}
 }
 \keyword{internal}
+\keyword{tree}

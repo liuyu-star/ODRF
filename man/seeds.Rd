@@ -19,7 +19,7 @@ The variables listed below, from left to right, are:
 \itemize{
 \item area A
 \item perimeter P
-\item compactness C = 4*pi*A/P^2
+\item compactness C = 4\emph{pi}A/P^2
 \item length of kernel
 \item width of kernel
 \item asymmetry coefficient
@@ -54,3 +54,4 @@ M. Charytanowicz, J. Niewczas, P. Kulczycki, P.A. Kowalski, S. Lukasik, S. Zak, 
 \code{\link{body_fat}} \code{\link{breast_cancer}}
 }
 \keyword{datasets}
+\keyword{internal}

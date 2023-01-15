@@ -4,6 +4,7 @@
 #'
 #' @param object An object of class ODT, as that created by the function \code{\link{ODT}}.
 #' @param Xnew An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
+#' Note that if there are NA values in the data 'Xnew', which will be replaced with the average value.
 #' @param leafnode If or not output the leaf node sequence number that \code{Xnew} is partitioned. (default FALSE)
 #' @param ... Arguments to be passed to methods.
 #'
@@ -13,7 +14,7 @@
 #' \item leafnode: the leaf node sequence number that the new data is partitioned.
 #' }
 #'
-#' @references Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.
+#' @references Zhan, H., Liu, Y., & Xia, Y. (2022). Consistency of The Oblique Decision Tree and Its Random Forest. arXiv preprint arXiv:2211.12653.
 #'
 #' @seealso \code{\link{ODT}} \code{\link{predict.ODRF}}
 #'
@@ -43,6 +44,7 @@
 #' mean((pred - test_data[, 1])^2)
 #'
 #' @importFrom stats aggregate as.formula na.action predict quantile runif
+#' @keywords tree predict
 #' @rdname predict.ODT
 #' @aliases predict.ODT
 #' @method predict ODT
@@ -59,15 +61,21 @@ predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
   # address na values.
 
   ppTree <- object
-  if (any(is.na(Xnew))) {
-    Xnew <- ppTree$data$na.action(data.frame(Xnew))
-    warning("NA values exist in data matrix")
+
+  Xna <- is.na(Xnew)
+  if (any(Xna)) {
+    # Xnew <- ppTree$data$na.action(data.frame(Xnew))
+    xj <- which(colSums(Xna) > 0)
+    warning("There are NA values in columns ", paste(xj, collapse = ", "), " of the data 'Xnew', which will be replaced with the average value.")
+    for (j in xj) {
+      Xnew[Xna[, j], j] <- mean(Xnew[, j], na.rm = TRUE)
+    }
   }
   Xnew <- as.matrix(Xnew)
 
-  if (!is.null(ppTree$data$subset)) {
-    Xnew <- Xnew[ppTree$data$subset, ]
-  }
+  # if (!is.null(ppTree$data$subset)) {
+  #  Xnew <- Xnew[ppTree$data$subset, ]
+  # }
   # weights0=c(ppTree$data$weights,ppTree$paramList$weights)
   # if(!is.null(ppTree$data$weights))
   #  Xnew <- Xnew * matrix(weights,length(y),ncol(Xnew))
@@ -130,13 +138,13 @@ predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
     )
 
     if (leafnode) {
-      pred <- pred$node
+      pred <- as.integer(pred$node)
     } else {
       pred <- pred$prediction
     }
   }
 
-  if (ppTree$type == "regression") {
+  if ((ppTree$type == "regression") && (!leafnode)) {
     pred <- as.numeric(pred)
   }
 

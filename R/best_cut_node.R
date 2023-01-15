@@ -1,4 +1,4 @@
-#' find best split variable and node.
+#' find best split variable and node
 #'
 #' A function to select the splitting variables and nodes using one of three criteria.
 #'
@@ -29,13 +29,16 @@
 #' @export
 best.cut.node <- function(X, y, type = "i-classification", weights = 1, MinLeaf = ifelse(type == "regression", 5, 1),
                           numLabels = ifelse(type == "regression", 0, length(unique(y)))) {
+  if (any(is.na(X))) {
+    stop("data 'X' has Missing value, NA or NaN")
+  }
+
   X <- as.matrix(X)
   if (type != "regression") {
     y <- as.integer(as.factor(y))
   } else {
     y <- c(y)
   }
-
 
   .Call("_ODRF_best_cut_node", PACKAGE = "ODRF", strsplit(type, split = "")[[1]][1], X, y, weights, MinLeaf, numLabels)
 }

@@ -9,7 +9,8 @@
 \arguments{
 \item{object}{An object of class ODT, as that created by the function \code{\link{ODT}}.}
 
-\item{Xnew}{An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.}
+\item{Xnew}{An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
+Note that if there are NA values in the data 'Xnew', which will be replaced with the average value.}
 
 \item{leafnode}{If or not output the leaf node sequence number that \code{Xnew} is partitioned. (default FALSE)}
 
@@ -52,8 +53,10 @@ mean((pred - test_data[, 1])^2)
 
 }
 \references{
-Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.
+Zhan, H., Liu, Y., & Xia, Y. (2022). Consistency of The Oblique Decision Tree and Its Random Forest. arXiv preprint arXiv:2211.12653.
 }
 \seealso{
 \code{\link{ODT}} \code{\link{predict.ODRF}}
 }
+\keyword{predict}
+\keyword{tree}

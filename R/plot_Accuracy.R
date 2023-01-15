@@ -1,8 +1,8 @@
-#' plot method for \code{ODRF_accuracy} objects
+#' plot method for \code{Accuracy} objects
 #'
 #' Draw the error graph of class \code{ODRF} at different tree sizes.
 #'
-#' @param x Object of class \code{\link{ODRF_accuracy}}.
+#' @param x Object of class \code{\link{Accuracy}}.
 #' @param lty A vector of line types, see \code{\link{par}}.
 #' @param digits Integer indicating the number of decimal places (round) or significant digits (signif) to be used.
 #' @param main main title of the plot.
@@ -10,9 +10,9 @@
 #'
 #' @return OOB error and test error, misclassification rate (MR) for classification or mean square error (MSE) for regression.
 #'
-#' @keywords forest
+#' @keywords plot forest
 #'
-#' @seealso \code{\link{ODRF}} \code{\link{ODRF_accuracy}}
+#' @seealso \code{\link{ODRF}} \code{\link{Accuracy}}
 #'
 #' @examples
 #' data(breast_cancer)
@@ -22,14 +22,14 @@
 #' test_data <- data.frame(breast_cancer[-train, -1])
 #'
 #' forest <- ODRF(diagnosis ~ ., train_data, type = "i-classification", parallel = FALSE)
-#' (error <- ODRF_accuracy(forest, train_data, test_data))
+#' (error <- Accuracy(forest, train_data, test_data))
 #' plot(error)
 #'
-#' @rdname plot.ODRF_accuracy
-#' @aliases plot.ODRF_accuracy
-#' @method plot ODRF_accuracy
+#' @rdname plot.Accuracy
+#' @aliases plot.Accuracy
+#' @method plot Accuracy
 #' @export
-plot.ODRF_accuracy <- function(x, lty = 1, digits = NULL, main = NULL, ...) {
+plot.Accuracy <- function(x, lty = 1, digits = NULL, main = NULL, ...) {
   if (is.null(main)) {
     main <- paste0("Oblique ", ifelse(x$type == "regression", "Regression", "Classification"), " Forest")
   }

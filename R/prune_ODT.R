@@ -8,9 +8,12 @@
 #' @param MaxDepth The maximum depth of the tree after pruning. (Default 1)
 #' @param ... Optional parameters to be passed to the low level function.
 #'
+#' @details The leftmost value of the horizontal axis indicates the tree without pruning, while the rightmost value indicates the data without splitting and using the average value as the predicted value.
+#'
 #' @return \itemize{An object of class \code{ODT} and \code{prune.ODT}.
 #' \item{\code{ppTree} The same result as \code{ODT}.}
-#' \item{\code{pruneError} Error of validation data after each pruning, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
+#' \item{\code{pruneError} Error of validation data after each pruning, misclassification rate (MR) for classification or mean square error (MSE) for regression.
+#' The maximum value indicates the tree without pruning, and the minimum value (0) indicates indicates the data without splitting and using the average value as the predicted value.}
 #' }
 #' @seealso \code{\link{ODT}} \code{\link{plot.prune.ODT}} \code{\link{prune.ODRF}} \code{\link{online.ODT}}
 #'
@@ -41,6 +44,7 @@
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
 #'
+#' @keywords tree prune
 #' @rdname prune.ODT
 #' @aliases prune.ODT
 #' @method prune ODT
@@ -63,18 +67,21 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
     stop("'Xcat!=0' however 'catLabel' does not exist!")
   }
   # address na values.
-  data <- data.frame(y, X)
-  if (any(is.na(data))) {
-    data <- ppTree$data$na.action(data.frame(data))
-    warning("NA values exist in data matrix")
+  Xna <- is.na(X)
+  if (any(Xna)) {
+    xj <- which(colSums(Xna) > 0)
+    warning("There are NA values in columns ", paste(xj, collapse = ", "), " of the data 'X', which will be replaced with the average value.")
+    for (j in xj) {
+      X[Xna[, j], j] <- mean(X[, j], na.rm = TRUE)
+    }
   }
-
+  Xnew <- as.matrix(X)
+  ynew <- y
   # ynew= data[,setdiff(colnames(data),vars[-1])]
   # Xnew= data[,vars[-1]]
-  ynew <- data[, 1]
-  Xnew <- data[, -1]
-  Xnew <- as.matrix(Xnew)
-  rm(data)
+  # ynew <- data[, 1]
+  # Xnew <- data[, -1]
+  # rm(data)
   rm(X)
   rm(y)
 
@@ -113,9 +120,9 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
   Xnew <- as.matrix(Xnew)
   colnames(Xnew) <- ppTree$data$varName
 
-  if (!is.null(ppTree$data$subset)) {
-    Xnew <- Xnew[ppTree$data$subset, ]
-  }
+  # if (!is.null(ppTree$data$subset)) {
+  #  Xnew <- Xnew[ppTree$data$subset, ]
+  # }
 
   # Variable scaling.
   if (ppTree$data$Xscale != "No") {

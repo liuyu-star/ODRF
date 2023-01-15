@@ -2,13 +2,13 @@
 #'
 #' Prediction accuracy of ODRF at different tree sizes.
 #'
-#' @param ppForest an object of class \code{ODRF}, as that created by the function \code{\link{ODRF}}.
+#' @param forest an object of class \code{ODRF}, as that created by the function \code{\link{ODRF}}.
 #' @param data Training data of class \code{data.frame} in \code{\link{ODRF}} is used to calculate the OOB error.
 #' @param newdata A data frame or matrix containing new data is used to calculate the test error. If it is missing, let it be \code{data}.
 #'
 #' @return OOB error and test error, misclassification rate (MR) for classification or mean square error (MSE) for regression.
 #'
-#' @seealso \code{\link{ODRF}} \code{\link{plot.ODRF_accuracy}}
+#' @seealso \code{\link{ODRF}} \code{\link{VarImp}} \code{\link{plot.Accuracy}}
 #'
 #' @examples
 #' data(breast_cancer)
@@ -18,11 +18,12 @@
 #' test_data <- data.frame(breast_cancer[-train, -1])
 #'
 #' forest <- ODRF(diagnosis ~ ., train_data, type = "i-classification", parallel = FALSE)
-#' (error <- ODRF_accuracy(forest, train_data, test_data))
+#' (error <- Accuracy(forest, train_data, test_data))
 #'
+#' @keywords forest
 #' @export
-ODRF_accuracy <- function(ppForest, data, newdata = NULL) {
-  vars <- all.vars(ppForest$terms)
+Accuracy <- function(forest, data, newdata = NULL) {
+  vars <- all.vars(forest$terms)
   if (!all(vars[-1] %in% colnames(data))) {
     stop("The column name of 'data' does not match the training data.")
   }
@@ -32,18 +33,18 @@ ODRF_accuracy <- function(ppForest, data, newdata = NULL) {
   ynew <- newdata[, setdiff(colnames(newdata), vars[-1])]
   Xnew <- newdata[, vars[-1]]
   Xnew <- as.matrix(Xnew)
-  if (ppForest$type != "regression") {
-    y <- factor(y, levels = ppForest$Levels)
+  if (forest$type != "regression") {
+    y <- factor(y, levels = forest$Levels)
   }
 
   n <- length(y)
-  nt <- ntrees <- ppForest$forest$ntrees
-  nC <- length(ppForest$Levels)
+  nt <- ntrees <- forest$forest$ntrees
+  nC <- length(forest$Levels)
   ny <- length(ynew)
 
-  treeVotes <- predict(ppForest, Xnew, type = "tree")
+  treeVotes <- predict(forest, Xnew, type = "tree")
   err.test <- rep(0, ntrees)
-  if (ppForest$type == "regression") {
+  if (forest$type == "regression") {
     # e.0=mean((ynew-mean(y))^2)
     pred <- rowSums(treeVotes)
     err.test[nt] <- mean((ynew - pred / nt)^2) # /e.0;
@@ -53,7 +54,7 @@ ODRF_accuracy <- function(ppForest, data, newdata = NULL) {
     }
   } else {
     weights <- rep(1, ny * nt)
-    Votes <- factor(c(t(treeVotes)), levels = ppForest$Levels)
+    Votes <- factor(c(t(treeVotes)), levels = forest$Levels)
     treeVotes <- matrix(as.integer(Votes), nt, ny)
 
     Votes <- c(treeVotes) + nC * rep(0:(ny - 1), rep(nt, ny))
@@ -62,13 +63,13 @@ ODRF_accuracy <- function(ppForest, data, newdata = NULL) {
 
     # prob=matrix(Votes,ny,nC,byrow = TRUE);
     Votes <- matrix(Votes, ny, nC, byrow = TRUE)
-    pred <- ppForest$Levels[max.col(Votes)] ## "random"
+    pred <- forest$Levels[max.col(Votes)] ## "random"
     err.test[nt] <- mean(ynew != pred)
     treeC <- matrix(seq(nC), ny, nC, byrow = TRUE)
     for (t in seq(nt - 1, 1)) {
       Votes <- Votes - (treeC == treeVotes[t + 1, ]) * 1
       # pred=apply(prob,1,which.max);
-      pred <- ppForest$Levels[max.col(Votes)] ## "random"
+      pred <- forest$Levels[max.col(Votes)] ## "random"
       err.test[t] <- mean(ynew != pred)
     }
   }
@@ -78,33 +79,33 @@ ODRF_accuracy <- function(ppForest, data, newdata = NULL) {
   for (tt in 1:ntrees) {
     oobVotes <- matrix(NA, n, tt)
     for (t in 1:tt) {
-      oobVotes[ppForest$ppTrees[[t]]$oobIndex, t] <- ppForest$ppTrees[[t]]$oobPred
+      oobVotes[forest$ppTrees[[t]]$oobIndex, t] <- forest$ppTrees[[t]]$oobPred
     }
     idx <- which(rowSums(is.na(oobVotes)) < tt)
     oobVotes <- oobVotes[idx, , drop = FALSE]
 
-    if (ppForest$type == "regression") {
+    if (forest$type == "regression") {
       pred <- rowMeans(oobVotes, na.rm = TRUE)
-      err <- mean((y[idx] - pred)^2) / mean((y[idx] - mean(y))^2)
+      err <- mean((y[idx] - pred)^2) # / mean((y[idx] - mean(y))^2)
     } else {
       ny <- length(y[idx])
       nt <- ncol(oobVotes)
       weights <- rep(1, ny * nt)
-      Votes <- factor(c(t(oobVotes)), levels = ppForest$Levels)
+      Votes <- factor(c(t(oobVotes)), levels = forest$Levels)
       Votes <- as.integer(Votes) + nC * rep(0:(ny - 1), rep(nt, ny))
       Votes <- aggregate(c(rep(0, ny * nC), weights), by = list(c(1:(ny * nC), Votes)), sum)[, 2]
 
       prob <- matrix(Votes, ny, nC, byrow = TRUE)
       # pred=apply(prob,1,which.max);
       pred <- max.col(prob) ## "random"
-      pred <- ppForest$Levels[pred]
+      pred <- forest$Levels[pred]
       err <- mean(y[idx] != pred)
     }
     err.oob[tt] <- err
   }
 
-  error <- list(err.oob = err.oob, err.test = err.test, type = ppForest$type)
+  error <- list(err.oob = err.oob, err.test = err.test, type = forest$type)
 
-  class(error) <- "ODRF_accuracy"
+  class(error) <- "Accuracy"
   return(error)
 }

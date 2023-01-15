@@ -59,10 +59,9 @@ paramList <- list(dimX = 8, randDist = "Norm", dimProj = 5)
 
 }
 \references{
-Tomita T M, Browne J, Shen C, et al. Sparse projection oblique randomer forests[J]. Journal of machine learning research, 2020, 21(104).
+Tomita, T. M., Browne, J., Shen, C., Chung, J., Patsolic, J. L., Falk, B., ... & Vogelstein, J. T. (2020). Sparse projection oblique randomer forests. Journal of machine learning research, 21(104).
 }
 \seealso{
 \code{\link{RotMatPPO}} \code{\link{RotMatRF}} \code{\link{RotMatMake}}
 }
-\keyword{Random}
-\keyword{Rotation}
+\keyword{rotation}

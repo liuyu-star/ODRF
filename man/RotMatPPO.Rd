@@ -73,5 +73,4 @@ data(body_fat)
 \seealso{
 \code{\link{RotMatMake}} \code{\link{RotMatRand}} \code{\link{RotMatRF}} \code{\link{PPO}}
 }
-\keyword{projection}
-\keyword{pursuit}
+\keyword{rotation}

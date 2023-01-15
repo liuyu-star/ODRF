@@ -15,7 +15,7 @@
 
 \item{weights}{Vector of non-negative observational weights; fractional weights are allowed (default NULL).}
 
-\item{...}{optional parameters to be passed to the low level function.}
+\item{...}{Optional parameters to be passed to the low level function.}
 }
 \value{
 The same result as \code{ODRF}.
@@ -40,7 +40,7 @@ pred <- predict(online_forest, test_data[, -8])
 (mean(pred != test_data[, 8]))
 
 # Regression with Oblique Decision Random Forest
-\dontest{
+\donttest{
 data(body_fat)
 set.seed(221212)
 train <- sample(1:252, 80)
@@ -56,9 +56,12 @@ online_forest <- online(
 )
 pred <- predict(online_forest, test_data[, -1])
 # estimation error
-mean((pred - test_data[, 1])^2)}
+mean((pred - test_data[, 1])^2)
+}
 
 }
 \seealso{
 \code{\link{ODRF}} \code{\link{prune.ODRF}} \code{\link{online.ODT}}
 }
+\keyword{forest}
+\keyword{online}

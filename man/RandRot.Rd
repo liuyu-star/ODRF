@@ -13,7 +13,7 @@ RandRot(p)
 A p x p uniformly random rotation matrix.
 }
 \description{
-Samples a p x p uniformly random rotation matrix via QR decomposition 
+Samples a p x p uniformly random rotation matrix via QR decomposition
 of a matrix with elements sampled iid from a standard normal distribution.
 }
 \examples{
@@ -25,3 +25,4 @@ set.seed(220828)
 \code{\link{RotMatPPO}} \code{\link{RotMatRand}} \code{\link{RotMatRF}} \code{\link{RotMatMake}}
 }
 \keyword{internal}
+\keyword{tree}

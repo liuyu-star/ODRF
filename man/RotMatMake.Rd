@@ -101,3 +101,4 @@ tree <- ODT(X, y,
 \seealso{
 \code{\link{RotMatPPO}} \code{\link{RotMatRand}} \code{\link{RotMatRF}}
 }
+\keyword{rotation}

@@ -6,7 +6,7 @@
 #' @param X An n by d numeric matrix (preferable) or data frame is used to update the object of class \code{ODRF}.
 #' @param y A response vector of length n is used to update the object of class \code{ODRF}.
 #' @param weights Vector of non-negative observational weights; fractional weights are allowed (default NULL).
-#' @param ... optional parameters to be passed to the low level function.
+#' @param ... Optional parameters to be passed to the low level function.
 #'
 #' @return The same result as \code{ODRF}.
 #'
@@ -29,7 +29,7 @@
 #' (mean(pred != test_data[, 8]))
 #'
 #' # Regression with Oblique Decision Random Forest
-#' \dontest{
+#' \donttest{
 #' data(body_fat)
 #' set.seed(221212)
 #' train <- sample(1:252, 80)
@@ -45,8 +45,10 @@
 #' )
 #' pred <- predict(online_forest, test_data[, -1])
 #' # estimation error
-#' mean((pred - test_data[, 1])^2)}
+#' mean((pred - test_data[, 1])^2)
+#' }
 #'
+#' @keywords forest online
 #' @rdname online.ODRF
 #' @aliases online.ODRF
 #' @method online ODRF
@@ -92,7 +94,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
   # address na values.
   if (any(is.na(data))) {
     data <- na.action(data.frame(data))
-    warning("NA values exist in data matrix")
+    warning("NA values exist in data matrix 'X'")
   }
   # y= data[,setdiff(colnames(data),vars[-1])]
   # X= data[,vars[-1]]
@@ -170,9 +172,9 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
   X <- as.matrix(X)
   colnames(X) <- varName
 
-  if (!is.null(subset)) {
-    X <- X[subset, ]
-  }
+  # if (!is.null(subset)) {
+  #  X <- X[subset, ,drop = FALSE]
+  # }
 
   # Variable scaling.
   if (Xscale != "No") {
@@ -265,7 +267,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
     # set.seed(seed)
     icore <- NULL
     ppForestT <- foreach::foreach(
-      icore = seq_along(chunks), .combine = list, .multicombine = TRUE,
+      icore = seq_along(chunks), .combine = list, .multicombine = TRUE, .export = c("ODT.compute"),
       .packages = "ODRF", .noexport = "ppForest"
     ) %dopar% {
       lapply(chunks[[icore]], PPtree)

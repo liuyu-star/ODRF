@@ -21,7 +21,7 @@
 #'
 #' @return OOB error and test error of \code{newdata}, misclassification rate (MR) for classification or mean square error (MSE) for regression.
 #'
-#' @keywords tree
+#' @keywords tree plot
 #'
 #' @seealso \code{\link{ODT}} \code{\link{plot.ODT}}
 #'
@@ -52,7 +52,7 @@ plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, type = "i-class
   paramList$type <- type
   paramList$NodeRotateFun <- NodeRotateFun
   tree <- do.call(ODT.formula, paramList)
-  Depth <- max(tree$structure$nodeDepth)
+  Depth <- max(tree$structure$nodeDepth) + 2
   # Depth=Depth+ceiling(Depth/2)
 
   vars <- all.vars(tree$terms)

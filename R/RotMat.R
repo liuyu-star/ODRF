@@ -21,8 +21,8 @@
 #' \item{Coefficient: Coefficients of the projection matrix.}
 #' }
 #'
-#' @references Tomita T M, Browne J, Shen C, et al. Sparse projection oblique randomer forests[J]. Journal of machine learning research, 2020, 21(104).
-#' @keywords Random Rotation
+#' @references Tomita, T. M., Browne, J., Shen, C., Chung, J., Patsolic, J. L., Falk, B., ... & Vogelstein, J. T. (2020). Sparse projection oblique randomer forests. Journal of machine learning research, 21(104).
+#' @keywords rotation
 #'
 #' @seealso \code{\link{RotMatPPO}} \code{\link{RotMatRF}} \code{\link{RotMatMake}}
 #'
@@ -82,7 +82,9 @@ RotMatRand <- function(dimX, randDist = "Binary", numProj = ceiling(sqrt(dimX)),
 
 
   if (randDist == "Binary") {
-    proj <- sample(c(-1L, 1L), length(nz.rows), replace = TRUE)
+    proj <- sample(c(-1L, 1L), length(nz.rows), replace = TRUE, prob = c(
+      prob, 1 - prob
+    ))
   }
   if (randDist == "Norm") {
     proj <- rnorm(length(nz.rows))
@@ -130,7 +132,7 @@ RotMatRand <- function(dimX, randDist = "Binary", numProj = ceiling(sqrt(dimX)),
 #' \item{Coefficient: Coefficients of the projection matrix.}
 #' }
 #'
-#' @keywords Random Forest
+#' @keywords rotation
 #'
 #' @seealso \code{\link{RotMatPPO}} \code{\link{RotMatRand}} \code{\link{RotMatMake}}
 #'
@@ -189,7 +191,7 @@ RotMatRF <- function(dimX, numProj, catLabel = NULL, ...) {
 #' \item{Coefficient: Coefficients of the projection matrix.}
 #' }
 #'
-#' @keywords projection pursuit
+#' @keywords rotation
 #'
 #' @seealso \code{\link{RotMatMake}} \code{\link{RotMatRand}} \code{\link{RotMatRF}} \code{\link{PPO}}
 #'
@@ -360,6 +362,7 @@ RotMatPPO <- function(X, y, model = "PPR", type = "i-classification", weights = 
     # sparseM[d2+(1:p0),]=sparseM1
     sparseM <- rbind(sparseM, sparseM1)
   }
+  sparseM[is.na(sparseM[, 3]), 3] <- 1
 
   colnames(sparseM) <- c("Variable", "Number", "Coefficient")
   return(sparseM)
@@ -443,6 +446,7 @@ RotMatPPO <- function(X, y, model = "PPR", type = "i-classification", weights = 
 #'     )
 #' )
 #'
+#' @keywords rotation
 #' @export
 RotMatMake <- function(X = NULL, y = NULL, RotMatFun = "RotMatPPO", PPFun = "PPO", FunDir = getwd(), paramList = NULL, ...) {
   p <- 1
@@ -490,7 +494,7 @@ RotMatMake <- function(X = NULL, y = NULL, RotMatFun = "RotMatPPO", PPFun = "PPO
 
 #' Samples a p x p uniformly random rotation matrix
 #'
-#' Samples a p x p uniformly random rotation matrix via QR decomposition 
+#' Samples a p x p uniformly random rotation matrix via QR decomposition
 #' of a matrix with elements sampled iid from a standard normal distribution.
 #'
 #' @param p The columns of an n by p numeric matrix or data frame.
@@ -502,8 +506,8 @@ RotMatMake <- function(X = NULL, y = NULL, RotMatFun = "RotMatPPO", PPFun = "PPO
 #' @examples
 #' set.seed(220828)
 #' (ODRF:::RandRot(100))
-#' 
-#' @keywords internal
+#'
+#' @keywords internal tree
 #' @importFrom stats rnorm
 RandRot <- function(p) {
   RotMat <- qr.Q(qr(matrix(stats::rnorm(p^2), p, p)))

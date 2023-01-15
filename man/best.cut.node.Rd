@@ -2,7 +2,7 @@
 % Please edit documentation in R/best_cut_node.R
 \name{best.cut.node}
 \alias{best.cut.node}
-\title{find best split variable and node.}
+\title{find best split variable and node}
 \usage{
 best.cut.node(
   X,

@@ -11,3 +11,7 @@
 ^README\.Rmd$
 ^revdep$
 ^ODRF\.Rproj$
+^\.circleci$
+^\.circleci/config\.yml$
+^appveyor\.yml$
+^\.travis\.yml$

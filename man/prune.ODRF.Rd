@@ -35,11 +35,10 @@ set.seed(221212)
 train <- sample(1:209, 100)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
-index <- seq(floor(nrow(train_data) / 2))
-forest <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
+forest <- ODRF(varieties_of_wheat ~ ., train_data,
   type = "i-classification", parallel = FALSE
 )
-prune_forest <- prune(forest, train_data[-index, -8], train_data[-index, 8])
+prune_forest <- prune(forest, train_data[, -8], train_data[, 8])
 pred <- predict(prune_forest, test_data[, -8])
 # classification error
 (mean(pred != test_data[, 8]))
@@ -52,7 +51,7 @@ train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 forest <- ODRF(Density ~ ., train_data[index, ], type = "regression", parallel = FALSE)
-prune_forest <- prune(forest, train_data[-index, -1], train_data[-index, 1])
+prune_forest <- prune(forest, train_data[-index, -1], train_data[-index, 1], useOOB = FALSE)
 pred <- predict(prune_forest, test_data[, -1])
 # estimation error
 mean((pred - test_data[, 1])^2)
@@ -61,3 +60,5 @@ mean((pred - test_data[, 1])^2)
 \seealso{
 \code{\link{ODRF}} \code{\link{online.ODRF}} \code{\link{prune.ODT}}
 }
+\keyword{forest}
+\keyword{prune}

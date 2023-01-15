@@ -22,11 +22,10 @@
 #' train <- sample(1:209, 100)
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
-#' index <- seq(floor(nrow(train_data) / 2))
-#' forest <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
+#' forest <- ODRF(varieties_of_wheat ~ ., train_data,
 #'   type = "i-classification", parallel = FALSE
 #' )
-#' prune_forest <- prune(forest, train_data[-index, -8], train_data[-index, 8])
+#' prune_forest <- prune(forest, train_data[, -8], train_data[, 8])
 #' pred <- predict(prune_forest, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
@@ -39,11 +38,12 @@
 #' test_data <- data.frame(body_fat[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
 #' forest <- ODRF(Density ~ ., train_data[index, ], type = "regression", parallel = FALSE)
-#' prune_forest <- prune(forest, train_data[-index, -1], train_data[-index, 1])
+#' prune_forest <- prune(forest, train_data[-index, -1], train_data[-index, 1], useOOB = FALSE)
 #' pred <- predict(prune_forest, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
 #'
+#' @keywords forest prune
 #' @rdname prune.ODRF
 #' @aliases prune.ODRF
 #' @method prune ODRF
@@ -74,21 +74,24 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
     stop("'Xcat!=0' however 'catLabel' does not exist!")
   }
   # vars=all.vars(ppForest$terms)
-  # address na values.
-  data <- data.frame(y, X)
-  if (any(is.na(data))) {
-    data <- ppForest$data$na.action(data.frame(data))
-    warning("NA values exist in data frame")
+  Xna <- is.na(X)
+  if (any(Xna)) {
+    xj <- which(colSums(Xna) > 0)
+    warning("There are NA values in columns ", paste(xj, collapse = ", "), " of the data 'X', which will be replaced with the average value.")
+    for (j in xj) {
+      X[Xna[, j], j] <- mean(X[, j], na.rm = TRUE)
+    }
   }
-
+  Xnew <- as.matrix(X)
+  ynew <- y
   # ynew= data[,setdiff(colnames(data),vars[-1])]
   # Xnew= data[,vars[-1]]
-  ynew <- data[, 1]
-  Xnew <- data[, -1]
-  Xnew <- as.matrix(Xnew)
-  rm(data)
+  # ynew <- data[, 1]
+  # Xnew <- data[, -1]
+  # rm(data)
   rm(X)
   rm(y)
+
 
   p <- ncol(Xnew)
   n <- nrow(Xnew)
@@ -140,9 +143,9 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
     }
   }
 
-  if (!is.null(ppForest$data$subset)) {
-    Xnew <- Xnew[ppForest$data$subset, ]
-  }
+  # if (!is.null(ppForest$data$subset)) {
+  #  Xnew <- Xnew[ppForest$data$subset, ]
+  # }
 
   # Variable scaling.
   if (ppForest$data$Xscale != "No") {
@@ -243,7 +246,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
     # set.seed(seed)
     icore <- NULL
     ppForestT <- foreach::foreach(
-      icore = seq_along(chunks), .combine = list, .multicombine = TRUE,
+      icore = seq_along(chunks), .combine = list, .multicombine = TRUE, .export = c("ODT.compute"),
       .packages = "ODRF", .noexport = "ppForest"
     ) %dopar% {
       lapply(chunks[[icore]], PPtree)
@@ -271,9 +274,9 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
     }
     idx <- which(rowSums(is.na(oobVotes)) < ntrees)
     oobVotes <- oobVotes[idx, , drop = FALSE]
+    yy <- ynew[idx]
 
     if (type != "regression") {
-      yy <- ynew[idx]
       ny <- length(yy)
       nC <- numClass
       weights <- rep(1, ny * ntrees)
@@ -299,7 +302,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
       ppForest$oobConfusionMat <- XConfusionMat
     } else {
       oobPred <- rowMeans(oobVotes, na.rm = TRUE)
-      ppForest$oobErr <- mean((oobPred - yy)^2) / mean((yy - mean(y))^2)
+      ppForest$oobErr <- mean((oobPred - yy)^2) # / mean((yy - mean(yy))^2)
     }
   }
 

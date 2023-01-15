@@ -59,3 +59,4 @@ Wolberg WH, Street WN, Mangasarian OL. Machine learning techniques to diagnose b
 \code{\link{body_fat}} \code{\link{seeds}}
 }
 \keyword{datasets}
+\keyword{internal}

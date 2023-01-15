@@ -41,6 +41,7 @@
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
 #'
+#' @keywords tree online
 #' @rdname online.ODT
 #' @aliases online.ODT
 #' @method online ODT
@@ -91,7 +92,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
   # address na values.
   if (any(is.na(data))) {
     data <- na.action(data.frame(data))
-    warning("NA values exist in data matrix")
+    warning("NA values exist in data matrix 'X'")
   }
   # y= data[,setdiff(colnames(data),vars[-1])]
   # X= data[,vars[-1]]

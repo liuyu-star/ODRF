@@ -33,9 +33,10 @@ print(tree, projection = TRUE, cutvalue = TRUE)
 \references{
 Lee, EK(2017)
 PPtreeViz: An R Package for Visualizing Projection Pursuit Classification
-Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
+Trees, Journal of Statistical Software \url{doi:10.18637/jss.v083.i08}
 }
 \seealso{
 \code{\link{ODT}}
 }
+\keyword{print}
 \keyword{tree}

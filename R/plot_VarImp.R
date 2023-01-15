@@ -8,8 +8,7 @@
 #' @param main plot title.
 #' @param ... Arguments to be passed to methods.
 #'
-#' @return A matrix of importance measure, first column for each predictor variable and second column is Increased error.
-#' Error is misclassification rate (MR) for classification or mean square error (MSE) for regression.
+#' @return The horizontal axis is the increased error of ODRF after replacing the variable, the larger the increased error the more important the variable is.
 #'
 #' @seealso \code{\link{ODRF}} \code{\link{VarImp}}
 #'
@@ -26,6 +25,7 @@
 #' (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
 #' plot(varimp, digits = 0)
 #'
+#' @keywords forest plot
 #' @rdname plot.VarImp
 #' @aliases plot.VarImp
 #' @method plot VarImp
@@ -55,7 +55,7 @@ plot.VarImp <- function(x, nvar = 30, digits = NULL, main = NULL, ...) {
 
   ## If there are more than two columns, just use the last two columns.
   op <- par(xaxs = "i") #* 10^digits
-  dotchart(imp[, 2],
+  dotchart(sort(imp[, 2]),
     xlab = paste0("Increased error (*", 10^-digits, ")"), ylab = "", main = main, xaxt = "n",
     cex.lab = 1.5, cex.axis = 1.25, bg = "skyblue"
   )

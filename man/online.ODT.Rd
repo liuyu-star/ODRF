@@ -56,3 +56,5 @@ mean((pred - test_data[, 1])^2)
 \seealso{
 \code{\link{ODT}} \code{\link{prune.ODT}} \code{\link{online.ODRF}}
 }
+\keyword{online}
+\keyword{tree}

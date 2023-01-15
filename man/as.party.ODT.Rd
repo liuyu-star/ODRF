@@ -9,8 +9,8 @@
 \arguments{
 \item{obj}{An object of class \code{\link{ODT}}.}
 
-\item{data}{Training data of class \code{data.frame} is used to convert the object of class \code{ODRF}.
-and \code{data} must be the training data \code{data} in \code{\link{ODT}}.}
+\item{data}{Training data of class \code{data.frame} is used to convert the object of class \code{ODT},
+and it must be the training data \code{data} in \code{\link{ODT}}.}
 
 \item{...}{Arguments to be passed to methods}
 }
@@ -31,7 +31,7 @@ plot(party.tree)
 
 }
 \references{
-Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
+Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software \url{doi:10.18637/jss.v083.i08}
 }
 \seealso{
 \code{\link{ODT}} \code{\link{party}}

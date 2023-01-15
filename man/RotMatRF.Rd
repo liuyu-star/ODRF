@@ -35,5 +35,4 @@ set.seed(2)
 \seealso{
 \code{\link{RotMatPPO}} \code{\link{RotMatRand}} \code{\link{RotMatMake}}
 }
-\keyword{Forest}
-\keyword{Random}
+\keyword{rotation}

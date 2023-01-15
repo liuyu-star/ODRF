@@ -20,3 +20,4 @@ Prune \code{ODT} or \code{ODRF} from bottom to top with validation data based on
 \seealso{
 \code{\link{ODT}} \code{\link{ODRF}} \code{\link{prune.ODT}} \code{\link{prune.ODRF}}
 }
+\keyword{internal}

@@ -36,7 +36,7 @@
 #'
 #' @return Optimal projection direction.
 #'
-#' @keywords projection pursuit
+#' @keywords rotation
 #'
 #' @references Friedman, J. H., & Stuetzle, W. (1981). Projection pursuit regression. Journal of the American statistical Association, 76(376), 817-823.
 #' @references Ripley, B. D. (1996) Pattern Recognition and Neural Networks. Cambridge.
@@ -83,6 +83,10 @@ PPO <- function(X, y, model = "PPR", type = "i-classification", weights = NULL, 
       }
     }
 
+    if ((type == "regression") && (!model %in% c("PPR", "Rand", "Log"))) {
+      stop(paste0("'model = ", model, "' can only be used for classification"))
+    }
+
     if (model == "PPR") {
       PP <- ppr(X, Y, weights = weights, nterms = 1, bass = 1)$alpha # sm.method="spline",sm.method="gcvspline"
     } else if (model == "Rand") {
@@ -95,7 +99,7 @@ PPO <- function(X, y, model = "PPR", type = "i-classification", weights = NULL, 
       PP <- nnet(X, Y, weights = weights, size = 1, linout = TRUE, trace = FALSE)$wts[2:(1 + p)] #
       # }
     } else if (model %in% c("LDA", "PDA", "Lr", "GINI", "ENTROPY")) {
-      PP <- ppOptCpp(y, X, q = 1, PPmethod = model, weight = TRUE, r = 1, lambda = 0.1, energy = 0, cooling = 0.9, TOL = 0.0001, maxiter = 1000L)$projbest
+      PP <- ppOptCpp(as.integer(y), X, q = 1, PPmethod = model, weight = TRUE, r = 1, lambda = 0.1, energy = 0, cooling = 0.9, TOL = 0.0001, maxiter = 1000L)$projbest
     } else {
       PP <- PP_Optimizer(
         data = X, class = y, findex = model,

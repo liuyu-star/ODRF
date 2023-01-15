@@ -3,14 +3,12 @@
 #' Plot the error graph of the pruned oblique decision tree at different split nodes.
 #'
 #' @param x An object of class \code{\link{prune.ODT}}.
-#' @param position Position of the curve label.
+#' @param position Position of the curve label, including "topleft" (default), "bottomright", "bottom", "bottomleft", "left", "top", "topright", "right" and "center".
 #' @param digits Integer indicating the number of decimal places (round) or significant digits (signif) to be used.
 #' @param main main title
 #' @param ... Arguments to be passed to methods.
 #'
-#' @return  Error of validation data after each pruning, misclassification rate (MR) for classification or mean square error (MSE) for regression.
-#'
-#' @keywords tree
+#' @return The leftmost value of the horizontal axis indicates the tree without pruning, while the rightmost value indicates the data without splitting and using the average value as the predicted value.
 #'
 #' @seealso \code{\link{ODT}} \code{\link{prune.ODT}}
 #'
@@ -29,6 +27,7 @@
 #' class(prune_tree) <- "prune.ODT"
 #' plot(prune_tree)
 #'
+#' @keywords tree plot prune
 #' @rdname plot.prune.ODT
 #' @aliases plot.prune.ODT
 #' @method plot prune.ODT
@@ -60,7 +59,7 @@ plot.prune.ODT <- function(x, position = "topleft", digits = NULL, main = NULL, 
     }
   }
 
-  plot(x, pruneError[, 4], pch = 21, bg = "skyblue", type = "b", lty = 1, xlab = "The number of split nodes", ylab = paste0("Error (*", 10^-digits, ")"), main = main, xaxt = "n", yaxt = "n") # , col = c("black")
+  plot(x, pruneError[, 4], pch = 21, bg = "skyblue", type = "b", lty = 1, xlab = "Split node", ylab = paste0("Error (*", 10^-digits, ")"), main = main, xaxt = "n", yaxt = "n") # , col = c("black")
   # plot(x, pruneError[,4],pch = 21, bg = "skyblue", type = "p",lty=1, xlab="The number of split nodes", ylab="Error",main=main,xaxt="n",yaxt="n")#, col = c("black")
   axis(1, seq(min(x), max(x), length.out = minLen), round(seq(max(pruneError[, 1]), min(pruneError[, 1]), length.out = minLen)), cex.lab = 1.5, cex.axis = 1.25)
   axis(2, seq(min(pruneError[, 4]), max(pruneError[, 4]), length.out = minLen), round(seq(min(pruneError[, 4]), max(pruneError[, 4]), length.out = minLen) * 10^digits, 2), cex.lab = 1.5, cex.axis = 1.25)

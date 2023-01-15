@@ -3,10 +3,10 @@
 #' To make \code{ODT} object to objects of class \code{party}.
 #'
 #' @param obj An object of class \code{\link{ODT}}.
-#' @param data Training data of class \code{data.frame} is used to convert the object of class \code{ODRF}.
-#' and \code{data} must be the training data \code{data} in \code{\link{ODT}}.
+#' @param data Training data of class \code{data.frame} is used to convert the object of class \code{ODT},
+#' and it must be the training data \code{data} in \code{\link{ODT}}.
 #' @param ... Arguments to be passed to methods
-#' 
+#'
 #' @return An objects of class \code{party}.
 #'
 #' @references Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>

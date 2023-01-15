@@ -9,7 +9,8 @@
 \arguments{
 \item{object}{An object of class ODRF, as that created by the function \code{\link{ODRF}}.}
 
-\item{Xnew}{An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.}
+\item{Xnew}{An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
+Note that if there are NA values in the data 'Xnew', which will be replaced with the average value.}
 
 \item{type}{One of \code{response}, \code{prob} or \code{tree}, indicating the type of output: predicted values, matrix of class probabilities or predicted value for each tree.}
 
@@ -43,7 +44,8 @@ pred <- predict(forest, test_data[, -8])
 (mean(pred != test_data[, 8]))
 
 # Regression with Oblique Decision Random Forest
-\dontest{data(body_fat)
+\donttest{
+data(body_fat)
 set.seed(221212)
 train <- sample(1:252, 80)
 train_data <- data.frame(body_fat[train, ])
@@ -51,12 +53,15 @@ test_data <- data.frame(body_fat[-train, ])
 forest <- ODRF(Density ~ ., train_data, type = "regression", parallel = FALSE)
 pred <- predict(forest, test_data[, -1])
 # estimation error
-mean((pred - test_data[, 1])^2)}
+mean((pred - test_data[, 1])^2)
+}
 
 }
 \references{
-Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.
+Zhan, H., Liu, Y., & Xia, Y. (2022). Consistency of The Oblique Decision Tree and Its Random Forest. arXiv preprint arXiv:2211.12653.
 }
 \seealso{
 \code{\link{ODRF}} \code{\link{predict.ODT}}
 }
+\keyword{forest}
+\keyword{predict}

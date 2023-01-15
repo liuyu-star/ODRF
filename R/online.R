@@ -7,6 +7,8 @@
 #'
 #' @return object of class \code{ODT} or \code{ODRF}.
 #'
+#' @keywords internal
+#'
 #' @seealso \code{\link{ODT}} \code{\link{ODRF}} \code{\link{online.ODT}} \code{\link{online.ODRF}}
 #'
 #' @export

@@ -29,6 +29,8 @@
 #' @references Bailey, Covert (1994). Smart Exercise: Burning Fat, Getting Fit, Houghton-Mifflin Co., Boston, pp. 179-186.
 #' @name body_fat
 #'
+#' @keywords internal
+#'
 #' @seealso  \code{\link{breast_cancer}} \code{\link{seeds}}
 #'
 #' @examples

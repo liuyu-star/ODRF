@@ -76,5 +76,4 @@ Cook, D., Buja, A., Lee, E. K., & Wickham, H. (2008). Grand tours, projection pu
 \seealso{
 \code{\link{RotMatPPO}}
 }
-\keyword{projection}
-\keyword{pursuit}
+\keyword{rotation}

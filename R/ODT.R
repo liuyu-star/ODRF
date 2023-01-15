@@ -54,11 +54,8 @@
 #' @seealso \code{\link{online.ODT}} \code{\link{prune.ODT}} \code{\link{as.party}} \code{\link{predict.ODT}} \code{\link{print.ODT}} \code{\link{plot.ODT}} \code{\link{plot_ODT_depth}}
 #'
 #' @author Yu Liu and Yingcun Xia
-#' @references Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.
-#' @keywords CART
-#' @keywords oblique decision tree
-#' @keywords random forest
-#' @keywords projection pursuit
+#' @references Zhan, H., Liu, Y., & Xia, Y. (2022). Consistency of The Oblique Decision Tree and Its Random Forest. arXiv preprint arXiv:2211.12653.
+#' @keywords tree
 #'
 #' @examples
 #' # Classification with Oblique Decision Tree.
@@ -78,7 +75,10 @@
 #' train <- sample(1:252, 100)
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
-#' tree <- ODT(Density ~ ., train_data, type = "regression")
+#' tree <- ODT(Density ~ ., train_data,
+#'   type = "regression",
+#'   NodeRotateFun = "RotMatPPO", paramList = list(model = "Log", dimProj = "Rand")
+#' )
 #' pred <- predict(tree, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
@@ -140,7 +140,6 @@
 #'
 #' tree <- ODT(X, y, type = "g-classification", Xcat = c(1, 2), catLabel = catLabel)
 #'
-#' @useDynLib ODRF, .registration = TRUE
 #' @import Rcpp
 #' @importFrom stats model.frame model.extract model.matrix na.fail
 #' @export
@@ -166,6 +165,13 @@ ODT.formula <- function(formula, data = NULL, type = "auto", NodeRotateFun = "Ro
     # data <- environment(formula)
     X <- eval(formula[[3]])
     y <- eval(formula[[2]])
+    if (sum(match(class(X), c("data.frame", "matrix"), nomatch = 0L)) == 0) {
+      stop("argument 'X' can only be the classes 'data.frame' or 'matrix'")
+    }
+    if (ncol(X) == 1) {
+      stop("argument 'X' dimension must exceed 1")
+    }
+
     if (is.null(colnames(X))) {
       colnames(X) <- paste0("X", seq_len(ncol(X)))
     }
@@ -176,9 +182,17 @@ ODT.formula <- function(formula, data = NULL, type = "auto", NodeRotateFun = "Ro
     Call$formula <- formula
     Call$data <- quote(data)
   } else {
+    if (sum(match(class(data), c("data.frame"), nomatch = 0L)) == 0) {
+      stop("argument 'data' can only be the classe 'data.frame'")
+    }
+    if (ncol(data) == 2) {
+      stop("The predictor dimension of argument 'data' must exceed 1.")
+    }
+
     varName <- setdiff(colnames(data), as.character(formula[[2]]))
     X <- data[, varName]
     y <- data[, as.character(formula[[2]])]
+    Call$data <- quote(data)
   }
 
   ppTree <- ODT.compute(
@@ -218,6 +232,13 @@ ODT.default <- function(X, y, type = "auto", NodeRotateFun = "RotMatPPO", FunDir
   if (indx[[1]] == 0 || indx[[2]] == 0) {
     stop("A 'formula' or 'X', 'y' argument is required")
   } else {
+    if (sum(match(class(X), c("data.frame", "matrix"), nomatch = 0L)) == 0) {
+      stop("argument 'X' can only be the classes 'data.frame' or 'matrix'")
+    }
+    if (ncol(X) == 1) {
+      stop("argument 'X' dimension must exceed 1")
+    }
+
     if (is.null(colnames(X))) {
       colnames(X) <- paste0("X", seq_len(ncol(X)))
     }
@@ -255,7 +276,7 @@ ODT.default <- function(X, y, type = "auto", NodeRotateFun = "RotMatPPO", FunDir
   return(ppTree)
 }
 
-
+#' @keywords internal
 ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
                         MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
   if (is.factor(y) && (type == "auto")) {
@@ -278,8 +299,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
   }
 
   FUN <- match.fun(NodeRotateFun, descend = TRUE)
-  type0 <- strsplit(type, split = "")[[1]][1]
-
+  # type0 <- strsplit(type, split = "")[[1]][1]
 
   n <- length(y)
   p <- ncol(X)
@@ -288,15 +308,14 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
     if (is.null(Levels)) {
       Levels <- levels(as.factor(y))
     }
-    if (!is.integer(y)) {
-      y <- as.integer(as.factor(y))
-    }
     maxLabel <- length(Levels)
+    if (length(Levels) == 1) {
+      stop("the number of factor levels of response variable must be greater than one")
+    }
   } else {
     y <- c(y)
     maxLabel <- 0
   }
-
 
   if (is.null(Xcat)) {
     Xcat <- which(apply(X, 2, function(x) {
@@ -345,11 +364,26 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
   temp$drop.unused.levels <- TRUE
   temp <- eval(temp) # , parent.frame()
   Terms <- attr(temp, "terms")
+
+  y <- c(model.extract(temp, "response"))
+  X <- model.matrix(Terms, temp)
+  int <- match("(Intercept)", dimnames(X)[[2]], nomatch = 0)
+  if (int > 0) {
+    X <- X[, -int, drop = FALSE]
+  }
+  n <- length(y)
+  p <- ncol(X)
+  if (!is.integer(y) && type != "regression") {
+    y <- as.integer(as.factor(y))
+  }
   rm(data)
 
   # weights=c(weights,paramList$weights)
+  if (!is.null(subset)) {
+    weights <- weights[subset]
+  }
   if (!is.null(weights)) {
-    X <- X * matrix(weights, length(y), ncol(X))
+    X <- X * matrix(weights, n, p)
   }
 
   # Variable scaling.
@@ -390,12 +424,15 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
 
   if (NodeRotateFun == "RotMatPPO") {
     if (is.null(paramList$dimProj)) {
-      paramList$dimProj <- min(ceiling(length(y)^0.4), ceiling(ncol(X) * 2 / 3))
+      paramList$dimProj <- min(ceiling(n^0.4), ceiling(p * 2 / 3))
     }
-    paramList$numProj <- ifelse(paramList$dimProj == "Rand", max(5, sample(floor(ncol(X) / 3), 1)), max(5, ceiling(ncol(X) / paramList$dimProj)))
+    paramList$numProj <- ifelse(paramList$dimProj == "Rand", max(5, sample(floor(p / 3), 1)), max(5, ceiling(p / paramList$dimProj)))
   }
   paramList <- defaults(paramList, type, p, weights, catLabel)
 
+  if ((type == "regression") && (!paramList$model %in% c("PPR", "Rand", "Log"))) {
+    stop(paste0("'model = ", paramList$model, "' can only be used for classification"))
+  }
 
   if (is.infinite(MaxDepth)) {
     numNode <- min(numNode, sum(2^(0:ceiling(log2(n / MinLeaf)))))
@@ -425,7 +462,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
   childNode <- nodeCutValue
 
 
-  # start create pptree nodeFlags
+  # start create Oblique Decision Tree.
   ##############################################################################
   currentNode <- 1
   freeNode <- 2
@@ -492,12 +529,13 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
       lrows <- which(sparseM[, 2] == numDr[i])
       rotaX[sparseM[lrows, 1], i] <- sparseM[lrows, 3]
     }
+
     ###################################################################
 
     rotaX <- X[nodeXIndx[[currentNode]], , drop = FALSE] %*% rotaX
 
-    bestCut <- best_cut_node(type0, rotaX, y[nodeXIndx[[currentNode]]], Wcd, MinLeaf, maxLabel)
-
+    # bestCut <- best_cut_node(type0, rotaX, y[nodeXIndx[[currentNode]]], Wcd, MinLeaf, maxLabel)
+    bestCut <- best.cut.node(rotaX, y[nodeXIndx[[currentNode]]], type, Wcd, MinLeaf, maxLabel)
     if (bestCut$BestCutVar == -1) {
       TF <- TRUE
     } else {

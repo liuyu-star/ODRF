@@ -59,3 +59,4 @@ Bailey, Covert (1994). Smart Exercise: Burning Fat, Getting Fit, Houghton-Miffli
 \code{\link{breast_cancer}} \code{\link{seeds}}
 }
 \keyword{datasets}
+\keyword{internal}

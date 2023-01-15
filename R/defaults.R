@@ -27,10 +27,9 @@
 #' \item \code{model} Model for projection pursuit. (see \code{\link{PPO}})
 #' }
 #'
-#' @keywords internal
-#'
 #' @seealso \code{\link{RotMatPPO}} \code{\link{RotMatRand}} \code{\link{RotMatRF}} \code{\link{RotMatMake}}
 #'
+#' @keywords internal tree
 #' @examples
 #' set.seed(1)
 #' paramList <- list(dimX = 8, numProj = 3, sparsity = 0.25, prob = 0.5)

@@ -20,3 +20,4 @@ object of class \code{ODT} or \code{ODRF}.
 \seealso{
 \code{\link{ODT}} \code{\link{ODRF}} \code{\link{online.ODT}} \code{\link{online.ODRF}}
 }
+\keyword{internal}

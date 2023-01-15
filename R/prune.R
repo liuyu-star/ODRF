@@ -7,6 +7,8 @@
 #'
 #' @return An object of class \code{ODT} and \code{prune.ODT}.
 #'
+#' @keywords internal
+#'
 #' @seealso \code{\link{ODT}} \code{\link{ODRF}} \code{\link{prune.ODT}} \code{\link{prune.ODRF}}
 #'
 #' @export

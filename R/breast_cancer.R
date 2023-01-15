@@ -29,6 +29,8 @@
 #' @references Wolberg WH, Street WN, Mangasarian OL. Machine learning techniques to diagnose breast cancer from image-processed nuclear features of fine needle aspirates. Cancer Lett. 1994 Mar 15;77(2-3):163-71.
 #' @name breast_cancer
 #'
+#' @keywords internal
+#'
 #' @seealso  \code{\link{body_fat}} \code{\link{seeds}}
 #'
 #' @examples

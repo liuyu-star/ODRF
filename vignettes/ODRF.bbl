@@ -1,0 +1,201 @@
+\begin{thebibliography}{30}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi:\discretionary{}{}{}#1}\else
+  \providecommand{\doi}{doi:\discretionary{}{}{}\begingroup
+  \urlstyle{rm}\Url}\fi
+\providecommand{\eprint}[2][]{\url{#2}}
+
+\bibitem[{Athey \emph{et~al.}(2019)Athey, Tibshirani, and
+  Wager}]{athey2019generalized}
+Athey S, Tibshirani J, Wager S (2019).
+\newblock \enquote{Generalized random forests.}
+\newblock \emph{The Annals of Statistics}, \textbf{47}(2), 1148--1178.
+
+\bibitem[{Blaser and Fryzlewicz(2016)}]{blaser2016random}
+Blaser R, Fryzlewicz P (2016).
+\newblock \enquote{Random rotation ensembles.}
+\newblock \emph{The Journal of Machine Learning Research}, \textbf{17}(1),
+  126--151.
+
+\bibitem[{Breiman(2001)}]{breiman2001random}
+Breiman L (2001).
+\newblock \enquote{Random forests.}
+\newblock \emph{Machine learning}, \textbf{45}(1), 5--32.
+
+\bibitem[{Chen and Guestrin(2016)}]{chen2016xgboost}
+Chen T, Guestrin C (2016).
+\newblock \enquote{\pkg{Xgboost}: A scalable tree boosting system.}
+\newblock In \emph{Proceedings of the 22nd acm sigkdd international conference
+  on knowledge discovery and data mining}, pp. 785--794.
+
+\bibitem[{Cook \emph{et~al.}(2008)Cook, Buja, Lee, and Wickham}]{cook2008grand}
+Cook D, Buja A, Lee EK, Wickham H (2008).
+\newblock \enquote{Grand tours, projection pursuit guided tours, and manual
+  controls.}
+\newblock In \emph{Handbook of data visualization}, pp. 295--314. Springer.
+
+\bibitem[{Fokkema \emph{et~al.}(2020)Fokkema, Edbrooke-Childs, and
+  Wolpert}]{2020Generalized}
+Fokkema M, Edbrooke-Childs J, Wolpert M (2020).
+\newblock \enquote{Generalized linear mixed-model (GLMM) trees: A flexible
+  decision-tree method for multilevel and longitudinal data.}
+\newblock \emph{Psychotherapy Research}, (22), 1--13.
+
+\bibitem[{Friedman and Stuetzle(1981)}]{friedman1981projection}
+Friedman JH, Stuetzle W (1981).
+\newblock \enquote{Projection pursuit regression.}
+\newblock \emph{Journal of the American statistical Association},
+  \textbf{76}(376), 817--823.
+
+\bibitem[{Geurts \emph{et~al.}(2006)Geurts, Ernst, and
+  Wehenkel}]{2006Extremely}
+Geurts P, Ernst D, Wehenkel L (2006).
+\newblock \enquote{Extremely randomized trees.}
+\newblock \emph{Machine Learning}, \textbf{63}(1), 3--42.
+
+\bibitem[{Grinsztajn \emph{et~al.}(2022)Grinsztajn, Oyallon, and
+  Varoquaux}]{tabularDATA}
+Grinsztajn L, Oyallon E, Varoquaux G (2022).
+\newblock \enquote{Why do tree-based models still outperform deep learning on
+  tabular data?}
+\newblock \doi{10.48550/ARXIV.2207.08815}.
+\newblock \urlprefix\url{https://arxiv.org/abs/2207.08815}.
+
+\bibitem[{Grubinger \emph{et~al.}(2014)Grubinger, Zeileis, Pfeiffer, and
+  KP}]{Grubinger2014ectree}
+Grubinger, Zeileis, Pfeiffer, KP (2014).
+\newblock \enquote{\pkg{evtree}: Evolutionary Learning of Globally Optimal
+  Classification and Regression Trees in \proglang{R}.}
+\newblock \emph{J STAT SOFTW}.
+
+\bibitem[{Heath \emph{et~al.}(1993)Heath, Kasif, and
+  Salzberg}]{Heath93inductionof}
+Heath D, Kasif S, Salzberg S (1993).
+\newblock \enquote{Induction of Oblique Decision Trees.}
+\newblock \emph{Journal of Artificial Intelligence Research}, \textbf{2}(2),
+  1--32.
+
+\bibitem[{Hothorn \emph{et~al.}(2006)Hothorn, Hornik, and
+  Zeileis}]{hothorn2006unbiased}
+Hothorn T, Hornik K, Zeileis A (2006).
+\newblock \enquote{Unbiased recursive partitioning: A conditional inference
+  framework.}
+\newblock \emph{Journal of Computational and Graphical statistics},
+  \textbf{15}(3), 651--674.
+
+\bibitem[{Hothorn and Zeileis(2015)}]{2015Partykit}
+Hothorn T, Zeileis A (2015).
+\newblock \enquote{\pkg{Partykit}: a modular toolkit for recursive partytioning
+  in \proglang{R}.}
+\newblock \emph{The Journal of Machine Learning Research}, (1).
+
+\bibitem[{Johnson and Tong(2014)}]{2014Learning}
+Johnson R, Tong Z (2014).
+\newblock \enquote{Learning Nonlinear Functions Using Regularized Greedy
+  Forest.}
+\newblock \emph{IEEE Trans Pattern Anal Mach Intell}, \textbf{36}(5), 942--954.
+
+\bibitem[{Katuwal \emph{et~al.}(2020)Katuwal, Suganthan, and
+  Zhang}]{katuwal2020heterogeneous}
+Katuwal R, Suganthan PN, Zhang L (2020).
+\newblock \enquote{Heterogeneous oblique random forest.}
+\newblock \emph{Pattern Recognition}, \textbf{99}, 107078.
+
+\bibitem[{Lee \emph{et~al.}(2015)Lee, Yang, and Oh}]{lee2015fast}
+Lee D, Yang MH, Oh S (2015).
+\newblock \enquote{Fast and accurate head pose estimation via random projection
+  forests.}
+\newblock In \emph{Proceedings of the IEEE International Conference on Computer
+  Vision}, pp. 1958--1966.
+
+\bibitem[{Lee(2018)}]{lee2018pptreeviz}
+Lee EK (2018).
+\newblock \enquote{\pkg{PPtreeViz}: An R package for visualizing projection
+  pursuit classification trees.}
+\newblock \emph{Journal of Statistical Software}, \textbf{83}, 1--30.
+
+\bibitem[{Maia \emph{et~al.}(2022)Maia, Murphy, and Parnell}]{maia2022gp}
+Maia M, Murphy K, Parnell AC (2022).
+\newblock \enquote{\pkg{GP-BART}: a novel Bayesian additive regression trees
+  approach using Gaussian processes.}
+\newblock \emph{arXiv preprint arXiv:2204.02112}.
+
+\bibitem[{Menze \emph{et~al.}(2011)Menze, Kelm, Splitthoff, Koethe, and
+  Hamprecht}]{menze2011oblique}
+Menze BH, Kelm BM, Splitthoff DN, Koethe U, Hamprecht FA (2011).
+\newblock \enquote{On oblique random forests.}
+\newblock In \emph{Joint European Conference on Machine Learning and Knowledge
+  Discovery in Databases}, pp. 453--469. Springer.
+
+\bibitem[{Ossani and Cirillo(2022)}]{Pursuit}
+Ossani PC, Cirillo MA (2022).
+\newblock \emph{Projection Pursuit}.
+\newblock R package version 1.0.3,
+  \urlprefix\url{https://CRAN.R-project.org/package=Pursuit}.
+
+\bibitem[{Quinlan(1987)}]{quinlan1987decision}
+Quinlan JR (1987).
+\newblock \enquote{Decision trees as probabilistic classifiers.}
+\newblock In \emph{Proceedings of the Fourth International Workshop on Machine
+  Learning}, pp. 31--37. Elsevier.
+
+\bibitem[{Quinlan(1993)}]{quinlan1993program}
+Quinlan JR (1993).
+\newblock \enquote{Program for machine learning.}
+\newblock \emph{\emph{C4. 5}}.
+
+\bibitem[{Rainforth and Wood(2015)}]{rainforth2015canonical}
+Rainforth T, Wood F (2015).
+\newblock \enquote{Canonical correlation forests.}
+\newblock \emph{arXiv preprint arXiv:1507.05444}.
+
+\bibitem[{{\proglang{R} Core Team}(2017)}]{R}
+{\proglang{R} Core Team} (2017).
+\newblock \emph{\proglang{R}: {A} Language and Environment for Statistical
+  Computing}.
+\newblock \proglang{R} Foundation for Statistical Computing, Vienna, Austria.
+\newblock \urlprefix\url{https://www.R-project.org/}.
+
+\bibitem[{Silva \emph{et~al.}(2021)Silva, Cook, and Lee}]{silva2021projection}
+Silva Nd, Cook D, Lee EK (2021).
+\newblock \enquote{A projection pursuit forest algorithm for supervised
+  classification.}
+\newblock \emph{Journal of Computational and Graphical Statistics},
+  \textbf{30}(4), 1168--1180.
+
+\bibitem[{Tomita \emph{et~al.}(2020)Tomita, Browne, Shen, Chung, Patsolic,
+  Falk, Priebe, Yim, Burns, Maggioni \emph{et~al.}}]{tomita2020sparse}
+Tomita TM, Browne J, Shen C, Chung J, Patsolic JL, Falk B, Priebe CE, Yim J,
+  Burns R, Maggioni M, \emph{et~al.} (2020).
+\newblock \enquote{Sparse projection oblique randomer forests.}
+\newblock \emph{Journal of machine learning research}, \textbf{21}(104).
+
+\bibitem[{Truong(2009)}]{truong2009fast}
+Truong AKY (2009).
+\newblock \emph{Fast growing and interpretable oblique trees via logistic
+  regression models}.
+\newblock Ph.D. thesis, Oxford University, UK.
+
+\bibitem[{Venables and Ripley(2002)}]{nnet}
+Venables WN, Ripley BD (2002).
+\newblock \emph{Modern Applied Statistics with S}.
+\newblock Fourth edition. Springer, New York.
+\newblock ISBN 0-387-95457-0,
+  \urlprefix\url{https://www.stats.ox.ac.uk/pub/MASS4/}.
+
+\bibitem[{Zeileis and Hothorn(2015)}]{zeileis2015parties}
+Zeileis A, Hothorn T (2015).
+\newblock \enquote{Parties, Models, Mobsters: A New Implementation of
+  Model-Based Recursive Partitioning in R.}
+
+\bibitem[{Zhan \emph{et~al.}(2022)Zhan, Liu, and Xia}]{zhan2022consistency}
+Zhan H, Liu Y, Xia Y (2022).
+\newblock \enquote{Consistency of The Oblique Decision Tree and Its Random
+  Forest.}
+\newblock \emph{arXiv preprint arXiv:2211.12653}.
+
+\end{thebibliography}

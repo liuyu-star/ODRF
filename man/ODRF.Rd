@@ -164,17 +164,21 @@ forest <- ODRF(varieties_of_wheat ~ ., train_data,
 pred <- predict(forest, test_data[, -8])
 # classification error
 (mean(pred != test_data[, 8]))
-
+\donttest{
 # Regression with Oblique Decision Randome Forest.
-\dontest{data(body_fat)
+data(body_fat)
 set.seed(221212)
 train <- sample(1:252, 80)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
-forest <- ODRF(Density ~ ., train_data, type = "regression", parallel = FALSE)
+forest <- ODRF(Density ~ ., train_data,
+  type = "regression", parallel = FALSE,
+  NodeRotateFun = "RotMatPPO", paramList = list(model = "Log", dimProj = "Rand")
+)
 pred <- predict(forest, test_data[, -1])
 # estimation error
-mean((pred - test_data[, 1])^2)}
+mean((pred - test_data[, 1])^2)
+}
 
 ### Train ODRF on one-of-K encoded categorical data ###
 set.seed(22)
@@ -185,7 +189,9 @@ X <- data.frame(Xcol1, Xcol2, Xcon)
 Xcat <- c(1, 2)
 catLabel <- NULL
 y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
-\dontest{forest <- ODRF(y ~ X, type = "i-classification", Xcat = NULL, parallel = FALSE)}
+\donttest{
+forest <- ODRF(y ~ X, type = "i-classification", Xcat = NULL, parallel = FALSE)
+}
 head(X)
 #>   Xcol1 Xcol2          X1         X2          X3
 #> 1     B     5 -0.04178453  2.3962339 -0.01443979
@@ -197,7 +203,7 @@ head(X)
 
 # one-of-K encode each categorical feature and store in X1
 numCat <- apply(X[, Xcat, drop = FALSE], 2, function(x) length(unique(x)))
-# initialize training data matrix X
+# initialize training data matrix X1
 X1 <- matrix(0, nrow = nrow(X), ncol = sum(numCat))
 catLabel <- vector("list", length(Xcat))
 names(catLabel) <- colnames(X)[Xcat]
@@ -231,28 +237,23 @@ catLabel
 #> $Xcol2
 #> [1] "1" "2" "3" "4" "5"
 
-\dontest{forest <- ODRF(X, y,
+\donttest{
+forest <- ODRF(X, y,
   type = "g-classification", Xcat = c(1, 2),
   catLabel = catLabel, parallel = FALSE
-)}
+)
+}
 
 }
 \references{
-Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.
+Zhan, H., Liu, Y., & Xia, Y. (2022). Consistency of The Oblique Decision Tree and Its Random Forest. arXiv preprint arXiv:2211.12653.
 
-Tomita T M, Browne J, Shen C, et al. Sparse projection oblique randomer forests[J]. Journal of machine learning research, 2020, 21(104).
+Tomita, T. M., Browne, J., Shen, C., Chung, J., Patsolic, J. L., Falk, B., ... & Vogelstein, J. T. (2020). Sparse projection oblique randomer forests. Journal of machine learning research, 21(104).
 }
 \seealso{
-\code{\link{online.ODRF}} \code{\link{prune.ODRF}} \code{\link{predict.ODRF}} \code{\link{print.ODRF}} \code{\link{ODRF_accuracy}} \code{\link{VarImp}}
+\code{\link{online.ODRF}} \code{\link{prune.ODRF}} \code{\link{predict.ODRF}} \code{\link{print.ODRF}} \code{\link{Accuracy}} \code{\link{VarImp}}
 }
 \author{
 Yu Liu and Yingcun Xia
 }
-\keyword{CART}
-\keyword{decision}
 \keyword{forest}
-\keyword{oblique}
-\keyword{projection}
-\keyword{pursuit}
-\keyword{random}
-\keyword{tree}

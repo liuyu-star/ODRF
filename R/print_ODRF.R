@@ -14,7 +14,7 @@
 #' forest <- ODRF(Species ~ ., data = iris, parallel = FALSE)
 #' forest
 #'
-#' @keywords forest
+#' @keywords forest print
 #' @rdname print.ODRF
 #' @aliases print.ODRF
 #' @method print ODRF

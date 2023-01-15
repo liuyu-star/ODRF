@@ -1,13 +1,13 @@
 Type: Package
 Package: ODRF
 Title: Oblique Decision Random Forest for Classification and Regression
-Version: 1.0.2
+Version: 0.0.1
 Date: 2022-09-21
 Authors@R: c(
-    person(given = "Yu", family = "Liu", email = "liuyuchina123@gmail.com", role = c("aut", "cre", "cph")),
-    person(given = "Yingcun", family = "Xia", email = "staxyc@nus.edu.sg", role = "aut")
+    person("Yu", "Liu", , "liuyuchina123@gmail.com", role = c("aut", "cre")),
+    person("Yingcun", "Xia", , "staxyc@nus.edu.sg", role = "aut")
   )
-Author: Yu Liu [aut, cre, cph], Yingcun Xia [aut]
+Author: Yu Liu [aut, cre], Yingcun Xia [aut]
 Maintainer: Yu Liu <liuyuchina123@gmail.com>
 Description: The oblique decision tree (ODT) uses linear combinations of
     predictors as partitioning variables in a decision tree. Oblique
@@ -24,11 +24,11 @@ Depends:
 Imports: 
     doParallel,
     foreach,
+    glue,
     graphics,
     grid,
+    lifecycle,
     magrittr,
-    MAVE,
-    mda,
     nnet,
     parallel,
     Pursuit,
@@ -36,8 +36,10 @@ Imports:
     rlang (>= 0.4.11),
     stats
 Suggests: 
+    covr,
     knitr,
     rmarkdown,
+    roxygen2,
     spelling,
     testthat (>= 3.0.0)
 LinkingTo: 
@@ -47,7 +49,8 @@ VignetteBuilder:
     knitr
 Config/testthat/edition: 3
 Encoding: UTF-8
+Language: en-US
 LazyData: yes
 NeedsCompilation: yes
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
-Language: en-US

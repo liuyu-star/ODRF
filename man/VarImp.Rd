@@ -4,10 +4,10 @@
 \alias{VarImp}
 \title{variable importance of oblique decision random forest}
 \usage{
-VarImp(ppForest, X, y)
+VarImp(forest, X, y)
 }
 \arguments{
-\item{ppForest}{An object of class \code{\link{ODRF}}.}
+\item{forest}{An object of class \code{\link{ODRF}}.}
 
 \item{X}{An n by d numerical matrix (preferably) or data frame is used in the \code{ODRF}.}
 
@@ -15,6 +15,7 @@ VarImp(ppForest, X, y)
 }
 \value{
 A matrix of importance measure, first column is the predictors and second column is Increased error. Misclassification rate (MR) for classification or mean square error (MSE) for regression.
+The larger the increased error the more important the variable is.
 }
 \description{
 Variable importance is computed from permuting OOB data.
@@ -35,5 +36,6 @@ forest <- ODRF(diagnosis ~ ., train_data, type = "i-classification", parallel = 
 
 }
 \seealso{
-\code{\link{ODRF}} \code{\link{plot.VarImp}}
+\code{\link{ODRF}} \code{\link{Accuracy}} \code{\link{plot.VarImp}}
 }
+\keyword{forest}

@@ -57,15 +57,12 @@
 #' \item{\code{forest}: The list of forest related parameters used to build the forest.}
 #' }
 #'
-#' @seealso \code{\link{online.ODRF}} \code{\link{prune.ODRF}} \code{\link{predict.ODRF}} \code{\link{print.ODRF}} \code{\link{ODRF_accuracy}} \code{\link{VarImp}}
+#' @seealso \code{\link{online.ODRF}} \code{\link{prune.ODRF}} \code{\link{predict.ODRF}} \code{\link{print.ODRF}} \code{\link{Accuracy}} \code{\link{VarImp}}
 #'
 #' @author Yu Liu and Yingcun Xia
-#' @references Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.
-#' @references Tomita T M, Browne J, Shen C, et al. Sparse projection oblique randomer forests[J]. Journal of machine learning research, 2020, 21(104).
-#' @keywords CART
-#' @keywords oblique decision tree
-#' @keywords random forest
-#' @keywords projection pursuit
+#' @references Zhan, H., Liu, Y., & Xia, Y. (2022). Consistency of The Oblique Decision Tree and Its Random Forest. arXiv preprint arXiv:2211.12653.
+#' @references Tomita, T. M., Browne, J., Shen, C., Chung, J., Patsolic, J. L., Falk, B., ... & Vogelstein, J. T. (2020). Sparse projection oblique randomer forests. Journal of machine learning research, 21(104).
+#' @keywords forest
 #'
 #' @examples
 #' # Classification with Oblique Decision Randome Forest.
@@ -81,17 +78,21 @@
 #' pred <- predict(forest, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
-#'
+#' \donttest{
 #' # Regression with Oblique Decision Randome Forest.
-#' \dontest{data(body_fat)
+#' data(body_fat)
 #' set.seed(221212)
 #' train <- sample(1:252, 80)
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
-#' forest <- ODRF(Density ~ ., train_data, type = "regression", parallel = FALSE)
+#' forest <- ODRF(Density ~ ., train_data,
+#'   type = "regression", parallel = FALSE,
+#'   NodeRotateFun = "RotMatPPO", paramList = list(model = "Log", dimProj = "Rand")
+#' )
 #' pred <- predict(forest, test_data[, -1])
 #' # estimation error
-#' mean((pred - test_data[, 1])^2)}
+#' mean((pred - test_data[, 1])^2)
+#' }
 #'
 #' ### Train ODRF on one-of-K encoded categorical data ###
 #' set.seed(22)
@@ -102,7 +103,9 @@
 #' Xcat <- c(1, 2)
 #' catLabel <- NULL
 #' y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
-#' \dontest{forest <- ODRF(y ~ X, type = "i-classification", Xcat = NULL, parallel = FALSE)}
+#' \donttest{
+#' forest <- ODRF(y ~ X, type = "i-classification", Xcat = NULL, parallel = FALSE)
+#' }
 #' head(X)
 #' #>   Xcol1 Xcol2          X1         X2          X3
 #' #> 1     B     5 -0.04178453  2.3962339 -0.01443979
@@ -114,7 +117,7 @@
 #'
 #' # one-of-K encode each categorical feature and store in X1
 #' numCat <- apply(X[, Xcat, drop = FALSE], 2, function(x) length(unique(x)))
-#' # initialize training data matrix X
+#' # initialize training data matrix X1
 #' X1 <- matrix(0, nrow = nrow(X), ncol = sum(numCat))
 #' catLabel <- vector("list", length(Xcat))
 #' names(catLabel) <- colnames(X)[Xcat]
@@ -148,18 +151,16 @@
 #' #> $Xcol2
 #' #> [1] "1" "2" "3" "4" "5"
 #'
-#' \dontest{forest <- ODRF(X, y,
+#' \donttest{
+#' forest <- ODRF(X, y,
 #'   type = "g-classification", Xcat = c(1, 2),
 #'   catLabel = catLabel, parallel = FALSE
-#' )}
+#' )
+#' }
 #'
-#' @useDynLib ODRF, .registration = TRUE
-#' @import MAVE mda
-#' @import Rcpp
-#' @import doParallel
-#' @import foreach
-#' @importFrom parallel detectCores makeCluster clusterSplit stopCluster
-#' @importFrom stats model.frame model.extract model.matrix na.fail
+#' @import rlang
+#' @importFrom glue glue
+#' @importFrom lifecycle deprecated
 #' @export
 ODRF <- function(X, ...) {
   UseMethod("ODRF")
@@ -176,6 +177,7 @@ ODRF.formula <- function(formula, data = NULL, type = "auto", NodeRotateFun = "R
                          na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
   Call <- match.call()
   indx <- match(c("formula", "data", "subset", "na.action"), names(Call), nomatch = 0L) # , "weights"
+  # formula=X
   if (indx[[1]] == 0) {
     stop("A 'formula' or 'X', 'y' argument is required")
   } else if (indx[[2]] == 0) {
@@ -183,13 +185,30 @@ ODRF.formula <- function(formula, data = NULL, type = "auto", NodeRotateFun = "R
     # data <- environment(formula)
     X <- eval(formula[[3]])
     y <- eval(formula[[2]])
-    varName <- colnames(X)
+    if (sum(match(class(X), c("data.frame", "matrix"), nomatch = 0L)) == 0) {
+      stop("argument 'X' can only be the classes 'data.frame' or 'matrix'")
+    }
+    if (ncol(X) == 1) {
+      stop("argument 'X' dimension must exceed 1")
+    }
+
+    if (is.null(colnames(X))) {
+      colnames(X) <- paste0("X", seq_len(ncol(X)))
+    }
     data <- data.frame(y, X)
+    varName <- colnames(X)
     colnames(data) <- c(as.character(formula[[2]]), varName)
     formula <- as.formula(paste0(as.character(formula[[2]]), "~."))
     Call$formula <- formula
     Call$data <- quote(data)
   } else {
+    if (sum(match(class(data), c("data.frame"), nomatch = 0L)) == 0) {
+      stop("argument 'data' can only be the classe 'data.frame'")
+    }
+    if (ncol(data) == 2) {
+      stop("The predictor dimension of argument 'data' must exceed 1.")
+    }
+
     varName <- setdiff(colnames(data), as.character(formula[[2]]))
     X <- data[, varName]
     y <- data[, as.character(formula[[2]])]
@@ -221,11 +240,22 @@ ODRF.default <- function(X, y, type = "auto", NodeRotateFun = "RotMatPPO", FunDi
   if (indx[[1]] == 0 || indx[[2]] == 0) {
     stop("A 'formula' or 'X', 'y' argument is required")
   } else {
+    if (sum(match(class(X), c("data.frame", "matrix"), nomatch = 0L)) == 0) {
+      stop("argument 'X' can only be the classes 'data.frame' or 'matrix'")
+    }
+    if (ncol(X) == 1) {
+      stop("argument 'X' dimension must exceed 1")
+    }
+
+    if (is.null(colnames(X))) {
+      colnames(X) <- paste0("X", seq_len(ncol(X)))
+    }
     data <- data.frame(y = y, X)
+    varName <- colnames(X)
+
     formula <- y~.
     Call$formula <- formula
     Call$data <- quote(data)
-    varName <- colnames(X)
     Call$X <- NULL
     Call$y <- NULL
   }
@@ -238,11 +268,20 @@ ODRF.default <- function(X, y, type = "auto", NodeRotateFun = "RotMatPPO", FunDi
   )
 }
 
-
+#' @useDynLib ODRF, .registration = TRUE
+#' @import Rcpp
+#' @import doParallel
+#' @import foreach
+#' @importFrom parallel detectCores makeCluster clusterSplit stopCluster
+#' @importFrom stats model.frame model.extract model.matrix na.fail
+#' @keywords internal
 ODRF.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDir, paramList,
                          ntrees, storeOOB, replacement, stratify, numOOB, parallel,
                          numCores, seed, MaxDepth, numNode, MinLeaf, subset, weights,
                          na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
+  if (ntrees == 1) {
+    stop("argument 'ntrees' must exceed 1")
+  }
   if (is.factor(y) && (type == "auto")) {
     type <- "i-classification"
     warning("You are creating a forest for classification")
@@ -274,6 +313,9 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunD
       ppForest$Levels <- levels(as.factor(y))
       y <- as.integer(as.factor(y))
       # stop("Incompatible X type. y must be of type factor or numeric.")
+    }
+    if (length(ppForest$Levels) == 1) {
+      stop("the number of factor levels of response variable must be greater than one")
     }
 
     numClass <- length(ppForest$Levels)
@@ -338,7 +380,26 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunD
   Terms <- attr(temp, "terms")
   ppForest$terms <- Terms
 
+  y <- c(model.extract(temp, "response"))
+  X <- model.matrix(Terms, temp)
+  int <- match("(Intercept)", dimnames(X)[[2]], nomatch = 0)
+  if (int > 0) {
+    X <- X[, -int, drop = FALSE]
+  }
+  n <- length(y)
+  p <- ncol(X)
+  if (type != "regression") {
+    y <- as.integer(as.factor(y))
+  }
   rm(data)
+
+  # weights=c(weights,paramList$weights)
+  if (!is.null(subset)) {
+    weights <- weights[subset]
+  }
+  # if (!is.null(weights)) {
+  #  X <- X * matrix(weights, n, p)
+  # }
 
   # Variable scaling.
   minCol <- NULL
@@ -445,7 +506,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunD
     # set.seed(seed)
     icore <- NULL
     ppForestT <- foreach::foreach(
-      icore = seq_along(chunks), .combine = list, .multicombine = TRUE,
+      icore = seq_along(chunks), .combine = list, .multicombine = TRUE, .export = c("ODT.compute"),
       .packages = c("ODRF"), .noexport = "ppForest"
     ) %dopar% {
       lapply(chunks[[icore]], PPtree)
@@ -494,13 +555,13 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunD
       # }
 
       # oobErr=mean(oobPred!=Levels[y[idx]]);
-      XConfusionMat <- table(oobPred, Levels[yy])
-      class_error <- (rowSums(XConfusionMat) - diag(XConfusionMat)) / rowSums(XConfusionMat)
+      XConfusionMat <- table(factor(oobPred, levels = Levels), factor(Levels[yy], levels = Levels))
+      class_error <- (rowSums(XConfusionMat) - diag(XConfusionMat)) / (rowSums(XConfusionMat) + 1e-4)
       XConfusionMat <- cbind(XConfusionMat, class_error)
       ppForest$oobConfusionMat <- XConfusionMat
     } else {
       oobPred <- rowMeans(oobVotes, na.rm = TRUE)
-      ppForest$oobErr <- mean((oobPred - yy)^2) / mean((yy - mean(y))^2)
+      ppForest$oobErr <- mean((oobPred - yy)^2) # / mean((yy - mean(y))^2)
     }
   }
 
@@ -508,3 +569,4 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunD
   # class(ppForest) <- "ODRF"
   return(ppForest)
 }
+

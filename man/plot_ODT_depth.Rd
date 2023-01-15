@@ -60,4 +60,5 @@ plot_ODT_depth(Density ~ ., train_data, test_data, type = "regression")
 \seealso{
 \code{\link{ODT}} \code{\link{plot.ODT}}
 }
+\keyword{plot}
 \keyword{tree}

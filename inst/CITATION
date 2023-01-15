@@ -1,8 +1,7 @@
 bibentry(bibtype = "Article",
   title        = "{ODRF}: Consistency of The Oblique Decision Tree and Its Random Forest",
-  author       = person(given = "Yu",
-                        family = "Liu",
-                        email = "liuyuchina123@gmail.com"),
+  author       = c(person(given = "Yu", family = "Liu", email = "liuyuchina123@gmail.com"),
+                         person(given = "Yingcun", family = "Xia", email = "staxyc@nus.edu.sg") ),
   journal      = "arXiv preprint arXiv:2211.12653",
   year         = "2022",
   header       = "To cite ODRF in publications use:"

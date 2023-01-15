@@ -20,11 +20,15 @@
 \value{
 \itemize{An object of class \code{ODT} and \code{prune.ODT}.
 \item{\code{ppTree} The same result as \code{ODT}.}
-\item{\code{pruneError} Error of validation data after each pruning, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
+\item{\code{pruneError} Error of validation data after each pruning, misclassification rate (MR) for classification or mean square error (MSE) for regression.
+The maximum value indicates the tree without pruning, and the minimum value (0) indicates indicates the data without splitting and using the average value as the predicted value.}
 }
 }
 \description{
 Prune \code{ODT} from bottom to top with validation data based on prediction error.
+}
+\details{
+The leftmost value of the horizontal axis indicates the tree without pruning, while the rightmost value indicates the data without splitting and using the average value as the predicted value.
 }
 \examples{
 # Classification with Oblique Decision Tree
@@ -57,3 +61,5 @@ mean((pred - test_data[, 1])^2)
 \seealso{
 \code{\link{ODT}} \code{\link{plot.prune.ODT}} \code{\link{prune.ODRF}} \code{\link{online.ODT}}
 }
+\keyword{prune}
+\keyword{tree}

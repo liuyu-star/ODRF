@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{An object of class \code{\link{prune.ODT}}.}
 
-\item{position}{Position of the curve label.}
+\item{position}{Position of the curve label, including "topleft" (default), "bottomright", "bottom", "bottomleft", "left", "top", "topright", "right" and "center".}
 
 \item{digits}{Integer indicating the number of decimal places (round) or significant digits (signif) to be used.}
 
@@ -18,7 +18,7 @@
 \item{...}{Arguments to be passed to methods.}
 }
 \value{
-Error of validation data after each pruning, misclassification rate (MR) for classification or mean square error (MSE) for regression.
+The leftmost value of the horizontal axis indicates the tree without pruning, while the rightmost value indicates the data without splitting and using the average value as the predicted value.
 }
 \description{
 Plot the error graph of the pruned oblique decision tree at different split nodes.
@@ -42,4 +42,6 @@ plot(prune_tree)
 \seealso{
 \code{\link{ODT}} \code{\link{prune.ODT}}
 }
+\keyword{plot}
+\keyword{prune}
 \keyword{tree}

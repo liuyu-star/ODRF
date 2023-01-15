@@ -6,7 +6,7 @@
 #' @param cutvalue Print cutoff values in each node if TRUE.
 #' @param verbose Print if TRUE, no output if FALSE.
 #' @param ... Arguments to be passed to methods.
-#' 
+#'
 #' @return The oblique decision tree structure.
 #' @references Lee, EK(2017)
 #' PPtreeViz: An R Package for Visualizing Projection Pursuit Classification
@@ -20,7 +20,7 @@
 #' tree
 #' print(tree, projection = TRUE, cutvalue = TRUE)
 #'
-#' @keywords tree
+#' @keywords tree print
 #' @rdname print.ODT
 #' @aliases print.ODT
 #' @method print ODT
@@ -111,10 +111,7 @@ print.ODT <- function(x, projection = FALSE, cutvalue = FALSE, verbose = TRUE, .
       depth <- depth.track[id.l]
     }
   }
-  colnames(Alpha) <- ppTree$data$varName
-  rownames(Alpha) <- paste("proj", seq_len(nrow(Alpha)), sep = "")
-  # colnames(CutValue)<-paste("Rule",1:ncol(CutValue),sep="")
-  names(CutValue) <- paste("CutValue", seq_along(CutValue), sep = "")
+
   TreePrint.output <-
     paste(
       "=============================================================",
@@ -133,6 +130,13 @@ print.ODT <- function(x, projection = FALSE, cutvalue = FALSE, verbose = TRUE, .
         "\nProjection coefficient in each node",
         "\n-------------------------------------------------------------\n"
       )
+
+      if (length(CutValue) == 0) {
+        stop("This tree is not partitioned and has no projection matrix.")
+      }
+
+      colnames(Alpha) <- ppTree$data$varName
+      rownames(Alpha) <- paste("proj", seq_len(nrow(Alpha)), sep = "")
       print(round(Alpha, 4))
     }
     if (cutvalue) {
@@ -140,6 +144,12 @@ print.ODT <- function(x, projection = FALSE, cutvalue = FALSE, verbose = TRUE, .
         "\nCutoff values of each node",
         "\n-------------------------------------------------------------\n"
       )
+      if (length(CutValue) == 0) {
+        stop("This tree is not partitioned and has no partition values")
+      }
+
+      names(CutValue) <- paste("CutValue", seq_along(CutValue), sep = "")
+
       print(round(CutValue, 4))
     }
   }

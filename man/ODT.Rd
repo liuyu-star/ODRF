@@ -141,7 +141,10 @@ set.seed(221212)
 train <- sample(1:252, 100)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
-tree <- ODT(Density ~ ., train_data, type = "regression")
+tree <- ODT(Density ~ ., train_data,
+  type = "regression",
+  NodeRotateFun = "RotMatPPO", paramList = list(model = "Log", dimProj = "Rand")
+)
 pred <- predict(tree, test_data[, -1])
 # estimation error
 mean((pred - test_data[, 1])^2)
@@ -205,7 +208,7 @@ tree <- ODT(X, y, type = "g-classification", Xcat = c(1, 2), catLabel = catLabel
 
 }
 \references{
-Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.
+Zhan, H., Liu, Y., & Xia, Y. (2022). Consistency of The Oblique Decision Tree and Its Random Forest. arXiv preprint arXiv:2211.12653.
 }
 \seealso{
 \code{\link{online.ODT}} \code{\link{prune.ODT}} \code{\link{as.party}} \code{\link{predict.ODT}} \code{\link{print.ODT}} \code{\link{plot.ODT}} \code{\link{plot_ODT_depth}}
@@ -213,11 +216,4 @@ Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Fo
 \author{
 Yu Liu and Yingcun Xia
 }
-\keyword{CART}
-\keyword{decision}
-\keyword{forest}
-\keyword{oblique}
-\keyword{projection}
-\keyword{pursuit}
-\keyword{random}
 \keyword{tree}

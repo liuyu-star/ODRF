@@ -4,6 +4,7 @@
 #'
 #' @param object An object of class ODRF, as that created by the function \code{\link{ODRF}}.
 #' @param Xnew An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
+#' Note that if there are NA values in the data 'Xnew', which will be replaced with the average value.
 #' @param type One of \code{response}, \code{prob} or \code{tree}, indicating the type of output: predicted values, matrix of class probabilities or predicted value for each tree.
 #' @param weight.tree Whether to weight the tree, if \code{TRUE} then use the out-of-bag error of the tree as the weight. (default \code{FALSE})
 #' @param ... Arguments to be passed to methods.
@@ -17,7 +18,7 @@
 #'
 #' @seealso \code{\link{ODRF}} \code{\link{predict.ODT}}
 #'
-#' @references Zhan H, Liu Y, Xia Y. Consistency of The Oblique Decision Tree and Its Random Forest[J]. arXiv preprint arXiv:2211.12653, 2022.
+#' @references Zhan, H., Liu, Y., & Xia, Y. (2022). Consistency of The Oblique Decision Tree and Its Random Forest. arXiv preprint arXiv:2211.12653.
 #'
 #' @examples
 #' # Classification with Oblique Decision Random Forest
@@ -34,7 +35,8 @@
 #' (mean(pred != test_data[, 8]))
 #'
 #' # Regression with Oblique Decision Random Forest
-#' \dontest{data(body_fat)
+#' \donttest{
+#' data(body_fat)
 #' set.seed(221212)
 #' train <- sample(1:252, 80)
 #' train_data <- data.frame(body_fat[train, ])
@@ -42,8 +44,10 @@
 #' forest <- ODRF(Density ~ ., train_data, type = "regression", parallel = FALSE)
 #' pred <- predict(forest, test_data[, -1])
 #' # estimation error
-#' mean((pred - test_data[, 1])^2)}
+#' mean((pred - test_data[, 1])^2)
+#' }
 #'
+#' @keywords forest predict
 #' @rdname predict.ODRF
 #' @aliases predict.ODRF
 #' @method predict ODRF
@@ -52,15 +56,20 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
   ppForest <- object
   rm(object)
 
-  if (any(is.na(Xnew))) {
-    Xnew <- ppForest$data$na.action(data.frame(Xnew))
-    warning("NA values exist in data matrix")
+  Xna <- is.na(Xnew)
+  if (any(Xna)) {
+    # Xnew <- ppTree$data$na.action(data.frame(Xnew))
+    xj <- which(colSums(Xna) > 0)
+    warning("There are NA values in columns ", paste(xj, collapse = ", "), " of the data 'Xnew', which will be replaced with the average value.")
+    for (j in xj) {
+      Xnew[Xna[, j], j] <- mean(Xnew[, j], na.rm = TRUE)
+    }
   }
   Xnew <- as.matrix(Xnew)
 
-  if (!is.null(ppForest$data$subset)) {
-    Xnew <- Xnew[ppForest$data$subset, ]
-  }
+  # if (!is.null(ppForest$data$subset)) {
+  #  Xnew <- Xnew[ppForest$data$subset, ]
+  # }
 
   p <- ncol(Xnew)
   n <- nrow(Xnew)
@@ -125,6 +134,7 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
     oobErr <- sapply(ppForest$ppTrees, function(trees) trees$oobErr)
   } else {
     oobErr <- rep(1, ntrees)
+    warning("numOOB=0, weight.tree = TRUE invalid")
   }
   weights <- weight.tree * oobErr + (!weight.tree)
   weights <- weights / sum(weights)

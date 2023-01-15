@@ -18,8 +18,7 @@
 \item{...}{Arguments to be passed to methods.}
 }
 \value{
-A matrix of importance measure, first column for each predictor variable and second column is Increased error.
-Error is misclassification rate (MR) for classification or mean square error (MSE) for regression.
+The horizontal axis is the increased error of ODRF after replacing the variable, the larger the increased error the more important the variable is.
 }
 \description{
 Dotchart of variable importance as measured by a Oblique Decision Random Forest.
@@ -41,3 +40,5 @@ plot(varimp, digits = 0)
 \seealso{
 \code{\link{ODRF}} \code{\link{VarImp}}
 }
+\keyword{forest}
+\keyword{plot}

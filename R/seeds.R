@@ -22,6 +22,8 @@
 #' @references M. Charytanowicz, J. Niewczas, P. Kulczycki, P.A. Kowalski, S. Lukasik, S. Zak, 'A Complete Gradient Clustering Algorithm for Features Analysis of X-ray Images', in: Information Technologies in Biomedicine, Ewa Pietka, Jacek Kawa (eds.), Springer-Verlag, Berlin-Heidelberg, 2010, pp. 15-24.
 #' @name seeds
 #'
+#' @keywords internal
+#'
 #' @seealso  \code{\link{body_fat}} \code{\link{breast_cancer}}
 #'
 #' @examples
