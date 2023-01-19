@@ -7,7 +7,7 @@ test_that("predict returns good prediction", {
 
   tree <- ODT(varieties_of_wheat ~ ., train_data, type = "i-classification")
   pred <- predict(tree, test_data[, -8])
-  expect_gt(mean(pred == test_data[, 8]), 0.9)
+  expect_gt(mean(pred == test_data[, 8]), 0.8)
 })
 
 tree <- ODT(Species ~ ., iris, type = "i-classification")

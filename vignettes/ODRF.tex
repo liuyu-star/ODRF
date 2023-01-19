@@ -459,16 +459,16 @@ Oblique Classification Tree structure
 =============================================================
 
 1) root
-   node2)# proj1*X < 0.25 -> (leaf1 = setosa)
-   node3)  proj1*X >= 0.25
+   node2)# proj1*X < 0.29 -> (leaf1 = setosa)
+   node3)  proj1*X >= 0.29
       node4)  proj2*X < 0.69
-         node6)# proj3*X < 0.67 -> (leaf2 = versicolor)
-         node7)  proj3*X >= 0.67
-            node10)# proj5*X < 0.6 -> (leaf5 = virginica)
-            node11)# proj5*X >= 0.6 -> (leaf6 = versicolor)
+         node6)# proj3*X < 0.58 -> (leaf2 = versicolor)
+         node7)  proj3*X >= 0.58
+            node10)# proj5*X < 0.35 -> (leaf5 = versicolor)
+            node11)# proj5*X >= 0.35 -> (leaf6 = versicolor)
       node5)  proj2*X >= 0.69
-         node8)# proj4*X < 0.65 -> (leaf3 = virginica)
-         node9)# proj4*X >= 0.65 -> (leaf4 = virginica)
+         node8)# proj4*X < 0.54 -> (leaf3 = virginica)
+         node9)# proj4*X >= 0.54 -> (leaf4 = virginica)
 \end{Soutput}
 \begin{Sinput}
 R> party.tree <- as.party(tree, data = iris)
@@ -480,16 +480,16 @@ Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width
 
 Fitted party:
 [1] root
-|   [2] proj1X >= 0.24576
+|   [2] proj1X >= 0.29167
 |   |   [3] proj2X >= 0.6875
-|   |   |   [4] proj4X >= 0.65254: virginica (n = 43, err = 0.0%)
-|   |   |   [5] proj4X < 0.65254: virginica (n = 3, err = 33.3%)
+|   |   |   [4] proj4X >= 0.54167: virginica (n = 35, err = 0.0%)
+|   |   |   [5] proj4X < 0.54167: virginica (n = 11, err = 9.1%)
 |   |   [6] proj2X < 0.6875
-|   |   |   [7] proj3X >= 0.66949
-|   |   |   |   [8] proj5X >= 0.60417: versicolor (n = 3, err = 33.3%)
-|   |   |   |   [9] proj5X < 0.60417: virginica (n = 3, err = 0.0%)
-|   |   |   [10] proj3X < 0.66949: versicolor (n = 48, err = 2.1%)
-|   [11] proj1X < 0.24576: setosa (n = 50, err = 0.0%)
+|   |   |   [7] proj3X >= 0.58475
+|   |   |   |   [8] proj5X >= 0.35417: versicolor (n = 14, err = 7.1%)
+|   |   |   |   [9] proj5X < 0.35417: versicolor (n = 11, err = 36.4%)
+|   |   |   [10] proj3X < 0.58475: versicolor (n = 29, err = 0.0%)
+|   [11] proj1X < 0.29167: setosa (n = 50, err = 0.0%)
 
 Number of inner nodes:    5
 Number of terminal nodes: 6
@@ -503,12 +503,12 @@ Call:
  ODRF.formula(formula = Species ~ ., data = data, parallel = FALSE) 
                Type of oblique decision random forest: classification
                                       Number of trees: 100
-                           OOB estimate of error rate: 4.67%
+                           OOB estimate of error rate: 6%
 Confusion matrix:
            setosa versicolor virginica class_error
 setosa         50          0         0  0.00000000
-versicolor      0         46         3  0.06122436
-virginica       0          4        47  0.07843122
+versicolor      0         46         5  0.09803902
+virginica       0          4        45  0.08163249
 \end{Soutput}
 \end{Schunk}
 \fct{print} is \proglang{R}'s standard \code{S3} method used to print the results of various objects of class. We use a similar way to \fct{print} in \pkg{PPtreeViz} package \cite{lee2018pptreeviz} to print the tree structure of \fct{ODT}, which shows each node partition of \code{ODT} in detail. When the options \code{projection = TRUE, cutvalue = TRUE} denotes to print projection coefficient and cutoff values in each node respectively. Currently, the \pkg{partykit} package is commonly used to summarize and vi-sualize tree structure in various ways. The function \fct{as.party} in \pkg{partykit} package can convert the trees in other \proglang{R} packages to \code{party} class. We define the \fct{as.party.ODT} function to add \code{ODT} class to the \code{party} class, so that we can use the same function \fct{print} to print the tree structure of the \code{party} class. In addition, we can also use the function \fct{print} to print the model estimation error for the class \fct{ODRF}.
@@ -574,7 +574,7 @@ R> print(c(
 \end{Sinput}
 \begin{Soutput}
        forest       forest1       forest2 forest.online  forest.prune 
-   0.03370787    0.07865169    0.08988764    0.04494382    0.06741573 
+   0.04494382    0.07865169    0.08988764    0.06741573    0.07865169 
 \end{Soutput}
 \begin{Sinput}
 R> data(body_fat, package = "ODRF")
@@ -605,7 +605,7 @@ R> print(c(
 \end{Sinput}
 \begin{Soutput}
         tree        tree1        tree2  tree.online   tree.prune 
-2.730683e-05 4.576357e-05 4.330298e-05 4.191764e-05 3.595299e-05 
+3.428481e-05 3.614067e-05 5.093495e-05 3.626432e-05 3.614067e-05 
 \end{Soutput}
 \end{Schunk}
 As shown in the classification and regression results above, the training data \code{train_data} is divided into two batches equally, then the first batch is used to train \code{ODT} and \code{ODRF}, and the second batch is used to update the model by \fct{online}. The error after the model update is significantly smaller than that of one batch of data alone, and the model is also pruned by \fct{prune} and the same effect is achieved.
@@ -631,8 +631,8 @@ R> data(seeds, package = "ODRF")
 R> (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = "i-classification"))
 \end{Sinput}
 \begin{Soutput}
-[1]  0.541389011  0.147840867 -0.141470331  0.490670015  0.370939106
-[6]  0.003959901 -0.535405078
+[1]  0.59669228  0.62575666 -0.47202518  0.03032322  0.01598554
+[6] -0.14782205 -0.08094918
 \end{Soutput}
 \begin{Sinput}
 R> RotMat <- RotMatPPO(seeds[, 1:7], seeds[, 8],
@@ -643,21 +643,22 @@ R> head(RotMat)
 \end{Sinput}
 \begin{Soutput}
      Variable Number Coefficient
-[1,]        2      1   1.0000000
-[2,]        7      2   1.0000000
-[3,]        4      3   1.0000000
-[4,]        5      4  -0.3558198
-[5,]        3      4   0.9345546
-[6,]        4      5   1.0000000
+[1,]        7      1   1.0000000
+[2,]        3      2   1.0000000
+[3,]        2      3   1.0000000
+[4,]        1      4  -0.8635696
+[5,]        5      4   0.5042297
+[6,]        3      5   1.0000000
 \end{Soutput}
 \begin{Sinput}
 R> data(body_fat, package = "ODRF")
 R> (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "regression"))
 \end{Sinput}
 \begin{Soutput}
- [1] -0.2019004 -0.4171691  0.6436646 -0.3221755 -0.4999429  0.1583641
- [7]  0.2958124 -0.2856300  0.2391311  0.6917452  0.5816309 -0.5984203
-[13] -0.1813335 -0.5909681
+ [1]  0.0500396390 -0.0004203160  0.0017394832 -0.0038324798
+ [5] -0.0035428671 -0.0036891205  0.0033979058 -0.0057153924
+ [9]  0.0002710173 -0.0043282445  0.0044730880  0.0029504953
+[13] -0.0004124229 -0.0172101483
 \end{Soutput}
 \begin{Sinput}
 R> RotMat <- RotMatPPO(seeds[, 1:7], seeds[, 8],
@@ -669,11 +670,11 @@ R> head(RotMat)
 \begin{Soutput}
      Variable Number Coefficient
 [1,]        3      1  1.00000000
-[2,]        1      2  1.00000000
-[3,]        6      3  1.00000000
-[4,]        6      4  0.01858663
-[5,]        7      4  0.99982725
-[6,]        2      5  1.00000000
+[2,]        6      2  1.00000000
+[3,]        4      3  1.00000000
+[4,]        3      4 -0.99619128
+[5,]        2      4 -0.08719482
+[6,]        1      5  1.00000000
 \end{Soutput}
 \begin{Sinput}
 R> set.seed(22)
@@ -875,12 +876,8 @@ Oblique Classification Tree structure
 =============================================================
 
 1) root
-   node2)  proj1*X < 0.2
-      node4)# proj2*X < 0.21 -> (leaf2 = B)
-      node5)  proj2*X >= 0.21
-         node6)# proj3*X < 0.25 -> (leaf3 = B)
-         node7)# proj3*X >= 0.25 -> (leaf4 = M)
-   node3)# proj1*X >= 0.2 -> (leaf1 = M)
+   node2)# proj1*X < 0.2 -> (leaf1 = B)
+   node3)# proj1*X >= 0.2 -> (leaf2 = M)
 \end{Soutput}
 \end{Schunk}
 We use the function \fct{ODT} to construct a decision tree, and print and plot the tree structure. It is shown that the tree structure is very simple with 3 split nodes, 4 leaf nodes and the depth of 4. In addition, we can obtain the projection coefficients of the variables at each split, and the results are shown in Table 2 after removing the variables with projection coefficients less than 0.1 from the 30 variables. It shows that perimeter (x3), concave points (x8, x28), area (x14) and radius (x21) play a major role in the first partition. compactness (x6), perimeter (x13) and concave points (x28) have a significant impact on the second partitioning. In the third partitioning, perimeter\_worst (x23) was randomly selected as the partitioning variable from 30 variable according to our procedure due to the small amount of data. We noticed that mean cell nuclei had the most influence in the whole decision tree.

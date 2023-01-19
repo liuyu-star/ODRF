@@ -108,7 +108,7 @@ including \itemize{
 
 \item{numNode}{Number of nodes that can be used by the tree (default \code{Inf}).}
 
-\item{MinLeaf}{Minimal node size. Default 1 for classification, 5 for regression.}
+\item{MinLeaf}{Minimal node size (Default 5).}
 
 \item{subset}{An index vector indicating which rows should be used. (NOTE: If given, this argument must be named.)}
 
@@ -148,7 +148,7 @@ An object of class ODRF Containing a list components:
 }
 }
 \description{
-Classification and regression implemented by the oblique decision random forest. It is an extension of random forest and include random forest as a special case. It usually produces more accurate predictions, but needs a long computation time.
+Classification and regression implemented by the oblique decision random forest. ODRF usually produces more accurate predictions than RF, but needs longer computation time.
 }
 \examples{
 # Classification with Oblique Decision Randome Forest.

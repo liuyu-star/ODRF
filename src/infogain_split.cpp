@@ -32,6 +32,7 @@ void infogain_split(int M, int N, double* Labels, double* Data, int minleaf, int
         if (diff_labels[nl]>0) bh-=diff_labels[nl]*(saved_logs[diff_labels[nl]-1]-saved_logs[M-1]);
     }
     bh = bh/M;
+    //bh = bh*(M/(M-1))^2;
     bh0=bh;
     
     for(i = 0;i<N;i++){

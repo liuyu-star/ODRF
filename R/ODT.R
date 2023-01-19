@@ -19,7 +19,7 @@
 #' @param paramList List of parameters used by the functions \code{NodeRotateFun}. If left unchanged, default values will be used, for details see \code{\link[ODRF]{defaults}}.
 #' @param MaxDepth The maximum depth of the tree (default \code{Inf}).
 #' @param numNode Number of nodes that can be used by the tree (default \code{Inf}).
-#' @param MinLeaf Minimal node size. Default 1 for classification, 5 for regression.
+#' @param MinLeaf Minimal node size (Default 10).
 #' @param Levels The category label of the response variable when \code{type} is not equal to 'regression'.
 #' @param subset An index vector indicating which rows should be used. (NOTE: If given, this argument must be named.)
 #' @param weights Vector of non-negative observational weights; fractional weights are allowed (default NULL).
@@ -153,7 +153,7 @@ ODT <- function(X, ...) {
 #' @aliases ODT.formula
 #' @export
 ODT.formula <- function(formula, data = NULL, type = "auto", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
-                        MaxDepth = Inf, numNode = Inf, MinLeaf = 5, Levels = NULL, subset = NULL, weights = NULL, na.action = na.fail,
+                        MaxDepth = Inf, numNode = Inf, MinLeaf = 10, Levels = NULL, subset = NULL, weights = NULL, na.action = na.fail,
                         catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
   Call <- match.call()
   indx <- match(c("formula", "data", "subset", "na.action"), names(Call), nomatch = 0L) # , "weights"
@@ -225,7 +225,7 @@ ODT.formula <- function(formula, data = NULL, type = "auto", NodeRotateFun = "Ro
 #' @aliases ODT.default
 #' @export
 ODT.default <- function(X, y, type = "auto", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
-                        MaxDepth = Inf, numNode = Inf, MinLeaf = 5, Levels = NULL, subset = NULL, weights = NULL, na.action = na.fail,
+                        MaxDepth = Inf, numNode = Inf, MinLeaf = 10, Levels = NULL, subset = NULL, weights = NULL, na.action = na.fail,
                         catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
   Call <- match.call()
   indx <- match(c("X", "y", "subset", "na.action"), names(Call), nomatch = 0L) # , "weights"
@@ -290,9 +290,9 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
   if (is.factor(y) && (type == "regression")) {
     stop(paste0("When ", formula[[2]], " is a factor type, 'type' cannot take 'regression'."))
   }
-  if (MinLeaf == 5) {
-    MinLeaf <- ifelse(type == "regression", 5, 1)
-  }
+  #if (MinLeaf == 5) {
+  #  MinLeaf <- ifelse(type == "regression", 10, 5)
+  #}
 
   if ((!NodeRotateFun %in% ls("package:ODRF")) && (!NodeRotateFun %in% ls(envir = .GlobalEnv))) {
     source(paste0(FunDir, "/", NodeRotateFun, ".R"))
@@ -352,11 +352,11 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
   }
 
   # address na values.
+  data <- data.frame(y, X)
   if (any(is.na(as.list(data)))) {
     warning("NA values exist in data frame")
   }
 
-  data <- data.frame(y, X)
   colnames(data) <- c(as.character(formula[[2]]), varName)
   indx <- match(c("formula", "data", "subset", "na.action"), names(Call), nomatch = 0L)
   temp <- Call[c(1L, indx)]
@@ -422,12 +422,6 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
     }
   }
 
-  if (NodeRotateFun == "RotMatPPO") {
-    if (is.null(paramList$dimProj)) {
-      paramList$dimProj <- min(ceiling(n^0.4), ceiling(p * 2 / 3))
-    }
-    paramList$numProj <- ifelse(paramList$dimProj == "Rand", max(5, sample(floor(p / 3), 1)), max(5, ceiling(p / paramList$dimProj)))
-  }
   paramList <- defaults(paramList, type, p, weights, catLabel)
 
   if ((type == "regression") && (!paramList$model %in% c("PPR", "Rand", "Log"))) {
@@ -468,9 +462,9 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
   freeNode <- 2
   while (!is.null(nodeXIndx[[currentNode]])) {
     if ((length(unique(y[nodeXIndx[[currentNode]]])) == 1) ||
-      (length(nodeXIndx[[currentNode]]) <= (MinLeaf + 1)) ||
-      (nodeDepth[currentNode] >= MaxDepth) ||
-      (freeNode >= numNode)) {
+        (length(nodeXIndx[[currentNode]]) <= (MinLeaf + 5)) ||
+        (nodeDepth[currentNode] >= MaxDepth) ||
+        (freeNode >= numNode)) {
       if (type != "regression") {
         leafLabel <- table(Levels[c(sl, y[nodeXIndx[[currentNode]]])]) - 1
         # nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
@@ -516,6 +510,12 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
     }
 
     if (NodeRotateFun == "RotMatPPO") {
+      if (is.null(paramList$dimProj)) {
+        paramList$dimProj <- min(ceiling(n^0.4), ceiling(p * 2 / 3))
+      }
+      if (is.null(paramList$numProj)) {
+        paramList$numProj <- ifelse(paramList$dimProj == "Rand",sample(floor(p / 3), 1),ceiling(p / paramList$dimProj))
+      }
       sparseM <- RotMatPPO(
         X = X[nodeXIndx[[currentNode]], ], y = y[nodeXIndx[[currentNode]]], model = paramList$model,
         type = paramList$type, weights = paramList$weights, dimProj = paramList$dimProj,

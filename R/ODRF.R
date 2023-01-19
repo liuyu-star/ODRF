@@ -1,6 +1,6 @@
 #' Classification and Regression with Oblique Decision Random Forest
 #'
-#' Classification and regression implemented by the oblique decision random forest. It is an extension of random forest and include random forest as a special case. It usually produces more accurate predictions, but needs a long computation time.
+#' Classification and regression implemented by the oblique decision random forest. ODRF usually produces more accurate predictions than RF, but needs longer computation time.
 #'
 #' @param formula Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})
 #' @param data Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.
@@ -27,7 +27,7 @@
 #' @param seed Random seeds in order to reproduce results.
 #' @param MaxDepth The maximum depth of the tree (default \code{Inf}).
 #' @param numNode Number of nodes that can be used by the tree (default \code{Inf}).
-#' @param MinLeaf Minimal node size. Default 1 for classification, 5 for regression.
+#' @param MinLeaf Minimal node size (Default 5).
 #' @param subset An index vector indicating which rows should be used. (NOTE: If given, this argument must be named.)
 #' @param weights Vector of non-negative observational weights; fractional weights are allowed (default NULL).
 #' @param na.action A function to specify the action to be taken if NAs are found. (NOTE: If given, this argument must be named.)
@@ -293,42 +293,15 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunD
   if (is.factor(y) && (type == "regression")) {
     stop(paste0("When ", formula[[2]], " is a factor type, 'type' cannot take 'regression'."))
   }
-  if (MinLeaf == 5) {
-    MinLeaf <- ifelse(type == "regression", 5, 1)
-  }
+  #if (MinLeaf == 5) {
+  #  MinLeaf <- ifelse(type == "regression", 5, 1)
+  #}
 
   ppForest <- list(
     call = Call, terms = NULL, type = type, Levels = NULL,
     NodeRotateFun = NodeRotateFun, paramList = paramList, oobErr = NULL, oobConfusionMat = NULL
   )
-  if (type != "regression") {
-    # adjust y to go from 1 to numClass if needed
-    if (is.factor(y)) {
-      ppForest$Levels <- levels(y)
-      y <- as.integer(y)
-    } else if (is.numeric(y)) {
-      ppForest$Levels <- sort(unique(y))
-      y <- as.integer(as.factor(y))
-    } else {
-      ppForest$Levels <- levels(as.factor(y))
-      y <- as.integer(as.factor(y))
-      # stop("Incompatible X type. y must be of type factor or numeric.")
-    }
-    if (length(ppForest$Levels) == 1) {
-      stop("the number of factor levels of response variable must be greater than one")
-    }
 
-    numClass <- length(ppForest$Levels)
-    classCt <- cumsum(table(y))
-    if (stratify) {
-      Cindex <- vector("list", numClass)
-      for (m in 1L:numClass) {
-        Cindex[[m]] <- which(y == m)
-      }
-    }
-  }
-
-  Levels <- ppForest$Levels
   n <- length(y)
   p <- ncol(X)
 
@@ -367,10 +340,11 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunD
   }
 
   # address na values.
+  data <- data.frame(y, X)
   if (any(is.na(as.list(data)))) {
     warning("NA values exist in data frame")
   }
-  data <- data.frame(y, X)
+
   colnames(data) <- c(as.character(formula[[2]]), varName)
   indx <- match(c("formula", "data", "subset", "na.action"), names(Call), nomatch = 0L)
   temp <- Call[c(1L, indx)]
@@ -388,10 +362,38 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunD
   }
   n <- length(y)
   p <- ncol(X)
-  if (type != "regression") {
-    y <- as.integer(as.factor(y))
-  }
+  #if (type != "regression") {
+  #  y <- as.integer(as.factor(y))
+  #}
   rm(data)
+
+  if (type != "regression") {
+    # adjust y to go from 1 to numClass if needed
+    if (is.factor(y)) {
+      ppForest$Levels <- levels(y)
+      y <- as.integer(y)
+    } else if (is.numeric(y)) {
+      ppForest$Levels <- sort(unique(y))
+      y <- as.integer(as.factor(y))
+    } else {
+      ppForest$Levels <- levels(as.factor(y))
+      y <- as.integer(as.factor(y))
+      # stop("Incompatible X type. y must be of type factor or numeric.")
+    }
+    if (length(ppForest$Levels) == 1) {
+      stop("the number of factor levels of response variable must be greater than one")
+    }
+
+    numClass <- length(ppForest$Levels)
+    classCt <- cumsum(table(y))
+    if (stratify) {
+      Cindex <- vector("list", numClass)
+      for (m in 1L:numClass) {
+        Cindex[[m]] <- which(y == m)
+      }
+    }
+  }
+  Levels <- ppForest$Levels
 
   # weights=c(weights,paramList$weights)
   if (!is.null(subset)) {

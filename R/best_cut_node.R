@@ -6,7 +6,7 @@
 #' @param y A response vector of length n.
 #' @param type One of three criteria, 'i-classification': information gain (classification, default),
 #' 'g-classification': gini impurity index (classification) or 'regression': mean square error (regression).
-#' @param MinLeaf The minimum amount of samples in a leaf.
+#' @param MinLeaf Minimal node size (Default 10).
 #' @param weights A vector of values which weigh the samples when considering a split.
 #' @param numLabels The number of categories.
 #'
@@ -27,7 +27,7 @@
 #' print(bestcut)
 #'
 #' @export
-best.cut.node <- function(X, y, type = "i-classification", weights = 1, MinLeaf = ifelse(type == "regression", 5, 1),
+best.cut.node <- function(X, y, type, weights = 1, MinLeaf = 10,
                           numLabels = ifelse(type == "regression", 0, length(unique(y)))) {
   if (any(is.na(X))) {
     stop("data 'X' has Missing value, NA or NaN")

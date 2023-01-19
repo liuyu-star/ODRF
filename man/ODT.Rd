@@ -17,7 +17,7 @@ ODT(X, ...)
   paramList = NULL,
   MaxDepth = Inf,
   numNode = Inf,
-  MinLeaf = 5,
+  MinLeaf = 10,
   Levels = NULL,
   subset = NULL,
   weights = NULL,
@@ -38,7 +38,7 @@ ODT(X, ...)
   paramList = NULL,
   MaxDepth = Inf,
   numNode = Inf,
-  MinLeaf = 5,
+  MinLeaf = 10,
   Levels = NULL,
   subset = NULL,
   weights = NULL,
@@ -78,7 +78,7 @@ including \itemize{
 
 \item{numNode}{Number of nodes that can be used by the tree (default \code{Inf}).}
 
-\item{MinLeaf}{Minimal node size. Default 1 for classification, 5 for regression.}
+\item{MinLeaf}{Minimal node size (Default 10).}
 
 \item{Levels}{The category label of the response variable when \code{type} is not equal to 'regression'.}
 

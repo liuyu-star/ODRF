@@ -7,9 +7,9 @@
 best.cut.node(
   X,
   y,
-  type = "i-classification",
+  type,
   weights = 1,
-  MinLeaf = ifelse(type == "regression", 5, 1),
+  MinLeaf = 10,
   numLabels = ifelse(type == "regression", 0, length(unique(y)))
 )
 }
@@ -23,7 +23,7 @@ best.cut.node(
 
 \item{weights}{A vector of values which weigh the samples when considering a split.}
 
-\item{MinLeaf}{The minimum amount of samples in a leaf.}
+\item{MinLeaf}{Minimal node size (Default 10).}
 
 \item{numLabels}{The number of categories.}
 }

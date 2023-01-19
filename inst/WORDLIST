@@ -22,6 +22,7 @@ Fryzlewicz
 FunDir
 GINI
 GRF
+Gini
 HORF
 Houghton
 JW
@@ -43,6 +44,7 @@ Mifflin
 MinLeaf
 Niewczas
 NodeRotateFun
+ODR
 ODT
 ODTs
 OL
@@ -71,6 +73,7 @@ RPFs
 RPR
 Rainforth
 RandMatBinary
+Randome
 Randomer
 Rcpp
 RerF
@@ -114,7 +117,6 @@ bayesian
 biodegradation
 bottomleft
 bottomright
-cardinality
 catLabel
 cforest
 ctree
@@ -142,10 +144,8 @@ kurtosismin
 laguerrefourier
 leafnode
 legendre
-lienar
 lr
 magrittr
-manipulatr
 mf
 motheds
 na
@@ -179,13 +179,12 @@ rlang
 rnd
 rotationForest
 rpart
-rstudio
 se
 signif
 storeOOB
 sualize
+supsmu
 svm
-th
 topleft
 topright
 tunnelled

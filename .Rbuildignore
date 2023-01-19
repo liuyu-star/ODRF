@@ -15,3 +15,5 @@
 ^\.circleci/config\.yml$
 ^appveyor\.yml$
 ^\.travis\.yml$
+^doc$
+^Meta$

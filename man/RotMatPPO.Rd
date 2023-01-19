@@ -11,8 +11,8 @@ RotMatPPO(
   type = "i-classification",
   weights = NULL,
   dimProj = min(ceiling(length(y)^0.4), ceiling(ncol(X) * 2/3)),
-  numProj = ifelse(dimProj == "Rand", max(5, sample(floor(ncol(X)/3), 1)), max(5,
-    ceiling(ncol(X)/dimProj))),
+  numProj = ifelse(dimProj == "Rand", sample(floor(ncol(X)/3), 1),
+    ceiling(ncol(X)/dimProj)),
   catLabel = NULL,
   ...
 )

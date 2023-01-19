@@ -219,7 +219,8 @@ RotMatRF <- function(dimX, numProj, catLabel = NULL, ...) {
 #' @importFrom nnet nnet
 #' @export
 RotMatPPO <- function(X, y, model = "PPR", type = "i-classification", weights = NULL, dimProj = min(ceiling(length(y)^0.4), ceiling(ncol(X) * 2 / 3)),
-                      numProj = ifelse(dimProj == "Rand", max(5, sample(floor(ncol(X) / 3), 1)), max(5, ceiling(ncol(X) / dimProj))), catLabel = NULL, ...) {
+                      numProj = ifelse(dimProj == "Rand",sample(floor(ncol(X) / 3), 1), ceiling(ncol(X) / dimProj)), catLabel = NULL, ...) {
+  #numProj = ifelse(dimProj == "Rand", max(5, sample(floor(ncol(X) / 3), 1)), max(5, ceiling(ncol(X) / dimProj)))
   if (dimProj != "Rand") {
     if (dimProj > ncol(X)) {
       stop("ERROR: parameter dimProj is greater than the number of dimensions.")
@@ -273,7 +274,7 @@ RotMatPPO <- function(X, y, model = "PPR", type = "i-classification", weights = 
     catMap <- 1
     for (xj in unique(ind[catVar])) {
       isj <- which(ind == xj)
-      sparseM[isj, 1L] <- sample(catMap:(catMap + length(catLabel[[xj]]) - 1), length(isj), replace = FALSE)
+      sparseM[isj, 1L] <- sample(catMap:(catMap + length(catLabel[[xj]]) - 1), length(isj), replace = TRUE)
       catMap <- catMap + length(catLabel[[xj]])
     }
   }

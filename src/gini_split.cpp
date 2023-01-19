@@ -28,6 +28,7 @@ void gini_split(int M, int N, double* Labels, double* Data, int minleaf,
         bh+=diff_labels[nl]*diff_labels[nl];
     }
     bh = 1 - (bh/(M*M));
+    bh = bh*pow(M/(M-1),2);
     
     
     for(i = 0;i<N;i++){
@@ -70,8 +71,8 @@ void gini_split(int M, int N, double* Labels, double* Data, int minleaf,
             }
             gl = 1 - gl/((j+1)*(j+1));
             gr = 1 - gr/((M-j-1)*(M-j-1));
-            
-            ch = ((j+1)*gl/M) + ((M-j-1)*gr/M);
+            //ch = ((j+1)*gl/M) + ((M-j-1)*gr/M);
+            ch = gl*pow((j+1)/((j+1)-1),2) + gr*pow((M-j-1)/((M-j-1)-1),2);
             
             if (ch<bh){
               if (fabs(sorted_data[j+1]-sorted_data[j])>1e-15){
@@ -133,6 +134,7 @@ void gini_split(int M, int N, double* Labels, double* Data, double* W, int minle
         bh+=diff_labels[nl]*diff_labels[nl];
     }
     bh = 1 - (bh/(sum_W*sum_W));
+    bh = bh*pow(M/(M-1),2);
     
     for(i = 0;i<N;i++){
       ah=1e+10;
@@ -180,8 +182,8 @@ void gini_split(int M, int N, double* Labels, double* Data, double* W, int minle
             }
             gl = 1 - gl/(sum_l*sum_l);
             gr = 1 - gr/((sum_W-sum_l)*(sum_W-sum_l));
-            
-            ch = ((sum_l)*gl/sum_W) + ((sum_W-sum_l)*gr/sum_W);
+            //ch = ((sum_l)*gl/sum_W) + ((sum_W-sum_l)*gr/sum_W);
+            ch = gl*pow((j+1)/((j+1)-1),2) + gr*pow((M-j-1)/((M-j-1)-1),2);
             
             if (ch<bh){
               if (fabs(sorted_data[j+1]-sorted_data[j])>1e-15){

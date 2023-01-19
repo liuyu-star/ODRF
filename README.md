@@ -62,10 +62,10 @@ Classification with Oblique Decision Tree.
 
 ``` r
 library(ODRF)
-#> 载入需要的程辑包：partykit
-#> 载入需要的程辑包：grid
-#> 载入需要的程辑包：libcoin
-#> 载入需要的程辑包：mvtnorm
+#> Loading required package: partykit
+#> Loading required package: grid
+#> Loading required package: libcoin
+#> Loading required package: mvtnorm
 data(seeds, package = "ODRF")
 set.seed(18)
 train <- sample(1:209, 120)
@@ -106,7 +106,7 @@ print(c(
   forest.online = e.forest.online, forest.prune = e.forest.prune
 ))
 #>        forest       forest1       forest2 forest.online  forest.prune 
-#>    0.03370787    0.07865169    0.08988764    0.04494382    0.06741573
+#>    0.05617978    0.06741573    0.07865169    0.05617978    0.06741573
 ```
 
 Regression with Oblique Decision Randome Forest.
@@ -140,7 +140,7 @@ print(c(
   tree.online = e.tree.online, tree.prune = e.tree.prune
 ))
 #>         tree        tree1        tree2  tree.online   tree.prune 
-#> 2.730683e-05 4.576357e-05 4.330298e-05 4.191764e-05 3.595299e-05
+#> 4.376944e-05 4.512269e-05 5.501814e-05 4.497263e-05 4.512269e-05
 ```
 
 As shown in the classification and regression results above, the
@@ -163,16 +163,12 @@ tree
 #> =============================================================
 #> 
 #> 1) root
-#>    node2)# proj1*X < 0.25 -> (leaf1 = setosa)
-#>    node3)  proj1*X >= 0.25
-#>       node4)  proj2*X < 0.69
-#>          node6)# proj3*X < 0.67 -> (leaf2 = versicolor)
-#>          node7)  proj3*X >= 0.67
-#>             node10)# proj5*X < 0.6 -> (leaf5 = virginica)
-#>             node11)# proj5*X >= 0.6 -> (leaf6 = versicolor)
-#>       node5)  proj2*X >= 0.69
-#>          node8)# proj4*X < 0.65 -> (leaf3 = virginica)
-#>          node9)# proj4*X >= 0.65 -> (leaf4 = virginica)
+#>    node2)# proj1*X < 0.29 -> (leaf1 = setosa)
+#>    node3)  proj1*X >= 0.29
+#>       node4)# proj2*X < 0.52 -> (leaf2 = versicolor)
+#>       node5)  proj2*X >= 0.52
+#>          node6)# proj3*X < 0.74 -> (leaf3 = virginica)
+#>          node7)# proj3*X >= 0.74 -> (leaf4 = virginica)
 forest <- ODRF(Species ~ ., data = iris, parallel = FALSE)
 #> Warning in ODRF.compute(formula, Call, varName, X, y, type, NodeRotateFun, : You
 #> are creating a forest for classification
@@ -182,12 +178,12 @@ forest
 #>  ODRF.formula(formula = Species ~ ., data = data, parallel = FALSE) 
 #>                Type of oblique decision random forest: classification
 #>                                       Number of trees: 100
-#>                            OOB estimate of error rate: 4.67%
+#>                            OOB estimate of error rate: 3.33%
 #> Confusion matrix:
 #>            setosa versicolor virginica class_error
 #> setosa         50          0         0  0.00000000
-#> versicolor      0         46         3  0.06122449
-#> virginica       0          4        47  0.07843137
+#> versicolor      0         46         1  0.02127655
+#> virginica       0          4        49  0.07547156
 ```
 
 ### Plot the tree structure of class `ODT`
@@ -204,8 +200,7 @@ If you encounter a clear bug, please file an issue with a minimal
 reproducible example on
 [GitHub](https://github.com/liuyu-star/ODRF/issues).
 
-------------------------------------------------------------------------
-
-Please note that this project is released with a [Contributor Code of
-Conduct](https://dplyr.tidyverse.org/CODE_OF_CONDUCT). By participating
-in this project you agree to abide by its terms.
+<!-- ---
+Please note that this project is released with a [Contributor Code of Conduct](https://dplyr.tidyverse.org/CODE_OF_CONDUCT).
+By participating in this project you agree to abide by its terms.
+-->
