@@ -146,6 +146,7 @@ plot(tree)
 If you encounter a clear bug, please file an issue with a minimal reproducible example on [GitHub](https://github.com/liuyu-star/ODRF/issues).
 
 ---
+
 Please note that this project is released with a [Contributor Code of Conduct](https://liuyu-star.github.io/ODRF/CONTRIBUTING).
 By participating in this project you agree to abide by its terms.
 
