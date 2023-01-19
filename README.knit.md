@@ -4,14 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
-)
-```
+
 
 # ODRF <a href='https://dplyr.tidyverse.org'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
@@ -52,8 +45,13 @@ We show how to use the ODRF package with examples.
 
 ### Classification and regression with functions `ODT()` and `ODRF()`
 Classification with Oblique Decision Tree.
-```{r ODT}
+
+```r
 library(ODRF)
+#> 载入需要的程辑包：partykit
+#> 载入需要的程辑包：grid
+#> 载入需要的程辑包：libcoin
+#> 载入需要的程辑包：mvtnorm
 data(seeds, package = "ODRF")
 set.seed(18)
 train <- sample(1:209, 120)
@@ -93,10 +91,13 @@ print(c(
   forest = e.forest, forest1 = e.forest.1, forest2 = e.forest.2,
   forest.online = e.forest.online, forest.prune = e.forest.prune
 ))
+#>        forest       forest1       forest2 forest.online  forest.prune 
+#>    0.05617978    0.06741573    0.07865169    0.05617978    0.06741573
 ```
 
 Regression with Oblique Decision Randome Forest.
-```{r ODRF}
+
+```r
 data(body_fat, package = "ODRF")
 set.seed(9)
 train <- sample(1:252, 120)
@@ -124,28 +125,59 @@ print(c(
   tree = e.tree, tree1 = e.tree.1, tree2 = e.tree.2,
   tree.online = e.tree.online, tree.prune = e.tree.prune
 ))
+#>         tree        tree1        tree2  tree.online   tree.prune 
+#> 4.376944e-05 4.512269e-05 5.501814e-05 4.497263e-05 4.512269e-05
 ```
 As shown in the classification and regression results above, the training data `train_data` is divided into two batches equally, then the first batch is used to train `ODT` and `ODRF`, and the second batch is used to update the model by `online()`. The error after the model update is significantly smaller than that of one batch of data alone, and the model is also pruned by `prune()` and the same effect is achieved.
 
 ### Print the tree structure of class `ODT` and the model estimation error of class `ODRF`
-```{r print}
+
+```r
 data(iris, package = "datasets")
 tree <- ODT(Species ~ ., data = iris)
+#> Warning in ODT.compute(formula, Call, varName, X, y, type, NodeRotateFun, : You
+#> are creating a forest for classification
 tree
+#> ============================================================= 
+#> Oblique Classification Tree structure 
+#> =============================================================
+#> 
+#> 1) root
+#>    node2)# proj1*X < 0.29 -> (leaf1 = setosa)
+#>    node3)  proj1*X >= 0.29
+#>       node4)# proj2*X < 0.52 -> (leaf2 = versicolor)
+#>       node5)  proj2*X >= 0.52
+#>          node6)# proj3*X < 0.74 -> (leaf3 = virginica)
+#>          node7)# proj3*X >= 0.74 -> (leaf4 = virginica)
 forest <- ODRF(Species ~ ., data = iris, parallel = FALSE)
+#> Warning in ODRF.compute(formula, Call, varName, X, y, type, NodeRotateFun, : You
+#> are creating a forest for classification
 forest
+#> 
+#> Call:
+#>  ODRF.formula(formula = Species ~ ., data = data, parallel = FALSE) 
+#>                Type of oblique decision random forest: classification
+#>                                       Number of trees: 100
+#>                            OOB estimate of error rate: 3.33%
+#> Confusion matrix:
+#>            setosa versicolor virginica class_error
+#> setosa         50          0         0  0.00000000
+#> versicolor      0         46         1  0.02127655
+#> virginica       0          4        49  0.07547156
 ```
 
 ### Plot the tree structure of class `ODT`
-```{r plot, fig.height=5.5,fig.width=7.2}
+
+```r
 plot(tree)
 ```
+
+<img src="man/figures/README-plot-1.png" width="100%" />
 
 ## Getting help
 
 If you encounter a clear bug, please file an issue with a minimal reproducible example on [GitHub](https://github.com/liuyu-star/ODRF/issues).
 
----
 Please note that this project is released with a [Contributor Code of Conduct](https://liuyu-star.github.io/ODRF/CONTRIBUTING).
 By participating in this project you agree to abide by its terms.
 
