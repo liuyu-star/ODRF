@@ -62,10 +62,10 @@ Classification with Oblique Decision Tree.
 
 ``` r
 library(ODRF)
-#> 载入需要的程辑包：partykit
-#> 载入需要的程辑包：grid
-#> 载入需要的程辑包：libcoin
-#> 载入需要的程辑包：mvtnorm
+#> Loading required package: partykit
+#> Loading required package: grid
+#> Loading required package: libcoin
+#> Loading required package: mvtnorm
 data(seeds, package = "ODRF")
 set.seed(18)
 train <- sample(1:209, 120)

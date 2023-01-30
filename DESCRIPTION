@@ -16,7 +16,7 @@ Description: The oblique decision tree (ODT) uses linear combinations of
     regression as supplements to the classical CART and Random Forest
     respectively.
 License: AGPL (>= 3)
-URL: https://github.com/liuyu-star/ODRF
+URL: https://liuyu-star.github.io/ODRF
 BugReports: https://github.com/liuyu-star/ODRF/issues
 Depends: 
     partykit,

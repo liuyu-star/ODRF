@@ -17,3 +17,4 @@
 ^\.travis\.yml$
 ^doc$
 ^Meta$
+^data-raw$
