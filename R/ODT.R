@@ -290,6 +290,8 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
   if (is.factor(y) && (type == "regression")) {
     stop(paste0("When ", formula[[2]], " is a factor type, 'type' cannot take 'regression'."))
   }
+
+  MinLeaf=(MinLeaf==1)+MinLeaf
   #if (MinLeaf == 5) {
   #  MinLeaf <- ifelse(type == "regression", 10, 5)
   #}
@@ -462,7 +464,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
   freeNode <- 2
   while (!is.null(nodeXIndx[[currentNode]])) {
     if ((length(unique(y[nodeXIndx[[currentNode]]])) == 1) ||
-        (length(nodeXIndx[[currentNode]]) <= (MinLeaf + 5)) ||
+        (length(nodeXIndx[[currentNode]]) <= (2*MinLeaf)) ||
         (nodeDepth[currentNode] >= MaxDepth) ||
         (freeNode >= numNode)) {
       if (type != "regression") {
