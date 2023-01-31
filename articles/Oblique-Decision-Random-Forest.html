@@ -223,7 +223,7 @@ other ODT and ODRF. You can learn more about them in
 <span>  tree.online <span class="op">=</span> <span class="va">e.tree.online</span>, tree.prune <span class="op">=</span> <span class="va">e.tree.prune</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         tree        tree1        tree2  tree.online   tree.prune </span></span>
-<span><span class="co">#&gt; 4.376944e-05 4.512269e-05 5.501814e-05 4.497263e-05 4.512269e-05</span></span></code></pre></div>
+<span><span class="co">#&gt; 4.376944e-05 3.823394e-05 4.979761e-05 3.838732e-05 3.823394e-05</span></span></code></pre></div>
 <p>As shown in the classification and regression results above, the
 training data <code>train_data</code> is divided into two batches
 equally, then the first batch is used to train <code>ODT</code> and
@@ -249,10 +249,8 @@ estimation error of class <code>ODRF</code><a class="anchor" aria-label="anchor"
 <span><span class="co">#&gt; 1) root</span></span>
 <span><span class="co">#&gt;    node2)# proj1*X &lt; 0.29 -&gt; (leaf1 = setosa)</span></span>
 <span><span class="co">#&gt;    node3)  proj1*X &gt;= 0.29</span></span>
-<span><span class="co">#&gt;       node4)# proj2*X &lt; 0.52 -&gt; (leaf2 = versicolor)</span></span>
-<span><span class="co">#&gt;       node5)  proj2*X &gt;= 0.52</span></span>
-<span><span class="co">#&gt;          node6)# proj3*X &lt; 0.74 -&gt; (leaf3 = virginica)</span></span>
-<span><span class="co">#&gt;          node7)# proj3*X &gt;= 0.74 -&gt; (leaf4 = virginica)</span></span>
+<span><span class="co">#&gt;       node4)# proj2*X &lt; 0.55 -&gt; (leaf2 = versicolor)</span></span>
+<span><span class="co">#&gt;       node5)# proj2*X &gt;= 0.55 -&gt; (leaf3 = virginica)</span></span>
 <span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ODRF.html">ODRF</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in ODRF.compute(formula, Call, varName, X, y, type, NodeRotateFun, :</span></span>
 <span><span class="co">#&gt; You are creating a forest for classification</span></span>
