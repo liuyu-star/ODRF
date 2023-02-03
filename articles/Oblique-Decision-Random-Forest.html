@@ -192,7 +192,7 @@ other ODT and ODRF. You can learn more about them in
 <span>  forest.online <span class="op">=</span> <span class="va">e.forest.online</span>, forest.prune <span class="op">=</span> <span class="va">e.forest.prune</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        forest       forest1       forest2 forest.online  forest.prune </span></span>
-<span><span class="co">#&gt;    0.05617978    0.07865169    0.07865169    0.04494382    0.08988764</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.03370787    0.08988764    0.08988764    0.08988764    0.08988764</span></span></code></pre></div>
 <p>Regression with Oblique Decision Randome Forest.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">body_fat</span>, package <span class="op">=</span> <span class="st">"ODRF"</span><span class="op">)</span></span>
@@ -223,7 +223,7 @@ other ODT and ODRF. You can learn more about them in
 <span>  tree.online <span class="op">=</span> <span class="va">e.tree.online</span>, tree.prune <span class="op">=</span> <span class="va">e.tree.prune</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;         tree        tree1        tree2  tree.online   tree.prune </span></span>
-<span><span class="co">#&gt; 4.376944e-05 3.823394e-05 4.979761e-05 3.838732e-05 3.823394e-05</span></span></code></pre></div>
+<span><span class="co">#&gt; 2.201597e-05 3.736379e-05 5.485434e-05 3.753883e-05 3.736379e-05</span></span></code></pre></div>
 <p>As shown in the classification and regression results above, the
 training data <code>train_data</code> is divided into two batches
 equally, then the first batch is used to train <code>ODT</code> and
@@ -239,33 +239,33 @@ estimation error of class <code>ODRF</code><a class="anchor" aria-label="anchor"
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">iris</span>, package <span class="op">=</span> <span class="st">"datasets"</span><span class="op">)</span></span>
 <span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ODT.html">ODT</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in ODT.compute(formula, Call, varName, X, y, type, NodeRotateFun, : You</span></span>
-<span><span class="co">#&gt; are creating a forest for classification</span></span>
+<span><span class="co">#&gt; Warning in ODT.compute(formula, Call, varName, X, y, type, lambda,</span></span>
+<span><span class="co">#&gt; NodeRotateFun, : You are creating a forest for classification</span></span>
 <span><span class="va">tree</span></span>
 <span><span class="co">#&gt; ============================================================= </span></span>
 <span><span class="co">#&gt; Oblique Classification Tree structure </span></span>
 <span><span class="co">#&gt; =============================================================</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; 1) root</span></span>
-<span><span class="co">#&gt;    node2)# proj1*X &lt; 0.29 -&gt; (leaf1 = setosa)</span></span>
-<span><span class="co">#&gt;    node3)  proj1*X &gt;= 0.29</span></span>
-<span><span class="co">#&gt;       node4)# proj2*X &lt; 0.55 -&gt; (leaf2 = versicolor)</span></span>
-<span><span class="co">#&gt;       node5)# proj2*X &gt;= 0.55 -&gt; (leaf3 = virginica)</span></span>
+<span><span class="co">#&gt;    node2)# proj1*X &lt; 0.01 -&gt; (leaf1 = setosa)</span></span>
+<span><span class="co">#&gt;    node3)  proj1*X &gt;= 0.01</span></span>
+<span><span class="co">#&gt;       node4)# proj2*X &lt; 0.88 -&gt; (leaf2 = versicolor)</span></span>
+<span><span class="co">#&gt;       node5)# proj2*X &gt;= 0.88 -&gt; (leaf3 = virginica)</span></span>
 <span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ODRF.html">ODRF</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in ODRF.compute(formula, Call, varName, X, y, type, NodeRotateFun, :</span></span>
-<span><span class="co">#&gt; You are creating a forest for classification</span></span>
+<span><span class="co">#&gt; Warning in ODRF.compute(formula, Call, varName, X, y, type, lambda,</span></span>
+<span><span class="co">#&gt; NodeRotateFun, : You are creating a forest for classification</span></span>
 <span><span class="va">forest</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Call:</span></span>
 <span><span class="co">#&gt;  ODRF.formula(formula = Species ~ ., data = data, parallel = FALSE) </span></span>
 <span><span class="co">#&gt;                Type of oblique decision random forest: classification</span></span>
 <span><span class="co">#&gt;                                       Number of trees: 100</span></span>
-<span><span class="co">#&gt;                            OOB estimate of error rate: 3.33%</span></span>
+<span><span class="co">#&gt;                            OOB estimate of error rate: 4%</span></span>
 <span><span class="co">#&gt; Confusion matrix:</span></span>
 <span><span class="co">#&gt;            setosa versicolor virginica class_error</span></span>
 <span><span class="co">#&gt; setosa         50          0         0  0.00000000</span></span>
-<span><span class="co">#&gt; versicolor      0         46         1  0.02127655</span></span>
-<span><span class="co">#&gt; virginica       0          4        49  0.07547156</span></span></code></pre></div>
+<span><span class="co">#&gt; versicolor      0         47         3  0.05999988</span></span>
+<span><span class="co">#&gt; virginica       0          3        47  0.05999988</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="plot-the-tree-structure-of-class-odt">Plot the tree structure of class <code>ODT</code><a class="anchor" aria-label="anchor" href="#plot-the-tree-structure-of-class-odt"></a>

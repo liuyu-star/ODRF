@@ -114,7 +114,7 @@ The maximum value indicates the tree without pruning, and the minimum value (0) 
 <span class="r-in"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">prune_tree</span>, <span class="va">test_data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">8</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># classification error</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pred</span> <span class="op">!=</span> <span class="va">test_data</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4495413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.4678899</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Regression with Oblique Decision Tree</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">body_fat</span><span class="op">)</span></span></span>
@@ -128,7 +128,7 @@ The maximum value indicates the tree without pruning, and the minimum value (0) 
 <span class="r-in"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">prune_tree</span>, <span class="va">test_data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># estimation error</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span> <span class="op">-</span> <span class="va">test_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.617084e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 7.613848e-05</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -61,6 +61,7 @@
 <span>  <span class="va">X</span>,</span>
 <span>  <span class="va">y</span>,</span>
 <span>  <span class="va">type</span>,</span>
+<span>  lambda <span class="op">=</span> <span class="st">"log"</span>,</span>
 <span>  weights <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  MinLeaf <span class="op">=</span> <span class="fl">10</span>,</span>
 <span>  numLabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">type</span> <span class="op">==</span> <span class="st">"regression"</span>, <span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -80,6 +81,10 @@
 <dt>type</dt>
 <dd><p>One of three criteria, 'i-classification': information gain (classification, default),
 'g-classification': gini impurity index (classification) or 'regression': mean square error (regression).</p></dd>
+
+
+<dt>lambda</dt>
+<dd><p>The adjustment parameters for the 'i-classification' and 'regression' criteria are used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).</p></dd>
 
 
 <dt>weights</dt>

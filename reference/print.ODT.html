@@ -111,36 +111,36 @@ Trees, Journal of Statistical Software <a href="doi:10.18637/jss.v083.i08">doi:1
 <span class="r-out co"><span class="r-pr">#&gt;</span> =============================================================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1) root</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    node2)# proj1*X &lt; 0.24 -&gt; (leaf1 = setosa)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    node3)  proj1*X &gt;= 0.24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       node4)# proj2*X &lt; 0.67 -&gt; (leaf2 = versicolor)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       node5)  proj2*X &gt;= 0.67</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          node6)# proj3*X &lt; 0.67 -&gt; (leaf3 = virginica)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          node7)# proj3*X &gt;= 0.67 -&gt; (leaf4 = virginica)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    node2)# proj1*X &lt; 0.37 -&gt; (leaf1 = setosa)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    node3)  proj1*X &gt;= 0.37</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       node4)# proj2*X &lt; 0.87 -&gt; (leaf2 = versicolor)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       node5)  proj2*X &gt;= 0.87</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          node6)# proj3*X &lt; 0.76 -&gt; (leaf3 = virginica)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          node7)# proj3*X &gt;= 0.76 -&gt; (leaf4 = virginica)</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tree</span>, projection <span class="op">=</span> <span class="cn">TRUE</span>, cutvalue <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ============================================================= </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Oblique Classification Tree structure </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =============================================================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1) root</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    node2)# proj1*X &lt; 0.24 -&gt; (leaf1 = setosa)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    node3)  proj1*X &gt;= 0.24</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       node4)# proj2*X &lt; 0.67 -&gt; (leaf2 = versicolor)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       node5)  proj2*X &gt;= 0.67</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          node6)# proj3*X &lt; 0.67 -&gt; (leaf3 = virginica)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>          node7)# proj3*X &gt;= 0.67 -&gt; (leaf4 = virginica)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    node2)# proj1*X &lt; 0.37 -&gt; (leaf1 = setosa)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    node3)  proj1*X &gt;= 0.37</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       node4)# proj2*X &lt; 0.87 -&gt; (leaf2 = versicolor)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       node5)  proj2*X &gt;= 0.87</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          node6)# proj3*X &lt; 0.76 -&gt; (leaf3 = virginica)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>          node7)# proj3*X &gt;= 0.76 -&gt; (leaf4 = virginica)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Projection coefficient in each node </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> proj1      -0.1667     -0.2165       0.7612      0.5881</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> proj2      -0.2686      0.0000       0.8954      0.3552</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> proj3       0.2559     -0.5352       0.2599      0.7619</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> proj1       0.0000           0       0.7552      0.6555</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> proj2       0.0000           0       0.5908      0.8068</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> proj3       0.1228           0       0.0000      0.9924</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cutoff values of each node </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CutValue1 CutValue2 CutValue3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    0.2362    0.6725    0.6710 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    0.3712    0.8662    0.7627 </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
