@@ -65,7 +65,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
 
   subset <- weights <- na.action <- n <- p <- varName <- Xscale <- minCol <- maxminCol <- NULL
   Xcat <- catLabel <- TreeRandRotate <- rotdims <- rotmat <- NULL
-  FunDir <- MaxDepth <- MinLeaf <- numNode <- NULL
+  lambda <- FunDir <- MaxDepth <- MinLeaf <- numNode <- NULL
   nodeRotaMat <- nodeNumLabel <- nodeCutValue <- nodeCutIndex <- childNode <- nodeDepth <- NULL
 
   ppTreeVar <- c(names(ppTree$data), names(ppTree$tree), names(ppTree$structure))
@@ -111,7 +111,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
 
   # get()
   FUN <- match.fun(NodeRotateFun, descend = TRUE)
-  method0 <- strsplit(type, split = "")[[1]][1]
+  #method0 <- strsplit(type, split = "")[[1]][1]
 
 
   if (type != "regression") {
@@ -320,7 +320,8 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
 
     rotaX <- X[nodeXIndx[[currentNode]], , drop = FALSE] %*% rotaX
 
-    bestCut <- best_cut_node(method0, rotaX, y[nodeXIndx[[currentNode]]], Wcd, MinLeaf, maxLabel)
+    #bestCut <- best_cut_node(method0, rotaX, y[nodeXIndx[[currentNode]]], Wcd, MinLeaf, maxLabel)
+    bestCut <- best.cut.node(rotaX, y[nodeXIndx[[currentNode]]], type, lambda, Wcd, MinLeaf, maxLabel)
 
     if (bestCut$BestCutVar == -1) {
       TF <- TRUE
@@ -448,7 +449,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
     Xscale = Xscale, minCol = minCol, maxminCol = maxminCol, Xcat = Xcat, catLabel = catLabel,
     TreeRandRotate = TreeRandRotate, rotdims = rotdims, rotmat = rotmat
   )
-  ppTree$tree <- list(FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode)
+  ppTree$tree <- list(lambda = lambda, FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode)
   ppTree$structure <- list(
     nodeRotaMat = nodeRotaMat, nodeNumLabel = nodeNumLabel, nodeCutValue = nodeCutValue[1:(currentNode - 1)],
     nodeCutIndex = nodeCutIndex[1:(currentNode - 1)], childNode = childNode[1:(currentNode - 1)],

@@ -12,18 +12,19 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // best_cut_node
-List best_cut_node(char method, NumericMatrix Data, NumericVector Labels, NumericVector W, int minleaf, int numLabels);
-RcppExport SEXP _ODRF_best_cut_node(SEXP methodSEXP, SEXP DataSEXP, SEXP LabelsSEXP, SEXP WSEXP, SEXP minleafSEXP, SEXP numLabelsSEXP) {
+List best_cut_node(char method, double lambda, NumericMatrix Data, NumericVector Labels, NumericVector W, int minleaf, int numLabels);
+RcppExport SEXP _ODRF_best_cut_node(SEXP methodSEXP, SEXP lambdaSEXP, SEXP DataSEXP, SEXP LabelsSEXP, SEXP WSEXP, SEXP minleafSEXP, SEXP numLabelsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< char >::type method(methodSEXP);
+    Rcpp::traits::input_parameter< double >::type lambda(lambdaSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type Data(DataSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type Labels(LabelsSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type W(WSEXP);
     Rcpp::traits::input_parameter< int >::type minleaf(minleafSEXP);
     Rcpp::traits::input_parameter< int >::type numLabels(numLabelsSEXP);
-    rcpp_result_gen = Rcpp::wrap(best_cut_node(method, Data, Labels, W, minleaf, numLabels));
+    rcpp_result_gen = Rcpp::wrap(best_cut_node(method, lambda, Data, Labels, W, minleaf, numLabels));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -65,7 +66,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_ODRF_best_cut_node", (DL_FUNC) &_ODRF_best_cut_node, 6},
+    {"_ODRF_best_cut_node", (DL_FUNC) &_ODRF_best_cut_node, 7},
     {"_ODRF_ppOpt", (DL_FUNC) &_ODRF_ppOpt, 11},
     {"_ODRF_predict_ODT", (DL_FUNC) &_ODRF_predict_ODT, 5},
     {NULL, NULL, 0}

@@ -66,7 +66,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
   paramList <- ppForest$paramList
 
   subset <- weights <- na.action <- n <- p <- varName <- Xscale <- minCol <- maxminCol <- Xcat <- catLabel <- NULL
-  FunDir <- MaxDepth <- MinLeaf <- numNode <- TreeRandRotate <- NULL
+  lambda <- FunDir <- MaxDepth <- MinLeaf <- numNode <- TreeRandRotate <- NULL
   ntrees <- numOOB <- storeOOB <- replacement <- stratify <- parallel <- numCores <- seed <- NULL
 
   ppForest <- ppForest[c(9, 10, 11)]
@@ -187,7 +187,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
     subset = subset, weights = weights, na.action = na.action, n = n, p = p, varName = varName,
     Xscale = Xscale, minCol = minCol, maxminCol = maxminCol, Xcat = Xcat, catLabel = catLabel
   )
-  ppForest$tree <- list(FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode, TreeRandRotate = TreeRandRotate)
+  ppForest$tree <- list(lambda = lambda, FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode, TreeRandRotate = TreeRandRotate)
   ppForest$forest <- list(
     ntrees = ntrees, numOOB = numOOB, storeOOB = storeOOB, replacement = replacement, stratify = stratify,
     parallel = parallel, numCores = numCores, seed = seed

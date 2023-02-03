@@ -3,7 +3,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-List best_cut_node(char method, NumericMatrix Data, NumericVector Labels, NumericVector W,int minleaf, int numLabels) {
+List best_cut_node(char method, double lambda, NumericMatrix Data, NumericVector Labels, NumericVector W,int minleaf, int numLabels) {
   
   int M=Data.nrow();
   int N=Data.ncol();
@@ -29,17 +29,17 @@ List best_cut_node(char method, NumericMatrix Data, NumericVector Labels, Numeri
     Labels1[i]=Labels[i];
   }
   
-  
+
   if (W.size()==1){
     switch (method){
     case 'g':
-      gini_split(M, N, Labels1, Data1, minleaf, numLabels, &bcvar, &bcval, bestval);
+      gini_split(lambda, M, N, Labels1, Data1, minleaf, numLabels, &bcvar, &bcval, bestval);
       break;
     case 'i':
       infogain_split(M, N, Labels1, Data1, minleaf, numLabels, &bcvar, &bcval, bestval);
       break;
     case 'r':
-      mse_split(M, N, Labels1, Data1, minleaf, &bcvar, &bcval, bestval);
+      mse_split(lambda, M, N, Labels1, Data1, minleaf, &bcvar, &bcval, bestval);
       break;
     }
   }else{
@@ -50,13 +50,13 @@ List best_cut_node(char method, NumericMatrix Data, NumericVector Labels, Numeri
     
     switch (method){
     case 'g':
-      gini_split(M, N, Labels1, Data1, minleaf, numLabels, &bcvar, &bcval, bestval);
+      gini_split(lambda, M, N, Labels1, Data1, minleaf, numLabels, &bcvar, &bcval, bestval);
       break;
     case 'i':
       infogain_split(M, N, Labels1, Data1, minleaf, numLabels, &bcvar, &bcval, bestval);
       break;
     case 'r':
-      mse_split(M, N, Labels1, Data1, minleaf, &bcvar, &bcval, bestval);
+      mse_split(lambda, M, N, Labels1, Data1, minleaf, &bcvar, &bcval, bestval);
       break;
     }
     

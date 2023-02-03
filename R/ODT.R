@@ -8,6 +8,7 @@
 #' @param y A response vector of length n.
 #' @param type The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression;
 #' 'auto' (default): If the response in \code{data} or \code{y} is a factor, 'g-classification' is used, otherwise regression is assumed.
+#' @param lambda The adjustment parameters for the 'i-classification' and 'regression' criteria are used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).
 #' @param NodeRotateFun Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
 #' including \itemize{
 #' \item{"RotMatPPO": projection pursuit optimization model (\code{\link{PPO}}), see \code{\link{RotMatPPO}} (default, model="PPR").}
@@ -152,7 +153,7 @@ ODT <- function(X, ...) {
 #' @method ODT formula
 #' @aliases ODT.formula
 #' @export
-ODT.formula <- function(formula, data = NULL, type = "auto", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
+ODT.formula <- function(formula, data = NULL, type = "auto", lambda='log', NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
                         MaxDepth = Inf, numNode = Inf, MinLeaf = 10, Levels = NULL, subset = NULL, weights = NULL, na.action = na.fail,
                         catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
   Call <- match.call()
@@ -196,7 +197,7 @@ ODT.formula <- function(formula, data = NULL, type = "auto", NodeRotateFun = "Ro
   }
 
   ppTree <- ODT.compute(
-    formula, Call, varName, X, y, type, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
+    formula, Call, varName, X, y, type, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
     MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate
   )
 
@@ -224,7 +225,7 @@ ODT.formula <- function(formula, data = NULL, type = "auto", NodeRotateFun = "Ro
 #' @method ODT default
 #' @aliases ODT.default
 #' @export
-ODT.default <- function(X, y, type = "auto", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
+ODT.default <- function(X, y, type = "auto", lambda='log', NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
                         MaxDepth = Inf, numNode = Inf, MinLeaf = 10, Levels = NULL, subset = NULL, weights = NULL, na.action = na.fail,
                         catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
   Call <- match.call()
@@ -253,7 +254,7 @@ ODT.default <- function(X, y, type = "auto", NodeRotateFun = "RotMatPPO", FunDir
   }
 
   ppTree <- ODT.compute(
-    formula, Call, varName, X, y, type, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
+    formula, Call, varName, X, y, type, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
     MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate
   )
 
@@ -277,10 +278,10 @@ ODT.default <- function(X, y, type = "auto", NodeRotateFun = "RotMatPPO", FunDir
 }
 
 #' @keywords internal
-ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
+ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
                         MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
   if (is.factor(y) && (type == "auto")) {
-    type <- "i-classification"
+    type <- "g-classification"
     warning("You are creating a forest for classification")
   }
   if (is.numeric(y) && (type == "auto")) {
@@ -424,6 +425,8 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
     }
   }
 
+  dimProj <- paramList$dimProj
+  numProj <- paramList$numProj
   paramList <- defaults(paramList, type, p, weights, catLabel)
 
   if ((type == "regression") && (!paramList$model %in% c("PPR", "Rand", "Log"))) {
@@ -512,6 +515,8 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
     }
 
     if (NodeRotateFun == "RotMatPPO") {
+      paramList$dimProj <- dimProj
+      paramList$numProj <- numProj
       if (is.null(paramList$dimProj)) {
         paramList$dimProj <- min(ceiling(n^0.4), ceiling(p * 2 / 3))
       }
@@ -537,7 +542,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
     rotaX <- X[nodeXIndx[[currentNode]], , drop = FALSE] %*% rotaX
 
     # bestCut <- best_cut_node(type0, rotaX, y[nodeXIndx[[currentNode]]], Wcd, MinLeaf, maxLabel)
-    bestCut <- best.cut.node(rotaX, y[nodeXIndx[[currentNode]]], type, Wcd, MinLeaf, maxLabel)
+    bestCut <- best.cut.node(rotaX, y[nodeXIndx[[currentNode]]], type, lambda, Wcd, MinLeaf, maxLabel)
     if (bestCut$BestCutVar == -1) {
       TF <- TRUE
     } else {
@@ -596,7 +601,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDi
     Xscale = Xscale, minCol = minCol, maxminCol = maxminCol, Xcat = Xcat, catLabel = catLabel,
     TreeRandRotate = TreeRandRotate, rotdims = rotdims, rotmat = rotmat
   )
-  ppTree$tree <- list(FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode)
+  ppTree$tree <- list(lambda = lambda, FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode)
   ppTree$structure <- list(
     nodeRotaMat = nodeRotaMat, nodeNumLabel = nodeNumLabel, nodeCutValue = nodeCutValue[1:(currentNode - 1)],
     nodeCutIndex = nodeCutIndex[1:(currentNode - 1)], childNode = childNode[1:(currentNode - 1)],

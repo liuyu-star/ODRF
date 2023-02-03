@@ -8,6 +8,7 @@ best.cut.node(
   X,
   y,
   type,
+  lambda = "log",
   weights = 1,
   MinLeaf = 10,
   numLabels = ifelse(type == "regression", 0, length(unique(y)))
@@ -20,6 +21,8 @@ best.cut.node(
 
 \item{type}{One of three criteria, 'i-classification': information gain (classification, default),
 'g-classification': gini impurity index (classification) or 'regression': mean square error (regression).}
+
+\item{lambda}{The adjustment parameters for the 'i-classification' and 'regression' criteria are used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).}
 
 \item{weights}{A vector of values which weigh the samples when considering a split.}
 

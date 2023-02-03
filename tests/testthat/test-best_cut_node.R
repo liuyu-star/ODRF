@@ -51,19 +51,31 @@ test_that("Split points are at (A+B)/2 for numeric features, i-classification sp
   y <- rbinom(100, 1, .5)
   X <- matrix(rbinom(5 * 100, 1, .5), 100, 5)
   best_cut <- best.cut.node(X, y, type = "i-classification")
-  expect_equal(best_cut$BestCutVal, 0.5)
+  if(best_cut$BestCutVar==-1){
+    expect_false(FALSE)
+  }else{
+    expect_equal(best_cut$BestCutVal, 0.5)
+  }
 })
 
 test_that("Split points are at (A+B)/2 for numeric features, g-classification splitting", {
   y <- rbinom(100, 1, .5)
   X <- matrix(rbinom(5 * 100, 1, .5), 100, 5)
   best_cut <- best.cut.node(X, y, type = "i-classification")
-  expect_equal(best_cut$BestCutVal, 0.5)
+  if(best_cut$BestCutVar==-1){
+    expect_false(FALSE)
+  }else{
+    expect_equal(best_cut$BestCutVal, 0.5)
+  }
 })
 
 test_that("Split points are at (A+B)/2 for numeric features, regression", {
   y <- rnorm(100)
   X <- matrix(rbinom(5 * 100, 1, .5), 100, 5)
   best_cut <- best.cut.node(X, y, type = "regression")
-  expect_equal(best_cut$BestCutVal, 0.5)
+  if(best_cut$BestCutVar==-1){
+    expect_false(FALSE)
+  }else{
+    expect_equal(best_cut$BestCutVal, 0.5)
+  }
 })

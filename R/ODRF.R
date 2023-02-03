@@ -8,6 +8,7 @@
 #' @param y A response vector of length n.
 #' @param type The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression.
 #' 'auto' (default): If the response in \code{data} or \code{y} is a factor, 'g-classification' is used, otherwise regression is assumed.
+#' @param lambda The adjustment parameters for the 'i-classification' and 'regression' criteria are used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).
 #' @param NodeRotateFun Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
 #' including \itemize{
 #' \item{"RotMatPPO": projection pursuit optimization model (\code{\link{PPO}}), see \code{\link{RotMatPPO}} (default, model="PPR").}
@@ -171,7 +172,7 @@ ODRF <- function(X, ...) {
 #' @method ODRF formula
 #' @aliases ODRF.formula
 #' @export
-ODRF.formula <- function(formula, data = NULL, type = "auto", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
+ODRF.formula <- function(formula, data = NULL, type = "auto", lambda='log', NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
                          ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, numOOB = 1 / 3, parallel = TRUE,
                          numCores = Inf, seed = 220924, MaxDepth = Inf, numNode = Inf, MinLeaf = 5, subset = NULL, weights = NULL,
                          na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
@@ -216,7 +217,7 @@ ODRF.formula <- function(formula, data = NULL, type = "auto", NodeRotateFun = "R
   }
 
   forest <- ODRF.compute(
-    formula, Call, varName, X, y, type, NodeRotateFun, FunDir, paramList,
+    formula, Call, varName, X, y, type, lambda, NodeRotateFun, FunDir, paramList,
     ntrees, storeOOB, replacement, stratify, numOOB, parallel,
     numCores, seed, MaxDepth, numNode, MinLeaf, subset, weights,
     na.action, catLabel, Xcat, Xscale, TreeRandRotate
@@ -231,7 +232,7 @@ ODRF.formula <- function(formula, data = NULL, type = "auto", NodeRotateFun = "R
 #' @method ODRF default
 #' @aliases ODRF.default
 #' @export
-ODRF.default <- function(X, y, type = "auto", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
+ODRF.default <- function(X, y, type = "auto", lambda='log', NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
                          ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, numOOB = 1 / 3, parallel = TRUE,
                          numCores = Inf, seed = 220924, MaxDepth = Inf, numNode = Inf, MinLeaf = 5, subset = NULL, weights = NULL,
                          na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
@@ -261,7 +262,7 @@ ODRF.default <- function(X, y, type = "auto", NodeRotateFun = "RotMatPPO", FunDi
   }
 
   ODRF.compute(
-    formula, Call, varName, X, y, type, NodeRotateFun, FunDir, paramList,
+    formula, Call, varName, X, y, type, lambda, NodeRotateFun, FunDir, paramList,
     ntrees, storeOOB, replacement, stratify, numOOB, parallel,
     numCores, seed, MaxDepth, numNode, MinLeaf, subset, weights,
     na.action, catLabel, Xcat, Xscale, TreeRandRotate
@@ -275,7 +276,7 @@ ODRF.default <- function(X, y, type = "auto", NodeRotateFun = "RotMatPPO", FunDi
 #' @importFrom parallel detectCores makeCluster clusterSplit stopCluster
 #' @importFrom stats model.frame model.extract model.matrix na.fail
 #' @keywords internal
-ODRF.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunDir, paramList,
+ODRF.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFun, FunDir, paramList,
                          ntrees, storeOOB, replacement, stratify, numOOB, parallel,
                          numCores, seed, MaxDepth, numNode, MinLeaf, subset, weights,
                          na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
@@ -283,7 +284,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunD
     stop("argument 'ntrees' must exceed 1")
   }
   if (is.factor(y) && (type == "auto")) {
-    type <- "i-classification"
+    type <- "g-classification"
     warning("You are creating a forest for classification")
   }
   if (is.numeric(y) && (type == "auto")) {
@@ -427,7 +428,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunD
     subset = subset, weights = weights, na.action = na.action, n = n, p = p, varName = varName,
     Xscale = Xscale, minCol = minCol, maxminCol = maxminCol, Xcat = Xcat, catLabel = catLabel
   )
-  ppForest$tree <- list(FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode, TreeRandRotate = TreeRandRotate)
+  ppForest$tree <- list(lambda = lambda, FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode, TreeRandRotate = TreeRandRotate)
   ppForest$forest <- list(
     ntrees = ntrees, numOOB = numOOB, storeOOB = storeOOB, replacement = replacement, stratify = stratify,
     parallel = parallel, numCores = numCores, seed = seed
@@ -467,7 +468,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, NodeRotateFun, FunD
     # colnames(data)=vars
     weights1 <- weights[TDindx]
     ppForestT <- ODT.compute(formula, Call, varName,
-      X = X[TDindx, ], y = y[TDindx], type, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
+      X = X[TDindx, ], y = y[TDindx], type, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
       MinLeaf, Levels, subset = NULL, weights = weights1, na.action = NULL, catLabel, Xcat = 0L, Xscale = "No", TreeRandRotate
     )
 

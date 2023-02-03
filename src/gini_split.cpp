@@ -1,10 +1,10 @@
 #include "quickie.h"
 #include <cmath>
-void gini_split(int M, int N, double* Labels, double* Data, int minleaf, 
+void gini_split(double lambda, int M, int N, double* Labels, double* Data, int minleaf, 
           int numLabels, int* bcvar, double* bcval, double* bestval){
     
     double *sorted_data;
-    double ah, bh, ch, gr, gl;
+    double ah, bh, ch, gr, gl, t, tl, tr;
     int i, j, cl, nl, mj;
     int *diff_labels_l, *diff_labels_r, *diff_labels, *sorted_labels;
     
@@ -28,7 +28,13 @@ void gini_split(int M, int N, double* Labels, double* Data, int minleaf,
         bh+=diff_labels[nl]*diff_labels[nl];
     }
     bh = 1 - (bh/(M*M));
-    bh = bh*pow(M/(M-1),2);
+    if (lambda==M){
+      t=log(M);
+    }else{
+      t=lambda;
+    }
+    bh = bh*pow(M,3)/pow(M-t,2);
+    //bh = bh*pow(M/(M-1),2);
     
     
     for(i = 0;i<N;i++){
@@ -72,7 +78,16 @@ void gini_split(int M, int N, double* Labels, double* Data, int minleaf,
             gl = 1 - gl/((j+1)*(j+1));
             gr = 1 - gr/((M-j-1)*(M-j-1));
             //ch = ((j+1)*gl/M) + ((M-j-1)*gr/M);
-            ch = gl*pow((j+1)/((j+1)-1),2) + gr*pow((M-j-1)/((M-j-1)-1),2);
+            //ch = gl*pow((j+1)/((j+1)-1),2) + gr*pow((M-j-1)/((M-j-1)-1),2);
+            //ch = gl*pow(j+1,3)/pow(j,2) + gr*pow(M-j-1,3)/pow(M-j-2,2);
+            if (lambda==M){
+            tl=log(j+1);
+            tr=log(M-j-1);
+            }else{
+            tl=lambda;
+            tr=lambda;
+            }
+            ch = gl*pow(j+1,3)/pow(j+1-tl,2) + gr*pow(M-j-1,3)/pow(M-j-1-tr,2);
             
             if (ch<bh){
               if (fabs(sorted_data[j+1]-sorted_data[j])>1e-15){
@@ -101,11 +116,11 @@ void gini_split(int M, int N, double* Labels, double* Data, int minleaf,
 }
 
 
-void gini_split(int M, int N, double* Labels, double* Data, double* W, int minleaf, 
+void gini_split(double lambda, int M, int N, double* Labels, double* Data, double* W, int minleaf, 
           int numLabels, int* bcvar, double* bcval, double* bestval){
     
     double *sorted_data, *sorted_w;
-    double ah, bh, ch, sum_W, sum_l, gr, gl;
+    double ah, bh, ch, sum_W, sum_l, gr, gl, t, tl, tr;
     int i, j, cl, nl, mj;
     double *diff_labels_l, *diff_labels_r, *diff_labels;
     int *sorted_labels;
@@ -134,7 +149,14 @@ void gini_split(int M, int N, double* Labels, double* Data, double* W, int minle
         bh+=diff_labels[nl]*diff_labels[nl];
     }
     bh = 1 - (bh/(sum_W*sum_W));
-    bh = bh*pow(M/(M-1),2);
+     if (lambda==M){
+      t=log(M);
+    }else{
+      t=lambda;
+    }
+    bh = bh*pow(M,3)/pow(M-t,2);
+    //bh = bh*pow(M,3)/pow(M-1,2);
+    //bh = bh*pow(M/(M-1),2);
     
     for(i = 0;i<N;i++){
       ah=1e+10;
@@ -183,7 +205,17 @@ void gini_split(int M, int N, double* Labels, double* Data, double* W, int minle
             gl = 1 - gl/(sum_l*sum_l);
             gr = 1 - gr/((sum_W-sum_l)*(sum_W-sum_l));
             //ch = ((sum_l)*gl/sum_W) + ((sum_W-sum_l)*gr/sum_W);
-            ch = gl*pow((j+1)/((j+1)-1),2) + gr*pow((M-j-1)/((M-j-1)-1),2);
+            //ch = gl*pow((j+1)/((j+1)-1),2) + gr*pow((M-j-1)/((M-j-1)-1),2);
+            //ch = gl*pow(j+1,3)/pow(j,2) + gr*pow(M-j-1,3)/pow(M-j-2,2);
+            if (lambda==M){
+            tl=log(j+1);
+            tr=log(M-j-1);
+            }else{
+            tl=lambda;
+            tr=lambda;
+            }
+            ch = gl*pow(j+1,3)/pow(j+1-tl,2) + gr*pow(M-j-1,3)/pow(M-j-1-tr,2);
+            
             
             if (ch<bh){
               if (fabs(sorted_data[j+1]-sorted_data[j])>1e-15){

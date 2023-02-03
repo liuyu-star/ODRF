@@ -12,6 +12,7 @@ ODRF(X, ...)
   formula,
   data = NULL,
   type = "auto",
+  lambda = "log",
   NodeRotateFun = "RotMatPPO",
   FunDir = getwd(),
   paramList = NULL,
@@ -40,6 +41,7 @@ ODRF(X, ...)
   X,
   y,
   type = "auto",
+  lambda = "log",
   NodeRotateFun = "RotMatPPO",
   FunDir = getwd(),
   paramList = NULL,
@@ -75,6 +77,8 @@ ODRF(X, ...)
 
 \item{type}{The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression.
 'auto' (default): If the response in \code{data} or \code{y} is a factor, 'g-classification' is used, otherwise regression is assumed.}
+
+\item{lambda}{The adjustment parameters for the 'i-classification' and 'regression' criteria are used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).}
 
 \item{NodeRotateFun}{Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
 including \itemize{

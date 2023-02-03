@@ -280,7 +280,7 @@ RotMatPPO <- function(X, y, model = "PPR", type = "i-classification", weights = 
   }
 
   ##########################
-  if (n > 10) {
+  if (n > 10 && nrow(sparseM1)>1) {
     Yi <- c(y)
     indC <- 0L
     if (type != "regression") {

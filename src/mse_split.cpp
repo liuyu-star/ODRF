@@ -1,11 +1,11 @@
 #include "quickie.h"
 #include <cmath>
-void mse_split(int M, int N, double* Labels, double* Data, int minleaf, 
+void mse_split(double lambda, int M, int N, double* Labels, double* Data, int minleaf, 
           int* bcvar, double* bcval, double* bestval){
             //, bool CV
     
     double *sorted_data, *sorted_labels;
-    double ah, bh, ch, sum_all, sum_all2, suml, suml2, sumr, sumr2, sr, sl, cl;
+    double ah, bh, ch, sum_all, sum_all2, suml, suml2, sumr, sumr2, sr, sl, cl, t, tl, tr;
     int i, j, mj;
     
     sorted_labels = new double[M];
@@ -20,7 +20,14 @@ void mse_split(int M, int N, double* Labels, double* Data, int minleaf,
     
     //bh = sum_all2 + sum_all*(sum_all/M) - 2*(sum_all/M)*sum_all;
     //bh = (sum_all2 - sum_all*(sum_all/M))/M;
-    bh = (sum_all2 - sum_all*(sum_all/M))*pow(M/(M-1),2);
+    //bh = (sum_all2 - sum_all*(sum_all/M))*pow(M/(M-1),2);
+    if (lambda==M){
+      t=log(M);
+    }else{
+      t=lambda;
+    }
+    bh = sum_all2 - sum_all*(sum_all/M);
+    bh = bh*pow(M/(M-t),2);
 
     for(i = 0;i<N;i++){
       ah=1e+10;
@@ -61,8 +68,16 @@ void mse_split(int M, int N, double* Labels, double* Data, int minleaf,
             sl = suml2 - suml*(suml/(j+1));
             sr = sumr2 - sumr*(sumr/(M-j-1));
             //ch = (sl + sr)/M;
-            ch = sl*pow((j+1)/((j+1)-1),2) + sr*pow((M-j-1)/((M-j-1)-1),2);
-            
+            //ch = sl*pow((j+1)/((j+1)-1),2) + sr*pow((M-j-1)/((M-j-1)-1),2);
+            if (lambda==M){
+            tl=log(j+1);
+            tr=log(M-j-1);
+            }else{
+            tl=lambda;
+            tr=lambda;
+            }
+            ch = sl*pow((j+1)/((j+1)-tl),2) + sr*pow((M-j-1)/((M-j-1)-tr),2);
+
             //sl = (suml2 - suml*(suml/(j+1)))/(j+1);
             //sr = (sumr2 - sumr*(sumr/(M-j-1)))/(M-j-1);
             //ch = ((j+1)*sl +(M-j-1)*sr)/M;
@@ -92,11 +107,11 @@ void mse_split(int M, int N, double* Labels, double* Data, int minleaf,
 }
 
 
-void mse_split(int M, int N, double* Labels, double* Data, double* W, int minleaf, 
+void mse_split(double lambda, int M, int N, double* Labels, double* Data, double* W, int minleaf, 
           int* bcvar, double* bcval, double* bestval){
     
     double *sorted_data, *sorted_labels, *sorted_w;
-    double ah, bh, ch, sum_W, sum_L, sum_wall, sum_wr, sum_wl, sum_all, sum_all2, suml, suml2, sumr, sumr2, sr, sl, cl;
+    double ah, bh, ch, sum_W, sum_L, sum_wall, sum_wr, sum_wl, sum_all, sum_all2, suml, suml2, sumr, sumr2, sr, sl, cl, t, tl, tr;
     int i, j, mj;
     
     sorted_labels = new double[M];
@@ -117,7 +132,13 @@ void mse_split(int M, int N, double* Labels, double* Data, double* W, int minlea
     
     //bh = sum_all2 + sum_W*(sum_all/M)*(sum_all/M) - 2*(sum_all/M)*sum_wall;
     //bh = (sum_all2 + sum_W*(sum_all/M)*(sum_all/M) - 2*(sum_all/M)*sum_wall)/sum_W;
-    bh = (sum_all2 + sum_W*(sum_all/M)*(sum_all/M) - 2*(sum_all/M)*sum_wall)*pow(M/(M-1),2);
+    if (lambda==M){
+      t=log(M);
+    }else{
+      t=lambda;
+    }
+    bh = sum_all2 + sum_W*(sum_all/M)*(sum_all/M) - 2*(sum_all/M)*sum_wall;
+    bh = bh*pow(M/(M-t),2);
     
     for(i = 0;i<N;i++){
         ah=1e+10;
@@ -167,8 +188,16 @@ void mse_split(int M, int N, double* Labels, double* Data, double* W, int minlea
             sl = suml2 + sum_L*(suml/(j+1))*(suml/(j+1)) - 2*(suml/(j+1))*sum_wl;
             sr = sumr2 + (sum_W-sum_L)*(sumr/(M-j-1))*(sumr/(M-j-1)) - 2*(sumr/(M-j-1))*sum_wr;
             
+            if (lambda==M){
+            tl=log(j+1);
+            tr=log(M-j-1);
+            }else{
+            tl=lambda;
+            tr=lambda;
+            }
+            ch = sl*pow((j+1)/((j+1)-tl),2) + sr*pow((M-j-1)/((M-j-1)-tr),2);
             //ch = (sl + sr)/sum_W;
-            ch = sl*pow((j+1)/((j+1)-1),2) + sr*pow((M-j-1)/((M-j-1)-1),2);
+            //ch = sl*pow((j+1)/((j+1)-1),2) + sr*pow((M-j-1)/((M-j-1)-1),2);
             //ch = sl + sr + log(M)/M;
             
             if (ch<bh){
