@@ -21,7 +21,7 @@
 #' test_data <- data.frame(seeds[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
-#'   type = "i-classification", parallel = FALSE
+#'   type = "gini", parallel = FALSE
 #' )
 #' online_forest <- online(forest, train_data[-index, -8], train_data[-index, 8])
 #' pred <- predict(online_forest, test_data[, -8])
@@ -37,7 +37,7 @@
 #' test_data <- data.frame(body_fat[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
 #' forest <- ODRF(Density ~ ., train_data[index, ],
-#'   type = "regression", parallel = FALSE
+#'   type = "mse", parallel = FALSE
 #' )
 #' online_forest <- online(
 #'   forest, train_data[-index, -1],
@@ -56,6 +56,8 @@
 online.ODRF <- function(obj, X, y, weights = NULL, ...) {
   ppForest <- obj
   rm(obj)
+  if(length(obj[["ppTrees"]][[1]][["structure"]][["nodeDepth"]])==1)
+    stop("No tree structure to use 'online'!")
   weights0 <- weights
   ppTrees <- ppForest$ppTrees
   Levels <- ppForest$Levels
@@ -115,7 +117,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
     call = Call, terms = Terms, type = type, Levels = NULL,
     NodeRotateFun = NodeRotateFun, paramList = paramList, oobErr = NULL, oobConfusionMat = NULL
   )
-  if (type != "regression") {
+  if (type != "mse") {
     # adjust y to go from 1 to numClass if needed
     if (is.factor(y)) {
       ppForest$Levels <- levels(y)
@@ -208,7 +210,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
       go <- TRUE
       while (go) {
         # make sure each class is represented in proportion to classes in initial dataset
-        if (stratify && (type != "regression")) {
+        if (stratify && (type != "mse")) {
           if (classCt[1L] != 0L) {
             TDindx[1:classCt[1L]] <- sample(Cindex[[1L]], classCt[1L], replace = TRUE)
           }
@@ -234,7 +236,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
       NTD <- setdiff(TDindx0, TDindx)
       pred <- predict(ppForestT, X[NTD, ])
 
-      if (type != "regression") {
+      if (type != "mse") {
         oobErr <- mean(pred != Levels[y[NTD]])
       } else {
         oobErr <- mean((pred - y[NTD])^2)
@@ -297,7 +299,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
     oobVotes <- oobVotes[idx, , drop = FALSE]
     yy <- y[idx]
 
-    if (type != "regression") {
+    if (type != "mse") {
       ny <- length(yy)
       nC <- numClass
       weights <- rep(1, ny * ntrees)

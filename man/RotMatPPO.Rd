@@ -8,7 +8,7 @@ RotMatPPO(
   X,
   y,
   model = "PPR",
-  type = "i-classification",
+  type = "entropy",
   weights = NULL,
   dimProj = min(ceiling(length(y)^0.4), ceiling(ncol(X) * 2/3)),
   numProj = ifelse(dimProj == "Rand", sample(floor(ncol(X)/3), 1),
@@ -24,8 +24,8 @@ RotMatPPO(
 
 \item{model}{Model for projection pursuit (for details see \code{\link{PPO}}).}
 
-\item{type}{The criterion used for splitting the variable. 'i-classification': information gain (classification, default),
-'g-classification': gini impurity index (classification) or 'regression': mean square error (regression).}
+\item{type}{One of three criteria, 'gini': gini impurity index (classification), 'entropy': information gain (classification, default)
+or 'mse': mean square error (regression).}
 
 \item{weights}{A vector of length same as \code{data} that are positive weights. (default NULL)}
 
@@ -59,15 +59,15 @@ y <- (rnorm(100) > 0) + 0
 
 # classification
 data(seeds)
-(PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "Log", type = "i-classification"))
-(PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "PPR", type = "i-classification"))
-(PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = "i-classification"))
+(PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "Log", type = "entropy"))
+(PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "PPR", type = "entropy"))
+(PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = "entropy"))
 
 # regression
 data(body_fat)
-(PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "regression"))
-(PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", type = "regression"))
-(PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", type = "regression"))
+(PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "mse"))
+(PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", type = "mse"))
+(PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", type = "mse"))
 
 }
 \seealso{

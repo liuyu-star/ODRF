@@ -26,7 +26,7 @@
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #'
-#' tree <- ODT(varieties_of_wheat ~ ., train_data, type = "i-classification")
+#' tree <- ODT(varieties_of_wheat ~ ., train_data, type = "entropy")
 #' pred <- predict(tree, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
@@ -38,7 +38,7 @@
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #'
-#' tree <- ODT(Density ~ ., train_data, type = "regression")
+#' tree <- ODT(Density ~ ., train_data, type = "mse")
 #' pred <- predict(tree, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
@@ -83,7 +83,7 @@ predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
   p <- ncol(Xnew)
   n <- nrow(Xnew)
 
-  if (ppTree$type != "regression") {
+  if (ppTree$type != "mse") {
     nodeLabel <- colnames(ppTree$structure$nodeNumLabel)[max.col(ppTree$structure$nodeNumLabel)] ## "random"
     nodeLabel[which(rowSums(ppTree$structure$nodeNumLabel) == 0)] <- 0
   } else {
@@ -144,7 +144,7 @@ predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
     }
   }
 
-  if ((ppTree$type == "regression") && (!leafnode)) {
+  if ((ppTree$type == "mse") && (!leafnode)) {
     pred <- as.numeric(pred)
   }
 

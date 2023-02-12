@@ -21,7 +21,7 @@
 #' train_data <- data.frame(breast_cancer[train, -1])
 #' test_data <- data.frame(breast_cancer[-train, -1])
 #'
-#' forest <- ODRF(diagnosis ~ ., train_data, type = "i-classification", parallel = FALSE)
+#' forest <- ODRF(diagnosis ~ ., train_data, type = "gini", parallel = FALSE)
 #' (error <- Accuracy(forest, train_data, test_data))
 #' plot(error)
 #'
@@ -31,14 +31,14 @@
 #' @export
 plot.Accuracy <- function(x, lty = 1, digits = NULL, main = NULL, ...) {
   if (is.null(main)) {
-    main <- paste0("Oblique ", ifelse(x$type == "regression", "Regression", "Classification"), " Forest")
+    main <- paste0("Oblique ", ifelse(x$type == "mse", "Regression", "Classification"), " Forest")
   }
   Err <- x
   err <- cbind(Err$err.oob, Err$err.test)
 
   minErr <- strsplit(as.character(min(err)), "")[[1]]
   id <- which(minErr == "e")
-  if (Err$type != "regression") {
+  if (Err$type != "mse") {
     digits <- 0
   } else if (is.null(digits)) {
     if (length(id) > 0) {

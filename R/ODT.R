@@ -6,9 +6,9 @@
 #' @param data Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.
 #' @param X An n by d numeric matrix (preferable) or data frame.
 #' @param y A response vector of length n.
-#' @param type The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression;
-#' 'auto' (default): If the response in \code{data} or \code{y} is a factor, 'g-classification' is used, otherwise regression is assumed.
-#' @param lambda The adjustment parameters for the 'i-classification' and 'regression' criteria are used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).
+#' @param type The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression;
+#' 'auto' (default): If the response in \code{data} or \code{y} is a factor, "gini" is used, otherwise regression is assumed.
+#' @param lambda The adjustment parameter of \code{type} is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).
 #' @param NodeRotateFun Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
 #' including \itemize{
 #' \item{"RotMatPPO": projection pursuit optimization model (\code{\link{PPO}}), see \code{\link{RotMatPPO}} (default, model="PPR").}
@@ -21,7 +21,7 @@
 #' @param MaxDepth The maximum depth of the tree (default \code{Inf}).
 #' @param numNode Number of nodes that can be used by the tree (default \code{Inf}).
 #' @param MinLeaf Minimal node size (Default 10).
-#' @param Levels The category label of the response variable when \code{type} is not equal to 'regression'.
+#' @param Levels The category label of the response variable when \code{type} is not equal to 'mse'.
 #' @param subset An index vector indicating which rows should be used. (NOTE: If given, this argument must be named.)
 #' @param weights Vector of non-negative observational weights; fractional weights are allowed (default NULL).
 #' @param na.action A function to specify the action to be taken if NAs are found. (NOTE: If given, this argument must be named.)
@@ -65,7 +65,7 @@
 #' train <- sample(1:209, 100)
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
-#' tree <- ODT(varieties_of_wheat ~ ., train_data, type = "i-classification")
+#' tree <- ODT(varieties_of_wheat ~ ., train_data, type = "entropy")
 #' pred <- predict(tree, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
@@ -77,7 +77,7 @@
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #' tree <- ODT(Density ~ ., train_data,
-#'   type = "regression",
+#'   type = "mse",
 #'   NodeRotateFun = "RotMatPPO", paramList = list(model = "Log", dimProj = "Rand")
 #' )
 #' pred <- predict(tree, test_data[, -1])
@@ -93,7 +93,7 @@
 #' Xcat <- c(1, 2)
 #' catLabel <- NULL
 #' y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
-#' tree <- ODT(y ~ X, type = "i-classification", Xcat = NULL)
+#' tree <- ODT(y ~ X, type = "entropy", Xcat = NULL)
 #' head(X)
 #' #>   Xcol1 Xcol2          X1         X2          X3
 #' #> 1     B     5 -0.04178453  2.3962339 -0.01443979
@@ -139,7 +139,7 @@
 #' #> $Xcol2
 #' #> [1] "1" "2" "3" "4" "5"
 #'
-#' tree <- ODT(X, y, type = "g-classification", Xcat = c(1, 2), catLabel = catLabel)
+#' tree <- ODT(X, y, type = "gini", Xcat = c(1, 2), catLabel = catLabel)
 #'
 #' @import Rcpp
 #' @importFrom stats model.frame model.extract model.matrix na.fail
@@ -281,20 +281,20 @@ ODT.default <- function(X, y, type = "auto", lambda='log', NodeRotateFun = "RotM
 ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
                         MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
   if (is.factor(y) && (type == "auto")) {
-    type <- "g-classification"
+    type <- "gini"
     warning("You are creating a forest for classification")
   }
   if (is.numeric(y) && (type == "auto")) {
-    type <- "regression"
+    type <- "mse"
     warning("You are creating a forest for regression")
   }
-  if (is.factor(y) && (type == "regression")) {
+  if (is.factor(y) && (type == "mse")) {
     stop(paste0("When ", formula[[2]], " is a factor type, 'type' cannot take 'regression'."))
   }
 
   MinLeaf=(MinLeaf==1)+MinLeaf
   #if (MinLeaf == 5) {
-  #  MinLeaf <- ifelse(type == "regression", 10, 5)
+  #  MinLeaf <- ifelse(type == "mse", 10, 5)
   #}
 
   if ((!NodeRotateFun %in% ls("package:ODRF")) && (!NodeRotateFun %in% ls(envir = .GlobalEnv))) {
@@ -307,7 +307,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
   n <- length(y)
   p <- ncol(X)
 
-  if (type != "regression") {
+  if (type != "mse") {
     if (is.null(Levels)) {
       Levels <- levels(as.factor(y))
     }
@@ -376,7 +376,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
   }
   n <- length(y)
   p <- ncol(X)
-  if (!is.integer(y) && type != "regression") {
+  if (!is.integer(y) && type != "mse") {
     y <- as.integer(as.factor(y))
   }
   rm(data)
@@ -429,7 +429,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
   numProj <- paramList$numProj
   paramList <- defaults(paramList, type, p, weights, catLabel)
 
-  if ((type == "regression") && (!paramList$model %in% c("PPR", "Rand", "Log"))) {
+  if ((type == "mse") && (!paramList$model %in% c("PPR", "Rand", "Log"))) {
     stop(paste0("'model = ", paramList$model, "' can only be used for classification"))
   }
 
@@ -443,7 +443,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
   nodeXIndx <- vector("list", numNode + 1)
   nodeXIndx[[1]] <- 1:n
 
-  if (type != "regression") {
+  if (type != "mse") {
     nodeNumLabel <- matrix(0, 0, maxLabel)
     colnames(nodeNumLabel) <- Levels
     sl <- seq(maxLabel)
@@ -470,7 +470,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
         (length(nodeXIndx[[currentNode]]) <= (2*MinLeaf)) ||
         (nodeDepth[currentNode] >= MaxDepth) ||
         (freeNode >= numNode)) {
-      if (type != "regression") {
+      if (type != "mse") {
         leafLabel <- table(Levels[c(sl, y[nodeXIndx[[currentNode]]])]) - 1
         # nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
         # nodeNumLabel[currentNode]=max(leafLabel)
@@ -518,7 +518,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
       paramList$dimProj <- dimProj
       paramList$numProj <- numProj
       if (is.null(paramList$dimProj)) {
-        paramList$dimProj <- min(ceiling(n^0.4), ceiling(p * 2 / 3))
+        paramList$dimProj <- min(ceiling(length(y[nodeXIndx[[currentNode]]])^0.4), ceiling(p * 2 / 3))
       }
       if (is.null(paramList$numProj)) {
         paramList$numProj <- ifelse(paramList$dimProj == "Rand",sample(floor(p / 3), 1),ceiling(p / paramList$dimProj))
@@ -550,7 +550,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
       TF <- min(length(Lindex), length(nodeXIndx[[currentNode]]) - length(Lindex)) <= MinLeaf
     }
     if (TF) {
-      if (type != "regression") {
+      if (type != "mse") {
         leafLabel <- table(Levels[c(sl, y[nodeXIndx[[currentNode]]])]) - 1
         # nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
         # nodeNumLabel[currentNode]=max(leafLabel)

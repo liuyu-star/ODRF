@@ -4,7 +4,7 @@
 \alias{PPO}
 \title{Projection Pursuit Optimization}
 \usage{
-PPO(X, y, model = "PPR", type = "i-classification", weights = NULL, ...)
+PPO(X, y, model = "PPR", type = "gini", weights = NULL, ...)
 }
 \arguments{
 \item{X}{An n by d numeric matrix (preferable) or data frame.}
@@ -27,18 +27,18 @@ The following models can only be used for classification, i.e. the \code{type} m
 \item{"friedmantukey": Friedman Tukey index}
 \item{"legendre": Legendre index}
 \item{"laguerrefourier": Laguerre Fourier index}
-\item{"hermite": Hermite index,}
+\item{"hermite": Hermite index}
 \item{"naturalhermite": Natural Hermite index}
-\item{"kurtosismax": Maximum kurtosis index,}
-\item{"kurtosismin": Minimum kurtosis index,}
+\item{"kurtosismax": Maximum kurtosis index}
+\item{"kurtosismin": Minimum kurtosis index}
 \item{"moment": Moment index}
 \item{"mf": MF index}
 \item{"chi": Chi-square index}
 }}
 }}
 
-\item{type}{The criterion used for splitting the variable. 'g-classification': gini impurity index (classification, default),
-'i-classification': information gain (classification) or 'regression': mean square error (regression).}
+\item{type}{The criterion used for splitting the variable. 'gini': gini impurity index (classification, default),
+'entropy': information gain (classification) or 'mse': mean square error (regression).}
 
 \item{weights}{Vector of non-negative observational weights; fractional weights are allowed (default NULL).}
 
@@ -53,15 +53,15 @@ Find the optimal projection using various projectin pursuit models.
 \examples{
 # classification
 data(seeds)
-(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "Log", type = "i-classification"))
-(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "PPR", type = "i-classification"))
-(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = "i-classification"))
+(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "Log", type = 'entropy'))
+(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "PPR", type = 'entropy'))
+(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = 'entropy'))
 
 # regression
 data(body_fat)
-(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "regression"))
-(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", type = "regression"))
-(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", type = "regression"))
+(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "mse"))
+(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", type = "mse"))
+(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", type = "mse"))
 
 }
 \references{

@@ -459,16 +459,10 @@ Oblique Classification Tree structure
 =============================================================
 
 1) root
-   node2)# proj1*X < 0.29 -> (leaf1 = setosa)
-   node3)  proj1*X >= 0.29
-      node4)  proj2*X < 0.69
-         node6)# proj3*X < 0.58 -> (leaf2 = versicolor)
-         node7)  proj3*X >= 0.58
-            node10)# proj5*X < 0.35 -> (leaf5 = versicolor)
-            node11)# proj5*X >= 0.35 -> (leaf6 = versicolor)
-      node5)  proj2*X >= 0.69
-         node8)# proj4*X < 0.54 -> (leaf3 = virginica)
-         node9)# proj4*X >= 0.54 -> (leaf4 = virginica)
+   node2)# proj1*X < 0.25 -> (leaf1 = setosa)
+   node3)  proj1*X >= 0.25
+      node4)# proj2*X < 0.88 -> (leaf2 = versicolor)
+      node5)# proj2*X >= 0.88 -> (leaf3 = virginica)
 \end{Soutput}
 \begin{Sinput}
 R> party.tree <- as.party(tree, data = iris)
@@ -480,19 +474,13 @@ Species ~ Sepal.Length + Sepal.Width + Petal.Length + Petal.Width
 
 Fitted party:
 [1] root
-|   [2] proj1X >= 0.29167
-|   |   [3] proj2X >= 0.6875
-|   |   |   [4] proj4X >= 0.54167: virginica (n = 35, err = 0.0%)
-|   |   |   [5] proj4X < 0.54167: virginica (n = 11, err = 9.1%)
-|   |   [6] proj2X < 0.6875
-|   |   |   [7] proj3X >= 0.58475
-|   |   |   |   [8] proj5X >= 0.35417: versicolor (n = 14, err = 7.1%)
-|   |   |   |   [9] proj5X < 0.35417: versicolor (n = 11, err = 36.4%)
-|   |   |   [10] proj3X < 0.58475: versicolor (n = 29, err = 0.0%)
-|   [11] proj1X < 0.29167: setosa (n = 50, err = 0.0%)
+|   [2] proj1X >= 0.24576
+|   |   [3] proj2X >= 0.88395: virginica (n = 53, err = 5.7%)
+|   |   [4] proj2X < 0.88395: versicolor (n = 47, err = 0.0%)
+|   [5] proj1X < 0.24576: setosa (n = 50, err = 0.0%)
 
-Number of inner nodes:    5
-Number of terminal nodes: 6
+Number of inner nodes:    2
+Number of terminal nodes: 3
 \end{Soutput}
 \begin{Sinput}
 R> forest <- ODRF(Species ~ ., data = iris, parallel = FALSE)
@@ -503,12 +491,12 @@ Call:
  ODRF.formula(formula = Species ~ ., data = data, parallel = FALSE) 
                Type of oblique decision random forest: classification
                                       Number of trees: 100
-                           OOB estimate of error rate: 6%
+                           OOB estimate of error rate: 4%
 Confusion matrix:
            setosa versicolor virginica class_error
 setosa         50          0         0  0.00000000
-versicolor      0         46         5  0.09803902
-virginica       0          4        45  0.08163249
+versicolor      0         47         3  0.05999988
+virginica       0          3        47  0.05999988
 \end{Soutput}
 \end{Schunk}
 \fct{print} is \proglang{R}'s standard \code{S3} method used to print the results of various objects of class. We use a similar way to \fct{print} in \pkg{PPtreeViz} package \cite{lee2018pptreeviz} to print the tree structure of \fct{ODT}, which shows each node partition of \code{ODT} in detail. When the options \code{projection = TRUE, cutvalue = TRUE} denotes to print projection coefficient and cutoff values in each node respectively. Currently, the \pkg{partykit} package is commonly used to summarize and vi-sualize tree structure in various ways. The function \fct{as.party} in \pkg{partykit} package can convert the trees in other \proglang{R} packages to \code{party} class. We define the \fct{as.party.ODT} function to add \code{ODT} class to the \code{party} class, so that we can use the same function \fct{print} to print the tree structure of the \code{party} class. In addition, we can also use the function \fct{print} to print the model estimation error for the class \fct{ODRF}.
@@ -518,7 +506,7 @@ virginica       0          4        45  0.08163249
 ## S3 method for class 'ODT'
 predict(ppTree, Xnew, leafnode = FALSE)
 ## S3 method for class 'ODRF'
-predict(ppForest, Xnew, type = "response", weight.tree = FALSE)
+predict(ppForest, Xnew, type = "mse", weight.tree = FALSE)
 \end{Code}
 We also defined \code{S3} methods \code{online} and \code{prune} used to online structure training and estimation error pruning for classes \code{ODT} and \code{ODRF}, respectively, and they can significantly improve the model accuracy. \code{online} Update existing \code{ODT} and \code{ODRF} using batches of data. \code{prune} is judged to prune or not based on whether the error of computing new data is reduced or not, and our pruning begins from the last leaf node. For class \code{ODRF}, let \code{prune}'s argument \code{useOOB=TRUE} to use 'out-of-bag' for pruning.
 \begin{Code}
@@ -541,17 +529,17 @@ R> train_data <- data.frame(seeds[train, ])
 R> test_data <- data.frame(seeds[-train, ])
 R> index <- seq(floor(nrow(train_data) / 2))
 R> forest <- ODRF(varieties_of_wheat ~ ., train_data,
-+    type = "i-classification", parallel = FALSE
++    type = "gini", parallel = FALSE
 +  )
 R> pred <- predict(forest, test_data[, -8])
 R> e.forest <- mean(pred != test_data[, 8])
 R> forest1 <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
-+    type = "i-classification", parallel = FALSE
++    type = "gini", parallel = FALSE
 +  )
 R> pred <- predict(forest1, test_data[, -8])
 R> e.forest.1 <- mean(pred != test_data[, 8])
 R> forest2 <- ODRF(varieties_of_wheat ~ ., train_data[-index, ],
-+    type = "i-classification", parallel = FALSE
++    type = "gini", parallel = FALSE
 +  )
 R> pred <- predict(forest2, test_data[, -8])
 R> e.forest.2 <- mean(pred != test_data[, 8])
@@ -574,7 +562,7 @@ R> print(c(
 \end{Sinput}
 \begin{Soutput}
        forest       forest1       forest2 forest.online  forest.prune 
-   0.04494382    0.07865169    0.08988764    0.06741573    0.07865169 
+   0.04494382    0.08988764    0.07865169    0.08988764    0.08988764 
 \end{Soutput}
 \begin{Sinput}
 R> data(body_fat, package = "ODRF")
@@ -583,13 +571,13 @@ R> train <- sample(1:252, 120)
 R> train_data <- data.frame(body_fat[train, ])
 R> test_data <- data.frame(body_fat[-train, ])
 R> index <- seq(floor(nrow(train_data) / 2))
-R> tree <- ODT(Density ~ ., train_data, type = "regression")
+R> tree <- ODT(Density ~ ., train_data, type = "mse")
 R> pred <- predict(tree, test_data[, -1])
 R> e.tree <- mean((pred - test_data[, 1])^2)
-R> tree1 <- ODT(Density ~ ., train_data[index, ], type = "regression")
+R> tree1 <- ODT(Density ~ ., train_data[index, ], type = "mse")
 R> pred <- predict(tree1, test_data[, -1])
 R> e.tree.1 <- mean((pred - test_data[, 1])^2)
-R> tree2 <- ODT(Density ~ ., train_data[-index, ], type = "regression")
+R> tree2 <- ODT(Density ~ ., train_data[-index, ], type = "mse")
 R> pred <- predict(tree2, test_data[, -1])
 R> e.tree.2 <- mean((pred - test_data[, 1])^2)
 R> tree.online <- online(tree1, train_data[-index, -1], train_data[-index, 1])
@@ -605,7 +593,7 @@ R> print(c(
 \end{Sinput}
 \begin{Soutput}
         tree        tree1        tree2  tree.online   tree.prune 
-3.428481e-05 3.614067e-05 5.093495e-05 3.626432e-05 3.614067e-05 
+2.201597e-05 3.736379e-05 5.485434e-05 3.753883e-05 3.736379e-05 
 \end{Soutput}
 \end{Schunk}
 As shown in the classification and regression results above, the training data \code{train_data} is divided into two batches equally, then the first batch is used to train \code{ODT} and \code{ODRF}, and the second batch is used to update the model by \fct{online}. The error after the model update is significantly smaller than that of one batch of data alone, and the model is also pruned by \fct{prune} and the same effect is achieved.
@@ -613,14 +601,14 @@ As shown in the classification and regression results above, the training data \
 \subsection[Create a projection matrix with the RotMat* function]{Create a projection matrix with the \code{RotMat*} function}
 We provide the functions \fct{RotMatPPO}, \fct{RotMatRand} and \fct{RotMatRF} for creating rotation matrix by projection pursuit optimization model (\emph{PPO}) \cite{cook2008grand}, same random rotation as \fct{RandMatBinary} in \pkg{rerf} package and single feature similar to random forest, respectively. The function \fct{PPO} is to find the best projection using various projectin pursuit models, including \code{"PPR"} (default): projection projection regression from \fct{ppr} in \pkg{stats} package \cite{friedman1981projection}, \code{"Log"}: logistic based on \fct{nnet} in \pkg{nnet} package \cite{nnet}, \code{"Rand"}: The random projection generated from $\{-1, 1\}$, argument \code{PPmethod} of function \fct{PPopt} in \pkg{PPtreeViz} package, and argument \code{findex} of function \fct{PP\_Optimizer} in \pkg{Pursuit} package \cite{Pursuit}. Note that \pkg{PPtreeViz} and \pkg{Pursuit} are only available for classification. The generated rotation matrix has three columns, the first column (\code{Variable}). Variable to be projected, the second column (\code{Number}): Number of projections, and the third column (\code{Coefficient}): the coefficient of the projected matrix. In addition, the user can define a projection matrix function, see the \pkg{ODRF} help file for more details on usage.%,We provide a several examples as follows, just let the argument \code{RotMatFun} be the name of the defined function and let the argument \code{paramList} be the arguments used in the defined function, or use the function \fct{RotMatMake} to define the projection matrix by the following way.
 \begin{Code}
-RotMatPPO(X,y,model = "PPR",type = "i-classification",weights = NULL,
+RotMatPPO(X,y,model = "PPR",type = "gini",weights = NULL,
   dimProj,numProj,catLabel = NULL, ...)
 RotMatRand(dimX,randDist = "Binary",numProj = ceiling(sqrt(dimX)),
   dimProj = "Rand",sparsity, prob = 0.5,lambda = 1,catLabel = NULL,...)
 RotMatRF(dimX, numProj, catLabel = NULL, ...)
 RotMatMake(X = NULL,y = NULL,RotMatFun = "RotMatPPO",PPFun = "PPO",
   FunDir = getwd(),paramList = NULL, ...)
-PPO(X, y, model = "PPR", type = "i-classification", weights = NULL
+PPO(X, y, model = "PPR", type = "gini", weights = NULL
 \end{Code}
 %
 To show that \fct{PPO} with different \code{model} to do classification and regression and used to \fct{RotMatPPO}. after that show simple usage of functions \fct{RotMatRand} and \fct{RotMatRF}.% Finally explain how to define the projection matrix function and train \code{ODT} by two ways.
@@ -628,53 +616,52 @@ To show that \fct{PPO} with different \code{model} to do classification and regr
 \begin{Schunk}
 \begin{Sinput}
 R> data(seeds, package = "ODRF")
-R> (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = "i-classification"))
+R> (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = "gini"))
 \end{Sinput}
 \begin{Soutput}
-[1]  0.59669228  0.62575666 -0.47202518  0.03032322  0.01598554
-[6] -0.14782205 -0.08094918
+[1] -0.18879202 -0.51060027  0.39160923  0.61697124 -0.36368411
+[6]  0.04657758 -0.18761137
 \end{Soutput}
 \begin{Sinput}
 R> RotMat <- RotMatPPO(seeds[, 1:7], seeds[, 8],
 +    model = "Log",
-+    type = "i-classification"
++    type = "gini"
 +  )
 R> head(RotMat)
 \end{Sinput}
 \begin{Soutput}
      Variable Number Coefficient
-[1,]        7      1   1.0000000
-[2,]        3      2   1.0000000
-[3,]        2      3   1.0000000
-[4,]        1      4  -0.8635696
-[5,]        5      4   0.5042297
-[6,]        3      5   1.0000000
+[1,]        1      1   1.0000000
+[2,]        2      2   1.0000000
+[3,]        5      3   1.0000000
+[4,]        3      4  -0.9598614
+[5,]        5      4   0.2117596
+[6,]        2      4  -0.1393858
 \end{Soutput}
 \begin{Sinput}
 R> data(body_fat, package = "ODRF")
-R> (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "regression"))
+R> (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "mse"))
 \end{Sinput}
 \begin{Soutput}
- [1]  0.0500396390 -0.0004203160  0.0017394832 -0.0038324798
- [5] -0.0035428671 -0.0036891205  0.0033979058 -0.0057153924
- [9]  0.0002710173 -0.0043282445  0.0044730880  0.0029504953
-[13] -0.0004124229 -0.0172101483
+ [1]  0.1743839  0.6443305  0.3057826  0.2737551  0.2326900 -0.4200966
+ [7]  0.3972650 -0.1875877  0.3346829  0.3215783  0.3712589  0.2475944
+[13]  0.3208377  0.1811815
 \end{Soutput}
 \begin{Sinput}
 R> RotMat <- RotMatPPO(seeds[, 1:7], seeds[, 8],
 +    model = "PPR",
-+    type = "i-classification"
++    type = "gini"
 +  )
 R> head(RotMat)
 \end{Sinput}
 \begin{Soutput}
      Variable Number Coefficient
-[1,]        3      1  1.00000000
-[2,]        6      2  1.00000000
-[3,]        4      3  1.00000000
-[4,]        3      4 -0.99619128
-[5,]        2      4 -0.08719482
-[6,]        1      5  1.00000000
+[1,]        4      1   1.0000000
+[2,]        2      2   1.0000000
+[3,]        3      3   1.0000000
+[4,]        1      4  -0.1194996
+[5,]        4      4  -0.6858997
+[6,]        5      4   0.2320949
 \end{Soutput}
 \begin{Sinput}
 R> set.seed(22)
@@ -876,8 +863,8 @@ Oblique Classification Tree structure
 =============================================================
 
 1) root
-   node2)# proj1*X < 0.2 -> (leaf1 = B)
-   node3)# proj1*X >= 0.2 -> (leaf2 = M)
+   node2)# proj1*X < 0.12 -> (leaf1 = B)
+   node3)# proj1*X >= 0.12 -> (leaf2 = M)
 \end{Soutput}
 \end{Schunk}
 We use the function \fct{ODT} to construct a decision tree, and print and plot the tree structure. It is shown that the tree structure is very simple with 3 split nodes, 4 leaf nodes and the depth of 4. In addition, we can obtain the projection coefficients of the variables at each split, and the results are shown in Table 2 after removing the variables with projection coefficients less than 0.1 from the 30 variables. It shows that perimeter (x3), concave points (x8, x28), area (x14) and radius (x21) play a major role in the first partition. compactness (x6), perimeter (x13) and concave points (x28) have a significant impact on the second partitioning. In the third partitioning, perimeter\_worst (x23) was randomly selected as the partitioning variable from 30 variable according to our procedure due to the small amount of data. We noticed that mean cell nuclei had the most influence in the whole decision tree.

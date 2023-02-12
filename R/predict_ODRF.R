@@ -12,7 +12,7 @@
 #' @return A set of vectors in the following list:
 #' \itemize{
 #' \item \code{response}: the prediced values of the new data.
-#' \item \code{prob}: matrix of class probabilities (one column for each class and one row for each input). If \code{ppForest$type} is \code{regression}, a vector of tree weights is returned.
+#' \item \code{prob}: matrix of class probabilities (one column for each class and one row for each input). If \code{ppForest$type} is \code{mse}, a vector of tree weights is returned.
 #' \item \code{tree}: it is a matrix where each column contains prediction by a tree in the forest.
 #' }
 #'
@@ -28,7 +28,7 @@
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data,
-#'   type = "i-classification", parallel = FALSE
+#'   type = "entropy", parallel = FALSE
 #' )
 #' pred <- predict(forest, test_data[, -8])
 #' # classification error
@@ -41,7 +41,7 @@
 #' train <- sample(1:252, 80)
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
-#' forest <- ODRF(Density ~ ., train_data, type = "regression", parallel = FALSE)
+#' forest <- ODRF(Density ~ ., train_data, type = "mse", parallel = FALSE)
 #' pred <- predict(forest, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
@@ -120,7 +120,7 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
   # }
   # Votes=t(sapply(seq(ntrees), function(i)PPtreePredict(Xnew,ppForest$trees[[i]])))
 
-  VALUE <- rep(ifelse(ppForest$type == "regression", 0, as.character(0)), n)
+  VALUE <- rep(ifelse(ppForest$type == "mse", 0, as.character(0)), n)
   TreePrediction <- vapply(ppForest$ppTrees, function(tree) {
     class(tree) <- "ODT"
     predict(tree, Xnew)
@@ -138,7 +138,7 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
   }
   weights <- weight.tree * oobErr + (!weight.tree)
   weights <- weights / sum(weights)
-  if (ppForest$type != "regression") {
+  if (ppForest$type != "mse") {
     # prob=matrix(0,n,nC)
     # for (i in 1:n) {
     #    prob[i,]=aggregate(c(rep(0,nC),weights[,i]), by=list(c(1:nC, f_votes[,i])),sum)[,2];

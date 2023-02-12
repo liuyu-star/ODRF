@@ -23,7 +23,7 @@
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data,
-#'   type = "i-classification", parallel = FALSE
+#'   type = "entropy", parallel = FALSE
 #' )
 #' prune_forest <- prune(forest, train_data[, -8], train_data[, 8])
 #' pred <- predict(prune_forest, test_data[, -8])
@@ -37,7 +37,7 @@
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
-#' forest <- ODRF(Density ~ ., train_data[index, ], type = "regression", parallel = FALSE)
+#' forest <- ODRF(Density ~ ., train_data[index, ], type = "mse", parallel = FALSE)
 #' prune_forest <- prune(forest, train_data[-index, -1], train_data[-index, 1], useOOB = FALSE)
 #' pred <- predict(prune_forest, test_data[, -1])
 #' # estimation error
@@ -51,6 +51,8 @@
 prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
   ppForest <- obj
   rm(obj)
+  if(length(obj[["ppTrees"]][[1]][["structure"]][["nodeDepth"]])==1)
+    stop("No tree structure to use 'prune'!")
   ppTrees <- ppForest$ppTrees
   type <- ppForest$type
   numOOB <- ppForest$forest$numOOB
@@ -99,7 +101,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
   numClass <- nC
   ntrees <- length(ppTrees)
 
-  if (type != "regression") {
+  if (type != "mse") {
     classCt <- cumsum(table(ynew))
     if (stratify) {
       Cindex <- vector("list", numClass)
@@ -173,7 +175,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
         go <- TRUE
         while (go) {
           # make sure each class is represented in proportion to classes in initial dataset
-          if (stratify && (type != "regression")) {
+          if (stratify && (type != "mse")) {
             if (classCt[1L] != 0L) {
               TDindx[1:classCt[1L]] <- sample(Cindex[[1L]], classCt[1L], replace = TRUE)
             }
@@ -211,7 +213,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
         # }
         pred <- predict(ppTree, Xnew[NTD, ])
 
-        if (type != "regression") {
+        if (type != "mse") {
           oobErr <- mean(pred != ynew[NTD])
         } else {
           oobErr <- mean((pred - ynew[NTD])^2)
@@ -276,7 +278,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
     oobVotes <- oobVotes[idx, , drop = FALSE]
     yy <- ynew[idx]
 
-    if (type != "regression") {
+    if (type != "mse") {
       ny <- length(yy)
       nC <- numClass
       weights <- rep(1, ny * ntrees)

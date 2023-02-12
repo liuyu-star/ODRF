@@ -41,12 +41,12 @@ train <- sample(1:252, 80)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 
-forest <- ODRF(Density ~ ., train_data, type = "regression", parallel = FALSE)
+forest <- ODRF(Density ~ ., train_data, type = "mse", parallel = FALSE)
 pred <- predict(forest, test_data[, -1])
 # estimation error
 mean((pred - test_data[, 1])^2)
 
-tree <- ODT(Density ~ ., train_data, type = "regression")
+tree <- ODT(Density ~ ., train_data, type = "mse")
 pred <- predict(tree, test_data[, -1])
 # estimation error
 mean((pred - test_data[, 1])^2)

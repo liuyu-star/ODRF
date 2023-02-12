@@ -25,7 +25,7 @@
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
-#' tree <- ODT(varieties_of_wheat ~ ., train_data[index, ], type = "i-classification")
+#' tree <- ODT(varieties_of_wheat ~ ., train_data[index, ], type = "entropy")
 #' prune_tree <- prune(tree, train_data[-index, -8], train_data[-index, 8])
 #' pred <- predict(prune_tree, test_data[, -8])
 #' # classification error
@@ -38,7 +38,7 @@
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
-#' tree <- ODT(Density ~ ., train_data[index, ], type = "regression")
+#' tree <- ODT(Density ~ ., train_data[index, ], type = "mse")
 #' prune_tree <- prune(tree, train_data[-index, -1], train_data[-index, 1])
 #' pred <- predict(prune_tree, test_data[, -1])
 #' # estimation error
@@ -52,6 +52,8 @@
 prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
   ppTree <- obj
   rm(obj)
+  if(is.null(obj$projections))
+    stop("No tree structure to use 'prune'!")
   structure <- ppTree$structure
   if (!is.null(MaxDepth)) {
     MaxDepth <- min(MaxDepth, max(structure$nodeDepth))
@@ -136,7 +138,7 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
   }
 
 
-  if (ppTree$type != "regression") {
+  if (ppTree$type != "mse") {
     # nodeLabel=rep(0,NROW(structure$nodeNumLabel))
     # leafid=which(rowSums(structure$nodeNumLabel)!=0)
     # leafLabel=structure$nodeNumLabel[leafid,,drop = FALSE]
@@ -155,7 +157,7 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
     )$prediction
   }
 
-  if (ppTree$type != "regression") {
+  if (ppTree$type != "mse") {
     err0 <- mean(prediction != ynew)
   } else {
     # e.0 = mean((ynew-mean(y))^2)
@@ -227,9 +229,9 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
 
     id <- idx[nodeCutValue[idx] == 0]
     # id=idx[!idx%in%cutNode]
-    # nodeLabel[currentNode]=ifelse(ppTree$type!="regression",nodeLabel[idx][which.max(structure$nodeNumLabel[idx])],
+    # nodeLabel[currentNode]=ifelse(ppTree$type!="mse",nodeLabel[idx][which.max(structure$nodeNumLabel[idx])],
     #                              structure$nodeNumLabel[idx]*nodeLabel[idx]/sum(structure$nodeNumLabel[idx]))
-    if (ppTree$type != "regression") {
+    if (ppTree$type != "mse") {
       # nnl=rep(nodeLabel[id],nodeNumLabel[id])
       # nnl=table(nnl)
       # nodeLabel[currentNode]=names(nnl)[which.max(nnl)]
@@ -249,7 +251,7 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
     nodeCutValue[currentNode] <- 0
     nodeCutValue <- nodeCutValue[-idx]
 
-    if (ppTree$type != "regression") {
+    if (ppTree$type != "mse") {
       nodeLabel <- colnames(nodeNumLabel)[max.col(nodeNumLabel)] ## "random"
       # nodeLabel[which(rowSums(structure$nodeNumLabel)==0),]=0
     } else {
@@ -265,7 +267,7 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
       )$prediction
     }
 
-    if (ppTree$type != "regression") {
+    if (ppTree$type != "mse") {
       err <- mean(prediction != ynew)
     } else {
       err <- mean((as.numeric(prediction) - ynew)^2) # /e.0

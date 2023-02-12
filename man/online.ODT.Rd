@@ -31,9 +31,7 @@ train <- sample(1:209, 100)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
-tree <- ODT(varieties_of_wheat ~ ., train_data[index, ],
-  type = "i-classification"
-)
+tree <- ODT(varieties_of_wheat ~ ., train_data[index, ], type = "gini")
 online_tree <- online(tree, train_data[-index, -8], train_data[-index, 8])
 pred <- predict(online_tree, test_data[, -8])
 # classification error
@@ -46,7 +44,7 @@ train <- sample(1:252, 100)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
-tree <- ODT(Density ~ ., train_data[index, ], type = "regression")
+tree <- ODT(Density ~ ., train_data[index, ], type = "mse")
 online_tree <- online(tree, train_data[-index, -1], train_data[-index, 1])
 pred <- predict(online_tree, test_data[, -1])
 # estimation error

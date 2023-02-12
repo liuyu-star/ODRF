@@ -34,7 +34,7 @@ print.ODT <- function(x, projection = FALSE, cutvalue = FALSE, verbose = TRUE, .
   TS <- matrix(0, numNode, 5)
   TS[, 1] <- seq(numNode)
   TS[, 2] <- ppTree[["structure"]][["childNode"]]
-  if (ppTree$type != "regression") {
+  if (ppTree$type != "mse") {
     TS[setdiff(seq(numNode), cutNode), 3] <- max.col(ppTree$structure$nodeNumLabel)[setdiff(seq(numNode), cutNode)]
   } else {
     TS[setdiff(seq(numNode), cutNode), 3] <- round(ppTree$structure$nodeNumLabel[, 1][setdiff(seq(numNode), cutNode)], 3)
@@ -79,7 +79,7 @@ print.ODT <- function(x, projection = FALSE, cutvalue = FALSE, verbose = TRUE, .
         n.temp <- length(TreePrint)
         tempp <- strsplit(TreePrint[n.temp], ") ")[[1]]
         temp.L <- paste(tempp[1], ")#", tempp[2], sep = "")
-        temp.L <- paste(temp.L, " -> ", "(", "leaf", leaf[i], " = ", ifelse(ppTree$type != "regression", ppTree$Levels[TS[i, 3]], TS[i, 3]), ")", sep = "")
+        temp.L <- paste(temp.L, " -> ", "(", "leaf", leaf[i], " = ", ifelse(ppTree$type != "mse", ppTree$Levels[TS[i, 3]], TS[i, 3]), ")", sep = "")
         TreePrint <- TreePrint[-n.temp]
         id.l <- length(keep.track) - 1
         i <- keep.track[id.l]
@@ -115,7 +115,7 @@ print.ODT <- function(x, projection = FALSE, cutvalue = FALSE, verbose = TRUE, .
   TreePrint.output <-
     paste(
       "=============================================================",
-      "\nOblique", ifelse(ppTree$type == "regression", "Regression", "Classification"), "Tree structure",
+      "\nOblique", ifelse(ppTree$type == "mse", "Regression", "Classification"), "Tree structure",
       "\n=============================================================\n"
     )
   for (i in seq_along(TreePrint)) {

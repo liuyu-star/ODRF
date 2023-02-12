@@ -36,7 +36,7 @@ List best_cut_node(char method, double lambda, NumericMatrix Data, NumericVector
       gini_split(lambda, M, N, Labels1, Data1, minleaf, numLabels, &bcvar, &bcval, bestval);
       break;
     case 'i':
-      infogain_split(M, N, Labels1, Data1, minleaf, numLabels, &bcvar, &bcval, bestval);
+      infogain_split(lambda, M, N, Labels1, Data1, minleaf, numLabels, &bcvar, &bcval, bestval);
       break;
     case 'r':
       mse_split(lambda, M, N, Labels1, Data1, minleaf, &bcvar, &bcval, bestval);
@@ -50,13 +50,13 @@ List best_cut_node(char method, double lambda, NumericMatrix Data, NumericVector
     
     switch (method){
     case 'g':
-      gini_split(lambda, M, N, Labels1, Data1, minleaf, numLabels, &bcvar, &bcval, bestval);
+      gini_split(lambda, M, N, Labels1, Data1, W1, minleaf, numLabels, &bcvar, &bcval, bestval);
       break;
     case 'i':
-      infogain_split(M, N, Labels1, Data1, minleaf, numLabels, &bcvar, &bcval, bestval);
+      infogain_split(lambda, M, N, Labels1, Data1, W1, minleaf, numLabels, &bcvar, &bcval, bestval);
       break;
     case 'r':
-      mse_split(lambda, M, N, Labels1, Data1, minleaf, &bcvar, &bcval, bestval);
+      mse_split(lambda, M, N, Labels1, Data1, W1, minleaf, &bcvar, &bcval, bestval);
       break;
     }
     

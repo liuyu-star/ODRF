@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# ODRF <a href='https://liuyu-star.github.io/ODRF'><img src='logo.png' align="right" height="139" /></a>
+# ODRF <a href='https://liuyu-star.github.io/ODRF'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 [![Codecov test coverage](https://codecov.io/gh/liuyu-star/ODRF/branch/main/graph/badge.svg)](https://app.codecov.io/gh/liuyu-star/ODRF?branch=main)
@@ -63,17 +63,17 @@ test_data <- data.frame(seeds[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
-  type = "i-classification", parallel = FALSE
+  type = "gini", parallel = FALSE
 )
 pred <- predict(forest, test_data[, -8])
 e.forest <- mean(pred != test_data[, 8])
 forest1 <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
-  type = "i-classification", parallel = FALSE
+  type = "gini", parallel = FALSE
 )
 pred <- predict(forest1, test_data[, -8])
 e.forest.1 <- mean(pred != test_data[, 8])
 forest2 <- ODRF(varieties_of_wheat ~ ., train_data[-index, ],
-  type = "i-classification", parallel = FALSE
+  type = "gini", parallel = FALSE
 )
 pred <- predict(forest2, test_data[, -8])
 e.forest.2 <- mean(pred != test_data[, 8])
@@ -105,13 +105,13 @@ train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 
-tree <- ODT(Density ~ ., train_data, type = "regression")
+tree <- ODT(Density ~ ., train_data, type = "mse")
 pred <- predict(tree, test_data[, -1])
 e.tree <- mean((pred - test_data[, 1])^2)
-tree1 <- ODT(Density ~ ., train_data[index, ], type = "regression")
+tree1 <- ODT(Density ~ ., train_data[index, ], type = "mse")
 pred <- predict(tree1, test_data[, -1])
 e.tree.1 <- mean((pred - test_data[, 1])^2)
-tree2 <- ODT(Density ~ ., train_data[-index, ], type = "regression")
+tree2 <- ODT(Density ~ ., train_data[-index, ], type = "mse")
 pred <- predict(tree2, test_data[, -1])
 e.tree.2 <- mean((pred - test_data[, 1])^2)
 

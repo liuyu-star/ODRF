@@ -61,10 +61,10 @@ ODT(X, ...)
 
 \item{data}{Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.}
 
-\item{type}{The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression;
-'auto' (default): If the response in \code{data} or \code{y} is a factor, 'g-classification' is used, otherwise regression is assumed.}
+\item{type}{The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression;
+'auto' (default): If the response in \code{data} or \code{y} is a factor, "gini" is used, otherwise regression is assumed.}
 
-\item{lambda}{The adjustment parameters for the 'i-classification' and 'regression' criteria are used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).}
+\item{lambda}{The adjustment parameter of \code{type} is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).}
 
 \item{NodeRotateFun}{Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
 including \itemize{
@@ -84,7 +84,7 @@ including \itemize{
 
 \item{MinLeaf}{Minimal node size (Default 10).}
 
-\item{Levels}{The category label of the response variable when \code{type} is not equal to 'regression'.}
+\item{Levels}{The category label of the response variable when \code{type} is not equal to 'mse'.}
 
 \item{subset}{An index vector indicating which rows should be used. (NOTE: If given, this argument must be named.)}
 
@@ -134,7 +134,7 @@ set.seed(221212)
 train <- sample(1:209, 100)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
-tree <- ODT(varieties_of_wheat ~ ., train_data, type = "i-classification")
+tree <- ODT(varieties_of_wheat ~ ., train_data, type = "entropy")
 pred <- predict(tree, test_data[, -8])
 # classification error
 (mean(pred != test_data[, 8]))
@@ -146,7 +146,7 @@ train <- sample(1:252, 100)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 tree <- ODT(Density ~ ., train_data,
-  type = "regression",
+  type = "mse",
   NodeRotateFun = "RotMatPPO", paramList = list(model = "Log", dimProj = "Rand")
 )
 pred <- predict(tree, test_data[, -1])
@@ -162,7 +162,7 @@ X <- data.frame(Xcol1, Xcol2, Xcon)
 Xcat <- c(1, 2)
 catLabel <- NULL
 y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
-tree <- ODT(y ~ X, type = "i-classification", Xcat = NULL)
+tree <- ODT(y ~ X, type = "entropy", Xcat = NULL)
 head(X)
 #>   Xcol1 Xcol2          X1         X2          X3
 #> 1     B     5 -0.04178453  2.3962339 -0.01443979
@@ -208,7 +208,7 @@ catLabel
 #> $Xcol2
 #> [1] "1" "2" "3" "4" "5"
 
-tree <- ODT(X, y, type = "g-classification", Xcat = c(1, 2), catLabel = catLabel)
+tree <- ODT(X, y, type = "gini", Xcat = c(1, 2), catLabel = catLabel)
 
 }
 \references{

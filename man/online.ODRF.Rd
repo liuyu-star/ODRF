@@ -32,7 +32,7 @@ train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 forest <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
-  type = "i-classification", parallel = FALSE
+  type = "gini", parallel = FALSE
 )
 online_forest <- online(forest, train_data[-index, -8], train_data[-index, 8])
 pred <- predict(online_forest, test_data[, -8])
@@ -48,7 +48,7 @@ train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 forest <- ODRF(Density ~ ., train_data[index, ],
-  type = "regression", parallel = FALSE
+  type = "mse", parallel = FALSE
 )
 online_forest <- online(
   forest, train_data[-index, -1],

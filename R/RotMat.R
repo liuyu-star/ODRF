@@ -175,8 +175,8 @@ RotMatRF <- function(dimX, numProj, catLabel = NULL, ...) {
 #' @param X An n by d numeric matrix (preferable) or data frame.
 #' @param y A response vector of length n.
 #' @param model Model for projection pursuit (for details see \code{\link{PPO}}).
-#' @param type The criterion used for splitting the variable. 'i-classification': information gain (classification, default),
-#' 'g-classification': gini impurity index (classification) or 'regression': mean square error (regression).
+#' @param type One of three criteria, 'gini': gini impurity index (classification), 'entropy': information gain (classification, default)
+#' or 'mse': mean square error (regression).
 #' @param weights A vector of length same as \code{data} that are positive weights. (default NULL)
 #' @param dimProj Number of variables to be projected, \code{dimProj}=min(ceiling(n^0.4),ceiling(ncol(X)*2/3)) (default) or dimProj="Rand": random from 1 to ncol(X).
 #' @param numProj The number of projection directions, when dimProj="Rand" default
@@ -205,20 +205,20 @@ RotMatRF <- function(dimX, numProj, catLabel = NULL, ...) {
 #'
 #' # classification
 #' data(seeds)
-#' (PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "Log", type = "i-classification"))
-#' (PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "PPR", type = "i-classification"))
-#' (PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = "i-classification"))
+#' (PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "Log", type = "entropy"))
+#' (PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "PPR", type = "entropy"))
+#' (PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = "entropy"))
 #'
 #' # regression
 #' data(body_fat)
-#' (PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "regression"))
-#' (PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", type = "regression"))
-#' (PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", type = "regression"))
+#' (PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "mse"))
+#' (PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", type = "mse"))
+#' (PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", type = "mse"))
 #'
 #' @importFrom stats rnorm lm ppr
 #' @importFrom nnet nnet
 #' @export
-RotMatPPO <- function(X, y, model = "PPR", type = "i-classification", weights = NULL, dimProj = min(ceiling(length(y)^0.4), ceiling(ncol(X) * 2 / 3)),
+RotMatPPO <- function(X, y, model = "PPR", type = "entropy", weights = NULL, dimProj = min(ceiling(length(y)^0.4), ceiling(ncol(X) * 2 / 3)),
                       numProj = ifelse(dimProj == "Rand",sample(floor(ncol(X) / 3), 1), ceiling(ncol(X) / dimProj)), catLabel = NULL, ...) {
   #numProj = ifelse(dimProj == "Rand", max(5, sample(floor(ncol(X) / 3), 1)), max(5, ceiling(ncol(X) / dimProj)))
   if (dimProj != "Rand") {
@@ -283,7 +283,7 @@ RotMatPPO <- function(X, y, model = "PPR", type = "i-classification", weights = 
   if (n > 10 && nrow(sparseM1)>1) {
     Yi <- c(y)
     indC <- 0L
-    if (type != "regression") {
+    if (type != "mse") {
       y <- as.factor(y)
       indC <- levels(y)
       if (length(indC) > 2) {
@@ -435,12 +435,12 @@ RotMatPPO <- function(X, y, model = "PPR", type = "i-classification", weights = 
 #'
 #' # train ODT with defined projection matrix function
 #' tree <- ODT(X, y,
-#'   type = "i-classification", NodeRotateFun = "makeRotMat",
+#'   type = "entropy", NodeRotateFun = "makeRotMat",
 #'   paramList = list(dimX = ncol(X), dimProj = 5, numProj = 4)
 #' )
 #' # train ODT with defined projection matrix function and projection optimization model function
 #' tree <- ODT(X, y,
-#'   type = "i-classification", NodeRotateFun = "RotMatMake", paramList =
+#'   type = "entropy", NodeRotateFun = "RotMatMake", paramList =
 #'     list(
 #'       RotMatFun = "makeRotMat", PPFun = "makePP",
 #'       dimX = ncol(X), dimProj = 5, numProj = 4, prob = 0.5

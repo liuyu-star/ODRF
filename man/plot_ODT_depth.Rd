@@ -8,7 +8,7 @@ plot_ODT_depth(
   formula,
   data = NULL,
   newdata = NULL,
-  type = "i-classification",
+  type = "gini",
   NodeRotateFun = "RotMatPPO",
   paramList = NULL,
   digits = NULL,
@@ -23,8 +23,8 @@ plot_ODT_depth(
 
 \item{newdata}{A data frame or matrix containing new data is used to calculate the test error. If it is missing, let it be \code{data}.}
 
-\item{type}{The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression.
-'auto' (default): If the response in \code{data} is a factor, 'g-classification' is used, otherwise regression is assumed.}
+\item{type}{The criterion used for splitting the variable. 'gini': gini impurity index (classification, default),
+'entropy': information gain (classification) or 'mse': mean square error (regression).}
 
 \item{NodeRotateFun}{Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
 including \itemize{
@@ -54,7 +54,7 @@ set.seed(221212)
 train <- sample(1:252, 100)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
-plot_ODT_depth(Density ~ ., train_data, test_data, type = "regression")
+plot_ODT_depth(Density ~ ., train_data, test_data, type = "mse")
 
 }
 \seealso{

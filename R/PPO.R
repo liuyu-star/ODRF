@@ -20,17 +20,17 @@
 #' \item{"friedmantukey": Friedman Tukey index}
 #' \item{"legendre": Legendre index}
 #' \item{"laguerrefourier": Laguerre Fourier index}
-#' \item{"hermite": Hermite index,}
+#' \item{"hermite": Hermite index}
 #' \item{"naturalhermite": Natural Hermite index}
-#' \item{"kurtosismax": Maximum kurtosis index,}
-#' \item{"kurtosismin": Minimum kurtosis index,}
+#' \item{"kurtosismax": Maximum kurtosis index}
+#' \item{"kurtosismin": Minimum kurtosis index}
 #' \item{"moment": Moment index}
 #' \item{"mf": MF index}
 #' \item{"chi": Chi-square index}
 #' }}
 #' }
-#' @param type The criterion used for splitting the variable. 'g-classification': gini impurity index (classification, default),
-#'        'i-classification': information gain (classification) or 'regression': mean square error (regression).
+#' @param type The criterion used for splitting the variable. 'gini': gini impurity index (classification, default),
+#'        'entropy': information gain (classification) or 'mse': mean square error (regression).
 #' @param weights Vector of non-negative observational weights; fractional weights are allowed (default NULL).
 #' @param ... optional parameters to be passed to the low level function.
 #'
@@ -48,21 +48,21 @@
 #' @examples
 #' # classification
 #' data(seeds)
-#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "Log", type = "i-classification"))
-#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "PPR", type = "i-classification"))
-#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = "i-classification"))
+#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "Log", type = 'entropy'))
+#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "PPR", type = 'entropy'))
+#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = 'entropy'))
 #'
 #' # regression
 #' data(body_fat)
-#' (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "regression"))
-#' (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", type = "regression"))
-#' (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", type = "regression"))
+#' (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "mse"))
+#' (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", type = "mse"))
+#' (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", type = "mse"))
 #'
 #' @import Pursuit Rcpp
 #' @importFrom stats ppr
 #' @importFrom nnet nnet
 #' @export
-PPO <- function(X, y, model = "PPR", type = "i-classification", weights = NULL, ...) {
+PPO <- function(X, y, model = "PPR", type = 'gini', weights = NULL, ...) {
   X <- as.matrix(X)
   p <- ncol(X)
 
@@ -73,7 +73,7 @@ PPO <- function(X, y, model = "PPR", type = "i-classification", weights = NULL, 
 
     Y <- c(y)
     indC <- 0L
-    if (type != "regression") {
+    if (type != "mse") {
       y <- as.factor(y)
       indC <- levels(y)
       if (length(indC) > 2) {
@@ -83,7 +83,7 @@ PPO <- function(X, y, model = "PPR", type = "i-classification", weights = NULL, 
       }
     }
 
-    if ((type == "regression") && (!model %in% c("PPR", "Rand", "Log"))) {
+    if ((type == "mse") && (!model %in% c("PPR", "Rand", "Log"))) {
       stop(paste0("'model = ", model, "' can only be used for classification"))
     }
 

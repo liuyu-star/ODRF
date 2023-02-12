@@ -5,8 +5,8 @@
 #' @param formula Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})
 #' @param data Training data of class \code{data.frame} in \code{\link{ODT}} is used to calculate the OOB error.
 #' @param newdata A data frame or matrix containing new data is used to calculate the test error. If it is missing, let it be \code{data}.
-#' @param type The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression.
-#' 'auto' (default): If the response in \code{data} is a factor, 'g-classification' is used, otherwise regression is assumed.
+#' @param type The criterion used for splitting the variable. 'gini': gini impurity index (classification, default),
+#'        'entropy': information gain (classification) or 'mse': mean square error (regression).
 #' @param NodeRotateFun Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
 #' including \itemize{
 #' \item{"RotMatPPO": projection pursuit optimization model (\code{\link{PPO}}), see \code{\link{RotMatPPO}} (default, model="PPR").}
@@ -31,13 +31,13 @@
 #' train <- sample(1:252, 100)
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
-#' plot_ODT_depth(Density ~ ., train_data, test_data, type = "regression")
+#' plot_ODT_depth(Density ~ ., train_data, test_data, type = "mse")
 #'
 #' @export
-plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, type = "i-classification", NodeRotateFun = "RotMatPPO",
+plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, type = "gini", NodeRotateFun = "RotMatPPO",
                            paramList = NULL, digits = NULL, main = NULL, ...) {
   if (is.null(main)) {
-    main <- paste0("Oblique ", ifelse(type == "regression", "Regression", "Classification"), " Tree")
+    main <- paste0("Oblique ", ifelse(type == "mse", "Regression", "Classification"), " Tree")
   }
 
   set.seed(221109)
@@ -71,7 +71,7 @@ plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, type = "i-class
     tree <- do.call(ODT.formula, paramList)
     pred <- predict(tree, Xnew)
 
-    if (type != "regression") {
+    if (type != "mse") {
       err[d] <- mean(pred != ynew)
     } else {
       err[d] <- mean((pred - ynew)^2) # /mean((ynew-mean(y))^2);
@@ -83,7 +83,7 @@ plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, type = "i-class
   # err=round(err,errid)
   minErr <- strsplit(as.character(min(err)), "")[[1]]
   id <- which(minErr == "e")
-  if (type != "regression") {
+  if (type != "mse") {
     digits <- 0
   } else if (is.null(digits)) {
     if (length(id) > 0) {

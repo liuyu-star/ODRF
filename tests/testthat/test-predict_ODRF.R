@@ -7,7 +7,7 @@ test_that("predict returns good prediction", {
   train_data <- data.frame(seeds[train, ])
   test_data <- data.frame(seeds[-train, ])
   forest <- ODRF(varieties_of_wheat ~ ., train_data,
-    type = "i-classification",
+    type = "entropy",
     parallel = FALSE
   )
   pred <- predict(forest, test_data[, -8])
@@ -16,7 +16,7 @@ test_that("predict returns good prediction", {
 
 
 # dat <- data.matrix(iris)
-forest1 <- ODRF(Species ~ ., data = iris, type = "i-classification", parallel = FALSE)
+forest1 <- ODRF(Species ~ ., data = iris, type = "entropy", parallel = FALSE)
 
 test_that("no error if data.frame has Missing value, NA or NaN", {
   dat <- iris[, -5]
@@ -48,17 +48,17 @@ test_that("Tree-wise split select weights work", {
 
 # Inbag count matrix
 test_that("Inbag count matrix if of right size, without replacement", {
-  rf <- ODRF(Species ~ ., iris, type = "i-classification", ntrees = 10, replacement = FALSE, parallel = FALSE)
+  rf <- ODRF(Species ~ ., iris, type = "entropy", ntrees = 10, replacement = FALSE, parallel = FALSE)
   pred <- predict(rf, iris[, -5], type = "tree")
   expect_equal(dim(pred), c(nrow(iris), 10))
 })
 
 test_that("Inbag count matrix if of right size, storeOOB = FALSE and weight.tree=TRUE", {
-  rf <- ODRF(Species ~ ., iris, type = "i-classification", ntrees = 10, storeOOB = FALSE, parallel = FALSE)
+  rf <- ODRF(Species ~ ., iris, type = "entropy", ntrees = 10, storeOOB = FALSE, parallel = FALSE)
   expect_error(predict(rf, iris[, -5], type = "prob", weight.tree = TRUE))
 })
 
 test_that("Inbag count matrix if of right size, numOOB = 0 and weight.tree=TRUE", {
-  rf <- ODRF(Species ~ ., iris, type = "i-classification", ntrees = 10, numOOB = 0, parallel = FALSE)
+  rf <- ODRF(Species ~ ., iris, type = "entropy", ntrees = 10, numOOB = 0, parallel = FALSE)
   expect_warning(predict(rf, iris[, -5], type = "prob", weight.tree = TRUE))
 })

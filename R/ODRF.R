@@ -6,9 +6,9 @@
 #' @param data Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.
 #' @param X An n by d numeric matrix (preferable) or data frame.
 #' @param y A response vector of length n.
-#' @param type The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression.
-#' 'auto' (default): If the response in \code{data} or \code{y} is a factor, 'g-classification' is used, otherwise regression is assumed.
-#' @param lambda The adjustment parameters for the 'i-classification' and 'regression' criteria are used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).
+#' @param type The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression;
+#' 'auto' (default): If the response in \code{data} or \code{y} is a factor, "gini" is used, otherwise regression is assumed.
+#' @param lambda The adjustment parameter of \code{type} is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).
 #' @param NodeRotateFun Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
 #' including \itemize{
 #' \item{"RotMatPPO": projection pursuit optimization model (\code{\link{PPO}}), see \code{\link{RotMatPPO}} (default, model="PPR").}
@@ -73,7 +73,7 @@
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data,
-#'   type = "i-classification",
+#'   type = 'entropy',
 #'   parallel = FALSE
 #' )
 #' pred <- predict(forest, test_data[, -8])
@@ -87,7 +87,7 @@
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #' forest <- ODRF(Density ~ ., train_data,
-#'   type = "regression", parallel = FALSE,
+#'   type = "mse", parallel = FALSE,
 #'   NodeRotateFun = "RotMatPPO", paramList = list(model = "Log", dimProj = "Rand")
 #' )
 #' pred <- predict(forest, test_data[, -1])
@@ -105,7 +105,7 @@
 #' catLabel <- NULL
 #' y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
 #' \donttest{
-#' forest <- ODRF(y ~ X, type = "i-classification", Xcat = NULL, parallel = FALSE)
+#' forest <- ODRF(y ~ X, type = 'entropy', Xcat = NULL, parallel = FALSE)
 #' }
 #' head(X)
 #' #>   Xcol1 Xcol2          X1         X2          X3
@@ -154,7 +154,7 @@
 #'
 #' \donttest{
 #' forest <- ODRF(X, y,
-#'   type = "g-classification", Xcat = c(1, 2),
+#'   type = "gini", Xcat = c(1, 2),
 #'   catLabel = catLabel, parallel = FALSE
 #' )
 #' }
@@ -284,18 +284,18 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateF
     stop("argument 'ntrees' must exceed 1")
   }
   if (is.factor(y) && (type == "auto")) {
-    type <- "g-classification"
+    type <- "gini"
     warning("You are creating a forest for classification")
   }
   if (is.numeric(y) && (type == "auto")) {
-    type <- "regression"
+    type <- "mse"
     warning("You are creating a forest for regression")
   }
-  if (is.factor(y) && (type == "regression")) {
+  if (is.factor(y) && (type == "mse")) {
     stop(paste0("When ", formula[[2]], " is a factor type, 'type' cannot take 'regression'."))
   }
   #if (MinLeaf == 5) {
-  #  MinLeaf <- ifelse(type == "regression", 5, 1)
+  #  MinLeaf <- ifelse(type == "mse", 5, 1)
   #}
 
   ppForest <- list(
@@ -363,12 +363,12 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateF
   }
   n <- length(y)
   p <- ncol(X)
-  #if (type != "regression") {
+  #if (type != "mse") {
   #  y <- as.integer(as.factor(y))
   #}
   rm(data)
 
-  if (type != "regression") {
+  if (type != "mse") {
     # adjust y to go from 1 to numClass if needed
     if (is.factor(y)) {
       ppForest$Levels <- levels(y)
@@ -445,7 +445,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateF
       go <- TRUE
       while (go) {
         # make sure each class is represented in proportion to classes in initial dataset
-        if (stratify && (type != "regression")) {
+        if (stratify && (type != "mse")) {
           if (classCt[1L] != 0L) {
             TDindx[1:classCt[1L]] <- sample(Cindex[[1L]], classCt[1L], replace = TRUE)
           }
@@ -477,7 +477,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateF
       NTD <- setdiff(TDindx0, TDindx)
       pred <- predict(ppForestT, X[NTD, ])
 
-      if (type != "regression") {
+      if (type != "mse") {
         oobErr <- mean(pred != Levels[y[NTD]])
       } else {
         oobErr <- mean((pred - y[NTD])^2)
@@ -538,7 +538,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateF
     oobVotes <- oobVotes[idx, , drop = FALSE]
     yy <- y[idx]
 
-    if (type != "regression") {
+    if (type != "mse") {
       ny <- length(yy)
       nC <- numClass
       tree_weights <- rep(1, ny * ntrees)

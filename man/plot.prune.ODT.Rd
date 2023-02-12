@@ -30,7 +30,7 @@ train <- sample(1:252, 100)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 
-tree <- ODT(Density ~ ., train_data, type = "regression")
+tree <- ODT(Density ~ ., train_data, type = "mse")
 prune_tree <- prune(tree, test_data[, -1], test_data[, 1])
 # Plot pruned oblique decision tree structure (default)
 plot(prune_tree)

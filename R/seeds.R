@@ -34,13 +34,13 @@
 #' test_data <- data.frame(seeds[-train, ])
 #'
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data,
-#'   type = "i-classification", parallel = FALSE
+#'   type = "gini", parallel = FALSE
 #' )
 #' pred <- predict(forest, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
 #'
-#' tree <- ODT(varieties_of_wheat ~ ., train_data, type = "i-classification")
+#' tree <- ODT(varieties_of_wheat ~ ., train_data, type = "gini")
 #' pred <- predict(tree, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))

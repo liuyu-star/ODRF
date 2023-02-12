@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2022.3.14)  18 JAN 2023 19:08
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2022.3.14)  6 FEB 2023 18:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1061,7 +1061,7 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 
 [11]
 
-LaTeX Warning: Reference `sec:print' on page 12 undefined on input line 712.
+LaTeX Warning: Reference `sec:print' on page 12 undefined on input line 699.
 
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
@@ -1069,7 +1069,12 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [12]
-Overfull \hbox (10.42455pt too wide) in paragraph at lines 728--768
+Overfull \hbox (10.42455pt too wide) in paragraph at lines 715--755
+[][] 
+ []
+
+
+Overfull \hbox (0.62012pt too wide) in paragraph at lines 816--847
 [][] 
  []
 
@@ -1079,9 +1084,7 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [13]
-Overfull \hbox (0.62012pt too wide) in paragraph at lines 829--860
-[][] 
- []
+Underfull \vbox (badness 3492) has occurred while \output is active []
 
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
@@ -1105,7 +1108,7 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 <ODRF-tree.pdf, id=301, 722.7pt x 289.08pt>
 File: ODRF-tree.pdf Graphic file (type pdf)
 <use ODRF-tree.pdf>
-Package pdftex.def Info: ODRF-tree.pdf  used on input line 886.
+Package pdftex.def Info: ODRF-tree.pdf  used on input line 873.
 (pdftex.def)             Requested size: 354.12434pt x 141.65044pt.
  (./ODRF.bbl
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
@@ -1130,7 +1133,7 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10.95> not available
 Package natbib Warning: There were undefined citations.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 927--927
+Underfull \hbox (badness 10000) in paragraph at lines 914--914
 
  []
 
@@ -1139,12 +1142,7 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 19
  []
 
-[19]
-Overfull \hbox (10.94998pt too wide) has occurred while \output is active
-\T1/lmr/m/n/10.95 20 []
- []
-
-[20] (./ODRF.aux)
+[19] (./ODRF.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -1152,9 +1150,9 @@ Package rerunfilecheck Info: File `ODRF.out' has not changed.
 (rerunfilecheck)             Checksum: 67F40B51A62CF690AC09FA10EC728A54;2780.
  ) 
 Here is how much of TeX's memory you used:
- 26103 strings out of 478276
- 517360 string characters out of 5843469
- 838700 words of memory out of 5000000
+ 26102 strings out of 478276
+ 517353 string characters out of 5843469
+ 835700 words of memory out of 5000000
  43751 multiletter control sequences out of 15000+600000
  553686 words of font info for 75 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1186,10 +1184,10 @@ texmf-dist/fonts/type1/public/lm/lmtt10.pfb><d:/Program Files/texlive/2021/texm
 f-dist/fonts/type1/public/lm/lmtt12.pfb><d:/Program Files/texlive/2021/texmf-di
 st/fonts/type1/public/lm/lmtto10.pfb><d:/Program Files/texlive/2021/texmf-dist/
 fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on ODRF.pdf (20 pages, 488638 bytes).
+Output written on ODRF.pdf (19 pages, 487807 bytes).
 PDF statistics:
- 461 PDF objects out of 1000 (max. 8388607)
- 385 compressed objects within 4 object streams
- 79 named destinations out of 1000 (max. 500000)
+ 456 PDF objects out of 1000 (max. 8388607)
+ 381 compressed objects within 4 object streams
+ 78 named destinations out of 1000 (max. 500000)
  106 words of extra memory for PDF output out of 10000 (max. 10000000)
 

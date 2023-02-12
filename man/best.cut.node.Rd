@@ -11,7 +11,7 @@ best.cut.node(
   lambda = "log",
   weights = 1,
   MinLeaf = 10,
-  numLabels = ifelse(type == "regression", 0, length(unique(y)))
+  numLabels = ifelse(type == "mse", 0, length(unique(y)))
 )
 }
 \arguments{
@@ -19,10 +19,10 @@ best.cut.node(
 
 \item{y}{A response vector of length n.}
 
-\item{type}{One of three criteria, 'i-classification': information gain (classification, default),
-'g-classification': gini impurity index (classification) or 'regression': mean square error (regression).}
+\item{type}{One of three criteria, 'gini': gini impurity index (classification), 'entropy': information gain (classification)
+or 'mse': mean square error (regression).}
 
-\item{lambda}{The adjustment parameters for the 'i-classification' and 'regression' criteria are used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).}
+\item{lambda}{The adjustment parameter of \code{type} is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).}
 
 \item{weights}{A vector of values which weigh the samples when considering a split.}
 
@@ -35,8 +35,7 @@ A list which contains:
 \itemize{
 \item BestCutVar: The best split variable.
 \item BestCutVal: The best split point for the best split variable.
-\item BestIndex: Each variable corresponds to the min gini impurity index(method='g-classification'),
-the max information gain(method='i-classification') or the min squared error(method='regression').
+\item BestIndex: Each variable corresponds to the min gini impurity index, the max information gain or the min mean square error.
 }
 }
 \description{
@@ -47,7 +46,7 @@ A function to select the splitting variables and nodes using one of three criter
 data(iris)
 X <- as.matrix(iris[, 1:4])
 y <- iris[[5]]
-bestcut <- best.cut.node(X, y, type = "i-classification")
+bestcut <- best.cut.node(X, y, type = 'gini')
 print(bestcut)
 
 }

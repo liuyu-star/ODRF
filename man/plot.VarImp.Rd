@@ -30,9 +30,7 @@ train <- sample(1:569, 200)
 train_data <- data.frame(breast_cancer[train, -1])
 test_data <- data.frame(breast_cancer[-train, -1])
 
-forest <- ODRF(diagnosis ~ ., train_data,
-  type = "i-classification", parallel = FALSE
-)
+forest <- ODRF(diagnosis ~ ., train_data, type = 'entropy', parallel = FALSE)
 (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
 plot(varimp, digits = 0)
 

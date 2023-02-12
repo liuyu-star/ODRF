@@ -1,11 +1,11 @@
 #include <cmath>
 #include "quickie.h"
 
-void infogain_split(int M, int N, double* Labels, double* Data, int minleaf, int numLabels, 
+void infogain_split(double lambda, int M, int N, double* Labels, double* Data, int minleaf, int numLabels, 
           int* bcvar, double* bcval, double* bestval){
     
     double *saved_logs, *sorted_data;
-    double ah, bh, ch, bh0;
+    double ah, bh, ch, bh0, gr, gl, t, tl, tr;
     int i, j, cl, nl, mj;
     int *diff_labels_l, *diff_labels_r, *diff_labels, *sorted_labels;
     
@@ -29,10 +29,17 @@ void infogain_split(int M, int N, double* Labels, double* Data, int minleaf, int
     
     bh = 0;
     for(nl=0;nl<numLabels;nl++){
-        if (diff_labels[nl]>0) bh-=diff_labels[nl]*(saved_logs[diff_labels[nl]-1]-saved_logs[M-1]);
+        //if (diff_labels[nl]>0) bh-=(diff_labels[nl]/M)*(saved_logs[diff_labels[nl]-1]-saved_logs[M-1]);
+        if (diff_labels[nl]>0) bh-=(diff_labels[nl])*(saved_logs[diff_labels[nl]-1]-saved_logs[M-1]);
     }
-    bh = bh/M;
+    //bh = bh/M;
     //bh = bh*(M/(M-1))^2;
+    if (lambda==M){
+      t=log(M);
+    }else{
+      t=lambda;
+    }
+    bh = bh*pow(M,3)/pow(M-t,2);
     bh0=bh;
     
     for(i = 0;i<N;i++){
@@ -67,12 +74,25 @@ void infogain_split(int M, int N, double* Labels, double* Data, int minleaf, int
             diff_labels_l[cl]++;
             diff_labels_r[cl]--;
             
-            ch = 0;
+            gl = 0;
+            gr = 0;
             for(nl=0;nl<numLabels;nl++) {
-                if(diff_labels_l[nl]>0) ch-=diff_labels_l[nl]*(saved_logs[diff_labels_l[nl]-1]-saved_logs[j]);
-                if(diff_labels_r[nl]>0) ch-=diff_labels_r[nl]*(saved_logs[diff_labels_r[nl]-1]-saved_logs[M-j-2]);
+                //if(diff_labels_l[nl]>0) gl-=(diff_labels_l[nl]/(j+1))*(saved_logs[diff_labels_l[nl]-1]-saved_logs[j]);
+                //if(diff_labels_r[nl]>0) gr-=(diff_labels_r[nl]/(M-j-1))*(saved_logs[diff_labels_r[nl]-1]-saved_logs[M-j-2]);
+                if(diff_labels_l[nl]>0) gl-=(diff_labels_l[nl])*(saved_logs[diff_labels_l[nl]-1]-saved_logs[j]);
+                if(diff_labels_r[nl]>0) gr-=(diff_labels_r[nl])*(saved_logs[diff_labels_r[nl]-1]-saved_logs[M-j-2]);
             }
-            ch = ch/M;
+            //ch = ch/M;
+            if (lambda==M){
+            tl=log(j+1);
+            tr=log(M-j-1);
+            }else{
+            tl=lambda;
+            tr=lambda;
+            }
+            //ch = gl+gr;
+            ch = gl*pow(j+1,3)/pow(j+1-tl,2) + gr*pow(M-j-1,3)/pow(M-j-1-tr,2);
+            //ch = ((j+1)*gl/M) + ((M-j-1)*gr/M);
             
             if (ch<bh){
               if (fabs(sorted_data[j+1]-sorted_data[j])>1e-15){
@@ -102,11 +122,11 @@ void infogain_split(int M, int N, double* Labels, double* Data, int minleaf, int
 }
 
 
-void infogain_split(int M, int N, double* Labels, double* Data, double* W, int minleaf, 
+void infogain_split(double lambda, int M, int N, double* Labels, double* Data, double* W, int minleaf, 
           int numLabels, int* bcvar, double* bcval, double* bestval){
     
     double *sorted_data, *sorted_w;
-    double ah, bh, ch, bh0, sum_W, sum_l;
+    double ah, bh, ch, bh0, sum_W, sum_l, gr, gl, t, tl, tr;
     int i, j, cl, nl, mj;
     double *diff_labels_l, *diff_labels_r, *diff_labels;
     int *sorted_labels;
@@ -132,9 +152,15 @@ void infogain_split(int M, int N, double* Labels, double* Data, double* W, int m
     
     bh = 0;
     for(nl=0;nl<numLabels;nl++){
-        if (diff_labels[nl]>0) bh-=diff_labels[nl]*(log2(diff_labels[nl])-log2(sum_W));
+        if (diff_labels[nl]>0) bh-=(diff_labels[nl]/sum_W)*(log2(diff_labels[nl])-log2(sum_W));
     }
-    bh = bh/sum_W;
+    //bh = bh/sum_W;
+    if (lambda==M){
+      t=log(M);
+    }else{
+      t=lambda;
+    }
+    bh = bh*pow(M,3)/pow(M-t,2);
     bh0=bh;
     
     for(i = 0;i<N;i++){
@@ -175,12 +201,21 @@ void infogain_split(int M, int N, double* Labels, double* Data, double* W, int m
             diff_labels_r[cl]-=sorted_w[j];
             sum_l += sorted_w[j];
             
-            ch = 0;
+            gl = 0;
+            gr = 0;
             for(nl=0;nl<numLabels;nl++) {
-                if(diff_labels_l[nl]>0) ch-=(sum_l)*(diff_labels_l[nl])*(log2(diff_labels_l[nl])-log2(sum_l));
-                if(diff_labels_r[nl]>0) ch-=(sum_W-sum_l)*(diff_labels_r[nl])*(log2(diff_labels_r[nl])-log2(sum_W-sum_l));
+                if(diff_labels_l[nl]>0) gl-=(diff_labels_l[nl]/sum_W)*(log2(diff_labels_l[nl])-log2(sum_l));//(sum_l/sum_W)*
+                if(diff_labels_r[nl]>0) gr-=(diff_labels_r[nl]/sum_W)*(log2(diff_labels_r[nl])-log2(sum_W-sum_l));//(sum_W-sum_l)/sum_W/sum_W*
             }
-            ch = ch/sum_W/sum_W;
+            //ch = ch/sum_W/sum_W;
+            if (lambda==M){
+            tl=log(j+1);
+            tr=log(M-j-1);
+            }else{
+            tl=lambda;
+            tr=lambda;
+            }
+            ch = gl*pow(j+1,3)/pow(j+1-tl,2) + gr*pow(M-j-1,3)/pow(M-j-1-tr,2);
             
             if (ch<bh){
               if (fabs(sorted_data[j+1]-sorted_data[j])>1e-15){

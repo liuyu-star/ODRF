@@ -5,12 +5,12 @@ test_that("predict returns good prediction", {
   train_data <- data.frame(seeds[train, ])
   test_data <- data.frame(seeds[-train, ])
 
-  tree <- ODT(varieties_of_wheat ~ ., train_data, type = "i-classification")
+  tree <- ODT(varieties_of_wheat ~ ., train_data, type = "entropy")
   pred <- predict(tree, test_data[, -8])
   expect_gt(mean(pred == test_data[, 8]), 0.8)
 })
 
-tree <- ODT(Species ~ ., iris, type = "i-classification")
+tree <- ODT(Species ~ ., iris, type = "entropy")
 
 test_that("no error if data.frame has Missing value, NA or NaN", {
   dat <- iris[, -5]
@@ -32,7 +32,7 @@ test_that("Terminal nodes returned by predict are node ids, classification", {
 
 test_that("Terminal nodes returned by predict are node ids, regression", {
   data(body_fat, package = "ODRF")
-  tree <- ODT(Density ~ ., body_fat, type = "regression")
+  tree <- ODT(Density ~ ., body_fat, type = "mse")
   pred <- predict(tree, body_fat[, -1], leafnode = TRUE)
   expect_type(pred, "integer")
 })

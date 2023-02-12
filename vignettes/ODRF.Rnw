@@ -467,7 +467,7 @@ forest
 ## S3 method for class 'ODT'
 predict(ppTree, Xnew, leafnode = FALSE)
 ## S3 method for class 'ODRF'
-predict(ppForest, Xnew, type = "response", weight.tree = FALSE)
+predict(ppForest, Xnew, type = "mse", weight.tree = FALSE)
 \end{Code}
 We also defined \code{S3} methods \code{online} and \code{prune} used to online structure training and estimation error pruning for classes \code{ODT} and \code{ODRF}, respectively, and they can significantly improve the model accuracy. \code{online} Update existing \code{ODT} and \code{ODRF} using batches of data. \code{prune} is judged to prune or not based on whether the error of computing new data is reduced or not, and our pruning begins from the last leaf node. For class \code{ODRF}, let \code{prune}'s argument \code{useOOB=TRUE} to use 'out-of-bag' for pruning.
 \begin{Code}
@@ -489,17 +489,17 @@ train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
-  type = "i-classification", parallel = FALSE
+  type = "gini", parallel = FALSE
 )
 pred <- predict(forest, test_data[, -8])
 e.forest <- mean(pred != test_data[, 8])
 forest1 <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
-  type = "i-classification", parallel = FALSE
+  type = "gini", parallel = FALSE
 )
 pred <- predict(forest1, test_data[, -8])
 e.forest.1 <- mean(pred != test_data[, 8])
 forest2 <- ODRF(varieties_of_wheat ~ ., train_data[-index, ],
-  type = "i-classification", parallel = FALSE
+  type = "gini", parallel = FALSE
 )
 pred <- predict(forest2, test_data[, -8])
 e.forest.2 <- mean(pred != test_data[, 8])
@@ -525,13 +525,13 @@ train <- sample(1:252, 120)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
-tree <- ODT(Density ~ ., train_data, type = "regression")
+tree <- ODT(Density ~ ., train_data, type = "mse")
 pred <- predict(tree, test_data[, -1])
 e.tree <- mean((pred - test_data[, 1])^2)
-tree1 <- ODT(Density ~ ., train_data[index, ], type = "regression")
+tree1 <- ODT(Density ~ ., train_data[index, ], type = "mse")
 pred <- predict(tree1, test_data[, -1])
 e.tree.1 <- mean((pred - test_data[, 1])^2)
-tree2 <- ODT(Density ~ ., train_data[-index, ], type = "regression")
+tree2 <- ODT(Density ~ ., train_data[-index, ], type = "mse")
 pred <- predict(tree2, test_data[, -1])
 e.tree.2 <- mean((pred - test_data[, 1])^2)
 tree.online <- online(tree1, train_data[-index, -1], train_data[-index, 1])
@@ -550,31 +550,31 @@ As shown in the classification and regression results above, the training data \
 \subsection[Create a projection matrix with the RotMat* function]{Create a projection matrix with the \code{RotMat*} function}
 We provide the functions \fct{RotMatPPO}, \fct{RotMatRand} and \fct{RotMatRF} for creating rotation matrix by projection pursuit optimization model (\emph{PPO}) \cite{cook2008grand}, same random rotation as \fct{RandMatBinary} in \pkg{rerf} package and single feature similar to random forest, respectively. The function \fct{PPO} is to find the best projection using various projectin pursuit models, including \code{"PPR"} (default): projection projection regression from \fct{ppr} in \pkg{stats} package \cite{friedman1981projection}, \code{"Log"}: logistic based on \fct{nnet} in \pkg{nnet} package \cite{nnet}, \code{"Rand"}: The random projection generated from $\{-1, 1\}$, argument \code{PPmethod} of function \fct{PPopt} in \pkg{PPtreeViz} package, and argument \code{findex} of function \fct{PP\_Optimizer} in \pkg{Pursuit} package \cite{Pursuit}. Note that \pkg{PPtreeViz} and \pkg{Pursuit} are only available for classification. The generated rotation matrix has three columns, the first column (\code{Variable}). Variable to be projected, the second column (\code{Number}): Number of projections, and the third column (\code{Coefficient}): the coefficient of the projected matrix. In addition, the user can define a projection matrix function, see the \pkg{ODRF} help file for more details on usage.%,We provide a several examples as follows, just let the argument \code{RotMatFun} be the name of the defined function and let the argument \code{paramList} be the arguments used in the defined function, or use the function \fct{RotMatMake} to define the projection matrix by the following way.
 \begin{Code}
-RotMatPPO(X,y,model = "PPR",type = "i-classification",weights = NULL,
+RotMatPPO(X,y,model = "PPR",type = "gini",weights = NULL,
   dimProj,numProj,catLabel = NULL, ...)
 RotMatRand(dimX,randDist = "Binary",numProj = ceiling(sqrt(dimX)),
   dimProj = "Rand",sparsity, prob = 0.5,lambda = 1,catLabel = NULL,...)
 RotMatRF(dimX, numProj, catLabel = NULL, ...)
 RotMatMake(X = NULL,y = NULL,RotMatFun = "RotMatPPO",PPFun = "PPO",
   FunDir = getwd(),paramList = NULL, ...)
-PPO(X, y, model = "PPR", type = "i-classification", weights = NULL
+PPO(X, y, model = "PPR", type = "gini", weights = NULL
 \end{Code}
 %
 To show that \fct{PPO} with different \code{model} to do classification and regression and used to \fct{RotMatPPO}. after that show simple usage of functions \fct{RotMatRand} and \fct{RotMatRF}.% Finally explain how to define the projection matrix function and train \code{ODT} by two ways.
 %
 <<RotMat>>=
 data(seeds, package = "ODRF")
-(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = "i-classification"))
+(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = "gini"))
 RotMat <- RotMatPPO(seeds[, 1:7], seeds[, 8],
   model = "Log",
-  type = "i-classification"
+  type = "gini"
 )
 head(RotMat)
 data(body_fat, package = "ODRF")
-(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "regression"))
+(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "mse"))
 RotMat <- RotMatPPO(seeds[, 1:7], seeds[, 8],
   model = "PPR",
-  type = "i-classification"
+  type = "gini"
 )
 head(RotMat)
 set.seed(22)
@@ -757,7 +757,7 @@ data(breast_cancer)
 train <- sample(1:569, 200)
 train_data <- data.frame(breast_cancer[train, -1])
 test_data <- data.frame(breast_cancer[-train, -1])
-tree <- ODT(diagnosis ~ ., train_data, type = "i-classification")
+tree <- ODT(diagnosis ~ ., train_data, type = "gini")
 print(tree)
 @
 We use the function \fct{ODT} to construct a decision tree, and print and plot the tree structure. It is shown that the tree structure is very simple with 3 split nodes, 4 leaf nodes and the depth of 4. In addition, we can obtain the projection coefficients of the variables at each split, and the results are shown in Table 2 after removing the variables with projection coefficients less than 0.1 from the 30 variables. It shows that perimeter (x3), concave points (x8, x28), area (x14) and radius (x21) play a major role in the first partition. compactness (x6), perimeter (x13) and concave points (x28) have a significant impact on the second partitioning. In the third partitioning, perimeter\_worst (x23) was randomly selected as the partitioning variable from 30 variable according to our procedure due to the small amount of data. We noticed that mean cell nuclei had the most influence in the whole decision tree.
@@ -769,7 +769,7 @@ data(breast_cancer)
 train <- sample(1:569, 200)
 train_data <- breast_cancer[train, -1]
 test_data <- breast_cancer[-train, -1]
-tree <- ODT(diagnosis ~ ., train_data, type = "i-classification")
+tree <- ODT(diagnosis ~ ., train_data, type = "gini")
 plot(tree)
 @
 %%%%%%%%%%%%%%%%%%%%%%%%%%

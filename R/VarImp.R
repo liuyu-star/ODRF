@@ -21,7 +21,7 @@
 #' train_data <- data.frame(breast_cancer[train, -1])
 #' test_data <- data.frame(breast_cancer[-train, -1])
 #'
-#' forest <- ODRF(diagnosis ~ ., train_data, type = "i-classification", parallel = FALSE)
+#' forest <- ODRF(diagnosis ~ ., train_data, type = "gini", parallel = FALSE)
 #' (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
 #'
 #' @keywords forest
@@ -45,7 +45,7 @@ VarImp <- function(forest, X, y) {
   # weights=weights0
 
 
-  if (forest$type != "regression") {
+  if (forest$type != "mse") {
     y <- factor(y, levels = forest$Levels)
   }
   # X=forest$data$X
@@ -105,7 +105,7 @@ VarImp <- function(forest, X, y) {
         Xi[, j - 1] <- Xi[sample(yn), j - 1] #+rnorm(length(oobIndex))
       }
       pred <- predict(tree, Xi)
-      if (forest$type != "regression") {
+      if (forest$type != "mse") {
         oobErr <- mean(pred != yi)
       } else {
         oobErr <- mean((pred - yi)^2) # /e.0

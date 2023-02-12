@@ -29,7 +29,7 @@ Draw oblique decision tree with tree structure. It is modified from a function i
 }
 \examples{
 data(iris)
-tree <- ODT(Species ~ ., data = iris, type = "i-classification")
+tree <- ODT(Species ~ ., data = iris, type = "gini")
 plot(tree)
 
 }

@@ -75,10 +75,10 @@ ODRF(X, ...)
 
 \item{data}{Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.}
 
-\item{type}{The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression.
-'auto' (default): If the response in \code{data} or \code{y} is a factor, 'g-classification' is used, otherwise regression is assumed.}
+\item{type}{The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression;
+'auto' (default): If the response in \code{data} or \code{y} is a factor, "gini" is used, otherwise regression is assumed.}
 
-\item{lambda}{The adjustment parameters for the 'i-classification' and 'regression' criteria are used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).}
+\item{lambda}{The adjustment parameter of \code{type} is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).}
 
 \item{NodeRotateFun}{Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
 including \itemize{
@@ -162,7 +162,7 @@ train <- sample(1:209, 100)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
-  type = "i-classification",
+  type = 'entropy',
   parallel = FALSE
 )
 pred <- predict(forest, test_data[, -8])
@@ -176,7 +176,7 @@ train <- sample(1:252, 80)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 forest <- ODRF(Density ~ ., train_data,
-  type = "regression", parallel = FALSE,
+  type = "mse", parallel = FALSE,
   NodeRotateFun = "RotMatPPO", paramList = list(model = "Log", dimProj = "Rand")
 )
 pred <- predict(forest, test_data[, -1])
@@ -194,7 +194,7 @@ Xcat <- c(1, 2)
 catLabel <- NULL
 y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
 \donttest{
-forest <- ODRF(y ~ X, type = "i-classification", Xcat = NULL, parallel = FALSE)
+forest <- ODRF(y ~ X, type = 'entropy', Xcat = NULL, parallel = FALSE)
 }
 head(X)
 #>   Xcol1 Xcol2          X1         X2          X3
@@ -243,7 +243,7 @@ catLabel
 
 \donttest{
 forest <- ODRF(X, y,
-  type = "g-classification", Xcat = c(1, 2),
+  type = "gini", Xcat = c(1, 2),
   catLabel = catLabel, parallel = FALSE
 )
 }

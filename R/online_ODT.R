@@ -20,9 +20,7 @@
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
-#' tree <- ODT(varieties_of_wheat ~ ., train_data[index, ],
-#'   type = "i-classification"
-#' )
+#' tree <- ODT(varieties_of_wheat ~ ., train_data[index, ], type = "gini")
 #' online_tree <- online(tree, train_data[-index, -8], train_data[-index, 8])
 #' pred <- predict(online_tree, test_data[, -8])
 #' # classification error
@@ -35,7 +33,7 @@
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
-#' tree <- ODT(Density ~ ., train_data[index, ], type = "regression")
+#' tree <- ODT(Density ~ ., train_data[index, ], type = "mse")
 #' online_tree <- online(tree, train_data[-index, -1], train_data[-index, 1])
 #' pred <- predict(online_tree, test_data[, -1])
 #' # estimation error
@@ -49,6 +47,8 @@
 online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
   ppTree <- obj
   rm(obj)
+  if(is.null(obj$projections))
+    stop("No tree structure to use 'online'!")
   weights0 <- weights
   Call <- ppTree$call
   Terms <- ppTree$terms
@@ -114,7 +114,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
   #method0 <- strsplit(type, split = "")[[1]][1]
 
 
-  if (type != "regression") {
+  if (type != "mse") {
     if (!is.integer(y)) {
       y <- as.integer(as.factor(y))
     }
@@ -250,7 +250,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
       nn <- length(y[nodeXIndx[[currentNode]]])
       # r=ceiling(nn*nodeNumLabel0[currentNode])
       # parentLabel=nn*nodeNumLabel0[currentNode,]
-      if (type != "regression") {
+      if (type != "mse") {
         leafLabel <- table(Levels[c(sl, y[nodeXIndx[[currentNode]]])]) - 1 + nn * nodeNumLabel0[currentNode, ]
         # leafLabel = table(c(Levels[y[nodeXIndx[[currentNode]]]],rep(names(nodeNumLabel0[currentNode]),r)))
         # nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
@@ -333,7 +333,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
       nn <- length(y[nodeXIndx[[currentNode]]])
       # r=ceiling(nn*nodeNumLabel0[currentNode])
       # parentLabel=nn*nodeNumLabel0[currentNode,]
-      if (type != "regression") {
+      if (type != "mse") {
         leafLabel <- table(Levels[c(sl, y[nodeXIndx[[currentNode]]])]) - 1 + nn * nodeNumLabel0[currentNode, ]
         # leafLabel = table(c(Levels[y[nodeXIndx[[currentNode]]]],rep(names(nodeNumLabel0[currentNode]),r)))
         # nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
@@ -366,7 +366,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
       # names(r)=rep(nodeLabel[currentNode],2)
       LRnode <- rbind(nodeNumLabel0[currentNode, ], nodeNumLabel0[currentNode, ])
       if (!is.na(childNode0[currentNode])) {
-        if (type != "regression") {
+        if (type != "mse") {
           # r=rep(nodeNumLabel0[currentNode],2)
           # names(r)=rep(names(nodeNumLabel0[currentNode]),2)
           LRnode <- LRnode / length(y[nodeXIndx[[currentNode]]])

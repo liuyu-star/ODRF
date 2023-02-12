@@ -40,12 +40,12 @@
 #' train_data <- data.frame(breast_cancer[train, -1])
 #' test_data <- data.frame(breast_cancer[-train, -1])
 #'
-#' forest <- ODRF(diagnosis ~ ., train_data, type = "i-classification", parallel = FALSE)
+#' forest <- ODRF(diagnosis ~ ., train_data, type = "gini", parallel = FALSE)
 #' pred <- predict(forest, test_data[, -1])
 #' # classification error
 #' (mean(pred != test_data[, 1]))
 #'
-#' tree <- ODT(diagnosis ~ ., train_data, type = "i-classification")
+#' tree <- ODT(diagnosis ~ ., train_data, type = "gini")
 #' pred <- predict(tree, test_data[, -1])
 #' # classification error
 #' (mean(pred != test_data[, 1]))
