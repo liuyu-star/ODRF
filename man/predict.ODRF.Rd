@@ -22,7 +22,7 @@ Note that if there are NA values in the data 'Xnew', which will be replaced with
 A set of vectors in the following list:
 \itemize{
 \item \code{response}: the prediced values of the new data.
-\item \code{prob}: matrix of class probabilities (one column for each class and one row for each input). If \code{ppForest$type} is \code{mse}, a vector of tree weights is returned.
+\item \code{prob}: matrix of class probabilities (one column for each class and one row for each input). If \code{ppForest$split} is \code{mse}, a vector of tree weights is returned.
 \item \code{tree}: it is a matrix where each column contains prediction by a tree in the forest.
 }
 }
@@ -37,7 +37,7 @@ train <- sample(1:209, 100)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
-  type = "entropy", parallel = FALSE
+  split = "entropy", parallel = FALSE
 )
 pred <- predict(forest, test_data[, -8])
 # classification error
@@ -50,7 +50,7 @@ set.seed(221212)
 train <- sample(1:252, 80)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
-forest <- ODRF(Density ~ ., train_data, type = "mse", parallel = FALSE)
+forest <- ODRF(Density ~ ., train_data, split = "mse", parallel = FALSE)
 pred <- predict(forest, test_data[, -1])
 # estimation error
 mean((pred - test_data[, 1])^2)

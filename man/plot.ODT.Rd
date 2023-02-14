@@ -29,12 +29,12 @@ Draw oblique decision tree with tree structure. It is modified from a function i
 }
 \examples{
 data(iris)
-tree <- ODT(Species ~ ., data = iris, type = "gini")
+tree <- ODT(Species ~ ., data = iris, split = "gini")
 plot(tree)
 
 }
 \references{
-Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software \url{doi:10.18637/jss.v083.i08}
+Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software.
 }
 \seealso{
 \code{\link{ODT}} \code{\link{as.party}} \code{\link{plot_ODT_depth}}

@@ -7,11 +7,11 @@
 best.cut.node(
   X,
   y,
-  type,
+  split,
   lambda = "log",
   weights = 1,
   MinLeaf = 10,
-  numLabels = ifelse(type == "mse", 0, length(unique(y)))
+  numLabels = ifelse(split == "mse", 0, length(unique(y)))
 )
 }
 \arguments{
@@ -19,10 +19,10 @@ best.cut.node(
 
 \item{y}{A response vector of length n.}
 
-\item{type}{One of three criteria, 'gini': gini impurity index (classification), 'entropy': information gain (classification)
+\item{split}{One of three criteria, 'gini': gini impurity index (classification), 'entropy': information gain (classification)
 or 'mse': mean square error (regression).}
 
-\item{lambda}{The adjustment parameter of \code{type} is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).}
+\item{lambda}{The adjustment parameter of \code{split} is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).}
 
 \item{weights}{A vector of values which weigh the samples when considering a split.}
 
@@ -46,7 +46,7 @@ A function to select the splitting variables and nodes using one of three criter
 data(iris)
 X <- as.matrix(iris[, 1:4])
 y <- iris[[5]]
-bestcut <- best.cut.node(X, y, type = 'gini')
+bestcut <- best.cut.node(X, y, split = 'gini')
 print(bestcut)
 
 }

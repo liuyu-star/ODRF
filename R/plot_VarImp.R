@@ -19,7 +19,7 @@
 #' train_data <- data.frame(breast_cancer[train, -1])
 #' test_data <- data.frame(breast_cancer[-train, -1])
 #'
-#' forest <- ODRF(diagnosis ~ ., train_data, type = 'entropy', parallel = FALSE)
+#' forest <- ODRF(diagnosis ~ ., train_data, split = 'entropy', parallel = FALSE)
 #' (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
 #' plot(varimp, digits = 0)
 #'
@@ -35,12 +35,12 @@ plot.VarImp <- function(x, nvar = 30, digits = NULL, main = NULL, ...) {
   nvar <- min(nvar, nrow(x$varImp))
 
   if (is.null(main)) {
-    main <- paste0("Oblique ", ifelse(x$type == "mse", "Regression", "Classification"), " Forest")
+    main <- paste0("Oblique ", ifelse(x$split == "mse", "Regression", "Classification"), " Forest")
   }
 
   minErr <- strsplit(as.character(min(imp[, 2])), "")[[1]]
   id <- which(minErr == "e")
-  if (x$type != "mse") {
+  if (x$split != "mse") {
     digits <- 0
   } else if (is.null(digits)) {
     if (length(id) > 0) {

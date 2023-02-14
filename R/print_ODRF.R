@@ -22,7 +22,7 @@
 print.ODRF <- function(x, ...) {
   cat("\nCall:\n", deparse(x$call), "\n")
   cat("               Type of oblique decision random forest: ",
-    ifelse(x$type == "regression", "regression", "classification"), "\n",
+    ifelse(x$split == "mse", "regression", "classification"), "\n",
     sep = ""
   )
   cat("                                      Number of trees: ", x$forest$ntrees, "\n", sep = "")

@@ -36,7 +36,7 @@ train <- sample(1:209, 100)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
-  type = "entropy", parallel = FALSE
+  split = "entropy", parallel = FALSE
 )
 prune_forest <- prune(forest, train_data[, -8], train_data[, 8])
 pred <- predict(prune_forest, test_data[, -8])
@@ -50,7 +50,7 @@ train <- sample(1:252, 80)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
-forest <- ODRF(Density ~ ., train_data[index, ], type = "mse", parallel = FALSE)
+forest <- ODRF(Density ~ ., train_data[index, ], split = "mse", parallel = FALSE)
 prune_forest <- prune(forest, train_data[-index, -1], train_data[-index, 1], useOOB = FALSE)
 pred <- predict(prune_forest, test_data[, -1])
 # estimation error

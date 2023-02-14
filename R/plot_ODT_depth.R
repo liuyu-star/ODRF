@@ -5,7 +5,7 @@
 #' @param formula Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})
 #' @param data Training data of class \code{data.frame} in \code{\link{ODT}} is used to calculate the OOB error.
 #' @param newdata A data frame or matrix containing new data is used to calculate the test error. If it is missing, let it be \code{data}.
-#' @param type The criterion used for splitting the variable. 'gini': gini impurity index (classification, default),
+#' @param split The criterion used for splitting the variable. 'gini': gini impurity index (classification, default),
 #'        'entropy': information gain (classification) or 'mse': mean square error (regression).
 #' @param NodeRotateFun Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
 #' including \itemize{
@@ -31,13 +31,13 @@
 #' train <- sample(1:252, 100)
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
-#' plot_ODT_depth(Density ~ ., train_data, test_data, type = "mse")
+#' plot_ODT_depth(Density ~ ., train_data, test_data, split = "mse")
 #'
 #' @export
-plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, type = "gini", NodeRotateFun = "RotMatPPO",
+plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, split = "gini", NodeRotateFun = "RotMatPPO",
                            paramList = NULL, digits = NULL, main = NULL, ...) {
   if (is.null(main)) {
-    main <- paste0("Oblique ", ifelse(type == "mse", "Regression", "Classification"), " Tree")
+    main <- paste0("Oblique ", ifelse(split == "mse", "Regression", "Classification"), " Tree")
   }
 
   set.seed(221109)
@@ -49,7 +49,7 @@ plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, type = "gini", 
   paramList$formula <- formula
   paramList$data <- data
   paramList$MaxDepth <- Inf
-  paramList$type <- type
+  paramList$split <- split
   paramList$NodeRotateFun <- NodeRotateFun
   tree <- do.call(ODT.formula, paramList)
   Depth <- max(tree$structure$nodeDepth) + 2
@@ -71,7 +71,7 @@ plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, type = "gini", 
     tree <- do.call(ODT.formula, paramList)
     pred <- predict(tree, Xnew)
 
-    if (type != "mse") {
+    if (split != "mse") {
       err[d] <- mean(pred != ynew)
     } else {
       err[d] <- mean((pred - ynew)^2) # /mean((ynew-mean(y))^2);
@@ -83,7 +83,7 @@ plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, type = "gini", 
   # err=round(err,errid)
   minErr <- strsplit(as.character(min(err)), "")[[1]]
   id <- which(minErr == "e")
-  if (type != "mse") {
+  if (split != "mse") {
     digits <- 0
   } else if (is.null(digits)) {
     if (length(id) > 0) {

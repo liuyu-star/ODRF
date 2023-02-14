@@ -85,12 +85,12 @@ head(RotMat)
 
 # train ODT with defined projection matrix function
 tree <- ODT(X, y,
-  type = "entropy", NodeRotateFun = "makeRotMat",
+  split = "entropy", NodeRotateFun = "makeRotMat",
   paramList = list(dimX = ncol(X), dimProj = 5, numProj = 4)
 )
 # train ODT with defined projection matrix function and projection optimization model function
 tree <- ODT(X, y,
-  type = "entropy", NodeRotateFun = "RotMatMake", paramList =
+  split = "entropy", NodeRotateFun = "RotMatMake", paramList =
     list(
       RotMatFun = "makeRotMat", PPFun = "makePP",
       dimX = ncol(X), dimProj = 5, numProj = 4, prob = 0.5

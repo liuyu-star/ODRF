@@ -17,7 +17,7 @@
 #' train_data <- data.frame(breast_cancer[train, -1])
 #' test_data <- data.frame(breast_cancer[-train, -1])
 #'
-#' forest <- ODRF(diagnosis ~ ., train_data, type = "gini", parallel = FALSE)
+#' forest <- ODRF(diagnosis ~ ., train_data, split = "gini", parallel = FALSE)
 #' (error <- Accuracy(forest, train_data, test_data))
 #'
 #' @keywords forest
@@ -33,7 +33,7 @@ Accuracy <- function(forest, data, newdata = NULL) {
   ynew <- newdata[, setdiff(colnames(newdata), vars[-1])]
   Xnew <- newdata[, vars[-1]]
   Xnew <- as.matrix(Xnew)
-  if (forest$type != "mse") {
+  if (forest$split != "mse") {
     y <- factor(y, levels = forest$Levels)
   }
 
@@ -42,9 +42,9 @@ Accuracy <- function(forest, data, newdata = NULL) {
   nC <- length(forest$Levels)
   ny <- length(ynew)
 
-  treeVotes <- predict(forest, Xnew, type = "tree")
+  treeVotes <- predict(forest, Xnew, split = "tree")
   err.test <- rep(0, ntrees)
-  if (forest$type == "mse") {
+  if (forest$split == "mse") {
     # e.0=mean((ynew-mean(y))^2)
     pred <- rowSums(treeVotes)
     err.test[nt] <- mean((ynew - pred / nt)^2) # /e.0;
@@ -84,7 +84,7 @@ Accuracy <- function(forest, data, newdata = NULL) {
     idx <- which(rowSums(is.na(oobVotes)) < tt)
     oobVotes <- oobVotes[idx, , drop = FALSE]
 
-    if (forest$type == "mse") {
+    if (forest$split == "mse") {
       pred <- rowMeans(oobVotes, na.rm = TRUE)
       err <- mean((y[idx] - pred)^2) # / mean((y[idx] - mean(y))^2)
     } else {
@@ -104,7 +104,7 @@ Accuracy <- function(forest, data, newdata = NULL) {
     err.oob[tt] <- err
   }
 
-  error <- list(err.oob = err.oob, err.test = err.test, type = forest$type)
+  error <- list(err.oob = err.oob, err.test = err.test, split = forest$split)
 
   class(error) <- "Accuracy"
   return(error)

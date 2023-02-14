@@ -34,7 +34,7 @@ train <- sample(1:209, 100)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 
-tree <- ODT(varieties_of_wheat ~ ., train_data, type = "entropy")
+tree <- ODT(varieties_of_wheat ~ ., train_data, split = "entropy")
 pred <- predict(tree, test_data[, -8])
 # classification error
 (mean(pred != test_data[, 8]))
@@ -46,7 +46,7 @@ train <- sample(1:252, 100)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 
-tree <- ODT(Density ~ ., train_data, type = "mse")
+tree <- ODT(Density ~ ., train_data, split = "mse")
 pred <- predict(tree, test_data[, -1])
 # estimation error
 mean((pred - test_data[, 1])^2)

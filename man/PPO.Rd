@@ -4,7 +4,7 @@
 \alias{PPO}
 \title{Projection Pursuit Optimization}
 \usage{
-PPO(X, y, model = "PPR", type = "gini", weights = NULL, ...)
+PPO(X, y, model = "PPR", split = "gini", weights = NULL, ...)
 }
 \arguments{
 \item{X}{An n by d numeric matrix (preferable) or data frame.}
@@ -17,7 +17,7 @@ PPO(X, y, model = "PPR", type = "gini", weights = NULL, ...)
 expanded to K binary features.}
 \item{"Log": logistic based on \code{\link{nnet}}.}
 \item{"Rand": The random projection generated from \eqn{\{-1, 1\}}.
-The following models can only be used for classification, i.e. the \code{type} must be 'i-classification' or 'g-classification'.}
+The following models can only be used for classification, i.e. the \code{split} must be ''entropy'' or 'gini'.}
 \item{"LDA", "PDA", "Lr", "GINI", and "ENTROPY" from library \code{PPtreeViz}.}
 \item{The following models based on \code{\link{Pursuit}}.
 \itemize{
@@ -37,7 +37,7 @@ The following models can only be used for classification, i.e. the \code{type} m
 }}
 }}
 
-\item{type}{The criterion used for splitting the variable. 'gini': gini impurity index (classification, default),
+\item{split}{The criterion used for splitting the variable. 'gini': gini impurity index (classification, default),
 'entropy': information gain (classification) or 'mse': mean square error (regression).}
 
 \item{weights}{Vector of non-negative observational weights; fractional weights are allowed (default NULL).}
@@ -53,15 +53,15 @@ Find the optimal projection using various projectin pursuit models.
 \examples{
 # classification
 data(seeds)
-(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "Log", type = 'entropy'))
-(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "PPR", type = 'entropy'))
-(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = 'entropy'))
+(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "Log", split = 'entropy'))
+(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "PPR", split = 'entropy'))
+(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", split = 'entropy'))
 
 # regression
 data(body_fat)
-(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "mse"))
-(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", type = "mse"))
-(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", type = "mse"))
+(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", split = "mse"))
+(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", split = "mse"))
+(PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", split = "mse"))
 
 }
 \references{

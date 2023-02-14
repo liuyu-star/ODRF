@@ -1,7 +1,7 @@
 ## Tests for random forests for classification
 ## Initialize the random forest for classification
 dat <- data.matrix(iris)
-forest <- ODRF(Species ~ ., data = iris, type = "entropy", parallel = FALSE)
+forest <- ODRF(Species ~ ., data = iris, split = "entropy", parallel = FALSE)
 
 ## Basic tests (for all random forests equal)
 test_that("classification iris forest is of class ODRF with 12 elements", {
@@ -10,7 +10,7 @@ test_that("classification iris forest is of class ODRF with 12 elements", {
 })
 
 test_that("Error if data is class matrix, classification", {
-  expect_error(ODRF(Species ~ ., data = dat, type = "entropy", parallel = FALSE))
+  expect_error(ODRF(Species ~ ., data = dat, split = "entropy", parallel = FALSE))
 })
 
 test_that("Error if ntrees=1, classification", {
@@ -20,11 +20,11 @@ test_that("Error if ntrees=1, classification", {
   expect_error(ODRF(X = X, y = y, ntrees = 1, parallel = FALSE))
 })
 
-test_that("Error if y is a factor type and type = 'regression'", {
+test_that("Error if y is a factor type and split = 'mse'", {
   n <- 100
   X <- matrix(runif(5 * n), n, 5)
   y <- as.factor(rbinom(n, 1, 0.5))
-  expect_error(ODRF(X = X, y = y, type = "mse", parallel = FALSE))
+  expect_error(ODRF(X = X, y = y, split = "mse", parallel = FALSE))
 })
 
 
@@ -54,19 +54,19 @@ test_that("confusion matrix cols are the true classes", {
 ind <- sample(150, 100)
 
 forest1 <- ODRF(Species ~ .,
-  data = iris, type = "gini", NodeRotateFun = "RotMatPPO",
+  data = iris, split = "gini", NodeRotateFun = "RotMatPPO",
   parallel = FALSE, seed = 1, ntrees = 10#,subset = ind
 )
 pred1 <- predict(forest1, Xnew = iris[-ind, -5])
 
 forest2 <- ODRF(Species ~ .,
-  data = iris, type = "gini", NodeRotateFun = "RotMatPPO",
+  data = iris, split = "gini", NodeRotateFun = "RotMatPPO",
   parallel = FALSE, seed = 1, ntrees = 10#,subset = ind
 )
 pred2 <- predict(forest2, Xnew = iris[-ind, -5])
 
 forest3 <- ODRF(Species ~ .,
-  data = iris, type = "gini",NodeRotateFun = "RotMatPPO",
+  data = iris, split = "gini",NodeRotateFun = "RotMatPPO",
   parallel = FALSE, seed = 2, ntrees = 10#,subset = ind
 )
 pred3 <- predict(forest3, Xnew = iris[-ind, -5])

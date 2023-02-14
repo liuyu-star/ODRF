@@ -6,9 +6,9 @@
 #' @param data Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.
 #' @param X An n by d numeric matrix (preferable) or data frame.
 #' @param y A response vector of length n.
-#' @param type The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression;
+#' @param split The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression;
 #' 'auto' (default): If the response in \code{data} or \code{y} is a factor, "gini" is used, otherwise regression is assumed.
-#' @param lambda The adjustment parameter of \code{type} is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).
+#' @param lambda The adjustment parameter of \code{split} is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).
 #' @param NodeRotateFun Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
 #' including \itemize{
 #' \item{"RotMatPPO": projection pursuit optimization model (\code{\link{PPO}}), see \code{\link{RotMatPPO}} (default, model="PPR").}
@@ -51,7 +51,7 @@
 #' }}
 #' \item{\code{oobErr}: 'out-of-bag' error for forest, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 #' \item{\code{oobConfusionMat}: 'out-of-bag' confusion matrix for forest.}
-#' \item{\code{type}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
+#' \item{\code{split}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
 #' \item{\code{paramList}: Parameters in a named list to be used by \code{NodeRotateFun}.}
 #' \item{\code{data}: The list of data related parameters used to build the forest.}
 #' \item{\code{tree}: The list of tree related parameters used to build the tree.}
@@ -73,7 +73,7 @@
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data,
-#'   type = 'entropy',
+#'   split = 'entropy',
 #'   parallel = FALSE
 #' )
 #' pred <- predict(forest, test_data[, -8])
@@ -87,7 +87,7 @@
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #' forest <- ODRF(Density ~ ., train_data,
-#'   type = "mse", parallel = FALSE,
+#'   split = "mse", parallel = FALSE,
 #'   NodeRotateFun = "RotMatPPO", paramList = list(model = "Log", dimProj = "Rand")
 #' )
 #' pred <- predict(forest, test_data[, -1])
@@ -105,7 +105,7 @@
 #' catLabel <- NULL
 #' y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
 #' \donttest{
-#' forest <- ODRF(y ~ X, type = 'entropy', Xcat = NULL, parallel = FALSE)
+#' forest <- ODRF(y ~ X, split = 'entropy', Xcat = NULL, parallel = FALSE)
 #' }
 #' head(X)
 #' #>   Xcol1 Xcol2          X1         X2          X3
@@ -154,7 +154,7 @@
 #'
 #' \donttest{
 #' forest <- ODRF(X, y,
-#'   type = "gini", Xcat = c(1, 2),
+#'   split = "gini", Xcat = c(1, 2),
 #'   catLabel = catLabel, parallel = FALSE
 #' )
 #' }
@@ -163,7 +163,7 @@
 #' @importFrom glue glue
 #' @importFrom lifecycle deprecated
 #' @export
-ODRF <- function(X, ...) {
+ODRF <- function(formula, ...) {
   UseMethod("ODRF")
 }
 
@@ -172,7 +172,7 @@ ODRF <- function(X, ...) {
 #' @method ODRF formula
 #' @aliases ODRF.formula
 #' @export
-ODRF.formula <- function(formula, data = NULL, type = "auto", lambda='log', NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
+ODRF.formula <- function(formula, data = NULL, split = "auto", lambda='log', NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
                          ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, numOOB = 1 / 3, parallel = TRUE,
                          numCores = Inf, seed = 220924, MaxDepth = Inf, numNode = Inf, MinLeaf = 5, subset = NULL, weights = NULL,
                          na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
@@ -197,9 +197,10 @@ ODRF.formula <- function(formula, data = NULL, type = "auto", lambda='log', Node
       colnames(X) <- paste0("X", seq_len(ncol(X)))
     }
     data <- data.frame(y, X)
-    varName <- colnames(X)
-    colnames(data) <- c(as.character(formula[[2]]), varName)
-    formula <- as.formula(paste0(as.character(formula[[2]]), "~."))
+    #varName <- colnames(X)
+    yname=ls(envir = .GlobalEnv)
+    colnames(data) <- c(as.character(formula)[2], colnames(X))
+    formula <- as.formula(paste0(as.character(formula)[2], "~."))
     Call$formula <- formula
     Call$data <- quote(data)
   } else {
@@ -210,14 +211,26 @@ ODRF.formula <- function(formula, data = NULL, type = "auto", lambda='log', Node
       stop("The predictor dimension of argument 'data' must exceed 1.")
     }
 
-    varName <- setdiff(colnames(data), as.character(formula[[2]]))
-    X <- data[, varName]
-    y <- data[, as.character(formula[[2]])]
+    #varName <- setdiff(colnames(data), as.character(formula)[2])
+    #X <- data[, varName]
+    #y <- data[, as.character(formula)[2]]
+    #Call$data <- quote(data)
+    yname <- colnames(data)
+    data=model.frame(formula, data, drop.unused.levels = TRUE)
+    y <- data[,1]
+    X <- data[,-1]
     Call$data <- quote(data)
   }
 
+  varName=colnames(X)
+  yname= names(unlist(sapply(yname, function(x)grep(x,as.character(formula)[2]))))
+  yname= yname[which.max(nchar(yname))]
+  if(yname!=as.character(formula)[2]){
+    varName <- c(yname, varName)
+  }
+
   forest <- ODRF.compute(
-    formula, Call, varName, X, y, type, lambda, NodeRotateFun, FunDir, paramList,
+    formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList,
     ntrees, storeOOB, replacement, stratify, numOOB, parallel,
     numCores, seed, MaxDepth, numNode, MinLeaf, subset, weights,
     na.action, catLabel, Xcat, Xscale, TreeRandRotate
@@ -232,7 +245,7 @@ ODRF.formula <- function(formula, data = NULL, type = "auto", lambda='log', Node
 #' @method ODRF default
 #' @aliases ODRF.default
 #' @export
-ODRF.default <- function(X, y, type = "auto", lambda='log', NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
+ODRF.default <- function(X, y, split = "auto", lambda='log', NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
                          ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, numOOB = 1 / 3, parallel = TRUE,
                          numCores = Inf, seed = 220924, MaxDepth = Inf, numNode = Inf, MinLeaf = 5, subset = NULL, weights = NULL,
                          na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
@@ -262,7 +275,7 @@ ODRF.default <- function(X, y, type = "auto", lambda='log', NodeRotateFun = "Rot
   }
 
   ODRF.compute(
-    formula, Call, varName, X, y, type, lambda, NodeRotateFun, FunDir, paramList,
+    formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList,
     ntrees, storeOOB, replacement, stratify, numOOB, parallel,
     numCores, seed, MaxDepth, numNode, MinLeaf, subset, weights,
     na.action, catLabel, Xcat, Xscale, TreeRandRotate
@@ -276,35 +289,35 @@ ODRF.default <- function(X, y, type = "auto", lambda='log', NodeRotateFun = "Rot
 #' @importFrom parallel detectCores makeCluster clusterSplit stopCluster
 #' @importFrom stats model.frame model.extract model.matrix na.fail
 #' @keywords internal
-ODRF.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFun, FunDir, paramList,
+ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList,
                          ntrees, storeOOB, replacement, stratify, numOOB, parallel,
                          numCores, seed, MaxDepth, numNode, MinLeaf, subset, weights,
                          na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
   if (ntrees == 1) {
     stop("argument 'ntrees' must exceed 1")
   }
-  if (is.factor(y) && (type == "auto")) {
-    type <- "gini"
+  if (is.factor(y) && (split == "auto")) {
+    split <- "gini"
     warning("You are creating a forest for classification")
   }
-  if (is.numeric(y) && (type == "auto")) {
-    type <- "mse"
+  if (is.numeric(y) && (split == "auto")) {
+    split <- "mse"
     warning("You are creating a forest for regression")
   }
-  if (is.factor(y) && (type == "mse")) {
-    stop(paste0("When ", formula[[2]], " is a factor type, 'type' cannot take 'regression'."))
+  if (is.factor(y) && (split == "mse")) {
+    stop(paste0("When ", formula[[2]], " is a factor type, 'split' cannot take 'regression'."))
   }
   #if (MinLeaf == 5) {
-  #  MinLeaf <- ifelse(type == "mse", 5, 1)
+  #  MinLeaf <- ifelse(split == "mse", 5, 1)
   #}
-
-  ppForest <- list(
-    call = Call, terms = NULL, type = type, Levels = NULL,
-    NodeRotateFun = NodeRotateFun, paramList = paramList, oobErr = NULL, oobConfusionMat = NULL
-  )
 
   n <- length(y)
   p <- ncol(X)
+  yname=NULL
+  if(length(varName)>p){
+    yname=varName[1]
+    varName=varName[-1]
+  }
 
   if (is.null(Xcat)) {
     Xcat <- which(apply(X, 2, function(x) {
@@ -336,7 +349,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateF
   X <- as.matrix(X)
   colnames(X) <- varName
 
-  if (all(apply(X, 2, is.character)) && (sum(Xcat) > 0)) {
+  if (any(apply(X, 2, is.character)) && (sum(Xcat) > 0)) {
     stop("The training data 'data' contains categorical variables, so that 'Xcal=NULL' can be automatically transformed into an one-of-K encode variables.")
   }
 
@@ -346,29 +359,48 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateF
     warning("NA values exist in data frame")
   }
 
-  colnames(data) <- c(as.character(formula[[2]]), varName)
-  indx <- match(c("formula", "data", "subset", "na.action"), names(Call), nomatch = 0L)
-  temp <- Call[c(1L, indx)]
+  Call0=Call
+  colnames(data) <- c(as.character(formula)[2], varName)
+  if(!is.null(yname)){
+    colnames(data)[1] <- yname
+    temp=model.frame(formula, data, drop.unused.levels = TRUE)
+    Terms <- attr(temp, "terms")
+
+    colnames(data)[1] <- "y"#as.character(formula)[2]
+    formula[[2]] <- quote(y)
+    Call0$formula <- formula
+  }
+
+  indx <- match(c("formula", "data", "subset", "na.action"), names(Call0), nomatch = 0L)
+  temp <- Call0[c(1L, indx)]
   temp[[1L]] <- quote(stats::model.frame)
   temp$drop.unused.levels <- TRUE
-  temp <- eval(temp) # , parent.frame()
-  Terms <- attr(temp, "terms")
-  ppForest$terms <- Terms
+  temp <- eval(temp)#, parent.frame())
+  Terms0 <- attr(temp, "terms")
+  if(is.null(yname)){
+    Terms <- Terms0;
+    Call <- Call0;
+  }
 
+  #data=model.frame(formula, data, drop.unused.levels = TRUE)
+  #y <- data[,1]
+  #X <- data[,-1]
   y <- c(model.extract(temp, "response"))
-  X <- model.matrix(Terms, temp)
+  X <- model.matrix(Terms0, temp)
   int <- match("(Intercept)", dimnames(X)[[2]], nomatch = 0)
   if (int > 0) {
     X <- X[, -int, drop = FALSE]
   }
   n <- length(y)
   p <- ncol(X)
-  #if (type != "mse") {
-  #  y <- as.integer(as.factor(y))
-  #}
   rm(data)
 
-  if (type != "mse") {
+  ppForest <- list(
+    call = Call, terms = Terms, split = split, Levels = NULL,
+    NodeRotateFun = NodeRotateFun, paramList = paramList, oobErr = NULL, oobConfusionMat = NULL
+  )
+
+  if (split != "mse") {
     # adjust y to go from 1 to numClass if needed
     if (is.factor(y)) {
       ppForest$Levels <- levels(y)
@@ -445,7 +477,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateF
       go <- TRUE
       while (go) {
         # make sure each class is represented in proportion to classes in initial dataset
-        if (stratify && (type != "mse")) {
+        if (stratify && (split != "mse")) {
           if (classCt[1L] != 0L) {
             TDindx[1:classCt[1L]] <- sample(Cindex[[1L]], classCt[1L], replace = TRUE)
           }
@@ -467,8 +499,8 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateF
     # data=data.frame(y[TDindx],X[TDindx,])
     # colnames(data)=vars
     weights1 <- weights[TDindx]
-    ppForestT <- ODT.compute(formula, Call, varName,
-      X = X[TDindx, ], y = y[TDindx], type, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
+    ppForestT <- ODT.compute(formula, Call0, varName,
+      X = X[TDindx, ], y = y[TDindx], split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
       MinLeaf, Levels, subset = NULL, weights = weights1, na.action = NULL, catLabel, Xcat = 0L, Xscale = "No", TreeRandRotate
     )
 
@@ -477,7 +509,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateF
       NTD <- setdiff(TDindx0, TDindx)
       pred <- predict(ppForestT, X[NTD, ])
 
-      if (type != "mse") {
+      if (split != "mse") {
         oobErr <- mean(pred != Levels[y[NTD]])
       } else {
         oobErr <- mean((pred - y[NTD])^2)
@@ -538,7 +570,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateF
     oobVotes <- oobVotes[idx, , drop = FALSE]
     yy <- y[idx]
 
-    if (type != "mse") {
+    if (split != "mse") {
       ny <- length(yy)
       nC <- numClass
       tree_weights <- rep(1, ny * ntrees)

@@ -6,9 +6,9 @@
 #' @param data Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.
 #' @param X An n by d numeric matrix (preferable) or data frame.
 #' @param y A response vector of length n.
-#' @param type The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression;
+#' @param split The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression;
 #' 'auto' (default): If the response in \code{data} or \code{y} is a factor, "gini" is used, otherwise regression is assumed.
-#' @param lambda The adjustment parameter of \code{type} is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).
+#' @param lambda The adjustment parameter of \code{split} is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).
 #' @param NodeRotateFun Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
 #' including \itemize{
 #' \item{"RotMatPPO": projection pursuit optimization model (\code{\link{PPO}}), see \code{\link{RotMatPPO}} (default, model="PPR").}
@@ -21,7 +21,7 @@
 #' @param MaxDepth The maximum depth of the tree (default \code{Inf}).
 #' @param numNode Number of nodes that can be used by the tree (default \code{Inf}).
 #' @param MinLeaf Minimal node size (Default 10).
-#' @param Levels The category label of the response variable when \code{type} is not equal to 'mse'.
+#' @param Levels The category label of the response variable when \code{split} is not equal to 'mse'.
 #' @param subset An index vector indicating which rows should be used. (NOTE: If given, this argument must be named.)
 #' @param weights Vector of non-negative observational weights; fractional weights are allowed (default NULL).
 #' @param na.action A function to specify the action to be taken if NAs are found. (NOTE: If given, this argument must be named.)
@@ -42,11 +42,11 @@
 #' \item{\code{nodeRotaMat}: Record the split variables (first column), split node serial number (second column) and rotation direction (third column) for each node. (The first column and the third column are 0 means leaf nodes)}
 #' \item{\code{nodeNumLabel}: Record each leaf node's category for classification or predicted value for regression (second column is data size). (Each column is 0 means it is not a leaf node)}
 #' \item{\code{nodeCutValue}: Record the split point of each node. (0 means leaf nodes)}
-#' \item{\code{nodeCutIndex}: Record the index values of the partitioning variables selected based on the partition criterion \code{type}.}
+#' \item{\code{nodeCutIndex}: Record the index values of the partitioning variables selected based on the partition criterion \code{split}.}
 #' \item{\code{childNode}: Record the number of child nodes after each splitting.}
 #' \item{\code{nodeDepth}: Record the depth of the tree where each node is located.}
 #' }}
-#' \item{\code{type}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
+#' \item{\code{split}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
 #' \item{\code{paramList}: Parameters in a named list to be used by \code{NodeRotateFun}.}
 #' \item{\code{data}: The list of data related parameters used to build the tree.}
 #' \item{\code{tree}: The list of tree related parameters used to build the tree.}
@@ -65,7 +65,7 @@
 #' train <- sample(1:209, 100)
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
-#' tree <- ODT(varieties_of_wheat ~ ., train_data, type = "entropy")
+#' tree <- ODT(varieties_of_wheat ~ ., train_data, split = "entropy")
 #' pred <- predict(tree, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
@@ -77,7 +77,7 @@
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #' tree <- ODT(Density ~ ., train_data,
-#'   type = "mse",
+#'   split = "mse",
 #'   NodeRotateFun = "RotMatPPO", paramList = list(model = "Log", dimProj = "Rand")
 #' )
 #' pred <- predict(tree, test_data[, -1])
@@ -93,7 +93,7 @@
 #' Xcat <- c(1, 2)
 #' catLabel <- NULL
 #' y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
-#' tree <- ODT(y ~ X, type = "entropy", Xcat = NULL)
+#' tree <- ODT(y ~ X, split = "entropy", Xcat = NULL)
 #' head(X)
 #' #>   Xcol1 Xcol2          X1         X2          X3
 #' #> 1     B     5 -0.04178453  2.3962339 -0.01443979
@@ -139,12 +139,12 @@
 #' #> $Xcol2
 #' #> [1] "1" "2" "3" "4" "5"
 #'
-#' tree <- ODT(X, y, type = "gini", Xcat = c(1, 2), catLabel = catLabel)
+#' tree <- ODT(X, y, split = "gini", Xcat = c(1, 2), catLabel = catLabel)
 #'
 #' @import Rcpp
 #' @importFrom stats model.frame model.extract model.matrix na.fail
 #' @export
-ODT <- function(X, ...) {
+ODT <- function(formula, ...) {
   UseMethod("ODT")
   # formula X
 }
@@ -153,7 +153,7 @@ ODT <- function(X, ...) {
 #' @method ODT formula
 #' @aliases ODT.formula
 #' @export
-ODT.formula <- function(formula, data = NULL, type = "auto", lambda='log', NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
+ODT.formula <- function(formula, data = NULL, split = "auto", lambda='log', NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
                         MaxDepth = Inf, numNode = Inf, MinLeaf = 10, Levels = NULL, subset = NULL, weights = NULL, na.action = na.fail,
                         catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
   Call <- match.call()
@@ -164,8 +164,8 @@ ODT.formula <- function(formula, data = NULL, type = "auto", lambda='log', NodeR
   } else if (indx[[2]] == 0) {
     # stop("a 'data' argument is required")
     # data <- environment(formula)
-    X <- eval(formula[[3]])
-    y <- eval(formula[[2]])
+    X <- eval(formula[[3]])#,envir =.BaseNamespaceEnv)
+    y <- eval(formula[[2]])#,envir =.BaseNamespaceEnv)
     if (sum(match(class(X), c("data.frame", "matrix"), nomatch = 0L)) == 0) {
       stop("argument 'X' can only be the classes 'data.frame' or 'matrix'")
     }
@@ -177,9 +177,10 @@ ODT.formula <- function(formula, data = NULL, type = "auto", lambda='log', NodeR
       colnames(X) <- paste0("X", seq_len(ncol(X)))
     }
     data <- data.frame(y, X)
-    varName <- colnames(X)
-    colnames(data) <- c(as.character(formula[[2]]), varName)
-    formula <- as.formula(paste0(as.character(formula[[2]]), "~."))
+    #varName <- colnames(X)
+    yname=ls(envir = .GlobalEnv)
+    colnames(data) <- c(as.character(formula)[2], colnames(X))
+    formula <- as.formula(paste0(as.character(formula)[2], "~."))
     Call$formula <- formula
     Call$data <- quote(data)
   } else {
@@ -190,14 +191,26 @@ ODT.formula <- function(formula, data = NULL, type = "auto", lambda='log', NodeR
       stop("The predictor dimension of argument 'data' must exceed 1.")
     }
 
-    varName <- setdiff(colnames(data), as.character(formula[[2]]))
-    X <- data[, varName]
-    y <- data[, as.character(formula[[2]])]
+    #varName <- setdiff(colnames(data), as.character(formula)[2])
+    #X <- data[, varName]
+    #y <- data[, as.character(formula)[2]]
+    #Call$data <- quote(data)
+    yname <- colnames(data)
+    data=model.frame(formula, data, drop.unused.levels = TRUE)
+    y <- data[,1]
+    X <- data[,-1]
     Call$data <- quote(data)
   }
 
+  varName=colnames(X)
+  yname= names(unlist(sapply(yname, function(x)grep(x,as.character(formula)[2]))))
+  yname= yname[which.max(nchar(yname))]
+  if(yname!=as.character(formula)[2]){
+    varName <- c(yname, varName)
+  }
+
   ppTree <- ODT.compute(
-    formula, Call, varName, X, y, type, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
+    formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
     MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate
   )
 
@@ -225,7 +238,7 @@ ODT.formula <- function(formula, data = NULL, type = "auto", lambda='log', NodeR
 #' @method ODT default
 #' @aliases ODT.default
 #' @export
-ODT.default <- function(X, y, type = "auto", lambda='log', NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
+ODT.default <- function(X, y, split = "auto", lambda='log', NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
                         MaxDepth = Inf, numNode = Inf, MinLeaf = 10, Levels = NULL, subset = NULL, weights = NULL, na.action = na.fail,
                         catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
   Call <- match.call()
@@ -254,7 +267,7 @@ ODT.default <- function(X, y, type = "auto", lambda='log', NodeRotateFun = "RotM
   }
 
   ppTree <- ODT.compute(
-    formula, Call, varName, X, y, type, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
+    formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
     MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate
   )
 
@@ -278,23 +291,23 @@ ODT.default <- function(X, y, type = "auto", lambda='log', NodeRotateFun = "RotM
 }
 
 #' @keywords internal
-ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
+ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
                         MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
-  if (is.factor(y) && (type == "auto")) {
-    type <- "gini"
+  if (is.factor(y) && (split == "auto")) {
+    split <- "gini"
     warning("You are creating a forest for classification")
   }
-  if (is.numeric(y) && (type == "auto")) {
-    type <- "mse"
+  if (is.numeric(y) && (split == "auto")) {
+    split <- "mse"
     warning("You are creating a forest for regression")
   }
-  if (is.factor(y) && (type == "mse")) {
-    stop(paste0("When ", formula[[2]], " is a factor type, 'type' cannot take 'regression'."))
+  if (is.factor(y) && (split == "mse")) {
+    stop(paste0("When ", formula[[2]], " is a factor type, 'split' cannot take 'mse'."))
   }
 
   MinLeaf=(MinLeaf==1)+MinLeaf
   #if (MinLeaf == 5) {
-  #  MinLeaf <- ifelse(type == "mse", 10, 5)
+  #  MinLeaf <- ifelse(split == "mse", 10, 5)
   #}
 
   if ((!NodeRotateFun %in% ls("package:ODRF")) && (!NodeRotateFun %in% ls(envir = .GlobalEnv))) {
@@ -302,12 +315,17 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
   }
 
   FUN <- match.fun(NodeRotateFun, descend = TRUE)
-  # type0 <- strsplit(type, split = "")[[1]][1]
+  # split0 <- strsplit(split, split = "")[[1]][1]
 
   n <- length(y)
   p <- ncol(X)
+  yname=NULL
+  if(length(varName)>p){
+    yname=varName[1]
+    varName=varName[-1]
+  }
 
-  if (type != "mse") {
+  if (split != "mse") {
     if (is.null(Levels)) {
       Levels <- levels(as.factor(y))
     }
@@ -360,26 +378,45 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
     warning("NA values exist in data frame")
   }
 
-  colnames(data) <- c(as.character(formula[[2]]), varName)
-  indx <- match(c("formula", "data", "subset", "na.action"), names(Call), nomatch = 0L)
-  temp <- Call[c(1L, indx)]
+  Call0=Call
+  colnames(data) <- c(as.character(formula)[2], varName)
+  if(!is.null(yname)){
+    colnames(data)[1] <- yname
+    temp=model.frame(formula, data, drop.unused.levels = TRUE)
+    Terms <- attr(temp, "terms")
+
+    colnames(data)[1] <- "y"#as.character(formula)[2]
+    Call0$formula[[2]] <- quote(y)
+  }
+
+  indx <- match(c("formula", "data", "subset", "na.action"), names(Call0), nomatch = 0L)
+  temp <- Call0[c(1L, indx)]
   temp[[1L]] <- quote(stats::model.frame)
   temp$drop.unused.levels <- TRUE
-  temp <- eval(temp) # , parent.frame()
-  Terms <- attr(temp, "terms")
+  temp <- eval(temp)#, parent.frame())
+  Terms0 <- attr(temp, "terms")
+  if(is.null(yname)){
+    Terms <- Terms0;
+    Call <- Call0;
+  }
 
+  #data=model.frame(formula, data, drop.unused.levels = TRUE)
+  #y <- data[,1]
+  #X <- data[,-1]
   y <- c(model.extract(temp, "response"))
-  X <- model.matrix(Terms, temp)
+  X <- model.matrix(Terms0, temp)
   int <- match("(Intercept)", dimnames(X)[[2]], nomatch = 0)
   if (int > 0) {
     X <- X[, -int, drop = FALSE]
   }
   n <- length(y)
   p <- ncol(X)
-  if (!is.integer(y) && type != "mse") {
+  if (!is.integer(y) && split != "mse") {
     y <- as.integer(as.factor(y))
   }
+
   rm(data)
+
 
   # weights=c(weights,paramList$weights)
   if (!is.null(subset)) {
@@ -427,9 +464,9 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
 
   dimProj <- paramList$dimProj
   numProj <- paramList$numProj
-  paramList <- defaults(paramList, type, p, weights, catLabel)
+  paramList <- defaults(paramList, split, p, weights, catLabel)
 
-  if ((type == "mse") && (!paramList$model %in% c("PPR", "Rand", "Log"))) {
+  if ((split == "mse") && (!paramList$model %in% c("PPR", "Rand", "Log"))) {
     stop(paste0("'model = ", paramList$model, "' can only be used for classification"))
   }
 
@@ -443,7 +480,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
   nodeXIndx <- vector("list", numNode + 1)
   nodeXIndx[[1]] <- 1:n
 
-  if (type != "mse") {
+  if (split != "mse") {
     nodeNumLabel <- matrix(0, 0, maxLabel)
     colnames(nodeNumLabel) <- Levels
     sl <- seq(maxLabel)
@@ -470,7 +507,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
         (length(nodeXIndx[[currentNode]]) <= (2*MinLeaf)) ||
         (nodeDepth[currentNode] >= MaxDepth) ||
         (freeNode >= numNode)) {
-      if (type != "mse") {
+      if (split != "mse") {
         leafLabel <- table(Levels[c(sl, y[nodeXIndx[[currentNode]]])]) - 1
         # nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
         # nodeNumLabel[currentNode]=max(leafLabel)
@@ -502,7 +539,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
       )
     }
 
-    if (!NodeRotateFun %in% ls("package:ODRF")) {
+    if (!NodeRotateFun %in% ls("package:ODRF", pattern = "RotMat")) {
       paramList$X <- X[nodeXIndx[[currentNode]], ]
       paramList$y <- y[nodeXIndx[[currentNode]]]
       sparseM <- do.call(FUN, paramList)
@@ -525,7 +562,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
       }
       sparseM <- RotMatPPO(
         X = X[nodeXIndx[[currentNode]], ], y = y[nodeXIndx[[currentNode]]], model = paramList$model,
-        type = paramList$type, weights = paramList$weights, dimProj = paramList$dimProj,
+        split = paramList$split, weights = paramList$weights, dimProj = paramList$dimProj,
         numProj = paramList$numProj, catLabel = paramList$catLabel
       )
     }
@@ -541,8 +578,8 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
 
     rotaX <- X[nodeXIndx[[currentNode]], , drop = FALSE] %*% rotaX
 
-    # bestCut <- best_cut_node(type0, rotaX, y[nodeXIndx[[currentNode]]], Wcd, MinLeaf, maxLabel)
-    bestCut <- best.cut.node(rotaX, y[nodeXIndx[[currentNode]]], type, lambda, Wcd, MinLeaf, maxLabel)
+    # bestCut <- best_cut_node(split0, rotaX, y[nodeXIndx[[currentNode]]], Wcd, MinLeaf, maxLabel)
+    bestCut <- best.cut.node(rotaX, y[nodeXIndx[[currentNode]]], split, lambda, Wcd, MinLeaf, maxLabel)
     if (bestCut$BestCutVar == -1) {
       TF <- TRUE
     } else {
@@ -550,7 +587,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
       TF <- min(length(Lindex), length(nodeXIndx[[currentNode]]) - length(Lindex)) <= MinLeaf
     }
     if (TF) {
-      if (type != "mse") {
+      if (split != "mse") {
         leafLabel <- table(Levels[c(sl, y[nodeXIndx[[currentNode]]])]) - 1
         # nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
         # nodeNumLabel[currentNode]=max(leafLabel)
@@ -595,7 +632,7 @@ ODT.compute <- function(formula, Call, varName, X, y, type, lambda, NodeRotateFu
   rownames(nodeRotaMat) <- rep(nodeDepth, table(nodeRotaMat[, 2]))
   rownames(nodeNumLabel) <- nodeDepth
 
-  ppTree <- list(call = Call, terms = Terms, type = type, Levels = Levels, NodeRotateFun = NodeRotateFun, paramList = paramList)
+  ppTree <- list(call = Call, terms = Terms, split = split, Levels = Levels, NodeRotateFun = NodeRotateFun, paramList = paramList)
   ppTree$data <- list(
     subset = subset, weights = weights, na.action = na.action, n = n, p = p, varName = varName,
     Xscale = Xscale, minCol = minCol, maxminCol = maxminCol, Xcat = Xcat, catLabel = catLabel,

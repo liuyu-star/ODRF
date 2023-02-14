@@ -175,7 +175,7 @@ RotMatRF <- function(dimX, numProj, catLabel = NULL, ...) {
 #' @param X An n by d numeric matrix (preferable) or data frame.
 #' @param y A response vector of length n.
 #' @param model Model for projection pursuit (for details see \code{\link{PPO}}).
-#' @param type One of three criteria, 'gini': gini impurity index (classification), 'entropy': information gain (classification, default)
+#' @param split One of three criteria, 'gini': gini impurity index (classification), 'entropy': information gain (classification, default)
 #' or 'mse': mean square error (regression).
 #' @param weights A vector of length same as \code{data} that are positive weights. (default NULL)
 #' @param dimProj Number of variables to be projected, \code{dimProj}=min(ceiling(n^0.4),ceiling(ncol(X)*2/3)) (default) or dimProj="Rand": random from 1 to ncol(X).
@@ -205,20 +205,20 @@ RotMatRF <- function(dimX, numProj, catLabel = NULL, ...) {
 #'
 #' # classification
 #' data(seeds)
-#' (PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "Log", type = "entropy"))
-#' (PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "PPR", type = "entropy"))
-#' (PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = "entropy"))
+#' (PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "Log", split = "entropy"))
+#' (PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "PPR", split = "entropy"))
+#' (PP <- RotMatPPO(seeds[, 1:7], seeds[, 8], model = "LDA", split = "entropy"))
 #'
 #' # regression
 #' data(body_fat)
-#' (PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "mse"))
-#' (PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", type = "mse"))
-#' (PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", type = "mse"))
+#' (PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "Log", split = "mse"))
+#' (PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", split = "mse"))
+#' (PP <- RotMatPPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", split = "mse"))
 #'
 #' @importFrom stats rnorm lm ppr
 #' @importFrom nnet nnet
 #' @export
-RotMatPPO <- function(X, y, model = "PPR", type = "entropy", weights = NULL, dimProj = min(ceiling(length(y)^0.4), ceiling(ncol(X) * 2 / 3)),
+RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, dimProj = min(ceiling(length(y)^0.4), ceiling(ncol(X) * 2 / 3)),
                       numProj = ifelse(dimProj == "Rand",sample(floor(ncol(X) / 3), 1), ceiling(ncol(X) / dimProj)), catLabel = NULL, ...) {
   #numProj = ifelse(dimProj == "Rand", max(5, sample(floor(ncol(X) / 3), 1)), max(5, ceiling(ncol(X) / dimProj)))
   if (dimProj != "Rand") {
@@ -283,7 +283,7 @@ RotMatPPO <- function(X, y, model = "PPR", type = "entropy", weights = NULL, dim
   if (n > 10 && nrow(sparseM1)>1) {
     Yi <- c(y)
     indC <- 0L
-    if (type != "mse") {
+    if (split != "mse") {
       y <- as.factor(y)
       indC <- levels(y)
       if (length(indC) > 2) {
@@ -299,8 +299,9 @@ RotMatPPO <- function(X, y, model = "PPR", type = "entropy", weights = NULL, dim
     ind <- as.numeric(names(indTab)[which(indTab > 1)])
     jx <- which(sparseM1[, 2] %in% ind)
     d11 <- min(max(c(indTab, d1)), length(unique(sparseM1[jx, 1])))
-    # d11=min(c(length(unique(sparseM[jx,1])),ifelse(type=='r',Inf,Inf)))#
+    # d11=min(c(length(unique(sparseM[jx,1])),ifelse(split=='r',Inf,Inf)))#
     # d11=max(max(indTab),min(length(unique(sparseM1[jx,1])),d1))
+    if(length(unique(sparseM1[jx, 2]))==1)d11=0
 
     sparseM1 <- rbind(sparseM1, matrix(d1 + d2 + 1, d11, 3))
     for (ni in unique(sparseM1[, 2L])) {
@@ -323,7 +324,7 @@ RotMatPPO <- function(X, y, model = "PPR", type = "entropy", weights = NULL, dim
         if (model == "PPR") {
           PP <- try(ppr(Xi, Yi, weights = weights, nterms = 1, bass = 1)$alpha, silent = TRUE) # sm.method="spline",sm.method="gcvspline"
         } else if (model == "Log") {
-          if ((n > 5 * pi) & (pi < 10)) {
+          if ((n > 5 * pi) && (pi < 20)) {
             PP <- try(ppr(Xi, Yi, weights = weights, nterms = 1, bass = 1)$alpha, silent = TRUE)
           } else {
             # PP = try(nnet(Xi, y, size=1,trace=FALSE)$wts[2:(1+pi)], silent = TRUE)
@@ -331,7 +332,7 @@ RotMatPPO <- function(X, y, model = "PPR", type = "entropy", weights = NULL, dim
             PP <- nnet(Xi, Yi, weights = weights, size = 1, linout = TRUE, trace = FALSE)$wts[2:(1 + pi)] #
           }
         } else {
-          PP <- PPO(Xi, y, model, type)
+          PP <- PPO(Xi, y, model, split)
         }
 
         if (inherits(PP, "try-error")) {
@@ -435,12 +436,12 @@ RotMatPPO <- function(X, y, model = "PPR", type = "entropy", weights = NULL, dim
 #'
 #' # train ODT with defined projection matrix function
 #' tree <- ODT(X, y,
-#'   type = "entropy", NodeRotateFun = "makeRotMat",
+#'   split = "entropy", NodeRotateFun = "makeRotMat",
 #'   paramList = list(dimX = ncol(X), dimProj = 5, numProj = 4)
 #' )
 #' # train ODT with defined projection matrix function and projection optimization model function
 #' tree <- ODT(X, y,
-#'   type = "entropy", NodeRotateFun = "RotMatMake", paramList =
+#'   split = "entropy", NodeRotateFun = "RotMatMake", paramList =
 #'     list(
 #'       RotMatFun = "makeRotMat", PPFun = "makePP",
 #'       dimX = ncol(X), dimProj = 5, numProj = 4, prob = 0.5
@@ -466,10 +467,10 @@ RotMatMake <- function(X = NULL, y = NULL, RotMatFun = "RotMatPPO", PPFun = "PPO
   }
   paramList <- defaults(paramList, dimX = p)
 
-  if ((!RotMatFun %in% ls("package:ODRF")) & (!RotMatFun %in% ls(envir = .GlobalEnv))) {
+  if ((!RotMatFun %in% ls("package:ODRF", pattern = "RotMat")) && (!RotMatFun %in% ls(envir = .GlobalEnv))) {
     source(paste0(FunDir, "/", RotMatFun, ".R"))
   }
-  if ((!PPFun %in% ls("package:ODRF")) & (!RotMatFun %in% ls(envir = .GlobalEnv))) {
+  if ((PPFun != "PPO") && (!RotMatFun %in% ls(envir = .GlobalEnv))) {
     source(paste0(FunDir, "/", PPFun, ".R"))
   }
 

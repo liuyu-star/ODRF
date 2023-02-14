@@ -10,7 +10,7 @@
 #' expanded to K binary features.}
 #' \item{"Log": logistic based on \code{\link{nnet}}.}
 #' \item{"Rand": The random projection generated from \eqn{\{-1, 1\}}.
-#' The following models can only be used for classification, i.e. the \code{type} must be 'i-classification' or 'g-classification'.}
+#' The following models can only be used for classification, i.e. the \code{split} must be ''entropy'' or 'gini'.}
 #' \item{"LDA", "PDA", "Lr", "GINI", and "ENTROPY" from library \code{PPtreeViz}.}
 #' \item{The following models based on \code{\link{Pursuit}}.
 #' \itemize{
@@ -29,7 +29,7 @@
 #' \item{"chi": Chi-square index}
 #' }}
 #' }
-#' @param type The criterion used for splitting the variable. 'gini': gini impurity index (classification, default),
+#' @param split The criterion used for splitting the variable. 'gini': gini impurity index (classification, default),
 #'        'entropy': information gain (classification) or 'mse': mean square error (regression).
 #' @param weights Vector of non-negative observational weights; fractional weights are allowed (default NULL).
 #' @param ... optional parameters to be passed to the low level function.
@@ -48,21 +48,21 @@
 #' @examples
 #' # classification
 #' data(seeds)
-#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "Log", type = 'entropy'))
-#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "PPR", type = 'entropy'))
-#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", type = 'entropy'))
+#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "Log", split = 'entropy'))
+#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "PPR", split = 'entropy'))
+#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", split = 'entropy'))
 #'
 #' # regression
 #' data(body_fat)
-#' (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", type = "mse"))
-#' (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", type = "mse"))
-#' (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", type = "mse"))
+#' (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", split = "mse"))
+#' (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Rand", split = "mse"))
+#' (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "PPR", split = "mse"))
 #'
 #' @import Pursuit Rcpp
 #' @importFrom stats ppr
 #' @importFrom nnet nnet
 #' @export
-PPO <- function(X, y, model = "PPR", type = 'gini', weights = NULL, ...) {
+PPO <- function(X, y, model = "PPR", split = 'gini', weights = NULL, ...) {
   X <- as.matrix(X)
   p <- ncol(X)
 
@@ -73,7 +73,7 @@ PPO <- function(X, y, model = "PPR", type = 'gini', weights = NULL, ...) {
 
     Y <- c(y)
     indC <- 0L
-    if (type != "mse") {
+    if (split != "mse") {
       y <- as.factor(y)
       indC <- levels(y)
       if (length(indC) > 2) {
@@ -83,7 +83,7 @@ PPO <- function(X, y, model = "PPR", type = 'gini', weights = NULL, ...) {
       }
     }
 
-    if ((type == "mse") && (!model %in% c("PPR", "Rand", "Log"))) {
+    if ((split == "mse") && (!model %in% c("PPR", "Rand", "Log"))) {
       stop(paste0("'model = ", model, "' can only be used for classification"))
     }
 

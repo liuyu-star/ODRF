@@ -21,7 +21,7 @@
 #' train_data <- data.frame(breast_cancer[train, -1])
 #' test_data <- data.frame(breast_cancer[-train, -1])
 #'
-#' forest <- ODRF(diagnosis ~ ., train_data, type = "gini", parallel = FALSE)
+#' forest <- ODRF(diagnosis ~ ., train_data, split = "gini", parallel = FALSE)
 #' (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
 #'
 #' @keywords forest
@@ -45,7 +45,7 @@ VarImp <- function(forest, X, y) {
   # weights=weights0
 
 
-  if (forest$type != "mse") {
+  if (forest$split != "mse") {
     y <- factor(y, levels = forest$Levels)
   }
   # X=forest$data$X
@@ -97,7 +97,7 @@ VarImp <- function(forest, X, y) {
     Xi <- X[oobIndex, ]
     yi <- y[oobIndex]
     yn <- length(yi)
-    # if(forest$type=="regression"){
+    # if(forest$split=="regression"){
     #  e.0=mean((yi-mean(y[-oobIndex]))^2)
     # }
     for (j in 1:(p + 1)) {
@@ -105,7 +105,7 @@ VarImp <- function(forest, X, y) {
         Xi[, j - 1] <- Xi[sample(yn), j - 1] #+rnorm(length(oobIndex))
       }
       pred <- predict(tree, Xi)
-      if (forest$type != "mse") {
+      if (forest$split != "mse") {
         oobErr <- mean(pred != yi)
       } else {
         oobErr <- mean((pred - yi)^2) # /e.0
@@ -126,7 +126,7 @@ VarImp <- function(forest, X, y) {
   varimport <- cbind(varible = seq(p), increased_error = oobErrVar)
   rownames(varimport) <- colnames(X)
 
-  varimport <- list(varImp = varimport[order(oobErrVar, decreasing = T), ], type = forest$type)
+  varimport <- list(varImp = varimport[order(oobErrVar, decreasing = T), ], split = forest$split)
   class(varimport) <- "VarImp"
 
   return(varimport)

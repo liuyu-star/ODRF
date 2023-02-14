@@ -4,9 +4,9 @@
 #'
 #' @param X An n by d numeric matrix (preferable) or data frame.
 #' @param y A response vector of length n.
-#' @param type One of three criteria, 'gini': gini impurity index (classification), 'entropy': information gain (classification)
+#' @param split One of three criteria, 'gini': gini impurity index (classification), 'entropy': information gain (classification)
 #' or 'mse': mean square error (regression).
-#' @param lambda The adjustment parameter of \code{type} is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).
+#' @param lambda The adjustment parameter of \code{split} is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).
 #' @param MinLeaf Minimal node size (Default 10).
 #' @param weights A vector of values which weigh the samples when considering a split.
 #' @param numLabels The number of categories.
@@ -23,18 +23,18 @@
 #' data(iris)
 #' X <- as.matrix(iris[, 1:4])
 #' y <- iris[[5]]
-#' bestcut <- best.cut.node(X, y, type = 'gini')
+#' bestcut <- best.cut.node(X, y, split = 'gini')
 #' print(bestcut)
 #'
 #' @export
-best.cut.node <- function(X, y, type, lambda='log', weights = 1, MinLeaf = 10,
-                          numLabels = ifelse(type == "mse", 0, length(unique(y)))) {
+best.cut.node <- function(X, y, split, lambda='log', weights = 1, MinLeaf = 10,
+                          numLabels = ifelse(split == "mse", 0, length(unique(y)))) {
   if (any(is.na(X))) {
     stop("data 'X' has Missing value, NA or NaN")
   }
 
   X <- as.matrix(X)
-  if (type != "mse") {
+  if (split != "mse") {
     y <- as.integer(as.factor(y))
   } else {
     y <- c(y)
@@ -44,10 +44,10 @@ best.cut.node <- function(X, y, type, lambda='log', weights = 1, MinLeaf = 10,
     lambda=length(y)
   }
 
-  if(type == "mse")method='r'
-  if(type == "entropy")method='i'
-  if(type == "gini")method='g'
+  if(split == "mse")method='r'
+  if(split == "entropy")method='i'
+  if(split == "gini")method='g'
 
-  #strsplit(type, split = "")[[1]][1]
+  #strsplit(split, split = "")[[1]][1]
   .Call("_ODRF_best_cut_node", PACKAGE = "ODRF", method, lambda, X, y, weights, MinLeaf, numLabels)
 }

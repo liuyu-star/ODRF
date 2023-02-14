@@ -19,7 +19,7 @@
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #'
-#' tree <- ODT(Density ~ ., train_data, type = "mse")
+#' tree <- ODT(Density ~ ., train_data, split = "mse")
 #' prune_tree <- prune(tree, test_data[, -1], test_data[, 1])
 #' # Plot pruned oblique decision tree structure (default)
 #' plot(prune_tree)
@@ -38,7 +38,7 @@ plot.prune.ODT <- function(x, position = "topleft", digits = NULL, main = NULL, 
   pruneError <- ppTree$pruneError
 
   if (is.null(main)) {
-    main <- paste0("Oblique ", ifelse(ppTree$type == "mse", "Regression", "Classification"), " Tree")
+    main <- paste0("Oblique ", ifelse(ppTree$split == "mse", "Regression", "Classification"), " Tree")
   }
 
   # par(mfrow = c(1,2))
@@ -49,7 +49,7 @@ plot.prune.ODT <- function(x, position = "topleft", digits = NULL, main = NULL, 
   x <- seq_len(nrow(pruneError))
   minErr <- strsplit(as.character(min(pruneError[, 4])), "")[[1]]
   id <- which(minErr == "e")
-  if (ppTree$type != "mse") {
+  if (ppTree$split != "mse") {
     digits <- 0
   } else if (is.null(digits)) {
     if (length(id) > 0) {

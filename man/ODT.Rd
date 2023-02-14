@@ -6,12 +6,12 @@
 \alias{ODT.default}
 \title{Classification and Regression with Oblique Decision Tree}
 \usage{
-ODT(X, ...)
+ODT(formula, ...)
 
 \method{ODT}{formula}(
   formula,
   data = NULL,
-  type = "auto",
+  split = "auto",
   lambda = "log",
   NodeRotateFun = "RotMatPPO",
   FunDir = getwd(),
@@ -33,7 +33,7 @@ ODT(X, ...)
 \method{ODT}{default}(
   X,
   y,
-  type = "auto",
+  split = "auto",
   lambda = "log",
   NodeRotateFun = "RotMatPPO",
   FunDir = getwd(),
@@ -53,18 +53,16 @@ ODT(X, ...)
 )
 }
 \arguments{
-\item{X}{An n by d numeric matrix (preferable) or data frame.}
+\item{formula}{Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
 
 \item{...}{Optional parameters to be passed to the low level function.}
 
-\item{formula}{Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
-
 \item{data}{Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.}
 
-\item{type}{The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression;
+\item{split}{The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression;
 'auto' (default): If the response in \code{data} or \code{y} is a factor, "gini" is used, otherwise regression is assumed.}
 
-\item{lambda}{The adjustment parameter of \code{type} is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).}
+\item{lambda}{The adjustment parameter of \code{split} is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).}
 
 \item{NodeRotateFun}{Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
 including \itemize{
@@ -84,7 +82,7 @@ including \itemize{
 
 \item{MinLeaf}{Minimal node size (Default 10).}
 
-\item{Levels}{The category label of the response variable when \code{type} is not equal to 'mse'.}
+\item{Levels}{The category label of the response variable when \code{split} is not equal to 'mse'.}
 
 \item{subset}{An index vector indicating which rows should be used. (NOTE: If given, this argument must be named.)}
 
@@ -101,6 +99,8 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))<
 
 \item{TreeRandRotate}{If or not to randomly rotate the Training data before building the tree (default FALSE, see \code{\link[ODRF]{RandRot}}).}
 
+\item{X}{An n by d numeric matrix (preferable) or data frame.}
+
 \item{y}{A response vector of length n.}
 }
 \value{
@@ -114,11 +114,11 @@ An object of class ODT Containing a list components:
 \item{\code{nodeRotaMat}: Record the split variables (first column), split node serial number (second column) and rotation direction (third column) for each node. (The first column and the third column are 0 means leaf nodes)}
 \item{\code{nodeNumLabel}: Record each leaf node's category for classification or predicted value for regression (second column is data size). (Each column is 0 means it is not a leaf node)}
 \item{\code{nodeCutValue}: Record the split point of each node. (0 means leaf nodes)}
-\item{\code{nodeCutIndex}: Record the index values of the partitioning variables selected based on the partition criterion \code{type}.}
+\item{\code{nodeCutIndex}: Record the index values of the partitioning variables selected based on the partition criterion \code{split}.}
 \item{\code{childNode}: Record the number of child nodes after each splitting.}
 \item{\code{nodeDepth}: Record the depth of the tree where each node is located.}
 }}
-\item{\code{type}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
+\item{\code{split}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
 \item{\code{paramList}: Parameters in a named list to be used by \code{NodeRotateFun}.}
 \item{\code{data}: The list of data related parameters used to build the tree.}
 \item{\code{tree}: The list of tree related parameters used to build the tree.}
@@ -134,7 +134,7 @@ set.seed(221212)
 train <- sample(1:209, 100)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
-tree <- ODT(varieties_of_wheat ~ ., train_data, type = "entropy")
+tree <- ODT(varieties_of_wheat ~ ., train_data, split = "entropy")
 pred <- predict(tree, test_data[, -8])
 # classification error
 (mean(pred != test_data[, 8]))
@@ -146,7 +146,7 @@ train <- sample(1:252, 100)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 tree <- ODT(Density ~ ., train_data,
-  type = "mse",
+  split = "mse",
   NodeRotateFun = "RotMatPPO", paramList = list(model = "Log", dimProj = "Rand")
 )
 pred <- predict(tree, test_data[, -1])
@@ -162,7 +162,7 @@ X <- data.frame(Xcol1, Xcol2, Xcon)
 Xcat <- c(1, 2)
 catLabel <- NULL
 y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
-tree <- ODT(y ~ X, type = "entropy", Xcat = NULL)
+tree <- ODT(y ~ X, split = "entropy", Xcat = NULL)
 head(X)
 #>   Xcol1 Xcol2          X1         X2          X3
 #> 1     B     5 -0.04178453  2.3962339 -0.01443979
@@ -208,7 +208,7 @@ catLabel
 #> $Xcol2
 #> [1] "1" "2" "3" "4" "5"
 
-tree <- ODT(X, y, type = "gini", Xcat = c(1, 2), catLabel = catLabel)
+tree <- ODT(X, y, split = "gini", Xcat = c(1, 2), catLabel = catLabel)
 
 }
 \references{

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2022.3.14)  6 FEB 2023 18:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2022.3.14)  14 FEB 2023 14:58
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -823,8 +823,8 @@ Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
 \FrameRule=\dimen289
 \FrameSep=\dimen290
 )
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 11
-0.
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 13
+8.
 
 (d:/Program Files/texlive/2021/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
@@ -837,24 +837,24 @@ File: l3backend-pdftex.def 2022-02-07 L3 backend support: PDF output (pdfTeX)
 ) (./ODRF.aux)
 \openout1 = `ODRF.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 110.
-LaTeX Font Info:    ... okay on input line 110.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 138.
+LaTeX Font Info:    ... okay on input line 138.
 
 (d:/Program Files/texlive/2021/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
@@ -881,7 +881,7 @@ g
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring ON on input line 110.
+Package hyperref Info: Link coloring ON on input line 138.
  (d:/Program Files/texlive/2021/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
 
@@ -894,63 +894,63 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count329
 )
-LaTeX Info: Redefining \ref on input line 110.
-LaTeX Info: Redefining \pageref on input line 110.
-LaTeX Info: Redefining \nameref on input line 110.
+LaTeX Info: Redefining \ref on input line 138.
+LaTeX Info: Redefining \pageref on input line 138.
+LaTeX Info: Redefining \nameref on input line 138.
  (./ODRF.out) (./ODRF.out)
 \@outlinefile=\write5
 \openout5 = `ODRF.out'.
 
 LaTeX Font Info:    Trying to load font information for T1+lmss on input line 1
-10.
+38.
 
 (d:/Program Files/texlive/2021/texmf-dist/tex/latex/lm/t1lmss.fd
 File: t1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 1
-10.
+38.
 
 (d:/Program Files/texlive/2021/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-10.
+38.
 
 (d:/Program Files/texlive/2021/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-110.
+138.
 
 (d:/Program Files/texlive/2021/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-110.
+138.
 
 (d:/Program Files/texlive/2021/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 110.
+(Font)              <10.95> on input line 138.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 110.
+(Font)              <8> on input line 138.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 110.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 110
+(Font)              <6> on input line 138.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 138
 .
 
 (d:/Program Files/texlive/2021/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 110
+LaTeX Font Info:    Trying to load font information for U+msb on input line 138
 .
 
 (d:/Program Files/texlive/2021/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 1
-10.
+38.
 
 (d:/Program Files/texlive/2021/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
@@ -963,10 +963,10 @@ Package caption Info: End \AtBeginDocument code.
 {d:/Program Files/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 
 Package natbib Warning: Citation `jaeger2022accelerated' on page 2 undefined on
- input line 131.
+ input line 160.
 
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
-43.
+73.
 (d:/Program Files/texlive/2021/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
@@ -975,8 +975,15 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [2]
-
-LaTeX Warning: Reference `sec:summary' on page 3 undefined on input line 156.
+Overfull \hbox (1.92664pt too wide) in paragraph at lines 211--215
+[]\T1/lmr/m/n/10.95 With ob-ser-va-tions $\U/msb/m/n/10.95 A[] \OT1/lmr/m/n/10.
+95 = \OMS/lmsy/m/n/10.95 f\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 X[]; Y[]\OT1/
+lmr/m/n/10.95 )\OML/lmm/m/it/10.95 ; i \OT1/lmr/m/n/10.95 = 1\OML/lmm/m/it/10.9
+5 ; ::::; n\OMS/lmsy/m/n/10.95 g$\T1/lmr/m/n/10.95 , where $\OML/lmm/m/it/10.95
+ Y[] \OT1/lmr/m/n/10.95 = (\OML/lmm/m/it/10.95 y[]; :::; y[]\OT1/lmr/m/n/10.95 
+)$ \T1/lmr/m/n/10.95 and $\OML/lmm/m/it/10.95 X[] \OT1/lmr/m/n/10.95 = (\OML/lm
+m/m/it/10.95 x[]; :::; x[]\OT1/lmr/m/n/10.95 )$\T1/lmr/m/n/10.95 ,
+ []
 
 
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
@@ -984,52 +991,27 @@ Overfull \hbox (5.47499pt too wide) has occurred while \output is active
  []
 
 [3]
-
-Package pgf Warning: Returning node center instead of a point on node border. D
-id you specify a point identical to the center of node ``N21''? on input line 3
-10.
-
-
-Package pgf Warning: Returning node center instead of a point on node border. D
-id you specify a point identical to the center of node ``N22''? on input line 3
-10.
-
-
-Package pgf Warning: Returning node center instead of a point on node border. D
-id you specify a point identical to the center of node ``N24''? on input line 3
-10.
-
-
-Overfull \hbox (5.90338pt too wide) in paragraph at lines 334--336
-\T1/lmr/m/n/10.95 where $\OML/lmm/m/it/10.95 m[]$ \T1/lmr/m/n/10.95 is a non-pa
-ra-met-ric smooth-ing of the re-gres-sion that min-i-mizes $[][]\OMS/lmsy/m/n/1
-0.95 f\OML/lmm/m/it/10.95 y[] \OMS/lmsy/m/n/10.95 ^^@ \OML/lmm/m/it/10.95 m[]\O
-T1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 ^^R[]X[]\OT1/lmr/m/n/10.95 )\OMS/lmsy/m/n
-/10.95 g[]$
- []
-
-
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 4 []
  []
 
 [4]
-Overfull \hbox (2.58278pt too wide) in paragraph at lines 411--412
+Overfull \hbox (5.47499pt too wide) has occurred while \output is active
+[] \T1/lmr/m/n/10.95 5
+ []
+
+[5]
+Overfull \hbox (2.58278pt too wide) in paragraph at lines 484--485
 []\T1/lmr/m/n/10.95 The first way is \T1/lmtt/m/n/10.95 formula = y ~ .,data = 
 data.frame(X, y = y) \T1/lmr/m/n/10.95 or \T1/lmtt/m/n/10.95 formula = y ~ X \T
 1/lmr/m/n/10.95 with
  []
 
 LaTeX Font Info:    Trying to load font information for TS1+lmtt on input line 
-413.
+486.
 (d:/Program Files/texlive/2021/texmf-dist/tex/latex/lm/ts1lmtt.fd
 File: ts1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-Overfull \hbox (5.47499pt too wide) has occurred while \output is active
-[] \T1/lmr/m/n/10.95 5
- []
-
-[5]
 Overfull \hbox (5.47499pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 6 []
  []
@@ -1055,13 +1037,27 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [10]
+
+LaTeX Warning: Reference `sec:print' on page 11 undefined on input line 756.
+
+
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 11
  []
 
 [11]
+Overfull \hbox (10.42455pt too wide) in paragraph at lines 772--812
+[][] 
+ []
 
-LaTeX Warning: Reference `sec:print' on page 12 undefined on input line 699.
+
+Package natbib Warning: Citation `2012obliqueRF' on page 12 undefined on input 
+line 868.
+
+
+Overfull \hbox (6.09511pt too wide) in paragraph at lines 873--904
+[][] 
+ []
 
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
@@ -1069,14 +1065,7 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [12]
-Overfull \hbox (10.42455pt too wide) in paragraph at lines 715--755
-[][] 
- []
-
-
-Overfull \hbox (0.62012pt too wide) in paragraph at lines 816--847
-[][] 
- []
+Underfull \vbox (badness 3492) has occurred while \output is active []
 
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
@@ -1084,43 +1073,32 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [13]
-Underfull \vbox (badness 3492) has occurred while \output is active []
-
-
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 14 []
  []
 
 [14]
-Underfull \vbox (badness 3492) has occurred while \output is active []
-
-
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 15
  []
 
 [15]
+<ODRF-plot.pdf, id=301, 722.7pt x 289.08pt>
+File: ODRF-plot.pdf Graphic file (type pdf)
+<use ODRF-plot.pdf>
+Package pdftex.def Info: ODRF-plot.pdf  used on input line 934.
+(pdftex.def)             Requested size: 354.12434pt x 141.65044pt.
+ (./ODRF.bbl
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 16 []
  []
 
-[16]
-<ODRF-tree.pdf, id=301, 722.7pt x 289.08pt>
-File: ODRF-tree.pdf Graphic file (type pdf)
-<use ODRF-tree.pdf>
-Package pdftex.def Info: ODRF-tree.pdf  used on input line 873.
-(pdftex.def)             Requested size: 354.12434pt x 141.65044pt.
- (./ODRF.bbl
+[16 <./ODRF-plot.pdf>]
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 17
  []
 
-[17 <./ODRF-tree.pdf>]
-Overfull \hbox (10.94998pt too wide) has occurred while \output is active
-\T1/lmr/m/n/10.95 18 []
- []
-
-[18]
+[17]
 Underfull \hbox (badness 3281) in paragraph at lines 152--155
 []\T1/lmr/m/n/10.95 Rainforth T, Wood F (2015).  ``Canon-i-cal cor-re-la-tion f
 orests.''  \T1/lmr/m/it/10.95 arXiv preprint
@@ -1133,11 +1111,16 @@ LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10.95> not available
 Package natbib Warning: There were undefined citations.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 914--914
+Underfull \hbox (badness 10000) in paragraph at lines 975--975
 
  []
 
 
+Overfull \hbox (10.94998pt too wide) has occurred while \output is active
+\T1/lmr/m/n/10.95 18 []
+ []
+
+[18]
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 19
  []
@@ -1150,19 +1133,19 @@ Package rerunfilecheck Info: File `ODRF.out' has not changed.
 (rerunfilecheck)             Checksum: 67F40B51A62CF690AC09FA10EC728A54;2780.
  ) 
 Here is how much of TeX's memory you used:
- 26102 strings out of 478276
- 517353 string characters out of 5843469
- 835700 words of memory out of 5000000
- 43751 multiletter control sequences out of 15000+600000
- 553686 words of font info for 75 fonts, out of 8000000 for 9000
+ 26083 strings out of 478276
+ 517144 string characters out of 5843469
+ 831905 words of memory out of 5000000
+ 43731 multiletter control sequences out of 15000+600000
+ 549730 words of font info for 75 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 99i,14n,94p,1786b,1476s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 99i,14n,94p,1812b,1476s stack positions out of 5000i,500n,10000p,200000b,80000s
 {d:/Program Files/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{d:/Pr
 ogram Files/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{d:/Program F
-iles/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{d:/Program Files
-/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{d:/Program Files/tex
-live/2021/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{d:/Program Files/texlive
-/2021/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}<d:/Program Files/texlive/2021/te
+iles/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{d:/Program Files/tex
+live/2021/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{d:/Program Files/texlive
+/2021/texmf-dist/fonts/enc/dvips/lm/lm-mathex.enc}{d:/Program Files/texlive/202
+1/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}<d:/Program Files/texlive/2021/te
 xmf-dist/fonts/type1/public/lm/lmb10.pfb><d:/Program Files/texlive/2021/texmf-d
 ist/fonts/type1/public/lm/lmbo10.pfb><d:/Program Files/texlive/2021/texmf-dist/
 fonts/type1/public/lm/lmbx10.pfb><d:/Program Files/texlive/2021/texmf-dist/font
@@ -1171,23 +1154,24 @@ pe1/public/lm/lmex10.pfb><d:/Program Files/texlive/2021/texmf-dist/fonts/type1/
 public/lm/lmmi10.pfb><d:/Program Files/texlive/2021/texmf-dist/fonts/type1/publ
 ic/lm/lmmi6.pfb><d:/Program Files/texlive/2021/texmf-dist/fonts/type1/public/lm
 /lmmi8.pfb><d:/Program Files/texlive/2021/texmf-dist/fonts/type1/public/lm/lmr1
-0.pfb><d:/Program Files/texlive/2021/texmf-dist/fonts/type1/public/lm/lmr8.pfb>
-<d:/Program Files/texlive/2021/texmf-dist/fonts/type1/public/lm/lmri10.pfb><d:/
-Program Files/texlive/2021/texmf-dist/fonts/type1/public/lm/lmro10.pfb><d:/Prog
-ram Files/texlive/2021/texmf-dist/fonts/type1/public/lm/lmss10.pfb><d:/Program 
-Files/texlive/2021/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb><d:/Program Fi
-les/texlive/2021/texmf-dist/fonts/type1/public/lm/lmsso10.pfb><d:/Program Files
-/texlive/2021/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><d:/Program Files/tex
-live/2021/texmf-dist/fonts/type1/public/lm/lmsy6.pfb><d:/Program Files/texlive/
-2021/texmf-dist/fonts/type1/public/lm/lmsy8.pfb><d:/Program Files/texlive/2021/
-texmf-dist/fonts/type1/public/lm/lmtt10.pfb><d:/Program Files/texlive/2021/texm
-f-dist/fonts/type1/public/lm/lmtt12.pfb><d:/Program Files/texlive/2021/texmf-di
-st/fonts/type1/public/lm/lmtto10.pfb><d:/Program Files/texlive/2021/texmf-dist/
-fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on ODRF.pdf (19 pages, 487807 bytes).
+0.pfb><d:/Program Files/texlive/2021/texmf-dist/fonts/type1/public/lm/lmr6.pfb>
+<d:/Program Files/texlive/2021/texmf-dist/fonts/type1/public/lm/lmr8.pfb><d:/Pr
+ogram Files/texlive/2021/texmf-dist/fonts/type1/public/lm/lmri10.pfb><d:/Progra
+m Files/texlive/2021/texmf-dist/fonts/type1/public/lm/lmro10.pfb><d:/Program Fi
+les/texlive/2021/texmf-dist/fonts/type1/public/lm/lmss10.pfb><d:/Program Files/
+texlive/2021/texmf-dist/fonts/type1/public/lm/lmssbx10.pfb><d:/Program Files/te
+xlive/2021/texmf-dist/fonts/type1/public/lm/lmsso10.pfb><d:/Program Files/texli
+ve/2021/texmf-dist/fonts/type1/public/lm/lmsy10.pfb><d:/Program Files/texlive/2
+021/texmf-dist/fonts/type1/public/lm/lmsy6.pfb><d:/Program Files/texlive/2021/t
+exmf-dist/fonts/type1/public/lm/lmsy8.pfb><d:/Program Files/texlive/2021/texmf-
+dist/fonts/type1/public/lm/lmtt10.pfb><d:/Program Files/texlive/2021/texmf-dist
+/fonts/type1/public/lm/lmtt12.pfb><d:/Program Files/texlive/2021/texmf-dist/fon
+ts/type1/public/lm/lmtto10.pfb><d:/Program Files/texlive/2021/texmf-dist/fonts/
+type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on ODRF.pdf (19 pages, 511329 bytes).
 PDF statistics:
- 456 PDF objects out of 1000 (max. 8388607)
- 381 compressed objects within 4 object streams
+ 466 PDF objects out of 1000 (max. 8388607)
+ 388 compressed objects within 4 object streams
  78 named destinations out of 1000 (max. 500000)
  106 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -31,7 +31,7 @@ train <- sample(1:569, 200)
 train_data <- data.frame(breast_cancer[train, -1])
 test_data <- data.frame(breast_cancer[-train, -1])
 
-forest <- ODRF(diagnosis ~ ., train_data, type = "gini", parallel = FALSE)
+forest <- ODRF(diagnosis ~ ., train_data, split = "gini", parallel = FALSE)
 (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
 
 }

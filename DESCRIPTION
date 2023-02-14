@@ -36,10 +36,8 @@ Imports:
     rlang (>= 0.4.11),
     stats
 Suggests: 
-    covr,
     knitr,
     rmarkdown,
-    roxygen2,
     spelling,
     testthat (>= 3.0.0)
 LinkingTo: 

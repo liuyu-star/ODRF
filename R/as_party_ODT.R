@@ -9,7 +9,7 @@
 #'
 #' @return An objects of class \code{party}.
 #'
-#' @references Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software <doi:10.18637/jss.v083.i08>
+#' @references Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software.
 #'
 #' @seealso \code{\link{ODT}} \code{\link{party}}
 #'
@@ -46,7 +46,7 @@ as.party.ODT <- function(obj, data, ...) {
   TS <- matrix(0, numNode, 5)
   TS[, 1] <- seq(numNode)
   TS[, 2] <- ppTree[["structure"]][["childNode"]]
-  if (ppTree$type != "mse") {
+  if (ppTree$split != "mse") {
     TS[setdiff(seq(numNode), cutNode), 3] <- max.col(ppTree$structure$nodeNumLabel)[setdiff(seq(numNode), cutNode)]
   } else {
     TS[setdiff(seq(numNode), cutNode), 3] <- round(ppTree$structure$nodeNumLabel[, 1][setdiff(seq(numNode), cutNode)], 3)
@@ -84,7 +84,7 @@ as.party.ODT <- function(obj, data, ...) {
 
   fit <- as.data.frame(matrix(nrow = NROW(mf), ncol = 0))
   # fit <- as.data.frame(matrix(nrow = NROW(mf), ncol = 0))
-  # if(ppTree$type!="regression"){
+  # if(ppTree$split!="regression"){
   #  pred=as.numeric(factor(predict_ppCART(ppTree,X),levels = ppTree$Levels))
   # }else{
   #  pred=predict_ppCART(ppTree,X)

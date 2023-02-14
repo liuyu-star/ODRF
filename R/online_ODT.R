@@ -20,7 +20,7 @@
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
-#' tree <- ODT(varieties_of_wheat ~ ., train_data[index, ], type = "gini")
+#' tree <- ODT(varieties_of_wheat ~ ., train_data[index, ], split = "gini")
 #' online_tree <- online(tree, train_data[-index, -8], train_data[-index, 8])
 #' pred <- predict(online_tree, test_data[, -8])
 #' # classification error
@@ -33,7 +33,7 @@
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
-#' tree <- ODT(Density ~ ., train_data[index, ], type = "mse")
+#' tree <- ODT(Density ~ ., train_data[index, ], split = "mse")
 #' online_tree <- online(tree, train_data[-index, -1], train_data[-index, 1])
 #' pred <- predict(online_tree, test_data[, -1])
 #' # estimation error
@@ -47,12 +47,12 @@
 online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
   ppTree <- obj
   rm(obj)
-  if(is.null(obj$projections))
+  if(length(ppTree[["structure"]][["nodeDepth"]])==1)
     stop("No tree structure to use 'online'!")
   weights0 <- weights
   Call <- ppTree$call
   Terms <- ppTree$terms
-  type <- ppTree$type
+  split <- ppTree$split
   Levels <- ppTree$Levels
   NodeRotateFun <- ppTree$NodeRotateFun
   paramList <- ppTree$paramList
@@ -111,10 +111,10 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
 
   # get()
   FUN <- match.fun(NodeRotateFun, descend = TRUE)
-  #method0 <- strsplit(type, split = "")[[1]][1]
+  #method0 <- strsplit(split, split = "")[[1]][1]
 
 
-  if (type != "mse") {
+  if (split != "mse") {
     if (!is.integer(y)) {
       y <- as.integer(as.factor(y))
     }
@@ -190,13 +190,9 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
     # , as.character(ppTree$nodeLabel)
   }
 
-  if (NodeRotateFun == "RotMatPPO") {
-    if (is.null(paramList$dimProj)) {
-      paramList$dimProj <- min(ceiling(length(y)^0.4), ceiling(ncol(X) * 2 / 3))
-    }
-    paramList$numProj <- ifelse(paramList$dimProj == "Rand", max(5, sample(floor(ncol(X) / 3), 1)), max(5, ceiling(ncol(X) / paramList$dimProj)))
-  }
-  paramList <- defaults(paramList, type, p, weights, catLabel)
+  dimProj <- paramList$dimProj
+  numProj <- paramList$numProj
+  paramList <- defaults(paramList, split, p, weights, catLabel)
 
 
   if (is.infinite(MaxDepth)) {
@@ -230,7 +226,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
   # nodeNumLabel=c(nodeNumLabel,rep0);
 
 
-  # start create pptree nodeFlags
+  # start create pptree
   ##############################################################################
   currentNode <- nodeX[1]
   freeNode <- ifelse(currentNode == 1, 2, childNode[max(which(childNode[seq(currentNode)] != 0))] + 2)
@@ -250,7 +246,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
       nn <- length(y[nodeXIndx[[currentNode]]])
       # r=ceiling(nn*nodeNumLabel0[currentNode])
       # parentLabel=nn*nodeNumLabel0[currentNode,]
-      if (type != "mse") {
+      if (split != "mse") {
         leafLabel <- table(Levels[c(sl, y[nodeXIndx[[currentNode]]])]) - 1 + nn * nodeNumLabel0[currentNode, ]
         # leafLabel = table(c(Levels[y[nodeXIndx[[currentNode]]]],rep(names(nodeNumLabel0[currentNode]),r)))
         # nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
@@ -303,9 +299,17 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
     }
 
     if (NodeRotateFun == "RotMatPPO") {
+      paramList$dimProj <- dimProj
+      paramList$numProj <- numProj
+      if (is.null(paramList$dimProj)) {
+        paramList$dimProj <- min(ceiling(length(y[nodeXIndx[[currentNode]]])^0.4), ceiling(p * 2 / 3))
+      }
+      if (is.null(paramList$numProj)) {
+        paramList$numProj <- ifelse(paramList$dimProj == "Rand",sample(floor(p / 3), 1),ceiling(p / paramList$dimProj))
+      }
       sparseM <- RotMatPPO(
         X = X[nodeXIndx[[currentNode]], ], y = y[nodeXIndx[[currentNode]]], model = paramList$model,
-        type = paramList$type, weights = paramList$weights, dimProj = paramList$dimProj,
+        split = paramList$split, weights = paramList$weights, dimProj = paramList$dimProj,
         numProj = paramList$numProj, catLabel = paramList$catLabel
       )
     }
@@ -316,12 +320,13 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
       lrows <- which(sparseM[, 2] == numDr[i])
       rotaX[sparseM[lrows, 1], i] <- sparseM[lrows, 3]
     }
+
     ###################################################################
 
     rotaX <- X[nodeXIndx[[currentNode]], , drop = FALSE] %*% rotaX
 
     #bestCut <- best_cut_node(method0, rotaX, y[nodeXIndx[[currentNode]]], Wcd, MinLeaf, maxLabel)
-    bestCut <- best.cut.node(rotaX, y[nodeXIndx[[currentNode]]], type, lambda, Wcd, MinLeaf, maxLabel)
+    bestCut <- best.cut.node(rotaX, y[nodeXIndx[[currentNode]]], split, lambda, Wcd, MinLeaf, maxLabel)
 
     if (bestCut$BestCutVar == -1) {
       TF <- TRUE
@@ -333,7 +338,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
       nn <- length(y[nodeXIndx[[currentNode]]])
       # r=ceiling(nn*nodeNumLabel0[currentNode])
       # parentLabel=nn*nodeNumLabel0[currentNode,]
-      if (type != "mse") {
+      if (split != "mse") {
         leafLabel <- table(Levels[c(sl, y[nodeXIndx[[currentNode]]])]) - 1 + nn * nodeNumLabel0[currentNode, ]
         # leafLabel = table(c(Levels[y[nodeXIndx[[currentNode]]]],rep(names(nodeNumLabel0[currentNode]),r)))
         # nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
@@ -366,7 +371,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
       # names(r)=rep(nodeLabel[currentNode],2)
       LRnode <- rbind(nodeNumLabel0[currentNode, ], nodeNumLabel0[currentNode, ])
       if (!is.na(childNode0[currentNode])) {
-        if (type != "mse") {
+        if (split != "mse") {
           # r=rep(nodeNumLabel0[currentNode],2)
           # names(r)=rep(names(nodeNumLabel0[currentNode]),2)
           LRnode <- LRnode / length(y[nodeXIndx[[currentNode]]])
@@ -439,7 +444,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
   rownames(nodeRotaMat) <- rep(nodeDepth, table(nodeRotaMat[, 2]))
   rownames(nodeNumLabel) <- nodeDepth
 
-  ppTree <- list(call = Call, terms = Terms, type = type, Levels = Levels, NodeRotateFun = NodeRotateFun, paramList = paramList)
+  ppTree <- list(call = Call, terms = Terms, split = split, Levels = Levels, NodeRotateFun = NodeRotateFun, paramList = paramList)
   if ("projections" %in% ls(envir = .GlobalEnv)) {
     ppTree <- c(ppTree[seq(5)], list(projections = projections), ppTree[-seq(5)])
   }

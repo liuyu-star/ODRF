@@ -26,7 +26,7 @@
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #'
-#' tree <- ODT(varieties_of_wheat ~ ., train_data, type = "entropy")
+#' tree <- ODT(varieties_of_wheat ~ ., train_data, split = "entropy")
 #' pred <- predict(tree, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
@@ -38,7 +38,7 @@
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #'
-#' tree <- ODT(Density ~ ., train_data, type = "mse")
+#' tree <- ODT(Density ~ ., train_data, split = "mse")
 #' pred <- predict(tree, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
@@ -50,7 +50,7 @@
 #' @method predict ODT
 #' @export
 predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
-  # ppTreeVar=c("type",names(ppTree$structure),names(ppTree$data),names(ppTree$tree))
+  # ppTreeVar=c("split",names(ppTree$structure),names(ppTree$data),names(ppTree$tree))
   # ppTree=do.call("c",ppTree)
   # assign("Levels", as.vector(unlist(ppTree[c(2,3)])))
   # ppTree=ppTree[-c(2,3)]
@@ -61,6 +61,15 @@ predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
   # address na values.
 
   ppTree <- object
+  rm(object)
+
+  pp=ppTree$data$p
+  if(!is.null(ppTree$data$catLabel)&&(sum(ppTree$data$Xcat)>0)){
+    pp=pp-length(unlist(ppTree$data$catLabel))+ length(ppTree$data$Xcat)
+  }
+  if(ncol(Xnew)!=pp){
+    stop("The dimensions of 'Xnew' and training data do not match")
+  }
 
   Xna <- is.na(Xnew)
   if (any(Xna)) {
@@ -83,7 +92,7 @@ predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
   p <- ncol(Xnew)
   n <- nrow(Xnew)
 
-  if (ppTree$type != "mse") {
+  if (ppTree$split != "mse") {
     nodeLabel <- colnames(ppTree$structure$nodeNumLabel)[max.col(ppTree$structure$nodeNumLabel)] ## "random"
     nodeLabel[which(rowSums(ppTree$structure$nodeNumLabel) == 0)] <- 0
   } else {
@@ -114,7 +123,7 @@ predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
         xj <- xj1
       }
 
-      Xnew <- cbind(Xnew1, Xnew[, -Xcat])
+      Xnew <- cbind(Xnew1, apply(Xnew[, -Xcat], 2, as.numeric))
       p <- ncol(Xnew)
       numCat <- length(unlist(catLabel))
       rm(Xnew1)
@@ -144,7 +153,7 @@ predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
     }
   }
 
-  if ((ppTree$type == "mse") && (!leafnode)) {
+  if ((ppTree$split == "mse") && (!leafnode)) {
     pred <- as.numeric(pred)
   }
 
