@@ -19,7 +19,6 @@ knitr::opts_chunk$set(
 [![Codecov test coverage](https://codecov.io/gh/liuyu-star/ODRF/branch/main/graph/badge.svg)](https://app.codecov.io/gh/liuyu-star/ODRF?branch=main)
 [![CRAN status](https://www.r-pkg.org/badges/version/ODRF)](https://CRAN.R-project.org/package=ODRF)
 [![R-CMD-check](https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml)
-[![CircleCI build status](https://circleci.com/gh/liuyu-star/ODRF.svg?style=svg)](https://circleci.com/gh/liuyu-star/ODRF)
 <!-- badges: end -->
 
 The goal of ODRF is to supplement classical CART and random forests for classification and regression. The use of linear combinations of predictors as splitting variables is one of the important extensions of CART and is known as Oblique Decision Trees (ODT) and ODT-based Random Forests (ODRF).

@@ -10,8 +10,6 @@ coverage](https://codecov.io/gh/liuyu-star/ODRF/branch/main/graph/badge.svg)](ht
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ODRF)](https://CRAN.R-project.org/package=ODRF)
 [![R-CMD-check](https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml)
-[![CircleCI build
-status](https://circleci.com/gh/liuyu-star/ODRF.svg?style=svg)](https://circleci.com/gh/liuyu-star/ODRF)
 <!-- badges: end -->
 
 The goal of ODRF is to supplement classical CART and random forests for
@@ -74,18 +72,24 @@ test_data <- data.frame(seeds[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
-  type = "i-classification", parallel = FALSE
+  type = "gini", parallel = FALSE
 )
+#> Warning in ODRF.compute(formula, Call, varName, X, y, split, lambda,
+#> NodeRotateFun, : You are creating a forest for regression
 pred <- predict(forest, test_data[, -8])
 e.forest <- mean(pred != test_data[, 8])
 forest1 <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
-  type = "i-classification", parallel = FALSE
+  type = "gini", parallel = FALSE
 )
+#> Warning in ODRF.compute(formula, Call, varName, X, y, split, lambda,
+#> NodeRotateFun, : You are creating a forest for regression
 pred <- predict(forest1, test_data[, -8])
 e.forest.1 <- mean(pred != test_data[, 8])
 forest2 <- ODRF(varieties_of_wheat ~ ., train_data[-index, ],
-  type = "i-classification", parallel = FALSE
+  type = "gini", parallel = FALSE
 )
+#> Warning in ODRF.compute(formula, Call, varName, X, y, split, lambda,
+#> NodeRotateFun, : You are creating a forest for regression
 pred <- predict(forest2, test_data[, -8])
 e.forest.2 <- mean(pred != test_data[, 8])
 
@@ -106,7 +110,7 @@ print(c(
   forest.online = e.forest.online, forest.prune = e.forest.prune
 ))
 #>        forest       forest1       forest2 forest.online  forest.prune 
-#>    0.05617978    0.06741573    0.07865169    0.05617978    0.06741573
+#>             1             1             1             1             1
 ```
 
 Regression with Oblique Decision Randome Forest.
@@ -119,13 +123,19 @@ train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 
-tree <- ODT(Density ~ ., train_data, type = "regression")
+tree <- ODT(Density ~ ., train_data, type = "mse")
+#> Warning in ODT.compute(formula, Call, varName, X, y, split, lambda,
+#> NodeRotateFun, : You are creating a forest for regression
 pred <- predict(tree, test_data[, -1])
 e.tree <- mean((pred - test_data[, 1])^2)
-tree1 <- ODT(Density ~ ., train_data[index, ], type = "regression")
+tree1 <- ODT(Density ~ ., train_data[index, ], type = "mse")
+#> Warning in ODT.compute(formula, Call, varName, X, y, split, lambda,
+#> NodeRotateFun, : You are creating a forest for regression
 pred <- predict(tree1, test_data[, -1])
 e.tree.1 <- mean((pred - test_data[, 1])^2)
-tree2 <- ODT(Density ~ ., train_data[-index, ], type = "regression")
+tree2 <- ODT(Density ~ ., train_data[-index, ], type = "mse")
+#> Warning in ODT.compute(formula, Call, varName, X, y, split, lambda,
+#> NodeRotateFun, : You are creating a forest for regression
 pred <- predict(tree2, test_data[, -1])
 e.tree.2 <- mean((pred - test_data[, 1])^2)
 
@@ -140,7 +150,7 @@ print(c(
   tree.online = e.tree.online, tree.prune = e.tree.prune
 ))
 #>         tree        tree1        tree2  tree.online   tree.prune 
-#> 4.376944e-05 4.512269e-05 5.501814e-05 4.497263e-05 4.512269e-05
+#> 2.103293e-05 3.592966e-05 5.485434e-05 3.599310e-05 3.592966e-05
 ```
 
 As shown in the classification and regression results above, the
@@ -155,35 +165,33 @@ model is also pruned by `prune()` and the same effect is achieved.
 ``` r
 data(iris, package = "datasets")
 tree <- ODT(Species ~ ., data = iris)
-#> Warning in ODT.compute(formula, Call, varName, X, y, type, NodeRotateFun, : You
-#> are creating a forest for classification
+#> Warning in ODT.compute(formula, Call, varName, X, y, split, lambda,
+#> NodeRotateFun, : You are creating a forest for classification
 tree
 #> ============================================================= 
 #> Oblique Classification Tree structure 
 #> =============================================================
 #> 
 #> 1) root
-#>    node2)# proj1*X < 0.29 -> (leaf1 = setosa)
-#>    node3)  proj1*X >= 0.29
-#>       node4)# proj2*X < 0.52 -> (leaf2 = versicolor)
-#>       node5)  proj2*X >= 0.52
-#>          node6)# proj3*X < 0.74 -> (leaf3 = virginica)
-#>          node7)# proj3*X >= 0.74 -> (leaf4 = virginica)
+#>    node2)# proj1*X < 0.01 -> (leaf1 = setosa)
+#>    node3)  proj1*X >= 0.01
+#>       node4)# proj2*X < 0.88 -> (leaf2 = versicolor)
+#>       node5)# proj2*X >= 0.88 -> (leaf3 = virginica)
 forest <- ODRF(Species ~ ., data = iris, parallel = FALSE)
-#> Warning in ODRF.compute(formula, Call, varName, X, y, type, NodeRotateFun, : You
-#> are creating a forest for classification
+#> Warning in ODRF.compute(formula, Call, varName, X, y, split, lambda,
+#> NodeRotateFun, : You are creating a forest for classification
 forest
 #> 
 #> Call:
 #>  ODRF.formula(formula = Species ~ ., data = data, parallel = FALSE) 
 #>                Type of oblique decision random forest: classification
 #>                                       Number of trees: 100
-#>                            OOB estimate of error rate: 3.33%
+#>                            OOB estimate of error rate: 4%
 #> Confusion matrix:
 #>            setosa versicolor virginica class_error
 #> setosa         50          0         0  0.00000000
-#> versicolor      0         46         1  0.02127655
-#> virginica       0          4        49  0.07547156
+#> versicolor      0         47         3  0.05999988
+#> virginica       0          3        47  0.05999988
 ```
 
 ### Plot the tree structure of class `ODT`
