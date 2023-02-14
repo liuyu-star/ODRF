@@ -36,6 +36,7 @@ Imports:
     rlang (>= 0.4.11),
     stats
 Suggests: 
+    tidyverse,
     knitr,
     rmarkdown,
     spelling,
