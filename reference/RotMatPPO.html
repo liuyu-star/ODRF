@@ -61,7 +61,7 @@
 <span>  <span class="va">X</span>,</span>
 <span>  <span class="va">y</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"PPR"</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"i-classification"</span>,</span>
+<span>  split <span class="op">=</span> <span class="st">"entropy"</span>,</span>
 <span>  weights <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  dimProj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">0.4</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">ceiling</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span> <span class="op">*</span> <span class="fl">2</span><span class="op">/</span><span class="fl">3</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  numProj <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">dimProj</span> <span class="op">==</span> <span class="st">"Rand"</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span><span class="op">/</span><span class="fl">3</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span>,</span>
@@ -85,9 +85,9 @@
 <dd><p>Model for projection pursuit (for details see <code><a href="PPO.html">PPO</a></code>).</p></dd>
 
 
-<dt>type</dt>
-<dd><p>The criterion used for splitting the variable. 'i-classification': information gain (classification, default),
-'g-classification': gini impurity index (classification) or 'regression': mean square error (regression).</p></dd>
+<dt>split</dt>
+<dd><p>One of three criteria, 'gini': gini impurity index (classification), 'entropy': information gain (classification, default)
+or 'mse': mean square error (regression).</p></dd>
 
 
 <dt>weights</dt>
@@ -193,7 +193,7 @@ numProj = sample(ceiling(ncol(X)/3),1) otherwise default numProj=ceiling(p0/dimP
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># classification</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">seeds</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">RotMatPPO</span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, <span class="va">seeds</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"Log"</span>, type <span class="op">=</span> <span class="st">"i-classification"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">RotMatPPO</span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, <span class="va">seeds</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"Log"</span>, split <span class="op">=</span> <span class="st">"entropy"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Variable Number Coefficient</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]        2      1  1.00000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]        3      2  1.00000000</span>
@@ -209,7 +209,7 @@ numProj = sample(ceiling(ncol(X)/3),1) otherwise default numProj=ceiling(p0/dimP
 <span class="r-out co"><span class="r-pr">#&gt;</span> [12,]        7      6  0.08196076</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13,]        2      6 -0.20369703</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [14,]        1      6  0.07035082</span>
-<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">RotMatPPO</span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, <span class="va">seeds</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"PPR"</span>, type <span class="op">=</span> <span class="st">"i-classification"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">RotMatPPO</span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, <span class="va">seeds</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"PPR"</span>, split <span class="op">=</span> <span class="st">"entropy"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Variable Number Coefficient</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]        5      1  1.00000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]        1      2  1.00000000</span>
@@ -225,7 +225,7 @@ numProj = sample(ceiling(ncol(X)/3),1) otherwise default numProj=ceiling(p0/dimP
 <span class="r-out co"><span class="r-pr">#&gt;</span> [12,]        3      6 -0.08901848</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13,]        4      6 -0.58308445</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [14,]        2      6 -0.29491483</span>
-<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">RotMatPPO</span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, <span class="va">seeds</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"LDA"</span>, type <span class="op">=</span> <span class="st">"i-classification"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">RotMatPPO</span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, <span class="va">seeds</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"LDA"</span>, split <span class="op">=</span> <span class="st">"entropy"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Variable Number Coefficient</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]        4      1  1.00000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]        6      2  1.00000000</span>
@@ -244,7 +244,7 @@ numProj = sample(ceiling(ncol(X)/3),1) otherwise default numProj=ceiling(p0/dimP
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># regression</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">body_fat</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">RotMatPPO</span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">body_fat</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"Log"</span>, type <span class="op">=</span> <span class="st">"regression"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">RotMatPPO</span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">body_fat</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"Log"</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Variable Number  Coefficient</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]       13      1  1.000000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]       10      2  1.000000000</span>
@@ -271,7 +271,7 @@ numProj = sample(ceiling(ncol(X)/3),1) otherwise default numProj=ceiling(p0/dimP
 <span class="r-out co"><span class="r-pr">#&gt;</span> [23,]       14      7  0.152819881</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [24,]       12      7 -0.068790054</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [25,]        3      7  0.002199650</span>
-<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">RotMatPPO</span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">body_fat</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"Rand"</span>, type <span class="op">=</span> <span class="st">"regression"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">RotMatPPO</span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">body_fat</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"Rand"</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Variable Number Coefficient</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]        8      1   1.0000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]        4      2   1.0000000</span>
@@ -298,7 +298,7 @@ numProj = sample(ceiling(ncol(X)/3),1) otherwise default numProj=ceiling(p0/dimP
 <span class="r-out co"><span class="r-pr">#&gt;</span> [23,]        2      7  -0.3779645</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [24,]        9      7   0.3779645</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [25,]       11      7   0.3779645</span>
-<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">RotMatPPO</span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">body_fat</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"PPR"</span>, type <span class="op">=</span> <span class="st">"regression"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">RotMatPPO</span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">body_fat</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"PPR"</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Variable Number  Coefficient</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1,]        8      1  1.000000000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [2,]       12      2  1.000000000</span>

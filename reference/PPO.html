@@ -57,7 +57,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">PPO</span><span class="op">(</span><span class="va">X</span>, <span class="va">y</span>, model <span class="op">=</span> <span class="st">"PPR"</span>, type <span class="op">=</span> <span class="st">"i-classification"</span>, weights <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">PPO</span><span class="op">(</span><span class="va">X</span>, <span class="va">y</span>, model <span class="op">=</span> <span class="st">"PPR"</span>, split <span class="op">=</span> <span class="st">"gini"</span>, weights <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -75,7 +75,7 @@
 expanded to K binary features.</p></li>
 <li><p>"Log": logistic based on <code>nnet</code>.</p></li>
 <li><p>"Rand": The random projection generated from \(\{-1, 1\}\).
-The following models can only be used for classification, i.e. the <code>type</code> must be 'i-classification' or 'g-classification'.</p></li>
+The following models can only be used for classification, i.e. the <code>split</code> must be ''entropy'' or 'gini'.</p></li>
 <li><p>"LDA", "PDA", "Lr", "GINI", and "ENTROPY" from library <code>PPtreeViz</code>.</p></li>
 <li><p>The following models based on <code>Pursuit</code>.
 </p><ul><li><p>"holes": Holes index</p></li>
@@ -84,10 +84,10 @@ The following models can only be used for classification, i.e. the <code>type</c
 <li><p>"friedmantukey": Friedman Tukey index</p></li>
 <li><p>"legendre": Legendre index</p></li>
 <li><p>"laguerrefourier": Laguerre Fourier index</p></li>
-<li><p>"hermite": Hermite index,</p></li>
+<li><p>"hermite": Hermite index</p></li>
 <li><p>"naturalhermite": Natural Hermite index</p></li>
-<li><p>"kurtosismax": Maximum kurtosis index,</p></li>
-<li><p>"kurtosismin": Minimum kurtosis index,</p></li>
+<li><p>"kurtosismax": Maximum kurtosis index</p></li>
+<li><p>"kurtosismin": Minimum kurtosis index</p></li>
 <li><p>"moment": Moment index</p></li>
 <li><p>"mf": MF index</p></li>
 <li><p>"chi": Chi-square index</p></li>
@@ -95,9 +95,9 @@ The following models can only be used for classification, i.e. the <code>type</c
 </ul></dd>
 
 
-<dt>type</dt>
-<dd><p>The criterion used for splitting the variable. 'g-classification': gini impurity index (classification, default),
-'i-classification': information gain (classification) or 'regression': mean square error (regression).</p></dd>
+<dt>split</dt>
+<dd><p>The criterion used for splitting the variable. 'gini': gini impurity index (classification, default),
+'entropy': information gain (classification) or 'mse': mean square error (regression).</p></dd>
 
 
 <dt>weights</dt>
@@ -130,25 +130,25 @@ The following models can only be used for classification, i.e. the <code>type</c
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># classification</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">seeds</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, <span class="va">seeds</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"Log"</span>, type <span class="op">=</span> <span class="st">"i-classification"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.54199231  0.08174903 -0.50660024 -0.78241961  0.24246604 -0.61740048</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [7] -0.90121843</span>
-<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, <span class="va">seeds</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"PPR"</span>, type <span class="op">=</span> <span class="st">"i-classification"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, <span class="va">seeds</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"Log"</span>, split <span class="op">=</span> <span class="st">'entropy'</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1]   56.8327068    0.2511654  -97.0802762  177.2736100 -152.2891052</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [6]  -12.3350140 -207.2412205</span>
+<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, <span class="va">seeds</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"PPR"</span>, split <span class="op">=</span> <span class="st">'entropy'</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.04663995 -0.01700724 -0.92771564 -0.23227466  0.20425324  0.01478790</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [7]  0.20245882</span>
-<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, <span class="va">seeds</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"LDA"</span>, type <span class="op">=</span> <span class="st">"i-classification"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  0.36637332  0.85615361 -0.16293680 -0.18577803  0.21292317 -0.07490168</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [7]  0.14409430</span>
+<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, <span class="va">seeds</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"LDA"</span>, split <span class="op">=</span> <span class="st">'entropy'</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  0.46317783  0.64125933  0.32400109  0.01026232 -0.21931491 -0.08145690</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [7]  0.46307287</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># regression</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">body_fat</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">body_fat</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"Log"</span>, type <span class="op">=</span> <span class="st">"regression"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -0.14449558  0.67845262  0.60647606 -0.50459183  0.69792985  0.56875491</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7]  0.16619375  0.69747624 -0.10701780  0.12306722 -0.55346262 -0.05425665</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13]  0.43958329 -0.14791003</span>
-<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">body_fat</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"Rand"</span>, type <span class="op">=</span> <span class="st">"regression"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  1  1  1 -1  1  1 -1 -1 -1 -1  1 -1 -1 -1</span>
-<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">body_fat</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"PPR"</span>, type <span class="op">=</span> <span class="st">"regression"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">body_fat</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"Log"</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -0.26705537 -0.27045471  0.58600916  0.03990731  0.18163071  0.20777468</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] -0.51726343  0.22839050  0.28999012 -0.25120474 -0.14449558  0.67845262</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13]  0.60647606 -0.50459183</span>
+<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">body_fat</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"Rand"</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  1  1 -1  1 -1 -1  1 -1 -1 -1  1  1  1 -1</span>
+<span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">body_fat</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"PPR"</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -0.973615195  0.007627492  0.018938292 -0.002055055  0.013834544</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [6]  0.030809259 -0.069084891  0.039733024 -0.039890401 -0.005993149</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [11] -0.107760827 -0.075608376 -0.006239274  0.158635551</span>

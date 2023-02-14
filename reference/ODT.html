@@ -57,13 +57,13 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ODT</span><span class="op">(</span><span class="va">X</span>, <span class="va">...</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ODT</span><span class="op">(</span><span class="va">formula</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for formula</span></span>
 <span><span class="fu">ODT</span><span class="op">(</span></span>
 <span>  <span class="va">formula</span>,</span>
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  split <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  lambda <span class="op">=</span> <span class="st">"log"</span>,</span>
 <span>  NodeRotateFun <span class="op">=</span> <span class="st">"RotMatPPO"</span>,</span>
 <span>  FunDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -86,7 +86,7 @@
 <span><span class="fu">ODT</span><span class="op">(</span></span>
 <span>  <span class="va">X</span>,</span>
 <span>  <span class="va">y</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"auto"</span>,</span>
+<span>  split <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  lambda <span class="op">=</span> <span class="st">"log"</span>,</span>
 <span>  NodeRotateFun <span class="op">=</span> <span class="st">"RotMatPPO"</span>,</span>
 <span>  FunDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,</span>
@@ -108,29 +108,25 @@
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>X</dt>
-<dd><p>An n by d numeric matrix (preferable) or data frame.</p></dd>
+    <dl><dt>formula</dt>
+<dd><p>Object of class <code>formula</code> with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see <code><a href="https://rdrr.io/r/stats/model.frame.html" class="external-link">model.frame</a></code>)</p></dd>
 
 
 <dt>...</dt>
 <dd><p>Optional parameters to be passed to the low level function.</p></dd>
 
 
-<dt>formula</dt>
-<dd><p>Object of class <code>formula</code> with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see <code><a href="https://rdrr.io/r/stats/model.frame.html" class="external-link">model.frame</a></code>)</p></dd>
-
-
 <dt>data</dt>
 <dd><p>Training data of class <code>data.frame</code> in which to interpret the variables named in the formula. If <code>data</code> is missing it is obtained from the current environment by <code>formula</code>.</p></dd>
 
 
-<dt>type</dt>
-<dd><p>The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression;
-'auto' (default): If the response in <code>data</code> or <code>y</code> is a factor, 'g-classification' is used, otherwise regression is assumed.</p></dd>
+<dt>split</dt>
+<dd><p>The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression;
+'auto' (default): If the response in <code>data</code> or <code>y</code> is a factor, "gini" is used, otherwise regression is assumed.</p></dd>
 
 
 <dt>lambda</dt>
-<dd><p>The adjustment parameters for the 'i-classification' and 'regression' criteria are used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).</p></dd>
+<dd><p>The adjustment parameter of <code>split</code> is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).</p></dd>
 
 
 <dt>NodeRotateFun</dt>
@@ -163,7 +159,7 @@ including</p><ul><li><p>"RotMatPPO": projection pursuit optimization model (<cod
 
 
 <dt>Levels</dt>
-<dd><p>The category label of the response variable when <code>type</code> is not equal to 'regression'.</p></dd>
+<dd><p>The category label of the response variable when <code>split</code> is not equal to 'mse'.</p></dd>
 
 
 <dt>subset</dt>
@@ -195,6 +191,10 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&
 <dd><p>If or not to randomly rotate the Training data before building the tree (default FALSE, see <code><a href="RandRot.html">RandRot</a></code>).</p></dd>
 
 
+<dt>X</dt>
+<dd><p>An n by d numeric matrix (preferable) or data frame.</p></dd>
+
+
 <dt>y</dt>
 <dd><p>A response vector of length n.</p></dd>
 
@@ -210,11 +210,11 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&
 </p><ul><li><p><code>nodeRotaMat</code>: Record the split variables (first column), split node serial number (second column) and rotation direction (third column) for each node. (The first column and the third column are 0 means leaf nodes)</p></li>
 <li><p><code>nodeNumLabel</code>: Record each leaf node's category for classification or predicted value for regression (second column is data size). (Each column is 0 means it is not a leaf node)</p></li>
 <li><p><code>nodeCutValue</code>: Record the split point of each node. (0 means leaf nodes)</p></li>
-<li><p><code>nodeCutIndex</code>: Record the index values of the partitioning variables selected based on the partition criterion <code>type</code>.</p></li>
+<li><p><code>nodeCutIndex</code>: Record the index values of the partitioning variables selected based on the partition criterion <code>split</code>.</p></li>
 <li><p><code>childNode</code>: Record the number of child nodes after each splitting.</p></li>
 <li><p><code>nodeDepth</code>: Record the depth of the tree where each node is located.</p></li>
 </ul></li>
-<li><p><code>type</code>, <code>Levels</code> and <code>NodeRotateFun</code> are important parameters for building the tree.</p></li>
+<li><p><code>split</code>, <code>Levels</code> and <code>NodeRotateFun</code> are important parameters for building the tree.</p></li>
 <li><p><code>paramList</code>: Parameters in a named list to be used by <code>NodeRotateFun</code>.</p></li>
 <li><p><code>data</code>: The list of data related parameters used to build the tree.</p></li>
 <li><p><code>tree</code>: The list of tree related parameters used to build the tree.</p></li>
@@ -240,7 +240,7 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&
 <span class="r-in"><span><span class="va">train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">209</span>, <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">train_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span><span class="va">train</span>, <span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span><span class="op">-</span><span class="va">train</span>, <span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu">ODT</span><span class="op">(</span><span class="va">varieties_of_wheat</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span>, type <span class="op">=</span> <span class="st">"i-classification"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu">ODT</span><span class="op">(</span><span class="va">varieties_of_wheat</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span>, split <span class="op">=</span> <span class="st">"entropy"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">tree</span>, <span class="va">test_data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">8</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># classification error</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pred</span> <span class="op">!=</span> <span class="va">test_data</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -253,13 +253,13 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&
 <span class="r-in"><span><span class="va">train_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span><span class="va">train</span>, <span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span><span class="op">-</span><span class="va">train</span>, <span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu">ODT</span><span class="op">(</span><span class="va">Density</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span>,</span></span>
-<span class="r-in"><span>  type <span class="op">=</span> <span class="st">"regression"</span>,</span></span>
+<span class="r-in"><span>  split <span class="op">=</span> <span class="st">"mse"</span>,</span></span>
 <span class="r-in"><span>  NodeRotateFun <span class="op">=</span> <span class="st">"RotMatPPO"</span>, paramList <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"Log"</span>, dimProj <span class="op">=</span> <span class="st">"Rand"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">tree</span>, <span class="va">test_data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># estimation error</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span> <span class="op">-</span> <span class="va">test_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4.461057e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5.321094e-05</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### Train ODT on one-of-K encoded categorical data ###</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">22</span><span class="op">)</span></span></span>
@@ -270,7 +270,7 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&
 <span class="r-in"><span><span class="va">Xcat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">catLabel</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span></span>
 <span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, <span class="fl">100</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu">ODT</span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">X</span>, type <span class="op">=</span> <span class="st">"i-classification"</span>, Xcat <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu">ODT</span><span class="op">(</span><span class="va">y</span> <span class="op">~</span> <span class="va">X</span>, split <span class="op">=</span> <span class="st">"entropy"</span>, Xcat <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
 <span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in eval(formula[[3]]):</span> object 'X' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">X</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Xcol1 Xcol2          X1         X2          X3</span>
@@ -337,7 +337,7 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&
 <span class="r-in"><span><span class="co">#&gt; $Xcol2</span></span></span>
 <span class="r-in"><span><span class="co">#&gt; [1] "1" "2" "3" "4" "5"</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu">ODT</span><span class="op">(</span><span class="va">X</span>, <span class="va">y</span>, type <span class="op">=</span> <span class="st">"g-classification"</span>, Xcat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, catLabel <span class="op">=</span> <span class="va">catLabel</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu">ODT</span><span class="op">(</span><span class="va">X</span>, <span class="va">y</span>, split <span class="op">=</span> <span class="st">"gini"</span>, Xcat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, catLabel <span class="op">=</span> <span class="va">catLabel</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

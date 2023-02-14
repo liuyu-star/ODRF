@@ -61,7 +61,7 @@
 <span>  <span class="va">formula</span>,</span>
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  newdata <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"i-classification"</span>,</span>
+<span>  split <span class="op">=</span> <span class="st">"gini"</span>,</span>
 <span>  NodeRotateFun <span class="op">=</span> <span class="st">"RotMatPPO"</span>,</span>
 <span>  paramList <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  digits <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -84,9 +84,9 @@
 <dd><p>A data frame or matrix containing new data is used to calculate the test error. If it is missing, let it be <code>data</code>.</p></dd>
 
 
-<dt>type</dt>
-<dd><p>The criterion used for splitting the nodes. 'i-classification': information gain and 'g-classification': gini impurity index for classification; 'regression': mean square error for regression.
-'auto' (default): If the response in <code>data</code> is a factor, 'g-classification' is used, otherwise regression is assumed.</p></dd>
+<dt>split</dt>
+<dd><p>The criterion used for splitting the variable. 'gini': gini impurity index (classification, default),
+'entropy': information gain (classification) or 'mse': mean square error (regression).</p></dd>
 
 
 <dt>NodeRotateFun</dt>
@@ -132,7 +132,7 @@ including</p><ul><li><p>"RotMatPPO": projection pursuit optimization model (<cod
 <span class="r-in"><span><span class="va">train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">252</span>, <span class="fl">100</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">train_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span><span class="va">train</span>, <span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span><span class="op">-</span><span class="va">train</span>, <span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">plot_ODT_depth</span><span class="op">(</span><span class="va">Density</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span>, <span class="va">test_data</span>, type <span class="op">=</span> <span class="st">"regression"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">plot_ODT_depth</span><span class="op">(</span><span class="va">Density</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span>, <span class="va">test_data</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot_ODT_depth-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
