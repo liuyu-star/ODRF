@@ -163,7 +163,7 @@
 #' @importFrom glue glue
 #' @importFrom lifecycle deprecated
 #' @export
-ODRF <- function(formula, ...) {
+ODRF <- function(X, ...) {
   UseMethod("ODRF")
 }
 

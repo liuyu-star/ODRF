@@ -36,7 +36,7 @@
 #' \itemize{
 #' \item{\code{call}: The original call to ODT.}
 #' \item{\code{terms}: An object of class \code{c("terms", "formula")} (see \code{\link{terms.object}}) summarizing the formula. Used by various methods, but typically not of direct relevance to users.}
-#' \item{\code{projections}: Projection direction for each node.}
+#' \item{\code{projections}: Projection direction for each split node.}
 #' \item{\code{structure}: A set of tree structure data records.
 #' \itemize{
 #' \item{\code{nodeRotaMat}: Record the split variables (first column), split node serial number (second column) and rotation direction (third column) for each node. (The first column and the third column are 0 means leaf nodes)}
@@ -144,7 +144,7 @@
 #' @import Rcpp
 #' @importFrom stats model.frame model.extract model.matrix na.fail
 #' @export
-ODT <- function(formula, ...) {
+ODT <- function(X, ...) {
   UseMethod("ODT")
   # formula X
 }
@@ -496,7 +496,7 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
   # nodeLabel = nodeCutValue;
   # nodeNumLabel = nodeCutValue;
   childNode <- nodeCutValue
-
+  nodeLR <- nodeCutValue
 
   # start create Oblique Decision Tree.
   ##############################################################################
@@ -507,6 +507,7 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
         (length(nodeXIndx[[currentNode]]) <= (2*MinLeaf)) ||
         (nodeDepth[currentNode] >= MaxDepth) ||
         (freeNode >= numNode)) {
+
       if (split != "mse") {
         leafLabel <- table(Levels[c(sl, y[nodeXIndx[[currentNode]]])]) - 1
         # nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
@@ -518,10 +519,36 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
         leafLabel <- c(mean(y[nodeXIndx[[currentNode]]]), length(y[nodeXIndx[[currentNode]]]))
       }
       nodeNumLabel <- rbind(nodeNumLabel, leafLabel)
-
       nodeRotaMat <- rbind(nodeRotaMat, c(0, currentNode, 0))
       nodeXIndx[currentNode] <- NA
-      currentNode <- currentNode + 1
+
+      TF=ifelse(currentNode>1,(nodeLR[currentNode-1]==nodeLR[currentNode])&&(nodeCutValue[currentNode-1]==0),FALSE)
+      if(TF&&(split != "mse")&&(length(unique(max.col(nodeNumLabel[currentNode-c(1,0),])))==1)){
+        idx=sort(which(nodeRotaMat[,2]==nodeLR[currentNode]))
+        nodeRotaMat[idx[1],] = c(0, nodeLR[currentNode], 0)
+        nodeRotaMat=nodeRotaMat[-c(idx[-1],nrow(nodeRotaMat)-c(1,0)),, drop = FALSE]
+        nodeCutValue[nodeLR[currentNode]]=0
+        #nodeCutValue = nodeCutValue[-(currentNode-c(1,0))]
+        nodeCutIndex[nodeLR[currentNode]]=0
+        #nodeCutIndex = nodeCutIndex[-(currentNode-c(1,0))]
+
+        childNode[nodeLR[currentNode]]=0
+        #childNode = childNode[-(currentNode-c(1,0))]
+        idx=which(childNode!=0)
+        idx=idx[idx>nodeLR[currentNode]]
+        childNode[idx]=childNode[idx]-2
+
+        nodeNumLabel[nodeLR[currentNode],] = colSums(nodeNumLabel[currentNode-c(1,0),])
+        nodeNumLabel = nodeNumLabel[-(currentNode-c(1,0)),]
+        nodeDepth = nodeDepth[-(currentNode-c(1,0))]
+        nodeXIndx = nodeXIndx[-(currentNode-c(1,0))]
+        nodeLR = nodeLR[-(currentNode-c(1,0))]
+        freeNode <- freeNode - 2
+        currentNode <- currentNode - 1
+      }else{
+        currentNode <- currentNode + 1
+      }
+
       next
     }
 
@@ -589,19 +616,40 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
     if (TF) {
       if (split != "mse") {
         leafLabel <- table(Levels[c(sl, y[nodeXIndx[[currentNode]]])]) - 1
-        # nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
-        # nodeNumLabel[currentNode]=max(leafLabel)
-        # nodeNumLabel[currentNode,]=leafLabel
       } else {
-        # nodeLabel[currentNode] = mean(y[nodeXIndx[[currentNode]]]);
-        # nodeNumLabel[currentNode]=length(y[nodeXIndx[[currentNode]]])
         leafLabel <- c(mean(y[nodeXIndx[[currentNode]]]), length(y[nodeXIndx[[currentNode]]]))
       }
       nodeNumLabel <- rbind(nodeNumLabel, leafLabel)
-
       nodeRotaMat <- rbind(nodeRotaMat, c(0, currentNode, 0))
       nodeXIndx[currentNode] <- NA
-      currentNode <- currentNode + 1
+
+      TF=ifelse(currentNode>1,(nodeLR[currentNode-1]==nodeLR[currentNode])&&(nodeCutValue[currentNode-1]==0),FALSE)
+      if(TF&&(split != "mse")&&(length(unique(max.col(nodeNumLabel[currentNode-c(1,0),])))==1)){
+        idx=sort(which(nodeRotaMat[,2]==nodeLR[currentNode]))
+        nodeRotaMat[idx[1],] = c(0, nodeLR[currentNode], 0)
+        nodeRotaMat=nodeRotaMat[-c(idx[-1],nrow(nodeRotaMat)-c(1,0)),, drop = FALSE]
+        nodeCutValue[nodeLR[currentNode]]=0
+        #nodeCutValue = nodeCutValue[-(currentNode-c(1,0))]
+        nodeCutIndex[nodeLR[currentNode]]=0
+        #nodeCutIndex = nodeCutIndex[-(currentNode-c(1,0))]
+
+        childNode[nodeLR[currentNode]]=0
+        #childNode = childNode[-(currentNode-c(1,0))]
+        idx=which(childNode!=0)
+        idx=idx[idx>nodeLR[currentNode]]
+        childNode[idx]=childNode[idx]-2
+
+        nodeNumLabel[nodeLR[currentNode],] = colSums(nodeNumLabel[currentNode-c(1,0),])
+        nodeNumLabel = nodeNumLabel[-(currentNode-c(1,0)),]
+        nodeDepth = nodeDepth[-(currentNode-c(1,0))]
+        nodeXIndx = nodeXIndx[-(currentNode-c(1,0))]
+        nodeLR = nodeLR[-(currentNode-c(1,0))]
+        freeNode <- freeNode - 2
+        currentNode <- currentNode - 1
+      }else{
+        currentNode <- currentNode + 1
+      }
+
       next
     }
 
@@ -619,6 +667,7 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
     nodeXIndx[[freeNode]] <- nodeXIndx[[currentNode]][Lindex]
     nodeXIndx[[freeNode + 1]] <- nodeXIndx[[currentNode]][setdiff(seq_along(nodeXIndx[[currentNode]]), Lindex)]
     nodeDepth[freeNode + c(0, 1)] <- nodeDepth[currentNode] + 1
+    nodeLR[freeNode + c(0, 1)] <- currentNode
 
     nodeNumLabel <- rbind(nodeNumLabel, 0)
 

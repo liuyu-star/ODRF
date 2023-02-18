@@ -6,7 +6,7 @@
 \alias{ODT.default}
 \title{Classification and Regression with Oblique Decision Tree}
 \usage{
-ODT(formula, ...)
+ODT(X, ...)
 
 \method{ODT}{formula}(
   formula,
@@ -53,9 +53,11 @@ ODT(formula, ...)
 )
 }
 \arguments{
-\item{formula}{Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
+\item{X}{An n by d numeric matrix (preferable) or data frame.}
 
 \item{...}{Optional parameters to be passed to the low level function.}
+
+\item{formula}{Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
 
 \item{data}{Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.}
 
@@ -99,8 +101,6 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))<
 
 \item{TreeRandRotate}{If or not to randomly rotate the Training data before building the tree (default FALSE, see \code{\link[ODRF]{RandRot}}).}
 
-\item{X}{An n by d numeric matrix (preferable) or data frame.}
-
 \item{y}{A response vector of length n.}
 }
 \value{
@@ -108,7 +108,7 @@ An object of class ODT Containing a list components:
 \itemize{
 \item{\code{call}: The original call to ODT.}
 \item{\code{terms}: An object of class \code{c("terms", "formula")} (see \code{\link{terms.object}}) summarizing the formula. Used by various methods, but typically not of direct relevance to users.}
-\item{\code{projections}: Projection direction for each node.}
+\item{\code{projections}: Projection direction for each split node.}
 \item{\code{structure}: A set of tree structure data records.
 \itemize{
 \item{\code{nodeRotaMat}: Record the split variables (first column), split node serial number (second column) and rotation direction (third column) for each node. (The first column and the third column are 0 means leaf nodes)}

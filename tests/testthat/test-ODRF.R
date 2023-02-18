@@ -76,6 +76,6 @@ test_that("same result with same seed", {
   expect_equal(pred1, pred2)
 })
 
-#test_that("different result with different seed", {
-#  expect_false(identical(pred1, pred3))
-#})
+test_that("different result with different seed", {
+  expect_false(identical(pred1, pred3))
+})

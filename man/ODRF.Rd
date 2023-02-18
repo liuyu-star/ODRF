@@ -6,7 +6,7 @@
 \alias{ODRF.default}
 \title{Classification and Regression with Oblique Decision Random Forest}
 \usage{
-ODRF(formula, ...)
+ODRF(X, ...)
 
 \method{ODRF}{formula}(
   formula,
@@ -67,9 +67,11 @@ ODRF(formula, ...)
 )
 }
 \arguments{
-\item{formula}{Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
+\item{X}{An n by d numeric matrix (preferable) or data frame.}
 
 \item{...}{Optional parameters to be passed to the low level function.}
+
+\item{formula}{Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
 
 \item{data}{Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.}
 
@@ -126,8 +128,6 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))<
 \item{Xscale}{Predictor standardization methods. " Min-max" (default), "Quantile", "No" denote Min-max transformation, Quantile transformation and No transformation respectively.}
 
 \item{TreeRandRotate}{If or not to randomly rotate the Training data before building the tree (default FALSE, see \code{\link[ODRF]{RandRot}}).}
-
-\item{X}{An n by d numeric matrix (preferable) or data frame.}
 
 \item{y}{A response vector of length n.}
 }

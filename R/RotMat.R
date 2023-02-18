@@ -234,38 +234,47 @@ RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, di
   # d=min(100, max(5, ceiling(p/q))) d q
   p0 <- p - (!is.null(catLabel)) * (length(unlist(catLabel)) - length(catLabel))
 
-  d2 <- ceiling(sqrt(p0))
-  ind <- sample(p0, d2, replace = FALSE)
-  sparseM <- cbind(ind, 1:d2, rep(1, d2))
+  if((numProj==1)&&(p0<10)){
+    sparseM=NULL
+    d2=0
+  }else{
+    d2 <- ceiling(sqrt(p0))
+    ind <- sample(p0, d2, replace = FALSE)
+    sparseM <- cbind(ind, 1:d2, rep(1, d2))
+  }
 
   # ceiling(sqrt(p))#d#round(p/3)#
   # if((n>Q)&(n>10)&(p>1)){
   sparseM1 <- NULL
   if (n > 10) {
-    if (dimProj == "Rand") {
-      # if(is.null(numProj)){max(5,sample(floor(p0/3),1))}
-      numProj <- min(p0, numProj)
-      d1 <- numProj
-      spd <- sample(p0, d1)
-      indp <- sum(spd)
-      ind <- unlist(sapply(spd, function(pd) sample(p0, pd)))
-      sparseM1 <- cbind(ind, d2 + rep(1:d1, spd), rep(1, indp))
-    } else {
-      # if(is.null(dimProj)){dimProj =min(ceiling(n^0.4),ceiling(p0*2/3))}
-      # if(is.null(numProj)){numProj=max(5, ceiling(p0/dimProj))}
-      numProj <- min(p0, numProj)
-      d1 <- numProj
-
-      indp <- p0
-      # sparseM=NULL
-      # for (k in 1:ceiling(2*q*d/p)) {
-      ind <- sample(1:indp, replace = FALSE)
-      s <- c(0, floor(quantile(1:indp, (1:d1) / d1)))
-      sparseM1 <- cbind(ind, d2 + rep(1:d1, s[-1] - s[-d1 - 1]), rep(1, indp))
+    numProj <- min(p0, numProj)
+    d1 <- numProj
+    indp <- p0
+    if(d1==1){
+      sparseM1 <- cbind(seq(indp), 1, 1)
+    }else{
+      if (dimProj == "Rand") {
+        # if(is.null(numProj)){max(5,sample(floor(p0/3),1))}
+        spd <- sample(p0, d1)
+        indp <- sum(spd)
+        ind <- unlist(sapply(spd, function(pd) sample(p0, pd)))
+        sparseM1 <- cbind(ind, d2 + rep(1:d1, spd), rep(1, indp))
+      } else {
+        # if(is.null(dimProj)){dimProj =min(ceiling(n^0.4),ceiling(p0*2/3))}
+        # if(is.null(numProj)){numProj=max(5, ceiling(p0/dimProj))}
+        #indp <- p0
+        # sparseM=NULL
+        # for (k in 1:ceiling(2*q*d/p)) {
+        ind <- sample(1:indp, replace = FALSE)
+        s <- c(0, floor(quantile(1:indp, (1:d1) / d1)))
+        sparseM1 <- cbind(ind, d2 + rep(1:d1, s[-1] - s[-d1 - 1]), rep(1, indp))
+      }
     }
   }
 
   sparseM <- rbind(sparseM, sparseM1)
+  if(is.null(sparseM))sparseM=t(c(sample(p0,1),1,1))
+
   if (!is.null(catLabel)) {
     ind <- sparseM[, 1]
     catVar <- which(ind <= length(catLabel))
@@ -364,6 +373,7 @@ RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, di
     # sparseM[d2+(1:p0),]=sparseM1
     sparseM <- rbind(sparseM, sparseM1)
   }
+
   sparseM[is.na(sparseM[, 3]), 3] <- 1
 
   colnames(sparseM) <- c("Variable", "Number", "Coefficient")

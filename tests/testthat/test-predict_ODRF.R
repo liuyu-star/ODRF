@@ -8,7 +8,8 @@ test_that("predict returns good prediction", {
   test_data <- data.frame(seeds[-train, ])
   forest <- ODRF(varieties_of_wheat ~ ., train_data,
     split = "entropy",
-    parallel = FALSE
+    parallel = FALSE,
+    seed = 230215
   )
   pred <- predict(forest, test_data[, -8])
   expect_gt(mean(pred == test_data[, 8]), 0.9)

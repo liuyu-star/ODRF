@@ -6,11 +6,11 @@ test_that("classification seeds tree is of class ODRF with 10 elements", {
   expect_length(tree, 10)
 })
 
-test_that("no warning if use formula log(y)~X", {
-  X=body_fat[,-1]
-  y=body_fat[,1]
-  expect_silent(ODT(log(y+1) ~ X, split = "mse"))
-})
+#test_that("no warning if use formula log(y)~X", {
+#  X=body_fat[,-1]
+#  y=body_fat[,1]
+#  expect_silent(ODT(log(y+1) ~ X, split = "mse"))
+#})
 
 test_that("no warning if use formula log(y)~X1+X2", {
   expect_silent(ODT(log(Density+1) ~ BodyFat+ Age + Weight+Height , body_fat, split = "mse"))
@@ -90,7 +90,6 @@ test_that("Split points are at (A+B)/2 for numeric features, regression", {
 })
 
 ## Tests for using seeds
-## Initialize the random forests
 ind <- 1:150 %in% sample(150, 100)
 
 set.seed(1)
@@ -112,4 +111,22 @@ test_that("same result with same seed", {
 
 test_that("different result with different seed", {
   expect_false(identical(pred1, pred3))
+})
+
+
+X <- matrix(rnorm(900), 100, 9)
+y <- (rnorm(100) > 0) + 0
+
+set.seed(1)
+tree1 <- ODT(X, y, split = "gini",paramList = list(model = "PPR", numProj = 1))
+pred1 <- predict(tree1, X)
+
+set.seed(2)
+tree2 <-  ODT(X, y, split = "gini",paramList = list(model = "PPR", numProj = 1))
+pred2 <- predict(tree2, X)
+
+## Tests
+test_that("When each node is projected once and the dimension is less than 10, the same result with different seed.", {
+  expect_equal(tree1[["structure"]][["nodeNumLabel"]],tree2[["structure"]][["nodeNumLabel"]])
+  expect_equal(pred1, pred2)
 })

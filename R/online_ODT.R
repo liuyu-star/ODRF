@@ -91,7 +91,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
   # }
   # address na values.
   if (any(is.na(data))) {
-    data <- na.action(data.frame(data))
+    data <- na.action(data)
     warning("NA values exist in data matrix 'X'")
   }
   # y= data[,setdiff(colnames(data),vars[-1])]
