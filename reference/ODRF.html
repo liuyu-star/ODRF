@@ -57,7 +57,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ODRF</span><span class="op">(</span><span class="va">formula</span>, <span class="va">...</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">ODRF</span><span class="op">(</span><span class="va">X</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># S3 method for formula</span></span>
 <span><span class="fu">ODRF</span><span class="op">(</span></span>
@@ -122,12 +122,16 @@
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>formula</dt>
-<dd><p>Object of class <code>formula</code> with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see <code><a href="https://rdrr.io/r/stats/model.frame.html" class="external-link">model.frame</a></code>)</p></dd>
+    <dl><dt>X</dt>
+<dd><p>An n by d numeric matrix (preferable) or data frame.</p></dd>
 
 
 <dt>...</dt>
 <dd><p>Optional parameters to be passed to the low level function.</p></dd>
+
+
+<dt>formula</dt>
+<dd><p>Object of class <code>formula</code> with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see <code><a href="https://rdrr.io/r/stats/model.frame.html" class="external-link">model.frame</a></code>)</p></dd>
 
 
 <dt>data</dt>
@@ -233,10 +237,6 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&
 <dd><p>If or not to randomly rotate the Training data before building the tree (default FALSE, see <code><a href="RandRot.html">RandRot</a></code>).</p></dd>
 
 
-<dt>X</dt>
-<dd><p>An n by d numeric matrix (preferable) or data frame.</p></dd>
-
-
 <dt>y</dt>
 <dd><p>A response vector of length n.</p></dd>
 
@@ -304,7 +304,7 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&
 <span class="r-in"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">forest</span>, <span class="va">test_data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># estimation error</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span> <span class="op">-</span> <span class="va">test_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.314786e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5.406321e-05</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### Train ODRF on one-of-K encoded categorical data ###</span></span></span>
