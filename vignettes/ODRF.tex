@@ -585,7 +585,8 @@ R> train <- sample(1:209, 120)
 R> seeds_train <- data.frame(seeds[train, ])
 R> seeds_test <- data.frame(seeds[-train, ])
 R> forest <- ODRF(varieties_of_wheat ~ ., seeds_train,
-+    split = "entropy", parallel = FALSE)
++    split = "entropy", parallel = FALSE
++  )
 R> pred <- predict(forest, seeds_test[, -8])
 R> (e.forest <- mean(pred != seeds_test[, 8]))
 \end{Sinput}
@@ -598,7 +599,7 @@ R> set.seed(42)
 R> train <- sample(1:252, 110)
 R> bodyfat_train <- data.frame(body_fat[train, ])
 R> bodyfat_test <- data.frame(body_fat[-train, ])
-R> tree <- ODT(Density ~ ., bodyfat_train, split = 'mse')
+R> tree <- ODT(Density ~ ., bodyfat_train, split = "mse")
 R> pred <- predict(tree, bodyfat_test[, -1])
 R> (e.tree <- mean((pred - bodyfat_test[, 1])^2))
 \end{Sinput}
@@ -623,26 +624,31 @@ The model is trained with \fct{online} and prune with \fct{prune} respectively.
 \begin{Sinput}
 R> index <- seq(floor(nrow(seeds_train) / 2))
 R> forest1 <- ODRF(varieties_of_wheat ~ ., seeds_train[index, ],
-+    split = "entropy", parallel = FALSE)
++    split = "entropy", parallel = FALSE
++  )
 R> pred <- predict(forest1, seeds_test[, -8])
 R> e.forest.1 <- mean(pred != seeds_test[, 8])
 R> forest.online <- online(forest1, seeds_train[-index, -8], seeds_train[-index, 8])
 R> pred <- predict(forest.online, seeds_test[, -8])
 R> e.forest.online <- mean(pred != seeds_test[, 8])
 R> forest.prune <- prune(forest1, seeds_train[-index, -8],
-+    seeds_train[-index, 8], useOOB = FALSE)
++    seeds_train[-index, 8],
++    useOOB = FALSE
++  )
 R> pred <- predict(forest.prune, seeds_test[, -8])
 R> e.forest.prune <- mean(pred != seeds_test[, 8])
-R> print(c(forest1 = e.forest.1, forest.online = e.forest.online,
-+    forest.prune = e.forest.prune))
+R> print(c(
++    forest1 = e.forest.1, forest.online = e.forest.online,
++    forest.prune = e.forest.prune
++  ))
 \end{Sinput}
 \begin{Soutput}
       forest1 forest.online  forest.prune 
-   0.11235955    0.07865169    0.11235955 
+   0.12359551    0.07865169    0.11235955 
 \end{Soutput}
 \begin{Sinput}
 R> index <- seq(floor(nrow(bodyfat_train) / 2))
-R> tree1 <- ODT(Density ~ ., bodyfat_train[index, ], split = 'mse')
+R> tree1 <- ODT(Density ~ ., bodyfat_train[index, ], split = "mse")
 R> pred <- predict(tree1, bodyfat_test[, -1])
 R> e.tree.1 <- mean((pred - bodyfat_test[, 1])^2)
 R> tree.online <- online(tree1, bodyfat_train[-index, -1], bodyfat_train[-index, 1])
@@ -655,7 +661,7 @@ R> print(c(tree1 = e.tree.1, tree.online = e.tree.online, tree.prune = e.tree.pr
 \end{Sinput}
 \begin{Soutput}
        tree1  tree.online   tree.prune 
-1.051369e-04 6.269136e-05 1.051369e-04 
+1.062404e-04 6.273606e-05 1.062404e-04 
 \end{Soutput}
 \end{Schunk}
 As shown in the classification and regression results above, the training data is divided into two batches equally, then the first batch is used to train \code{ODT} and \code{ODRF}, and the second batch is used to update the model by \fct{online}. The error after the model update is significantly smaller than that of one batch of data alone, and the model is also pruned by \fct{prune} and the same effect is achieved.
@@ -678,48 +684,52 @@ To show that \fct{PPO} with different \code{model} to do classification and regr
 \begin{Schunk}
 \begin{Sinput}
 R> data(seeds, package = "ODRF")
-R> (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", split = 'gini'))
+R> (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", split = "gini"))
 \end{Sinput}
 \begin{Soutput}
-[1] -0.54427677 -0.56029088  0.51407128 -0.02609682 -0.32630053
-[6]  0.08649715  0.10456012
+[1] -0.49502076 -0.33740737  0.43849098  0.49268176 -0.26011069
+[6]  0.05933291  0.36731879
 \end{Soutput}
 \begin{Sinput}
-R> RotMat <- RotMatPPO(seeds[, 1:7], seeds[, 8],model = "Log",
-+    split = 'gini')
+R> RotMat <- RotMatPPO(seeds[, 1:7], seeds[, 8],
++    model = "Log",
++    split = "gini"
++  )
 R> head(RotMat)
 \end{Sinput}
 \begin{Soutput}
      Variable Number Coefficient
-[1,]        3      1  1.00000000
-[2,]        7      2  1.00000000
-[3,]        4      3  1.00000000
-[4,]        5      4 -0.13275545
-[5,]        1      4 -0.08022302
-[6,]        3      4  0.98744349
+[1,]        2      1   1.0000000
+[2,]        1      2   1.0000000
+[3,]        5      3   1.0000000
+[4,]        4      4   0.1682477
+[5,]        3      4  -0.9344802
+[6,]        5      4   0.2575089
 \end{Soutput}
 \begin{Sinput}
 R> data(body_fat, package = "ODRF")
-R> (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", split = 'mse'))
+R> (PP <- PPO(body_fat[, 2:15], body_fat[, 1], model = "Log", split = "mse"))
 \end{Sinput}
 \begin{Soutput}
- [1] -0.45975657 -0.29758768 -0.05402092  0.21852978  0.17095624
- [6] -0.08476550 -0.34984403 -0.49031420  0.12965991  0.59473520
-[11]  0.10950056 -0.05657033 -0.12074028 -0.59710348
+ [1] -0.28657259 -0.27158117  0.36498660  0.39612999  0.09883108
+ [6] -0.54063364  0.29315319  0.31895101  0.38162931 -0.69963459
+[11] -0.29141738 -0.13294840 -0.23251601 -0.53330956
 \end{Soutput}
 \begin{Sinput}
-R> RotMat <- RotMatPPO(seeds[, 1:7], seeds[, 8],model = "PPR",
-+    split = 'gini')
+R> RotMat <- RotMatPPO(seeds[, 1:7], seeds[, 8],
++    model = "PPR",
++    split = "gini"
++  )
 R> head(RotMat)
 \end{Sinput}
 \begin{Soutput}
      Variable Number Coefficient
-[1,]        5      1  1.00000000
-[2,]        6      2  1.00000000
-[3,]        3      3  1.00000000
-[4,]        7      4  0.50198350
-[5,]        1      4  0.07514335
-[6,]        3      4 -0.64785271
+[1,]        2      1   1.0000000
+[2,]        7      2   1.0000000
+[3,]        1      3   1.0000000
+[4,]        7      4   0.9180474
+[5,]        4      4  -0.2507461
+[6,]        1      4  -0.2823547
 \end{Soutput}
 \begin{Sinput}
 R> set.seed(22)
@@ -920,12 +930,14 @@ Oblique Classification Tree structure
 =============================================================
 
 1) root
-   node2)  proj1*X < 1.43
-      node4)# proj2*X < 0.38 -> (leaf1 = B)
-      node5)# proj2*X >= 0.38 -> (leaf2 = M)
-   node3)  proj1*X >= 1.43
-      node6)# proj3*X < 0.21 -> (leaf3 = B)
-      node7)# proj3*X >= 0.21 -> (leaf4 = M)
+   node2)  proj1*X < -1.42
+      node4)# proj2*X < -0.25 -> (leaf1 = M)
+      node5)  proj2*X >= -0.25
+         node8)# proj4*X < -0.45 -> (leaf4 = M)
+         node9)# proj4*X >= -0.45 -> (leaf5 = B)
+   node3)  proj1*X >= -1.42
+      node6)# proj3*X < 0.31 -> (leaf2 = B)
+      node7)# proj3*X >= 0.31 -> (leaf3 = M)
 \end{Soutput}
 \end{Schunk}
 We use the function \fct{ODT} to construct a decision tree, and print and plot the tree structure. It is shown that the tree structure is very simple with 3 split nodes, 4 leaf nodes and the depth of 3. In addition, we can obtain the projection coefficients of the variables at each split, and the results are shown in Table~\ref{tab:proj} after removing the variables with projection coefficients less than 0.1 from the 30 variables. It shows that mean cell (x8) and worst cell (x21, x22, x26) play a major role in the first partition, and se cell (x14) and worst cell (x25, x26, x30) have a significant impact on the second partitioning. In the third partitioning, se cell (x13) and worst cell (x21) are equally important. We noticed that worst cell nuclei had the most influence in the whole decision tree.

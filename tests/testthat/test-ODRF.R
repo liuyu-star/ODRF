@@ -50,24 +50,24 @@ test_that("confusion matrix cols are the true classes", {
 ## Tests for using seeds
 ## Initialize the random forests
 
-#ind <- 1:150 %in% sample(150, 100)
+# ind <- 1:150 %in% sample(150, 100)
 ind <- sample(150, 100)
 
 forest1 <- ODRF(Species ~ .,
   data = iris, split = "gini", NodeRotateFun = "RotMatPPO",
-  parallel = FALSE, seed = 1, ntrees = 10#,subset = ind
+  parallel = FALSE, seed = 1, ntrees = 10 # ,subset = ind
 )
 pred1 <- predict(forest1, Xnew = iris[-ind, -5])
 
 forest2 <- ODRF(Species ~ .,
   data = iris, split = "gini", NodeRotateFun = "RotMatPPO",
-  parallel = FALSE, seed = 1, ntrees = 10#,subset = ind
+  parallel = FALSE, seed = 1, ntrees = 10 # ,subset = ind
 )
 pred2 <- predict(forest2, Xnew = iris[-ind, -5])
 
 forest3 <- ODRF(Species ~ .,
-  data = iris, split = "gini",NodeRotateFun = "RotMatPPO",
-  parallel = FALSE, seed = 2, ntrees = 10#,subset = ind
+  data = iris, split = "gini", NodeRotateFun = "RotMatPPO",
+  parallel = FALSE, seed = 2, ntrees = 10 # ,subset = ind
 )
 pred3 <- predict(forest3, Xnew = iris[-ind, -5])
 

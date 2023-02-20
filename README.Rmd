@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 [![Codecov test coverage](https://codecov.io/gh/liuyu-star/ODRF/branch/main/graph/badge.svg)](https://app.codecov.io/gh/liuyu-star/ODRF?branch=main)
 [![CRAN status](https://www.r-pkg.org/badges/version/ODRF)](https://CRAN.R-project.org/package=ODRF)
 [![R-CMD-check](https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
 The goal of ODRF is to supplement classical CART and random forests for classification and regression. The use of linear combinations of predictors as splitting variables is one of the important extensions of CART and is known as Oblique Decision Trees (ODT) and ODT-based Random Forests (ODRF).
@@ -61,17 +62,17 @@ test_data <- data.frame(seeds[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
-  type = "gini", parallel = FALSE
+  split = "gini", parallel = FALSE
 )
 pred <- predict(forest, test_data[, -8])
 e.forest <- mean(pred != test_data[, 8])
 forest1 <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
-  type = "gini", parallel = FALSE
+  split = "gini", parallel = FALSE
 )
 pred <- predict(forest1, test_data[, -8])
 e.forest.1 <- mean(pred != test_data[, 8])
 forest2 <- ODRF(varieties_of_wheat ~ ., train_data[-index, ],
-  type = "gini", parallel = FALSE
+  split = "gini", parallel = FALSE
 )
 pred <- predict(forest2, test_data[, -8])
 e.forest.2 <- mean(pred != test_data[, 8])
@@ -103,13 +104,13 @@ train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 
-tree <- ODT(Density ~ ., train_data, type = "mse")
+tree <- ODT(Density ~ ., train_data, split = "mse")
 pred <- predict(tree, test_data[, -1])
 e.tree <- mean((pred - test_data[, 1])^2)
-tree1 <- ODT(Density ~ ., train_data[index, ], type = "mse")
+tree1 <- ODT(Density ~ ., train_data[index, ], split = "mse")
 pred <- predict(tree1, test_data[, -1])
 e.tree.1 <- mean((pred - test_data[, 1])^2)
-tree2 <- ODT(Density ~ ., train_data[-index, ], type = "mse")
+tree2 <- ODT(Density ~ ., train_data[-index, ], split = "mse")
 pred <- predict(tree2, test_data[, -1])
 e.tree.2 <- mean((pred - test_data[, 1])^2)
 

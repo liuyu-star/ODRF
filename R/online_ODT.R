@@ -47,8 +47,9 @@
 online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
   ppTree <- obj
   rm(obj)
-  if(length(ppTree[["structure"]][["nodeDepth"]])==1)
+  if (length(ppTree[["structure"]][["nodeDepth"]]) == 1) {
     stop("No tree structure to use 'online'!")
+  }
   weights0 <- weights
   Call <- ppTree$call
   Terms <- ppTree$terms
@@ -111,7 +112,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
 
   # get()
   FUN <- match.fun(NodeRotateFun, descend = TRUE)
-  #method0 <- strsplit(split, split = "")[[1]][1]
+  # method0 <- strsplit(split, split = "")[[1]][1]
 
 
   if (split != "mse") {
@@ -305,7 +306,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
         paramList$dimProj <- min(ceiling(length(y[nodeXIndx[[currentNode]]])^0.4), ceiling(p * 2 / 3))
       }
       if (is.null(paramList$numProj)) {
-        paramList$numProj <- ifelse(paramList$dimProj == "Rand",sample(floor(p / 3), 1),ceiling(p / paramList$dimProj))
+        paramList$numProj <- ifelse(paramList$dimProj == "Rand", sample(floor(p / 3), 1), ceiling(p / paramList$dimProj))
       }
       sparseM <- RotMatPPO(
         X = X[nodeXIndx[[currentNode]], ], y = y[nodeXIndx[[currentNode]]], model = paramList$model,
@@ -325,7 +326,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
 
     rotaX <- X[nodeXIndx[[currentNode]], , drop = FALSE] %*% rotaX
 
-    #bestCut <- best_cut_node(method0, rotaX, y[nodeXIndx[[currentNode]]], Wcd, MinLeaf, maxLabel)
+    # bestCut <- best_cut_node(method0, rotaX, y[nodeXIndx[[currentNode]]], Wcd, MinLeaf, maxLabel)
     bestCut <- best.cut.node(rotaX, y[nodeXIndx[[currentNode]]], split, lambda, Wcd, MinLeaf, maxLabel)
 
     if (bestCut$BestCutVar == -1) {

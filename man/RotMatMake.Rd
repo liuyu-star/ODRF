@@ -69,7 +69,7 @@ makePP <- function(dimProj, prob, ...) {
   pp <- sample(c(1L, -1L), dimProj, replace = TRUE, prob = c(prob, 1 - prob))
   return(pp)
 }
-
+\donttest{
 RotMat <- RotMatMake(
   RotMatFun = "makeRotMat", PPFun = "makePP",
   paramList = list(dimX = 8, dimProj = 5, numProj = 4, prob = 0.5)
@@ -82,7 +82,8 @@ head(RotMat)
 #> [4,]        4      1          -1
 #> [5,]        5      1          -1
 #> [6,]        6      2           1
-
+}
+\donttest{
 # train ODT with defined projection matrix function
 tree <- ODT(X, y,
   split = "entropy", NodeRotateFun = "makeRotMat",
@@ -96,7 +97,7 @@ tree <- ODT(X, y,
       dimX = ncol(X), dimProj = 5, numProj = 4, prob = 0.5
     )
 )
-
+}
 }
 \seealso{
 \code{\link{RotMatPPO}} \code{\link{RotMatRand}} \code{\link{RotMatRF}}

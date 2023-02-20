@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2022.3.14)  14 FEB 2023 14:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.23 (TeX Live 2021/W32TeX) (preloaded format=pdflatex 2022.3.14)  20 FEB 2023 23:07
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1038,7 +1038,7 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 
 [10]
 
-LaTeX Warning: Reference `sec:print' on page 11 undefined on input line 756.
+LaTeX Warning: Reference `sec:print' on page 11 undefined on input line 766.
 
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
@@ -1046,16 +1046,7 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [11]
-Overfull \hbox (10.42455pt too wide) in paragraph at lines 772--812
-[][] 
- []
-
-
-Package natbib Warning: Citation `2012obliqueRF' on page 12 undefined on input 
-line 868.
-
-
-Overfull \hbox (6.09511pt too wide) in paragraph at lines 873--904
+Overfull \hbox (10.42455pt too wide) in paragraph at lines 782--822
 [][] 
  []
 
@@ -1065,7 +1056,14 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [12]
-Underfull \vbox (badness 3492) has occurred while \output is active []
+
+Package natbib Warning: Citation `2012obliqueRF' on page 13 undefined on input 
+line 878.
+
+
+Overfull \hbox (6.09511pt too wide) in paragraph at lines 883--914
+[][] 
+ []
 
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
@@ -1073,32 +1071,38 @@ Overfull \hbox (10.94998pt too wide) has occurred while \output is active
  []
 
 [13]
+Underfull \vbox (badness 3492) has occurred while \output is active []
+
+
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 14 []
  []
 
 [14]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 15
  []
 
 [15]
-<ODRF-plot.pdf, id=301, 722.7pt x 289.08pt>
+<ODRF-plot.pdf, id=299, 722.7pt x 289.08pt>
 File: ODRF-plot.pdf Graphic file (type pdf)
 <use ODRF-plot.pdf>
-Package pdftex.def Info: ODRF-plot.pdf  used on input line 934.
+Package pdftex.def Info: ODRF-plot.pdf  used on input line 946.
 (pdftex.def)             Requested size: 354.12434pt x 141.65044pt.
  (./ODRF.bbl
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 16 []
  []
 
-[16 <./ODRF-plot.pdf>]
+[16]
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 17
  []
 
-[17]
+[17 <./ODRF-plot.pdf>]
 Underfull \hbox (badness 3281) in paragraph at lines 152--155
 []\T1/lmr/m/n/10.95 Rainforth T, Wood F (2015).  ``Canon-i-cal cor-re-la-tion f
 orests.''  \T1/lmr/m/it/10.95 arXiv preprint
@@ -1106,21 +1110,21 @@ orests.''  \T1/lmr/m/it/10.95 arXiv preprint
 
 LaTeX Font Info:    Font shape `T1/lmss/m/it' in size <10.95> not available
 (Font)              Font shape `T1/lmss/m/sl' tried instead on input line 159.
-)
-
-Package natbib Warning: There were undefined citations.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 975--975
-
- []
-
 
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 \T1/lmr/m/n/10.95 18 []
  []
 
-[18]
+[18])
+
+Package natbib Warning: There were undefined citations.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 987--987
+
+ []
+
+
 Overfull \hbox (10.94998pt too wide) has occurred while \output is active
 [] \T1/lmr/m/n/10.95 19
  []
@@ -1133,11 +1137,11 @@ Package rerunfilecheck Info: File `ODRF.out' has not changed.
 (rerunfilecheck)             Checksum: 67F40B51A62CF690AC09FA10EC728A54;2780.
  ) 
 Here is how much of TeX's memory you used:
- 26083 strings out of 478276
- 517144 string characters out of 5843469
- 831905 words of memory out of 5000000
- 43731 multiletter control sequences out of 15000+600000
- 549730 words of font info for 75 fonts, out of 8000000 for 9000
+ 26081 strings out of 478276
+ 517114 string characters out of 5843469
+ 833905 words of memory out of 5000000
+ 43730 multiletter control sequences out of 15000+600000
+ 549423 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  99i,14n,94p,1812b,1476s stack positions out of 5000i,500n,10000p,200000b,80000s
 {d:/Program Files/texlive/2021/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{d:/Pr
@@ -1168,10 +1172,10 @@ dist/fonts/type1/public/lm/lmtt10.pfb><d:/Program Files/texlive/2021/texmf-dist
 /fonts/type1/public/lm/lmtt12.pfb><d:/Program Files/texlive/2021/texmf-dist/fon
 ts/type1/public/lm/lmtto10.pfb><d:/Program Files/texlive/2021/texmf-dist/fonts/
 type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on ODRF.pdf (19 pages, 511329 bytes).
+Output written on ODRF.pdf (19 pages, 511420 bytes).
 PDF statistics:
- 466 PDF objects out of 1000 (max. 8388607)
- 388 compressed objects within 4 object streams
+ 463 PDF objects out of 1000 (max. 8388607)
+ 386 compressed objects within 4 object streams
  78 named destinations out of 1000 (max. 500000)
  106 words of extra memory for PDF output out of 10000 (max. 10000000)
 

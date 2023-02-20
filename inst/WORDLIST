@@ -31,6 +31,7 @@ Kowalski
 Kulczycki
 Laguerre
 Lett
+Lifecycle
 Lukasik
 MF
 MRs
@@ -38,7 +39,6 @@ MSs
 Madelon
 Mangasarian
 MaxDepth
-Metaprogramming
 Mifflin
 Niewczas
 NodeRotateFun
@@ -119,14 +119,11 @@ cutvalue
 debrecen
 dimProj
 dimX
-dplyr
 et
-eval
 evtree
 findex
 friedmantukey
 getwd
-ggplot
 gini
 glmertree
 grf
@@ -162,7 +159,6 @@ randDist
 randomForest
 randomer
 rerf
-rlang
 rnd
 rotationForest
 rpart
@@ -173,8 +169,6 @@ supsmu
 svm
 topleft
 topright
-tunnelled
-tunnelling
 useOOB
 varibles
 waveforms

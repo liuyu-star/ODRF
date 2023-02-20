@@ -162,7 +162,7 @@ X <- data.frame(Xcol1, Xcol2, Xcon)
 Xcat <- c(1, 2)
 catLabel <- NULL
 y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
-tree <- ODT(y ~ X, split = "entropy", Xcat = NULL)
+tree <- ODT(X, y, split = "entropy", Xcat = NULL)
 head(X)
 #>   Xcol1 Xcol2          X1         X2          X3
 #> 1     B     5 -0.04178453  2.3962339 -0.01443979

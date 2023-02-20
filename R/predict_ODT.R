@@ -63,11 +63,11 @@ predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
   ppTree <- object
   rm(object)
 
-  pp=ppTree$data$p
-  if(!is.null(ppTree$data$catLabel)&&(sum(ppTree$data$Xcat)>0)){
-    pp=pp-length(unlist(ppTree$data$catLabel))+ length(ppTree$data$Xcat)
+  pp <- ppTree$data$p
+  if (!is.null(ppTree$data$catLabel) && (sum(ppTree$data$Xcat) > 0)) {
+    pp <- pp - length(unlist(ppTree$data$catLabel)) + length(ppTree$data$Xcat)
   }
-  if(ncol(Xnew)!=pp){
+  if (ncol(Xnew) != pp) {
     stop("The dimensions of 'Xnew' and training data do not match")
   }
 

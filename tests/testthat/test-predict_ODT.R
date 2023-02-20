@@ -22,13 +22,13 @@ test_that("No error if category predictor exists", {
   Xcat <- c(1, 2)
   catLabel <- NULL
   y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
-  #options(warn = -1)
-  #tree <- ODT(X,y, split = "entropy", Xcat = Xcat,catLabel=catLabel)
-  #options(warn = 1)
-  expect_warning(ODT(X,y, split = "entropy", Xcat = Xcat,catLabel=catLabel))
-  #expect_silent(predict(tree, X))
-  #expect_no_error(predict(tree, X))
-  #expect_no_error
+  # options(warn = -1)
+  # tree <- ODT(X,y, split = "entropy", Xcat = Xcat,catLabel=catLabel)
+  # options(warn = 1)
+  expect_warning(ODT(X, y, split = "entropy", Xcat = Xcat, catLabel = catLabel))
+  # expect_silent(predict(tree, X))
+  # expect_no_error(predict(tree, X))
+  # expect_no_error
 })
 
 

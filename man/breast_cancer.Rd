@@ -50,7 +50,6 @@ tree <- ODT(diagnosis ~ ., train_data, split = "gini")
 pred <- predict(tree, test_data[, -1])
 # classification error
 (mean(pred != test_data[, 1]))
-
 }
 \references{
 Wolberg WH, Street WN, Mangasarian OL. Machine learning techniques to diagnose breast cancer from image-processed nuclear features of fine needle aspirates. Cancer Lett. 1994 Mar 15;77(2-3):163-71.

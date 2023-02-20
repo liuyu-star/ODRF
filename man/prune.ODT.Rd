@@ -18,7 +18,8 @@
 \item{...}{Optional parameters to be passed to the low level function.}
 }
 \value{
-\itemize{An object of class \code{ODT} and \code{prune.ODT}.
+An object of class \code{ODT} and \code{prune.ODT}.
+\itemize{
 \item{\code{ppTree} The same result as \code{ODT}.}
 \item{\code{pruneError} Error of validation data after each pruning, misclassification rate (MR) for classification or mean square error (MSE) for regression.
 The maximum value indicates the tree without pruning, and the minimum value (0) indicates indicates the data without splitting and using the average value as the predicted value.}

@@ -10,7 +10,8 @@
 #'
 #' @details The leftmost value of the horizontal axis indicates the tree without pruning, while the rightmost value indicates the data without splitting and using the average value as the predicted value.
 #'
-#' @return \itemize{An object of class \code{ODT} and \code{prune.ODT}.
+#' @return An object of class \code{ODT} and \code{prune.ODT}.
+#' \itemize{
 #' \item{\code{ppTree} The same result as \code{ODT}.}
 #' \item{\code{pruneError} Error of validation data after each pruning, misclassification rate (MR) for classification or mean square error (MSE) for regression.
 #' The maximum value indicates the tree without pruning, and the minimum value (0) indicates indicates the data without splitting and using the average value as the predicted value.}
@@ -52,8 +53,9 @@
 prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
   ppTree <- obj
   rm(obj)
-  if(length(ppTree[["structure"]][["nodeDepth"]])==1)
+  if (length(ppTree[["structure"]][["nodeDepth"]]) == 1) {
     stop("No tree structure to use 'online'!")
+  }
   structure <- ppTree$structure
   if (!is.null(MaxDepth)) {
     MaxDepth <- min(MaxDepth, max(structure$nodeDepth))

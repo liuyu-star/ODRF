@@ -53,9 +53,9 @@ Find the optimal projection using various projectin pursuit models.
 \examples{
 # classification
 data(seeds)
-(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "Log", split = 'entropy'))
-(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "PPR", split = 'entropy'))
-(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", split = 'entropy'))
+(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "Log", split = "entropy"))
+(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "PPR", split = "entropy"))
+(PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", split = "entropy"))
 
 # regression
 data(body_fat)

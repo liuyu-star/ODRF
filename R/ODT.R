@@ -93,7 +93,7 @@
 #' Xcat <- c(1, 2)
 #' catLabel <- NULL
 #' y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
-#' tree <- ODT(y ~ X, split = "entropy", Xcat = NULL)
+#' tree <- ODT(X, y, split = "entropy", Xcat = NULL)
 #' head(X)
 #' #>   Xcol1 Xcol2          X1         X2          X3
 #' #> 1     B     5 -0.04178453  2.3962339 -0.01443979
@@ -153,7 +153,7 @@ ODT <- function(X, ...) {
 #' @method ODT formula
 #' @aliases ODT.formula
 #' @export
-ODT.formula <- function(formula, data = NULL, split = "auto", lambda='log', NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
+ODT.formula <- function(formula, data = NULL, split = "auto", lambda = "log", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
                         MaxDepth = Inf, numNode = Inf, MinLeaf = 10, Levels = NULL, subset = NULL, weights = NULL, na.action = na.fail,
                         catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
   Call <- match.call()
@@ -164,8 +164,8 @@ ODT.formula <- function(formula, data = NULL, split = "auto", lambda='log', Node
   } else if (indx[[2]] == 0) {
     # stop("a 'data' argument is required")
     # data <- environment(formula)
-    X <- eval(formula[[3]])#,envir =.BaseNamespaceEnv)
-    y <- eval(formula[[2]])#,envir =.BaseNamespaceEnv)
+    X <- eval(formula[[3]]) # ,envir =.BaseNamespaceEnv)
+    y <- eval(formula[[2]]) # ,envir =.BaseNamespaceEnv)
     if (sum(match(class(X), c("data.frame", "matrix"), nomatch = 0L)) == 0) {
       stop("argument 'X' can only be the classes 'data.frame' or 'matrix'")
     }
@@ -177,8 +177,8 @@ ODT.formula <- function(formula, data = NULL, split = "auto", lambda='log', Node
       colnames(X) <- paste0("X", seq_len(ncol(X)))
     }
     data <- data.frame(y, X)
-    #varName <- colnames(X)
-    yname=ls(envir = .GlobalEnv)
+    # varName <- colnames(X)
+    yname <- ls(envir = .GlobalEnv)
     colnames(data) <- c(as.character(formula)[2], colnames(X))
     formula <- as.formula(paste0(as.character(formula)[2], "~."))
     Call$formula <- formula
@@ -191,21 +191,21 @@ ODT.formula <- function(formula, data = NULL, split = "auto", lambda='log', Node
       stop("The predictor dimension of argument 'data' must exceed 1.")
     }
 
-    #varName <- setdiff(colnames(data), as.character(formula)[2])
-    #X <- data[, varName]
-    #y <- data[, as.character(formula)[2]]
-    #Call$data <- quote(data)
+    # varName <- setdiff(colnames(data), as.character(formula)[2])
+    # X <- data[, varName]
+    # y <- data[, as.character(formula)[2]]
+    # Call$data <- quote(data)
     yname <- colnames(data)
-    data=model.frame(formula, data, drop.unused.levels = TRUE)
-    y <- data[,1]
-    X <- data[,-1]
+    data <- model.frame(formula, data, drop.unused.levels = TRUE)
+    y <- data[, 1]
+    X <- data[, -1]
     Call$data <- quote(data)
   }
 
-  varName=colnames(X)
-  yname= names(unlist(sapply(yname, function(x)grep(x,as.character(formula)[2]))))
-  yname= yname[which.max(nchar(yname))]
-  if(yname!=as.character(formula)[2]){
+  varName <- colnames(X)
+  yname <- names(unlist(sapply(yname, function(x) grep(x, as.character(formula)[2]))))
+  yname <- yname[which.max(nchar(yname))]
+  if (yname != as.character(formula)[2]) {
     varName <- c(yname, varName)
   }
 
@@ -238,7 +238,7 @@ ODT.formula <- function(formula, data = NULL, split = "auto", lambda='log', Node
 #' @method ODT default
 #' @aliases ODT.default
 #' @export
-ODT.default <- function(X, y, split = "auto", lambda='log', NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
+ODT.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
                         MaxDepth = Inf, numNode = Inf, MinLeaf = 10, Levels = NULL, subset = NULL, weights = NULL, na.action = na.fail,
                         catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
   Call <- match.call()
@@ -291,6 +291,7 @@ ODT.default <- function(X, y, split = "auto", lambda='log', NodeRotateFun = "Rot
 }
 
 #' @keywords internal
+#' @noRd
 ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
                         MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
   if (is.factor(y) && (split == "auto")) {
@@ -305,10 +306,10 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
     stop(paste0("When ", formula[[2]], " is a factor type, 'split' cannot take 'mse'."))
   }
 
-  MinLeaf=(MinLeaf==1)+MinLeaf
-  #if (MinLeaf == 5) {
+  MinLeaf <- (MinLeaf == 1) + MinLeaf
+  # if (MinLeaf == 5) {
   #  MinLeaf <- ifelse(split == "mse", 10, 5)
-  #}
+  # }
 
   if ((!NodeRotateFun %in% ls("package:ODRF")) && (!NodeRotateFun %in% ls(envir = .GlobalEnv))) {
     source(paste0(FunDir, "/", NodeRotateFun, ".R"))
@@ -319,10 +320,10 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
 
   n <- length(y)
   p <- ncol(X)
-  yname=NULL
-  if(length(varName)>p){
-    yname=varName[1]
-    varName=varName[-1]
+  yname <- NULL
+  if (length(varName) > p) {
+    yname <- varName[1]
+    varName <- varName[-1]
   }
 
   if (split != "mse") {
@@ -378,14 +379,14 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
     warning("NA values exist in data frame")
   }
 
-  Call0=Call
+  Call0 <- Call
   colnames(data) <- c(as.character(formula)[2], varName)
-  if(!is.null(yname)){
+  if (!is.null(yname)) {
     colnames(data)[1] <- yname
-    temp=model.frame(formula, data, drop.unused.levels = TRUE)
+    temp <- model.frame(formula, data, drop.unused.levels = TRUE)
     Terms <- attr(temp, "terms")
 
-    colnames(data)[1] <- "y"#as.character(formula)[2]
+    colnames(data)[1] <- "y" # as.character(formula)[2]
     Call0$formula[[2]] <- quote(y)
   }
 
@@ -393,16 +394,16 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
   temp <- Call0[c(1L, indx)]
   temp[[1L]] <- quote(stats::model.frame)
   temp$drop.unused.levels <- TRUE
-  temp <- eval(temp)#, parent.frame())
+  temp <- eval(temp) # , parent.frame())
   Terms0 <- attr(temp, "terms")
-  if(is.null(yname)){
-    Terms <- Terms0;
-    Call <- Call0;
+  if (is.null(yname)) {
+    Terms <- Terms0
+    Call <- Call0
   }
 
-  #data=model.frame(formula, data, drop.unused.levels = TRUE)
-  #y <- data[,1]
-  #X <- data[,-1]
+  # data=model.frame(formula, data, drop.unused.levels = TRUE)
+  # y <- data[,1]
+  # X <- data[,-1]
   y <- c(model.extract(temp, "response"))
   X <- model.matrix(Terms0, temp)
   int <- match("(Intercept)", dimnames(X)[[2]], nomatch = 0)
@@ -504,10 +505,9 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
   freeNode <- 2
   while (!is.null(nodeXIndx[[currentNode]])) {
     if ((length(unique(y[nodeXIndx[[currentNode]]])) == 1) ||
-        (length(nodeXIndx[[currentNode]]) <= (2*MinLeaf)) ||
-        (nodeDepth[currentNode] >= MaxDepth) ||
-        (freeNode >= numNode)) {
-
+      (length(nodeXIndx[[currentNode]]) <= (2 * MinLeaf)) ||
+      (nodeDepth[currentNode] >= MaxDepth) ||
+      (freeNode >= numNode)) {
       if (split != "mse") {
         leafLabel <- table(Levels[c(sl, y[nodeXIndx[[currentNode]]])]) - 1
         # nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
@@ -522,30 +522,30 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
       nodeRotaMat <- rbind(nodeRotaMat, c(0, currentNode, 0))
       nodeXIndx[currentNode] <- NA
 
-      TF=ifelse(currentNode>1,(nodeLR[currentNode-1]==nodeLR[currentNode])&&(nodeCutValue[currentNode-1]==0),FALSE)
-      if(TF&&(split != "mse")&&(length(unique(max.col(nodeNumLabel[currentNode-c(1,0),])))==1)){
-        idx=sort(which(nodeRotaMat[,2]==nodeLR[currentNode]))
-        nodeRotaMat[idx[1],] = c(0, nodeLR[currentNode], 0)
-        nodeRotaMat=nodeRotaMat[-c(idx[-1],nrow(nodeRotaMat)-c(1,0)),, drop = FALSE]
-        nodeCutValue[nodeLR[currentNode]]=0
-        #nodeCutValue = nodeCutValue[-(currentNode-c(1,0))]
-        nodeCutIndex[nodeLR[currentNode]]=0
-        #nodeCutIndex = nodeCutIndex[-(currentNode-c(1,0))]
+      TF <- ifelse(currentNode > 1, (nodeLR[currentNode - 1] == nodeLR[currentNode]) && (nodeCutValue[currentNode - 1] == 0), FALSE)
+      if (TF && (split != "mse") && (length(unique(max.col(nodeNumLabel[currentNode - c(1, 0), ]))) == 1)) {
+        idx <- sort(which(nodeRotaMat[, 2] == nodeLR[currentNode]))
+        nodeRotaMat[idx[1], ] <- c(0, nodeLR[currentNode], 0)
+        nodeRotaMat <- nodeRotaMat[-c(idx[-1], nrow(nodeRotaMat) - c(1, 0)), , drop = FALSE]
+        nodeCutValue[nodeLR[currentNode]] <- 0
+        # nodeCutValue = nodeCutValue[-(currentNode-c(1,0))]
+        nodeCutIndex[nodeLR[currentNode]] <- 0
+        # nodeCutIndex = nodeCutIndex[-(currentNode-c(1,0))]
 
-        childNode[nodeLR[currentNode]]=0
-        #childNode = childNode[-(currentNode-c(1,0))]
-        idx=which(childNode!=0)
-        idx=idx[idx>nodeLR[currentNode]]
-        childNode[idx]=childNode[idx]-2
+        childNode[nodeLR[currentNode]] <- 0
+        # childNode = childNode[-(currentNode-c(1,0))]
+        idx <- which(childNode != 0)
+        idx <- idx[idx > nodeLR[currentNode]]
+        childNode[idx] <- childNode[idx] - 2
 
-        nodeNumLabel[nodeLR[currentNode],] = colSums(nodeNumLabel[currentNode-c(1,0),])
-        nodeNumLabel = nodeNumLabel[-(currentNode-c(1,0)),]
-        nodeDepth = nodeDepth[-(currentNode-c(1,0))]
-        nodeXIndx = nodeXIndx[-(currentNode-c(1,0))]
-        nodeLR = nodeLR[-(currentNode-c(1,0))]
+        nodeNumLabel[nodeLR[currentNode], ] <- colSums(nodeNumLabel[currentNode - c(1, 0), ])
+        nodeNumLabel <- nodeNumLabel[-(currentNode - c(1, 0)), ]
+        nodeDepth <- nodeDepth[-(currentNode - c(1, 0))]
+        nodeXIndx <- nodeXIndx[-(currentNode - c(1, 0))]
+        nodeLR <- nodeLR[-(currentNode - c(1, 0))]
         freeNode <- freeNode - 2
         currentNode <- currentNode - 1
-      }else{
+      } else {
         currentNode <- currentNode + 1
       }
 
@@ -585,7 +585,7 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
         paramList$dimProj <- min(ceiling(length(y[nodeXIndx[[currentNode]]])^0.4), ceiling(p * 2 / 3))
       }
       if (is.null(paramList$numProj)) {
-        paramList$numProj <- ifelse(paramList$dimProj == "Rand",sample(floor(p / 3), 1),ceiling(p / paramList$dimProj))
+        paramList$numProj <- ifelse(paramList$dimProj == "Rand", sample(floor(p / 3), 1), ceiling(p / paramList$dimProj))
       }
       sparseM <- RotMatPPO(
         X = X[nodeXIndx[[currentNode]], ], y = y[nodeXIndx[[currentNode]]], model = paramList$model,
@@ -623,30 +623,30 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
       nodeRotaMat <- rbind(nodeRotaMat, c(0, currentNode, 0))
       nodeXIndx[currentNode] <- NA
 
-      TF=ifelse(currentNode>1,(nodeLR[currentNode-1]==nodeLR[currentNode])&&(nodeCutValue[currentNode-1]==0),FALSE)
-      if(TF&&(split != "mse")&&(length(unique(max.col(nodeNumLabel[currentNode-c(1,0),])))==1)){
-        idx=sort(which(nodeRotaMat[,2]==nodeLR[currentNode]))
-        nodeRotaMat[idx[1],] = c(0, nodeLR[currentNode], 0)
-        nodeRotaMat=nodeRotaMat[-c(idx[-1],nrow(nodeRotaMat)-c(1,0)),, drop = FALSE]
-        nodeCutValue[nodeLR[currentNode]]=0
-        #nodeCutValue = nodeCutValue[-(currentNode-c(1,0))]
-        nodeCutIndex[nodeLR[currentNode]]=0
-        #nodeCutIndex = nodeCutIndex[-(currentNode-c(1,0))]
+      TF <- ifelse(currentNode > 1, (nodeLR[currentNode - 1] == nodeLR[currentNode]) && (nodeCutValue[currentNode - 1] == 0), FALSE)
+      if (TF && (split != "mse") && (length(unique(max.col(nodeNumLabel[currentNode - c(1, 0), ]))) == 1)) {
+        idx <- sort(which(nodeRotaMat[, 2] == nodeLR[currentNode]))
+        nodeRotaMat[idx[1], ] <- c(0, nodeLR[currentNode], 0)
+        nodeRotaMat <- nodeRotaMat[-c(idx[-1], nrow(nodeRotaMat) - c(1, 0)), , drop = FALSE]
+        nodeCutValue[nodeLR[currentNode]] <- 0
+        # nodeCutValue = nodeCutValue[-(currentNode-c(1,0))]
+        nodeCutIndex[nodeLR[currentNode]] <- 0
+        # nodeCutIndex = nodeCutIndex[-(currentNode-c(1,0))]
 
-        childNode[nodeLR[currentNode]]=0
-        #childNode = childNode[-(currentNode-c(1,0))]
-        idx=which(childNode!=0)
-        idx=idx[idx>nodeLR[currentNode]]
-        childNode[idx]=childNode[idx]-2
+        childNode[nodeLR[currentNode]] <- 0
+        # childNode = childNode[-(currentNode-c(1,0))]
+        idx <- which(childNode != 0)
+        idx <- idx[idx > nodeLR[currentNode]]
+        childNode[idx] <- childNode[idx] - 2
 
-        nodeNumLabel[nodeLR[currentNode],] = colSums(nodeNumLabel[currentNode-c(1,0),])
-        nodeNumLabel = nodeNumLabel[-(currentNode-c(1,0)),]
-        nodeDepth = nodeDepth[-(currentNode-c(1,0))]
-        nodeXIndx = nodeXIndx[-(currentNode-c(1,0))]
-        nodeLR = nodeLR[-(currentNode-c(1,0))]
+        nodeNumLabel[nodeLR[currentNode], ] <- colSums(nodeNumLabel[currentNode - c(1, 0), ])
+        nodeNumLabel <- nodeNumLabel[-(currentNode - c(1, 0)), ]
+        nodeDepth <- nodeDepth[-(currentNode - c(1, 0))]
+        nodeXIndx <- nodeXIndx[-(currentNode - c(1, 0))]
+        nodeLR <- nodeLR[-(currentNode - c(1, 0))]
         freeNode <- freeNode - 2
         currentNode <- currentNode - 1
-      }else{
+      } else {
         currentNode <- currentNode + 1
       }
 
@@ -678,8 +678,11 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
 
   nodeDepth <- nodeDepth[1:(currentNode - 1)]
   colnames(nodeRotaMat) <- c("var", "node", "coef")
-  rownames(nodeRotaMat) <- rep(nodeDepth, table(nodeRotaMat[, 2]))
-  rownames(nodeNumLabel) <- nodeDepth
+  #
+  if (length(nodeDepth) > 1) {
+    rownames(nodeRotaMat) <- rep(nodeDepth, table(nodeRotaMat[, 2]))
+    rownames(nodeNumLabel) <- nodeDepth
+  }
 
   ppTree <- list(call = Call, terms = Terms, split = split, Levels = Levels, NodeRotateFun = NodeRotateFun, paramList = paramList)
   ppTree$data <- list(

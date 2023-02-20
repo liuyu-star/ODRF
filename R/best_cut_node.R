@@ -23,11 +23,11 @@
 #' data(iris)
 #' X <- as.matrix(iris[, 1:4])
 #' y <- iris[[5]]
-#' bestcut <- best.cut.node(X, y, split = 'gini')
+#' bestcut <- best.cut.node(X, y, split = "gini")
 #' print(bestcut)
 #'
 #' @export
-best.cut.node <- function(X, y, split, lambda='log', weights = 1, MinLeaf = 10,
+best.cut.node <- function(X, y, split, lambda = "log", weights = 1, MinLeaf = 10,
                           numLabels = ifelse(split == "mse", 0, length(unique(y)))) {
   if (any(is.na(X))) {
     stop("data 'X' has Missing value, NA or NaN")
@@ -40,14 +40,14 @@ best.cut.node <- function(X, y, split, lambda='log', weights = 1, MinLeaf = 10,
     y <- c(y)
   }
 
-  if(lambda=="log"){
-    lambda=length(y)
+  if (lambda == "log") {
+    lambda <- length(y)
   }
 
-  if(split == "mse")method='r'
-  if(split == "entropy")method='i'
-  if(split == "gini")method='g'
+  if (split == "mse") method <- "r"
+  if (split == "entropy") method <- "i"
+  if (split == "gini") method <- "g"
 
-  #strsplit(split, split = "")[[1]][1]
+  # strsplit(split, split = "")[[1]][1]
   .Call("_ODRF_best_cut_node", PACKAGE = "ODRF", method, lambda, X, y, weights, MinLeaf, numLabels)
 }

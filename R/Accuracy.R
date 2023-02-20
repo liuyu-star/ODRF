@@ -45,7 +45,6 @@ Accuracy <- function(forest, data, newdata = NULL) {
   treeVotes <- predict(forest, Xnew, split = "tree")
   err.test <- rep(0, ntrees)
   if (forest$split == "mse") {
-    # e.0=mean((ynew-mean(y))^2)
     pred <- rowSums(treeVotes)
     err.test[nt] <- mean((ynew - pred / nt)^2) # /e.0;
     for (t in seq(nt - 1, 1)) {

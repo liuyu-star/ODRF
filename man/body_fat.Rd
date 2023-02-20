@@ -37,7 +37,7 @@ The variables listed below, from left to right, are:
 \examples{
 data(body_fat)
 set.seed(221212)
-train <- sample(1:252, 80)
+train <- sample(1:252, 50)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 

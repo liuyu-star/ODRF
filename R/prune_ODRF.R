@@ -9,7 +9,8 @@
 #' @param useOOB Whether to use OOB for pruning (Default TRUE). Note that when \code{useOOB=TRUE}, \code{X} and \code{y} must be the training data in \code{\link{ODRF}}.
 #' @param ... Optional parameters to be passed to the low level function.
 #'
-#' @return \itemize{An object of class \code{ODRF} and \code{prune.ODRF}.
+#' @return An object of class \code{ODRF} and \code{prune.ODRF}.
+#' \itemize{
 #' \item{\code{ppForest} The same result as \code{ODRF}.}
 #' \item{\code{pruneError} Error of test data or OOB after each pruning in each tree, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 #' }
@@ -19,7 +20,7 @@
 #' # Classification with Oblique Decision Random Forest
 #' data(seeds)
 #' set.seed(221212)
-#' train <- sample(1:209, 100)
+#' train <- sample(1:209, 80)
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data,
@@ -33,7 +34,7 @@
 #' # Regression with Oblique Decision Random Forest
 #' data(body_fat)
 #' set.seed(221212)
-#' train <- sample(1:252, 80)
+#' train <- sample(1:252, 50)
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
@@ -51,8 +52,9 @@
 prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
   ppForest <- obj
   rm(obj)
-  if(length(ppForest[["ppTrees"]][[1]][["structure"]][["nodeDepth"]])==1)
+  if (length(ppForest[["ppTrees"]][[1]][["structure"]][["nodeDepth"]]) == 1) {
     stop("No tree structure to use 'prune'!")
+  }
   ppTrees <- ppForest$ppTrees
   split <- ppForest$split
   numOOB <- ppForest$forest$numOOB

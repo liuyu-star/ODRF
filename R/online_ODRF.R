@@ -56,8 +56,9 @@
 online.ODRF <- function(obj, X, y, weights = NULL, ...) {
   ppForest <- obj
   rm(obj)
-  if(length(ppForest[["ppTrees"]][[1]][["structure"]][["nodeDepth"]])==1)
+  if (length(ppForest[["ppTrees"]][[1]][["structure"]][["nodeDepth"]]) == 1) {
     stop("No tree structure to use 'online'!")
+  }
   weights0 <- weights
   ppTrees <- ppForest$ppTrees
   Levels <- ppForest$Levels

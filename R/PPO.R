@@ -48,9 +48,9 @@
 #' @examples
 #' # classification
 #' data(seeds)
-#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "Log", split = 'entropy'))
-#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "PPR", split = 'entropy'))
-#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", split = 'entropy'))
+#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "Log", split = "entropy"))
+#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "PPR", split = "entropy"))
+#' (PP <- PPO(seeds[, 1:7], seeds[, 8], model = "LDA", split = "entropy"))
 #'
 #' # regression
 #' data(body_fat)
@@ -62,7 +62,7 @@
 #' @importFrom stats ppr
 #' @importFrom nnet nnet
 #' @export
-PPO <- function(X, y, model = "PPR", split = 'gini', weights = NULL, ...) {
+PPO <- function(X, y, model = "PPR", split = "gini", weights = NULL, ...) {
   X <- as.matrix(X)
   p <- ncol(X)
 

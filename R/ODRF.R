@@ -73,7 +73,7 @@
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data,
-#'   split = 'entropy',
+#'   split = "entropy",
 #'   parallel = FALSE
 #' )
 #' pred <- predict(forest, test_data[, -8])
@@ -105,7 +105,7 @@
 #' catLabel <- NULL
 #' y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
 #' \donttest{
-#' forest <- ODRF(y ~ X, split = 'entropy', Xcat = NULL, parallel = FALSE)
+#' forest <- ODRF(y ~ X, split = "entropy", Xcat = NULL, parallel = FALSE)
 #' }
 #' head(X)
 #' #>   Xcol1 Xcol2          X1         X2          X3
@@ -172,7 +172,7 @@ ODRF <- function(X, ...) {
 #' @method ODRF formula
 #' @aliases ODRF.formula
 #' @export
-ODRF.formula <- function(formula, data = NULL, split = "auto", lambda='log', NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
+ODRF.formula <- function(formula, data = NULL, split = "auto", lambda = "log", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
                          ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, numOOB = 1 / 3, parallel = TRUE,
                          numCores = Inf, seed = 220924, MaxDepth = Inf, numNode = Inf, MinLeaf = 5, subset = NULL, weights = NULL,
                          na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
@@ -197,8 +197,8 @@ ODRF.formula <- function(formula, data = NULL, split = "auto", lambda='log', Nod
       colnames(X) <- paste0("X", seq_len(ncol(X)))
     }
     data <- data.frame(y, X)
-    #varName <- colnames(X)
-    yname=ls(envir = .GlobalEnv)
+    # varName <- colnames(X)
+    yname <- ls(envir = .GlobalEnv)
     colnames(data) <- c(as.character(formula)[2], colnames(X))
     formula <- as.formula(paste0(as.character(formula)[2], "~."))
     Call$formula <- formula
@@ -211,21 +211,21 @@ ODRF.formula <- function(formula, data = NULL, split = "auto", lambda='log', Nod
       stop("The predictor dimension of argument 'data' must exceed 1.")
     }
 
-    #varName <- setdiff(colnames(data), as.character(formula)[2])
-    #X <- data[, varName]
-    #y <- data[, as.character(formula)[2]]
-    #Call$data <- quote(data)
+    # varName <- setdiff(colnames(data), as.character(formula)[2])
+    # X <- data[, varName]
+    # y <- data[, as.character(formula)[2]]
+    # Call$data <- quote(data)
     yname <- colnames(data)
-    data=model.frame(formula, data, drop.unused.levels = TRUE)
-    y <- data[,1]
-    X <- data[,-1]
+    data <- model.frame(formula, data, drop.unused.levels = TRUE)
+    y <- data[, 1]
+    X <- data[, -1]
     Call$data <- quote(data)
   }
 
-  varName=colnames(X)
-  yname= names(unlist(sapply(yname, function(x)grep(x,as.character(formula)[2]))))
-  yname= yname[which.max(nchar(yname))]
-  if(yname!=as.character(formula)[2]){
+  varName <- colnames(X)
+  yname <- names(unlist(sapply(yname, function(x) grep(x, as.character(formula)[2]))))
+  yname <- yname[which.max(nchar(yname))]
+  if (yname != as.character(formula)[2]) {
     varName <- c(yname, varName)
   }
 
@@ -245,7 +245,7 @@ ODRF.formula <- function(formula, data = NULL, split = "auto", lambda='log', Nod
 #' @method ODRF default
 #' @aliases ODRF.default
 #' @export
-ODRF.default <- function(X, y, split = "auto", lambda='log', NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
+ODRF.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
                          ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, numOOB = 1 / 3, parallel = TRUE,
                          numCores = Inf, seed = 220924, MaxDepth = Inf, numNode = Inf, MinLeaf = 5, subset = NULL, weights = NULL,
                          na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
@@ -289,6 +289,7 @@ ODRF.default <- function(X, y, split = "auto", lambda='log', NodeRotateFun = "Ro
 #' @importFrom parallel detectCores makeCluster clusterSplit stopCluster
 #' @importFrom stats model.frame model.extract model.matrix na.fail
 #' @keywords internal
+#' @noRd
 ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList,
                          ntrees, storeOOB, replacement, stratify, numOOB, parallel,
                          numCores, seed, MaxDepth, numNode, MinLeaf, subset, weights,
@@ -307,16 +308,16 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
   if (is.factor(y) && (split == "mse")) {
     stop(paste0("When ", formula[[2]], " is a factor type, 'split' cannot take 'regression'."))
   }
-  #if (MinLeaf == 5) {
+  # if (MinLeaf == 5) {
   #  MinLeaf <- ifelse(split == "mse", 5, 1)
-  #}
+  # }
 
   n <- length(y)
   p <- ncol(X)
-  yname=NULL
-  if(length(varName)>p){
-    yname=varName[1]
-    varName=varName[-1]
+  yname <- NULL
+  if (length(varName) > p) {
+    yname <- varName[1]
+    varName <- varName[-1]
   }
 
   if (is.null(Xcat)) {
@@ -359,14 +360,14 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
     warning("NA values exist in data frame")
   }
 
-  Call0=Call
+  Call0 <- Call
   colnames(data) <- c(as.character(formula)[2], varName)
-  if(!is.null(yname)){
+  if (!is.null(yname)) {
     colnames(data)[1] <- yname
-    temp=model.frame(formula, data, drop.unused.levels = TRUE)
+    temp <- model.frame(formula, data, drop.unused.levels = TRUE)
     Terms <- attr(temp, "terms")
 
-    colnames(data)[1] <- "y"#as.character(formula)[2]
+    colnames(data)[1] <- "y" # as.character(formula)[2]
     formula[[2]] <- quote(y)
     Call0$formula <- formula
   }
@@ -375,16 +376,16 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
   temp <- Call0[c(1L, indx)]
   temp[[1L]] <- quote(stats::model.frame)
   temp$drop.unused.levels <- TRUE
-  temp <- eval(temp)#, parent.frame())
+  temp <- eval(temp) # , parent.frame())
   Terms0 <- attr(temp, "terms")
-  if(is.null(yname)){
-    Terms <- Terms0;
-    Call <- Call0;
+  if (is.null(yname)) {
+    Terms <- Terms0
+    Call <- Call0
   }
 
-  #data=model.frame(formula, data, drop.unused.levels = TRUE)
-  #y <- data[,1]
-  #X <- data[,-1]
+  # data=model.frame(formula, data, drop.unused.levels = TRUE)
+  # y <- data[,1]
+  # X <- data[,-1]
   y <- c(model.extract(temp, "response"))
   X <- model.matrix(Terms0, temp)
   int <- match("(Intercept)", dimnames(X)[[2]], nomatch = 0)
@@ -604,4 +605,3 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
   # class(ppForest) <- "ODRF"
   return(ppForest)
 }
-

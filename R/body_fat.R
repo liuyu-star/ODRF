@@ -23,20 +23,17 @@
 #' }
 #'
 #' @docType data
-#' @keywords datasets
+#' @keywords datasets internal
 #' @format A data frame with 252 rows and 15 covariate variables and 1 response variable
 #' @source \url{https://www.kaggle.com/datasets/fedesoriano/body-fat-prediction-dataset}
 #' @references Bailey, Covert (1994). Smart Exercise: Burning Fat, Getting Fit, Houghton-Mifflin Co., Boston, pp. 179-186.
 #' @name body_fat
 #'
-#' @keywords internal
-#'
 #' @seealso  \code{\link{breast_cancer}} \code{\link{seeds}}
-#'
 #' @examples
 #' data(body_fat)
 #' set.seed(221212)
-#' train <- sample(1:252, 80)
+#' train <- sample(1:252, 50)
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #'

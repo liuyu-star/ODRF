@@ -23,16 +23,13 @@
 #' }}
 #'
 #' @docType data
-#' @keywords datasets
+#' @keywords datasets internal
 #' @format A data frame with 569 rows and 30 covariate variables and 1 response variable
 #' @source \url{https://www.kaggle.com/datasets/yasserh/breast-cancer-dataset?select=breast-cancer.csv} and \url{https://archive.ics.uci.edu/ml/datasets/breast+cancer+wisconsin+(diagnostic)}
 #' @references Wolberg WH, Street WN, Mangasarian OL. Machine learning techniques to diagnose breast cancer from image-processed nuclear features of fine needle aspirates. Cancer Lett. 1994 Mar 15;77(2-3):163-71.
 #' @name breast_cancer
 #'
-#' @keywords internal
-#'
 #' @seealso  \code{\link{body_fat}} \code{\link{seeds}}
-#'
 #' @examples
 #' data(breast_cancer)
 #' set.seed(221212)
@@ -49,5 +46,4 @@
 #' pred <- predict(tree, test_data[, -1])
 #' # classification error
 #' (mean(pred != test_data[, 1]))
-#'
 NULL

@@ -45,7 +45,6 @@ tree <- ODT(varieties_of_wheat ~ ., train_data, split = "gini")
 pred <- predict(tree, test_data[, -8])
 # classification error
 (mean(pred != test_data[, 8]))
-
 }
 \references{
 M. Charytanowicz, J. Niewczas, P. Kulczycki, P.A. Kowalski, S. Lukasik, S. Zak, 'A Complete Gradient Clustering Algorithm for Features Analysis of X-ray Images', in: Information Technologies in Biomedicine, Ewa Pietka, Jacek Kawa (eds.), Springer-Verlag, Berlin-Heidelberg, 2010, pp. 15-24.

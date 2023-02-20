@@ -219,8 +219,8 @@ RotMatRF <- function(dimX, numProj, catLabel = NULL, ...) {
 #' @importFrom nnet nnet
 #' @export
 RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, dimProj = min(ceiling(length(y)^0.4), ceiling(ncol(X) * 2 / 3)),
-                      numProj = ifelse(dimProj == "Rand",sample(floor(ncol(X) / 3), 1), ceiling(ncol(X) / dimProj)), catLabel = NULL, ...) {
-  #numProj = ifelse(dimProj == "Rand", max(5, sample(floor(ncol(X) / 3), 1)), max(5, ceiling(ncol(X) / dimProj)))
+                      numProj = ifelse(dimProj == "Rand", sample(floor(ncol(X) / 3), 1), ceiling(ncol(X) / dimProj)), catLabel = NULL, ...) {
+  # numProj = ifelse(dimProj == "Rand", max(5, sample(floor(ncol(X) / 3), 1)), max(5, ceiling(ncol(X) / dimProj)))
   if (dimProj != "Rand") {
     if (dimProj > ncol(X)) {
       stop("ERROR: parameter dimProj is greater than the number of dimensions.")
@@ -234,10 +234,10 @@ RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, di
   # d=min(100, max(5, ceiling(p/q))) d q
   p0 <- p - (!is.null(catLabel)) * (length(unlist(catLabel)) - length(catLabel))
 
-  if((numProj==1)&&(p0<10)){
-    sparseM=NULL
-    d2=0
-  }else{
+  if ((numProj == 1) && (p0 < 10)) {
+    sparseM <- NULL
+    d2 <- 0
+  } else {
     d2 <- ceiling(sqrt(p0))
     ind <- sample(p0, d2, replace = FALSE)
     sparseM <- cbind(ind, 1:d2, rep(1, d2))
@@ -250,9 +250,9 @@ RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, di
     numProj <- min(p0, numProj)
     d1 <- numProj
     indp <- p0
-    if(d1==1){
+    if (d1 == 1) {
       sparseM1 <- cbind(seq(indp), 1, 1)
-    }else{
+    } else {
       if (dimProj == "Rand") {
         # if(is.null(numProj)){max(5,sample(floor(p0/3),1))}
         spd <- sample(p0, d1)
@@ -262,7 +262,7 @@ RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, di
       } else {
         # if(is.null(dimProj)){dimProj =min(ceiling(n^0.4),ceiling(p0*2/3))}
         # if(is.null(numProj)){numProj=max(5, ceiling(p0/dimProj))}
-        #indp <- p0
+        # indp <- p0
         # sparseM=NULL
         # for (k in 1:ceiling(2*q*d/p)) {
         ind <- sample(1:indp, replace = FALSE)
@@ -273,7 +273,7 @@ RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, di
   }
 
   sparseM <- rbind(sparseM, sparseM1)
-  if(is.null(sparseM))sparseM=t(c(sample(p0,1),1,1))
+  if (is.null(sparseM)) sparseM <- t(c(sample(p0, 1), 1, 1))
 
   if (!is.null(catLabel)) {
     ind <- sparseM[, 1]
@@ -289,7 +289,7 @@ RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, di
   }
 
   ##########################
-  if (n > 10 && nrow(sparseM1)>1) {
+  if (n > 10 && nrow(sparseM1) > 1) {
     Yi <- c(y)
     indC <- 0L
     if (split != "mse") {
@@ -310,7 +310,7 @@ RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, di
     d11 <- min(max(c(indTab, d1)), length(unique(sparseM1[jx, 1])))
     # d11=min(c(length(unique(sparseM[jx,1])),ifelse(split=='r',Inf,Inf)))#
     # d11=max(max(indTab),min(length(unique(sparseM1[jx,1])),d1))
-    if(length(unique(sparseM1[jx, 2]))==1)d11=0
+    if (length(unique(sparseM1[jx, 2])) == 1) d11 <- 0
 
     sparseM1 <- rbind(sparseM1, matrix(d1 + d2 + 1, d11, 3))
     for (ni in unique(sparseM1[, 2L])) {
@@ -430,7 +430,7 @@ RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, di
 #'   pp <- sample(c(1L, -1L), dimProj, replace = TRUE, prob = c(prob, 1 - prob))
 #'   return(pp)
 #' }
-#'
+#' \donttest{
 #' RotMat <- RotMatMake(
 #'   RotMatFun = "makeRotMat", PPFun = "makePP",
 #'   paramList = list(dimX = 8, dimProj = 5, numProj = 4, prob = 0.5)
@@ -443,7 +443,8 @@ RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, di
 #' #> [4,]        4      1          -1
 #' #> [5,]        5      1          -1
 #' #> [6,]        6      2           1
-#'
+#' }
+#' \donttest{
 #' # train ODT with defined projection matrix function
 #' tree <- ODT(X, y,
 #'   split = "entropy", NodeRotateFun = "makeRotMat",
@@ -457,7 +458,7 @@ RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, di
 #'       dimX = ncol(X), dimProj = 5, numProj = 4, prob = 0.5
 #'     )
 #' )
-#'
+#' }
 #' @keywords rotation
 #' @export
 RotMatMake <- function(X = NULL, y = NULL, RotMatFun = "RotMatPPO", PPFun = "PPO", FunDir = getwd(), paramList = NULL, ...) {
@@ -473,8 +474,11 @@ RotMatMake <- function(X = NULL, y = NULL, RotMatFun = "RotMatPPO", PPFun = "PPO
     if (is.null(paramList$dimProj)) {
       paramList$dimProj <- min(ceiling(length(y)^0.4), ceiling(p * 2 / 3))
     }
-    paramList$numProj <- ifelse(paramList$dimProj == "Rand", max(5, sample(floor(p / 3), 1)), max(5, ceiling(p / paramList$dimProj)))
+    if (is.null(paramList$numProj)) {
+      paramList$numProj <- ifelse(paramList$dimProj == "Rand", sample(floor(p / 3), 1), ceiling(p / paramList$dimProj))
+    }
   }
+
   paramList <- defaults(paramList, dimX = p)
 
   if ((!RotMatFun %in% ls("package:ODRF", pattern = "RotMat")) && (!RotMatFun %in% ls(envir = .GlobalEnv))) {

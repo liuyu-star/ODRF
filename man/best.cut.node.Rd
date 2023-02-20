@@ -46,7 +46,7 @@ A function to select the splitting variables and nodes using one of three criter
 data(iris)
 X <- as.matrix(iris[, 1:4])
 y <- iris[[5]]
-bestcut <- best.cut.node(X, y, split = 'gini')
+bestcut <- best.cut.node(X, y, split = "gini")
 print(bestcut)
 
 }

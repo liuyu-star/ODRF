@@ -56,11 +56,11 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
   ppForest <- object
   rm(object)
 
-  pp=ppForest$data$p
-  if(!is.null(ppForest$data$catLabel)&&(sum(ppForest$data$Xcat)>0)){
-    pp=pp-length(unlist(ppForest$data$catLabel))+length(ppForest$data$Xcat)
+  pp <- ppForest$data$p
+  if (!is.null(ppForest$data$catLabel) && (sum(ppForest$data$Xcat) > 0)) {
+    pp <- pp - length(unlist(ppForest$data$catLabel)) + length(ppForest$data$Xcat)
   }
-  if(ncol(Xnew)!=pp){
+  if (ncol(Xnew) != pp) {
     stop("The dimensions of 'Xnew' and training data do not match")
   }
 

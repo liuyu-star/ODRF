@@ -16,16 +16,13 @@
 #' }
 #'
 #' @docType data
-#' @keywords datasets
+#' @keywords datasets internal
 #' @format A data frame with 209 rows and 7 covariate variables and 1 response variable.
 #' @source \url{https://archive.ics.uci.edu/ml/datasets/seeds}
 #' @references M. Charytanowicz, J. Niewczas, P. Kulczycki, P.A. Kowalski, S. Lukasik, S. Zak, 'A Complete Gradient Clustering Algorithm for Features Analysis of X-ray Images', in: Information Technologies in Biomedicine, Ewa Pietka, Jacek Kawa (eds.), Springer-Verlag, Berlin-Heidelberg, 2010, pp. 15-24.
 #' @name seeds
 #'
-#' @keywords internal
-#'
 #' @seealso  \code{\link{body_fat}} \code{\link{breast_cancer}}
-#'
 #' @examples
 #' data(seeds)
 #' set.seed(221212)
@@ -44,5 +41,4 @@
 #' pred <- predict(tree, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
-#'
 NULL

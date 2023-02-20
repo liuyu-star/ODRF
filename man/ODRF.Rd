@@ -162,7 +162,7 @@ train <- sample(1:209, 100)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
-  split = 'entropy',
+  split = "entropy",
   parallel = FALSE
 )
 pred <- predict(forest, test_data[, -8])
@@ -194,7 +194,7 @@ Xcat <- c(1, 2)
 catLabel <- NULL
 y <- as.factor(sample(c(0, 1), 100, replace = TRUE))
 \donttest{
-forest <- ODRF(y ~ X, split = 'entropy', Xcat = NULL, parallel = FALSE)
+forest <- ODRF(y ~ X, split = "entropy", Xcat = NULL, parallel = FALSE)
 }
 head(X)
 #>   Xcol1 Xcol2          X1         X2          X3

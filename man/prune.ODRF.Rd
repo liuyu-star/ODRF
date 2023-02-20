@@ -20,7 +20,8 @@
 \item{...}{Optional parameters to be passed to the low level function.}
 }
 \value{
-\itemize{An object of class \code{ODRF} and \code{prune.ODRF}.
+An object of class \code{ODRF} and \code{prune.ODRF}.
+\itemize{
 \item{\code{ppForest} The same result as \code{ODRF}.}
 \item{\code{pruneError} Error of test data or OOB after each pruning in each tree, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 }
@@ -32,7 +33,7 @@ Prune \code{ODRF} from bottom to top with test data based on prediction error.
 # Classification with Oblique Decision Random Forest
 data(seeds)
 set.seed(221212)
-train <- sample(1:209, 100)
+train <- sample(1:209, 80)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
@@ -46,7 +47,7 @@ pred <- predict(prune_forest, test_data[, -8])
 # Regression with Oblique Decision Random Forest
 data(body_fat)
 set.seed(221212)
-train <- sample(1:252, 80)
+train <- sample(1:252, 50)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
