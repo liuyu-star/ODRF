@@ -89,11 +89,11 @@
     
 <div class="section level2">
 <h2 id="odrf">ODRF
-<a href="https://liuyu-star.github.io/ODRF" class="external-link"><img src="reference/figures/logo.png" align="right" height="139"></a><a class="anchor" aria-label="anchor" href="#odrf"></a>
+<a href="https://liuyu-star.github.io/ODRF" class="external-link"><img src="logo.png" align="right" height="139"></a><a class="anchor" aria-label="anchor" href="#odrf"></a>
 </h2>
 <!-- badges: start -->
 <p><a href="https://app.codecov.io/gh/liuyu-star/ODRF?branch=main" class="external-link"><img src="https://codecov.io/gh/liuyu-star/ODRF/branch/main/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://CRAN.R-project.org/package=ODRF" class="external-link"><img src="https://www.r-pkg.org/badges/version/ODRF" alt="CRAN status"></a>
-<a href="https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <!-- badges: end --></p>
+<a href="https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a> <!-- badges: end --></p>
 <p>The goal of ODRF is to supplement classical CART and random forests
 for classification and regression. The use of linear combinations of
 predictors as splitting variables is one of the important extensions of
@@ -147,7 +147,7 @@ other ODT and ODRF. You can learn more about them in
 </h4>
 <p>Classification with Oblique Decision Tree.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://liuyu-star.github.io/ODRF" class="external-link">ODRF</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://liuyu-star.github.io/ODRF/" class="external-link">ODRF</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: partykit</span></span>
 <span><span class="co">#&gt; Loading required package: grid</span></span>
 <span><span class="co">#&gt; Loading required package: libcoin</span></span>
@@ -160,24 +160,18 @@ other ODT and ODRF. You can learn more about them in
 <span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">train_data</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ODRF.html">ODRF</a></span><span class="op">(</span><span class="va">varieties_of_wheat</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"gini"</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  split <span class="op">=</span> <span class="st">"gini"</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in ODRF.compute(formula, Call, varName, X, y, split, lambda,</span></span>
-<span><span class="co">#&gt; NodeRotateFun, : You are creating a forest for regression</span></span>
 <span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">forest</span>, <span class="va">test_data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">8</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">e.forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pred</span> <span class="op">!=</span> <span class="va">test_data</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">forest1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ODRF.html">ODRF</a></span><span class="op">(</span><span class="va">varieties_of_wheat</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span><span class="op">[</span><span class="va">index</span>, <span class="op">]</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"gini"</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  split <span class="op">=</span> <span class="st">"gini"</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in ODRF.compute(formula, Call, varName, X, y, split, lambda,</span></span>
-<span><span class="co">#&gt; NodeRotateFun, : You are creating a forest for regression</span></span>
 <span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">forest1</span>, <span class="va">test_data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">8</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">e.forest.1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pred</span> <span class="op">!=</span> <span class="va">test_data</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">forest2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ODRF.html">ODRF</a></span><span class="op">(</span><span class="va">varieties_of_wheat</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span><span class="op">[</span><span class="op">-</span><span class="va">index</span>, <span class="op">]</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"gini"</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  split <span class="op">=</span> <span class="st">"gini"</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in ODRF.compute(formula, Call, varName, X, y, split, lambda,</span></span>
-<span><span class="co">#&gt; NodeRotateFun, : You are creating a forest for regression</span></span>
 <span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">forest2</span>, <span class="va">test_data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">8</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">e.forest.2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pred</span> <span class="op">!=</span> <span class="va">test_data</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
@@ -198,7 +192,7 @@ other ODT and ODRF. You can learn more about them in
 <span>  forest.online <span class="op">=</span> <span class="va">e.forest.online</span>, forest.prune <span class="op">=</span> <span class="va">e.forest.prune</span></span>
 <span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        forest       forest1       forest2 forest.online  forest.prune </span></span>
-<span><span class="co">#&gt;             1             1             1             1             1</span></span></code></pre></div>
+<span><span class="co">#&gt;    0.04494382    0.08988764    0.07865169    0.07865169    0.10112360</span></span></code></pre></div>
 <p>Regression with Oblique Decision Randome Forest.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">body_fat</span>, package <span class="op">=</span> <span class="st">"ODRF"</span><span class="op">)</span></span>
@@ -208,19 +202,13 @@ other ODT and ODRF. You can learn more about them in
 <span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span><span class="op">-</span><span class="va">train</span>, <span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">train_data</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ODT.html">ODT</a></span><span class="op">(</span><span class="va">Density</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span>, type <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in ODT.compute(formula, Call, varName, X, y, split, lambda,</span></span>
-<span><span class="co">#&gt; NodeRotateFun, : You are creating a forest for regression</span></span>
+<span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ODT.html">ODT</a></span><span class="op">(</span><span class="va">Density</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span></span>
 <span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">tree</span>, <span class="va">test_data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">e.tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span> <span class="op">-</span> <span class="va">test_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
-<span><span class="va">tree1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ODT.html">ODT</a></span><span class="op">(</span><span class="va">Density</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span><span class="op">[</span><span class="va">index</span>, <span class="op">]</span>, type <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in ODT.compute(formula, Call, varName, X, y, split, lambda,</span></span>
-<span><span class="co">#&gt; NodeRotateFun, : You are creating a forest for regression</span></span>
+<span><span class="va">tree1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ODT.html">ODT</a></span><span class="op">(</span><span class="va">Density</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span><span class="op">[</span><span class="va">index</span>, <span class="op">]</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span></span>
 <span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">tree1</span>, <span class="va">test_data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">e.tree.1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span> <span class="op">-</span> <span class="va">test_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
-<span><span class="va">tree2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ODT.html">ODT</a></span><span class="op">(</span><span class="va">Density</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span><span class="op">[</span><span class="op">-</span><span class="va">index</span>, <span class="op">]</span>, type <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning in ODT.compute(formula, Call, varName, X, y, split, lambda,</span></span>
-<span><span class="co">#&gt; NodeRotateFun, : You are creating a forest for regression</span></span>
+<span><span class="va">tree2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ODT.html">ODT</a></span><span class="op">(</span><span class="va">Density</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span><span class="op">[</span><span class="op">-</span><span class="va">index</span>, <span class="op">]</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span></span>
 <span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">tree2</span>, <span class="va">test_data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">e.tree.2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span> <span class="op">-</span> <span class="va">test_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span>
 <span></span>
