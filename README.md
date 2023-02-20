@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ODRF <a href='https://liuyu-star.github.io/ODRF/'><img src='man/figures/logo.png' align="right" height="139" /></a>
+# ODRF <a href='https://liuyu-star.github.io/ODRF'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
@@ -10,6 +10,8 @@ coverage](https://codecov.io/gh/liuyu-star/ODRF/branch/main/graph/badge.svg)](ht
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ODRF)](https://CRAN.R-project.org/package=ODRF)
 [![R-CMD-check](https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml)
+[![Lifecycle:
+stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
 The goal of ODRF is to supplement classical CART and random forests for
@@ -72,24 +74,18 @@ test_data <- data.frame(seeds[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
-  type = "gini", parallel = FALSE
+  split = "gini", parallel = FALSE
 )
-#> Warning in ODRF.compute(formula, Call, varName, X, y, split, lambda,
-#> NodeRotateFun, : You are creating a forest for regression
 pred <- predict(forest, test_data[, -8])
 e.forest <- mean(pred != test_data[, 8])
 forest1 <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
-  type = "gini", parallel = FALSE
+  split = "gini", parallel = FALSE
 )
-#> Warning in ODRF.compute(formula, Call, varName, X, y, split, lambda,
-#> NodeRotateFun, : You are creating a forest for regression
 pred <- predict(forest1, test_data[, -8])
 e.forest.1 <- mean(pred != test_data[, 8])
 forest2 <- ODRF(varieties_of_wheat ~ ., train_data[-index, ],
-  type = "gini", parallel = FALSE
+  split = "gini", parallel = FALSE
 )
-#> Warning in ODRF.compute(formula, Call, varName, X, y, split, lambda,
-#> NodeRotateFun, : You are creating a forest for regression
 pred <- predict(forest2, test_data[, -8])
 e.forest.2 <- mean(pred != test_data[, 8])
 
@@ -110,7 +106,7 @@ print(c(
   forest.online = e.forest.online, forest.prune = e.forest.prune
 ))
 #>        forest       forest1       forest2 forest.online  forest.prune 
-#>             1             1             1             1             1
+#>    0.04494382    0.08988764    0.07865169    0.07865169    0.08988764
 ```
 
 Regression with Oblique Decision Randome Forest.
@@ -123,19 +119,13 @@ train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
 
-tree <- ODT(Density ~ ., train_data, type = "mse")
-#> Warning in ODT.compute(formula, Call, varName, X, y, split, lambda,
-#> NodeRotateFun, : You are creating a forest for regression
+tree <- ODT(Density ~ ., train_data, split = "mse")
 pred <- predict(tree, test_data[, -1])
 e.tree <- mean((pred - test_data[, 1])^2)
-tree1 <- ODT(Density ~ ., train_data[index, ], type = "mse")
-#> Warning in ODT.compute(formula, Call, varName, X, y, split, lambda,
-#> NodeRotateFun, : You are creating a forest for regression
+tree1 <- ODT(Density ~ ., train_data[index, ], split = "mse")
 pred <- predict(tree1, test_data[, -1])
 e.tree.1 <- mean((pred - test_data[, 1])^2)
-tree2 <- ODT(Density ~ ., train_data[-index, ], type = "mse")
-#> Warning in ODT.compute(formula, Call, varName, X, y, split, lambda,
-#> NodeRotateFun, : You are creating a forest for regression
+tree2 <- ODT(Density ~ ., train_data[-index, ], split = "mse")
 pred <- predict(tree2, test_data[, -1])
 e.tree.2 <- mean((pred - test_data[, 1])^2)
 
