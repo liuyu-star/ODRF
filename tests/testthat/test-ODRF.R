@@ -58,20 +58,20 @@ test_that("confusion matrix cols are the true classes", {
 ind <-  ceiling(quantile(seq(150),seq(100)/100))
 
 forest1 <- ODRF(Species ~ .,
-  data = iris, split = "gini", NodeRotateFun = "RotMatPPO",
-  parallel = FALSE, seed = 1, ntrees = 50 ,subset = ind
+  data = iris, split = "gini", NodeRotateFun = "RotMatRand",
+  parallel = FALSE, seed = 11, ntrees = 50 #,subset = ind
 )
 pred1 <- predict(forest1, Xnew = iris[-ind, -5])
 
 forest2 <- ODRF(Species ~ .,
-  data = iris, split = "gini",
-  parallel = FALSE, seed = 1, ntrees = 50 ,subset = ind
+  data = iris, split = "gini", NodeRotateFun = "RotMatRand",
+  parallel = FALSE, seed = 11, ntrees = 50 #,subset = ind
 )
 pred2 <- predict(forest2, Xnew = iris[-ind, -5])
 
 forest3 <- ODRF(Species ~ .,
-  data = iris, split = "gini",
-  parallel = FALSE, seed = 2, ntrees = 50 # ,subset = ind
+  data = iris, split = "gini", NodeRotateFun = "RotMatRand",
+  parallel = FALSE, seed = 22, ntrees = 50 #,subset = ind
 )
 pred3 <- predict(forest3, Xnew = iris[-ind, -5])
 
