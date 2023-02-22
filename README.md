@@ -28,7 +28,7 @@ The ODRF R package allows users to define their own functions to find the projec
 
 ## Overview
 
-The ODRF [R Package](https://cran.r-project.org/) consists of the
+The ODRF [R package](https://cran.r-project.org/) consists of the
 following main functions:
 
 - `ODT()` classification and regression using an ODT in which each node
@@ -150,13 +150,13 @@ print(c(
 ```
 
 As shown in the classification and regression results above, the
-training data `train_data` is divided into two batches equally, then the
-first batch is used to train `ODT` and `ODRF`, and the second batch is
-used to update the model by `online()`. The error after the model update
-is significantly smaller than that of one batch of data
+training data train_data is divided into two batches equally, then the
+first batch is used to train ODT and ODRF, and the second batch is used
+to update the model by online(). The error after the model update is
+significantly smaller than that of one batch of data
 alone.<!-- , and the model is also pruned by `prune()` and the same effect is achieved.-->
 
-### Print the tree structure of class `ODT` and the model estimation error of class `ODRF`
+### Print the tree structure of class ODT and the model estimation error of class ODRF
 
 ``` r
 data(iris, package = "datasets")
@@ -190,7 +190,7 @@ forest
 #> virginica       0          3        47  0.05999988
 ```
 
-### Plot the tree structure of class `ODT`
+### Plot the tree structure of class ODT
 
 ``` r
 plot(tree)
