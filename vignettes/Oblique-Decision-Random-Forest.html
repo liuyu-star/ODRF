@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Oblique Decision Random Forest for Classification and Regression</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Oblique Decision Random Forest for
+Classification and Regression</h1>
+
+
+
+<div id="odrf" class="section level1">
+<h1>ODRF
+<a href="https://liuyu-star.github.io/ODRF"><img src="data:image/png;base64,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" align="right" height="139" /></a></h1>
+<!-- badges: start -->
+<p><a href="https://app.codecov.io/gh/liuyu-star/ODRF?branch=main"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMTIiIGhlaWdodD0iMjAiPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPgogICAgICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIgLz4KICAgICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiIC8+CiAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPG1hc2sgaWQ9ImEiPgogICAgICAgIDxyZWN0IHdpZHRoPSIxMTIiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIiAvPgogICAgPC9tYXNrPgogICAgPGcgbWFzaz0idXJsKCNhKSI+CiAgICAgICAgPHBhdGggZmlsbD0iIzU1NSIgZD0iTTAgMGg3NnYyMEgweiIgLz4KICAgICAgICA8cGF0aCBmaWxsPSIjZTA1ZDQ0IiBkPSJNNzYgMGgzNnYyMEg3NnoiIC8+CiAgICAgICAgPHBhdGggZmlsbD0idXJsKCNiKSIgZD0iTTAgMGgxMTJ2MjBIMHoiIC8+CiAgICA8L2c+CiAgICA8ZyBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICAgICAgPHRleHQgeD0iNDYiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj5jb2RlY292PC90ZXh0PgogICAgICAgIDx0ZXh0IHg9IjQ2IiB5PSIxNCI+Y29kZWNvdjwvdGV4dD4KICAgICAgICA8dGV4dCB4PSI5MyIgeT0iMTUiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiPjM1JTwvdGV4dD4KICAgICAgICA8dGV4dCB4PSI5MyIgeT0iMTQiPjM1JTwvdGV4dD4KICAgIDwvZz4KICAgIDxzdmcgdmlld0JveD0iMTIwIC04IDYwIDYwIj4KICAgICAgICA8cGF0aCBkPSJNMjMuMDEzIDBDMTAuMzMzLjAwOS4wMSAxMC4yMiAwIDIyLjc2MnYuMDU4bDMuOTE0IDIuMjc1LjA1My0uMDM2YTExLjI5MSAxMS4yOTEgMCAwIDEgOC4zNTItMS43NjcgMTAuOTExIDEwLjkxMSAwIDAgMSA1LjUgMi43MjZsLjY3My42MjQuMzgtLjgyOGMuMzY4LS44MDIuNzkzLTEuNTU2IDEuMjY0LTIuMjQuMTktLjI3Ni4zOTgtLjU1NC42MzctLjg1MWwuMzkzLS40OS0uNDg0LS40MDRhMTYuMDggMTYuMDggMCAwIDAtNy40NTMtMy40NjYgMTYuNDgyIDE2LjQ4MiAwIDAgMC03LjcwNS40NDlDNy4zODYgMTAuNjgzIDE0LjU2IDUuMDE2IDIzLjAzIDUuMDFjNC43NzkgMCA5LjI3MiAxLjg0IDEyLjY1MSA1LjE4IDIuNDEgMi4zODIgNC4wNjkgNS4zNSA0LjgwNyA4LjU5MWExNi41MyAxNi41MyAwIDAgMC00Ljc5Mi0uNzIzbC0uMjkyLS4wMDJhMTYuNzA3IDE2LjcwNyAwIDAgMC0xLjkwMi4xNGwtLjA4LjAxMmMtLjI4LjAzNy0uNTI0LjA3NC0uNzQ4LjExNS0uMTEuMDE5LS4yMTguMDQxLS4zMjcuMDYzLS4yNTcuMDUyLS41MS4xMDgtLjc1LjE2OWwtLjI2NS4wNjdhMTYuMzkgMTYuMzkgMCAwIDAtLjkyNi4yNzZsLS4wNTYuMDE4Yy0uNjgyLjIzLTEuMzYuNTExLTIuMDE2LjgzOGwtLjA1Mi4wMjZjLS4yOS4xNDUtLjU4NC4zMDUtLjg5OS40OWwtLjA2OS4wNGExNS41OTYgMTUuNTk2IDAgMCAwLTQuMDYxIDMuNDY2bC0uMTQ1LjE3NWMtLjI5LjM2LS41MjEuNjY2LS43MjMuOTYtLjE3LjI0Ny0uMzQuNTEzLS41NTIuODY0bC0uMTE2LjE5OWMtLjE3LjI5Mi0uMzIuNTctLjQ0OS44MjRsLS4wMy4wNTdhMTYuMTE2IDE2LjExNiAwIDAgMC0uODQzIDIuMDI5bC0uMDM0LjEwMmExNS42NSAxNS42NSAwIDAgMC0uNzg2IDUuMTc0bC4wMDMuMjE0YTIxLjUyMyAyMS41MjMgMCAwIDAgLjA0Ljc1NGMuMDA5LjExOS4wMi4yMzcuMDMyLjM1NS4wMTQuMTQ1LjAzMi4yOS4wNDkuNDMybC4wMS4wOGMuMDEuMDY3LjAxNy4xMzMuMDI2LjE5Ny4wMzQuMjQyLjA3NC40OC4xMTkuNzIuNDYzIDIuNDE5IDEuNjIgNC44MzYgMy4zNDUgNi45OWwuMDc4LjA5OC4wOC0uMDk1Yy42ODgtLjgxIDIuMzk1LTMuMzggMi41MzktNC45MjJsLjAwMy0uMDI5LS4wMTQtLjAyNWExMC43MjcgMTAuNzI3IDAgMCAxLTEuMjI2LTQuOTU2YzAtNS43NiA0LjU0NS0xMC41NDQgMTAuMzQzLTEwLjg5bC4zODEtLjAxNGExMS40MDMgMTEuNDAzIDAgMCAxIDYuNjUxIDEuOTU3bC4wNTQuMDM2IDMuODYyLTIuMjM3LjA1LS4wM3YtLjA1NmMuMDA2LTYuMDgtMi4zODQtMTEuNzkzLTYuNzI5LTE2LjA4OUMzNC45MzIgMi4zNjEgMjkuMTYgMCAyMy4wMTMgMCIgZmlsbD0iI0YwMUY3QSIgZmlsbC1ydWxlPSJldmVub2RkIi8+CiAgICA8L3N2Zz4KPC9zdmc+" alt="Codecov test coverage" /></a> <a href="https://CRAN.R-project.org/package=ODRF"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMzEiIGhlaWdodD0iMjAiIGFyaWEtbGFiZWw9IkNSQU4gbm90IHB1Ymxpc2hlZCI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxtYXNrIGlkPSJhIj4KICAgIDxyZWN0IHdpZHRoPSIxMzEiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+CiAgPC9tYXNrPgogIDxnIG1hc2s9InVybCgjYSkiPgogICAgPHBhdGggZmlsbD0iIzU1NSIgZD0iTTAgMGg0M3YyMEgweiIvPgogICAgPHBhdGggZmlsbD0iI2UwNWQ0NCIgZD0iTTQzIDBoMTE0djIwSDQzeiIvPgogICAgPHBhdGggZmlsbD0idXJsKCNiKSIgZD0iTTAgMGgxMzF2MjBIMHoiLz4KICA8L2c+CiAgPGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIKICAgICBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICA8dGV4dCB4PSIyMS41IiB5PSIxNSIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyI+CiAgICAgIENSQU4KICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjIxLjUiIHk9IjE0Ij4KICAgICAgQ1JBTgogICAgPC90ZXh0PgogICAgPHRleHQgeD0iODYiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgbm90IHB1Ymxpc2hlZAogICAgPC90ZXh0PgogICAgPHRleHQgeD0iODYiIHk9IjE0Ij4KICAgICAgbm90IHB1Ymxpc2hlZAogICAgPC90ZXh0PgogIDwvZz4KPC9zdmc+" alt="CRAN status" /></a>
+<a href="https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check" /></a> <a href="https://lifecycle.r-lib.org/articles/stages.html#stable"><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iOTgiIGhlaWdodD0iMjAiIHJvbGU9ImltZyIgYXJpYS1sYWJlbD0ibGlmZWN5Y2xlOiBzdGFibGUiPjx0aXRsZT5saWZlY3ljbGU6IHN0YWJsZTwvdGl0bGU+PGxpbmVhckdyYWRpZW50IGlkPSJzIiB4Mj0iMCIgeTI9IjEwMCUiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iI2JiYiIgc3RvcC1vcGFjaXR5PSIuMSIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1vcGFjaXR5PSIuMSIvPjwvbGluZWFyR3JhZGllbnQ+PGNsaXBQYXRoIGlkPSJyIj48cmVjdCB3aWR0aD0iOTgiIGhlaWdodD0iMjAiIHJ4PSIzIiBmaWxsPSIjZmZmIi8+PC9jbGlwUGF0aD48ZyBjbGlwLXBhdGg9InVybCgjcikiPjxyZWN0IHdpZHRoPSI1NSIgaGVpZ2h0PSIyMCIgZmlsbD0iIzU1NSIvPjxyZWN0IHg9IjU1IiB3aWR0aD0iNDMiIGhlaWdodD0iMjAiIGZpbGw9IiM0YzEiLz48cmVjdCB3aWR0aD0iOTgiIGhlaWdodD0iMjAiIGZpbGw9InVybCgjcykiLz48L2c+PGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlZlcmRhbmEsR2VuZXZhLERlamFWdSBTYW5zLHNhbnMtc2VyaWYiIHRleHQtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIGZvbnQtc2l6ZT0iMTEwIj48dGV4dCBhcmlhLWhpZGRlbj0idHJ1ZSIgeD0iMjg1IiB5PSIxNTAiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiB0ZXh0TGVuZ3RoPSI0NTAiPmxpZmVjeWNsZTwvdGV4dD48dGV4dCB4PSIyODUiIHk9IjE0MCIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIGZpbGw9IiNmZmYiIHRleHRMZW5ndGg9IjQ1MCI+bGlmZWN5Y2xlPC90ZXh0Pjx0ZXh0IGFyaWEtaGlkZGVuPSJ0cnVlIiB4PSI3NTUiIHk9IjE1MCIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9IjMzMCI+c3RhYmxlPC90ZXh0Pjx0ZXh0IHg9Ijc1NSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgZmlsbD0iI2ZmZiIgdGV4dExlbmd0aD0iMzMwIj5zdGFibGU8L3RleHQ+PC9nPjwvc3ZnPg==" alt="Lifecycle: stable" /></a> <!-- badges: end --></p>
+<p>The goal of ODRF is to supplement classical CART and random forests
+for classification and regression. The use of linear combinations of
+predictors as splitting variables is one of the important extensions of
+CART and is known as Oblique Decision Trees (ODT) and ODT-based Random
+Forests (ODRF).</p>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>The ODRF <a href="https://cran.r-project.org/">R Package</a> consists
+of the S3 method as follows:</p>
+<ul>
+<li><code>ODT()</code> classification and regression using an ODT in
+which each node is split by a linear combination of predictors.</li>
+<li><code>ODRF()</code> classification and regression implemented by the
+ODRF. It’s an extension of random forest and include random forest as a
+special case.</li>
+<li><code>Online()</code> online structural training to update existing
+<code>ODT</code> and <code>ODRF</code> by using batches of data.</li>
+<li><code>prune()</code> prune <code>ODT</code> from bottom to top with
+validation data based on prediction error.</li>
+<li><code>print()</code>, <code>predict()</code> and <code>plot()</code>
+the base R functions in the base R Package to class <code>ODT</code> and
+<code>ODRF</code>.</li>
+</ul>
+<p>The ODRF R package allows users to define their own functions to find
+the projections of at each node, which is essential to the performance
+of the forests. We also provide a complete comparison and analysis for
+other ODT and ODRF. You can learn more about them in
+<code>vignette(&quot;ODRF&quot;)</code>.</p>
+</div>
+<div id="installation" class="section level2">
+<h2>Installation</h2>
+<p>You can install the development version of ODRF from <a href="https://github.com/">GitHub</a> with:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;devtools&quot;)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;liuyu-star/ODRF&quot;</span>)</span></code></pre></div>
+</div>
+<div id="usage" class="section level2">
+<h2>Usage</h2>
+<p>We show how to use the ODRF package with examples.</p>
+<div id="classification-and-regression-with-functions-odt-and-odrf" class="section level3">
+<h3>Classification and regression with functions <code>ODT()</code> and
+<code>ODRF()</code></h3>
+<p>Classification with Oblique Decision Randome Forest.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ODRF)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(seeds, <span class="at">package =</span> <span class="st">&quot;ODRF&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">209</span>, <span class="dv">150</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(seeds[train, ])</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(seeds[<span class="sc">-</span>train, ])</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>index <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">floor</span>(<span class="dv">1</span><span class="sc">*</span><span class="fu">nrow</span>(train_data) <span class="sc">/</span> <span class="dv">2</span>))</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>forest <span class="ot">&lt;-</span> <span class="fu">ODRF</span>(varieties_of_wheat <span class="sc">~</span> ., train_data,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">split =</span> <span class="st">&quot;gini&quot;</span>, <span class="at">parallel =</span> <span class="cn">FALSE</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(forest, test_data[, <span class="sc">-</span><span class="dv">8</span>])</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>e.forest <span class="ot">&lt;-</span> <span class="fu">mean</span>(pred <span class="sc">!=</span> test_data[, <span class="dv">8</span>])</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>forest1 <span class="ot">&lt;-</span> <span class="fu">ODRF</span>(varieties_of_wheat <span class="sc">~</span> ., train_data[index, ],</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">split =</span> <span class="st">&quot;gini&quot;</span>, <span class="at">parallel =</span> <span class="cn">FALSE</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(forest1, test_data[, <span class="sc">-</span><span class="dv">8</span>])</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>e.forest<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">mean</span>(pred <span class="sc">!=</span> test_data[, <span class="dv">8</span>])</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>forest2 <span class="ot">&lt;-</span> <span class="fu">ODRF</span>(varieties_of_wheat <span class="sc">~</span> ., train_data[<span class="sc">-</span>index, ],</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">split =</span> <span class="st">&quot;gini&quot;</span>, <span class="at">parallel =</span> <span class="cn">FALSE</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(forest2, test_data[, <span class="sc">-</span><span class="dv">8</span>])</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>e.forest<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">mean</span>(pred <span class="sc">!=</span> test_data[, <span class="dv">8</span>])</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>forest.online <span class="ot">&lt;-</span> <span class="fu">online</span>(</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  forest1, train_data[<span class="sc">-</span>index, <span class="sc">-</span><span class="dv">8</span>],</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  train_data[<span class="sc">-</span>index, <span class="dv">8</span>]</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(forest.online, test_data[, <span class="sc">-</span><span class="dv">8</span>])</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>e.forest.online <span class="ot">&lt;-</span> <span class="fu">mean</span>(pred <span class="sc">!=</span> test_data[, <span class="dv">8</span>])</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>forest.prune <span class="ot">&lt;-</span> <span class="fu">prune</span>(forest1, train_data[<span class="sc">-</span>index, <span class="sc">-</span><span class="dv">8</span>],</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  train_data[<span class="sc">-</span>index, <span class="dv">8</span>],</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">useOOB =</span> <span class="cn">FALSE</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(forest.prune, test_data[, <span class="sc">-</span><span class="dv">8</span>])</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>e.forest.prune <span class="ot">&lt;-</span> <span class="fu">mean</span>(pred <span class="sc">!=</span> test_data[, <span class="dv">8</span>])</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">c</span>(</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  <span class="at">forest =</span> e.forest, <span class="at">forest1 =</span> e.forest<span class="fl">.1</span>, <span class="at">forest2 =</span> e.forest<span class="fl">.2</span>,</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>  <span class="at">forest.online =</span> e.forest.online, <span class="at">forest.prune =</span> e.forest.prune</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;        forest       forest1       forest2 forest.online  forest.prune </span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    0.10169492    0.10169492    0.10169492    0.06779661    0.10169492</span></span></code></pre></div>
+<p>Regression with Oblique Decision Tree.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(body_fat, <span class="at">package =</span> <span class="st">&quot;ODRF&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>train <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">252</span>, <span class="dv">150</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(body_fat[train, ])</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(body_fat[<span class="sc">-</span>train, ])</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>index <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">floor</span>(<span class="dv">1</span><span class="sc">*</span><span class="fu">nrow</span>(train_data) <span class="sc">/</span> <span class="dv">2</span>))</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">ODT</span>(Density <span class="sc">~</span> ., train_data, <span class="at">split =</span> <span class="st">&quot;mse&quot;</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(tree, test_data[, <span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>e.tree <span class="ot">&lt;-</span> <span class="fu">mean</span>((pred <span class="sc">-</span> test_data[, <span class="dv">1</span>])<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>tree1 <span class="ot">&lt;-</span> <span class="fu">ODT</span>(Density <span class="sc">~</span> ., train_data[index, ], <span class="at">split =</span> <span class="st">&quot;mse&quot;</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(tree1, test_data[, <span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>e.tree<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">mean</span>((pred <span class="sc">-</span> test_data[, <span class="dv">1</span>])<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>tree2 <span class="ot">&lt;-</span> <span class="fu">ODT</span>(Density <span class="sc">~</span> ., train_data[<span class="sc">-</span>index, ], <span class="at">split =</span> <span class="st">&quot;mse&quot;</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(tree2, test_data[, <span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>e.tree<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">mean</span>((pred <span class="sc">-</span> test_data[, <span class="dv">1</span>])<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>tree.online <span class="ot">&lt;-</span> <span class="fu">online</span>(tree1, train_data[<span class="sc">-</span>index, <span class="sc">-</span><span class="dv">1</span>], train_data[<span class="sc">-</span>index, <span class="dv">1</span>])</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(tree.online, test_data[, <span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>e.tree.online <span class="ot">&lt;-</span> <span class="fu">mean</span>((pred <span class="sc">-</span> test_data[, <span class="dv">1</span>])<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>tree.prune <span class="ot">&lt;-</span> <span class="fu">prune</span>(tree1, train_data[<span class="sc">-</span>index, <span class="sc">-</span><span class="dv">1</span>], train_data[<span class="sc">-</span>index, <span class="dv">1</span>])</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(tree.prune, test_data[, <span class="sc">-</span><span class="dv">1</span>])</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>e.tree.prune <span class="ot">&lt;-</span> <span class="fu">mean</span>((pred <span class="sc">-</span> test_data[, <span class="dv">1</span>])<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">c</span>(</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree =</span> e.tree, <span class="at">tree1 =</span> e.tree<span class="fl">.1</span>, <span class="at">tree2 =</span> e.tree<span class="fl">.2</span>,</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree.online =</span> e.tree.online, <span class="at">tree.prune =</span> e.tree.prune</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;         tree        tree1        tree2  tree.online   tree.prune </span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2.619833e-05 4.165811e-05 7.627646e-05 3.634177e-05 4.165811e-05</span></span></code></pre></div>
+<p>As shown in the classification and regression results above, the
+training data <code>train_data</code> is divided into two batches
+equally, then the first batch is used to train <code>ODT</code> and
+<code>ODRF</code>, and the second batch is used to update the model by
+<code>online()</code>. The error after the model update is significantly
+smaller than that of one batch of data
+alone.<!-- , and the model is also pruned by `prune()` and the same effect is achieved.--></p>
+</div>
+<div id="print-the-tree-structure-of-class-odt-and-the-model-estimation-error-of-class-odrf" class="section level3">
+<h3>Print the tree structure of class <code>ODT</code> and the model
+estimation error of class <code>ODRF</code></h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(iris, <span class="at">package =</span> <span class="st">&quot;datasets&quot;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">ODT</span>(Species <span class="sc">~</span> ., <span class="at">data =</span> iris)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in ODT.compute(formula, Call, varName, X, y, split, lambda,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NodeRotateFun, : You are creating a forest for classification</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>tree</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; ============================================================= </span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Oblique Classification Tree structure </span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; =============================================================</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1) root</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    node2)# proj1*X &lt; 0.29 -&gt; (leaf1 = setosa)</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    node3)  proj1*X &gt;= 0.29</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       node4)# proj2*X &lt; 0.88 -&gt; (leaf2 = versicolor)</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       node5)# proj2*X &gt;= 0.88 -&gt; (leaf3 = virginica)</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>forest <span class="ot">&lt;-</span> <span class="fu">ODRF</span>(Species <span class="sc">~</span> ., <span class="at">data =</span> iris, <span class="at">parallel =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning in ODRF.compute(formula, Call, varName, X, y, split, lambda,</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; NodeRotateFun, : You are creating a forest for classification</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>forest</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Call:</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  ODRF.formula(formula = Species ~ ., data = data, parallel = FALSE) </span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                Type of oblique decision random forest: classification</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                                       Number of trees: 100</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                            OOB estimate of error rate: 4%</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Confusion matrix:</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;            setosa versicolor virginica class_error</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; setosa         50          0         0  0.00000000</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; versicolor      0         47         3  0.05999988</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; virginica       0          3        47  0.05999988</span></span></code></pre></div>
+</div>
+<div id="plot-the-tree-structure-of-class-odt" class="section level3">
+<h3>Plot the tree structure of class <code>ODT</code></h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(tree)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+<div id="getting-help" class="section level2">
+<h2>Getting help</h2>
+<p>If you encounter a clear bug, please file an issue with a minimal
+reproducible example on <a href="https://github.com/liuyu-star/ODRF/issues">GitHub</a>.</p>
+<hr />
+<p>Please note that this project is released with a <a href="https://liuyu-star.github.io/ODRF/CONTRIBUTING">Contributor Code
+of Conduct</a>. By participating in this project you agree to abide by
+its terms.</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
