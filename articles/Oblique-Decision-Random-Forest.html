@@ -94,27 +94,33 @@
 <!-- badges: start -->
 <p><a href="https://app.codecov.io/gh/liuyu-star/ODRF?branch=main" class="external-link"><img src="https://codecov.io/gh/liuyu-star/ODRF/branch/main/graph/badge.svg" alt="Codecov test coverage"></a> <a href="https://CRAN.R-project.org/package=ODRF" class="external-link"><img src="https://www.r-pkg.org/badges/version/ODRF" alt="CRAN status"></a>
 <a href="https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a> <!-- badges: end --></p>
-<p>The goal of ODRF is to supplement classical CART and random forests
-for classification and regression. The use of linear combinations of
-predictors as splitting variables is one of the important extensions of
-CART and is known as Oblique Decision Trees (ODT) and ODT-based Random
-Forests (ODRF).</p>
+<p>ODRF implements the well-known Oblique Decision Tree (ODT) and
+ODT-based Random Forest (ODRF), which uses linear combinations of
+predictors as partitioning variables for both traditional CART and
+Random Forest. A number of modifications have been adopted in the
+implementation; some new functions are also provided. <!--
+The goal of ODRF is to supplement classical CART and random forests for classification and regression. The use of linear combinations of predictors as splitting variables is one of the important extensions of CART and is known as Oblique Decision Trees (ODT) and ODT-based Random Forests (ODRF).
+--></p>
+<!--
+The ODRF R package allows users to define their own functions to find the projections of at each node, which is essential to the performance of the forests. We also provide a complete comparison and analysis for other ODT and ODRF. You can learn more about them in `vignette("ODRF")`.
+-->
 <div class="section level3">
 <h3 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h3>
 <p>The ODRF <a href="https://cran.r-project.org/" class="external-link">R Package</a> consists
-of the S3 method as follows:</p>
+of the following main functions:</p>
 <ul>
 <li>
-<code><a href="../reference/ODT.html">ODT()</a></code> classification and regression using an ODT in
-which each node is split by a linear combination of predictors.</li>
+<code><a href="../reference/ODT.html">ODT()</a></code> classification and regression using an
+<code>ODT</code> in which each node is split by a linear combination of
+predictors.</li>
 <li>
 <code><a href="../reference/ODRF.html">ODRF()</a></code> classification and regression implemented by the
-ODRF. It’s an extension of random forest and include random forest as a
-special case.</li>
+<code>ODRF</code> It’s an extension of random forest based on
+<code><a href="../reference/ODT.html">ODT()</a></code> and includes random forest as a special case.</li>
 <li>
-<code>Online()</code> online structural training to update existing
-<code>ODT</code> and <code>ODRF</code> by using batches of data.</li>
+<code>Online()</code> online training to update existing
+<code>ODT</code> and <code>ODRF</code> by using new data sets.</li>
 <li>
 <code><a href="../reference/prune.html">prune()</a></code> prune <code>ODT</code> from bottom to top with
 validation data based on prediction error.</li>
@@ -123,11 +129,11 @@ validation data based on prediction error.</li>
 the base R functions in the base R Package to class <code>ODT</code> and
 <code>ODRF</code>.</li>
 </ul>
-<p>The ODRF R package allows users to define their own functions to find
-the projections of at each node, which is essential to the performance
-of the forests. We also provide a complete comparison and analysis for
-other ODT and ODRF. You can learn more about them in
-<code>vignette("ODRF")</code>.</p>
+<p><code>ODRF</code> allows users to define their own functions to find
+the projections at each node, which is essential to the performance of
+the forests. We also provide a complete comparison and analysis for
+other <code>ODT</code> and <code>ODRF</code>, more details are available
+in <code>vignette("ODRF")</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
