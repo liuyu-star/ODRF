@@ -59,7 +59,7 @@ ODT(X, ...)
 
 \item{formula}{Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
 
-\item{data}{Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.}
+\item{data}{Training data of class \code{data.frame} containing variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.}
 
 \item{split}{The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression;
 'auto' (default): If the response in \code{data} or \code{y} is a factor, "gini" is used, otherwise regression is assumed.}
@@ -104,7 +104,7 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))<
 \item{y}{A response vector of length n.}
 }
 \value{
-An object of class ODT Containing a list components:
+An object of class ODT containing a list of components::
 \itemize{
 \item{\code{call}: The original call to ODT.}
 \item{\code{terms}: An object of class \code{c("terms", "formula")} (see \code{\link{terms.object}}) summarizing the formula. Used by various methods, but typically not of direct relevance to users.}

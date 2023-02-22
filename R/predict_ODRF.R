@@ -1,8 +1,8 @@
-#' predict based on ODRF objects
+#' predict based on an ODRF object
 #'
 #' Prediction of ODRF for an input matrix or data frame.
 #'
-#' @param object An object of class ODRF, as that created by the function \code{\link{ODRF}}.
+#' @param object An object of class ODRF, the same created by the function \code{\link{ODRF}}.
 #' @param Xnew An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
 #' Note that if there are NA values in the data 'Xnew', which will be replaced with the average value.
 #' @param type One of \code{response}, \code{prob} or \code{tree}, indicating the type of output: predicted values, matrix of class probabilities or predicted value for each tree.
@@ -11,7 +11,7 @@
 #'
 #' @return A set of vectors in the following list:
 #' \itemize{
-#' \item \code{response}: the prediced values of the new data.
+#' \item \code{response}: the predicted values of the new data.
 #' \item \code{prob}: matrix of class probabilities (one column for each class and one row for each input). If \code{object$split} is \code{mse}, a vector of tree weights is returned.
 #' \item \code{tree}: It is a matrix where each column is a prediction for each tree.
 #' }
@@ -41,7 +41,7 @@
 #' train <- sample(1:252, 80)
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
-#' forest <- ODRF(Density ~ ., train_data, split = "mse", parallel = FALSE)
+#' forest <- ODRF(Density ~ ., train_data, split = "mse", parallel = FALSE, ntrees = 50)
 #' pred <- predict(forest, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)

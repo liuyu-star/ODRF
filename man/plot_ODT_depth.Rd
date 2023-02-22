@@ -19,9 +19,9 @@ plot_ODT_depth(
 \arguments{
 \item{formula}{Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})}
 
-\item{data}{Training data of class \code{data.frame} in \code{\link{ODT}} is used to calculate the OOB error.}
+\item{data}{Training data of class \code{data.frame} in \code{\link{ODT}} used to calculate the OOB error.}
 
-\item{newdata}{A data frame containing new data is used to calculate the test error. If it is missing, let it be \code{data}.}
+\item{newdata}{A data frame or matrix containing new data is used to calculate the test error. If it is missing, then it is replaced by \code{data}.}
 
 \item{split}{The criterion used for splitting the variable. 'gini': gini impurity index (classification, default),
 'entropy': information gain (classification) or 'mse': mean square error (regression).}

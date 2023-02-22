@@ -3,7 +3,7 @@
 #' Classification and regression using an oblique decision tree (ODT) in which each node is split by a linear combination of predictors. Different methods are provided for selecting the linear combinations, while the splitting values are chosen by one of three criteria.
 #'
 #' @param formula Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})
-#' @param data Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.
+#' @param data Training data of class \code{data.frame} containing variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.
 #' @param X An n by d numeric matrix (preferable) or data frame.
 #' @param y A response vector of length n.
 #' @param split The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression;
@@ -32,7 +32,7 @@
 #' @param TreeRandRotate If or not to randomly rotate the Training data before building the tree (default FALSE, see \code{\link[ODRF]{RandRot}}).
 #' @param ... Optional parameters to be passed to the low level function.
 #'
-#' @return An object of class ODT Containing a list components:
+#' @return An object of class ODT containing a list of components::
 #' \itemize{
 #' \item{\code{call}: The original call to ODT.}
 #' \item{\code{terms}: An object of class \code{c("terms", "formula")} (see \code{\link{terms.object}}) summarizing the formula. Used by various methods, but typically not of direct relevance to users.}

@@ -4,14 +4,14 @@
 \alias{Accuracy}
 \title{accuracy of oblique decision random forest}
 \usage{
-Accuracy(forest, data, newdata = NULL)
+Accuracy(obj, data, newdata = NULL)
 }
 \arguments{
-\item{forest}{An object of class \code{ODRF}, as that created by the function \code{\link{ODRF}}.}
+\item{obj}{An object of class \code{ODRF}, as that created by the function \code{\link{ODRF}}.}
 
 \item{data}{Training data of class \code{data.frame} in \code{\link{ODRF}} is used to calculate the OOB error.}
 
-\item{newdata}{A data frame or matrix containing new data is used to calculate the test error. If it is missing, let it be \code{data}.}
+\item{newdata}{A data frame or matrix containing new data is used to calculate the test error. If it is missing, then it is replaced by \code{data}.}
 }
 \value{
 OOB error and test error, misclassification rate (MR) for classification or mean square error (MSE) for regression.
@@ -22,7 +22,7 @@ Prediction accuracy of ODRF at different tree sizes.
 \examples{
 data(breast_cancer)
 set.seed(221212)
-train <- sample(1:569, 200)
+train <- sample(1:569, 80)
 train_data <- data.frame(breast_cancer[train, -1])
 test_data <- data.frame(breast_cancer[-train, -1])
 

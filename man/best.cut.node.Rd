@@ -2,7 +2,7 @@
 % Please edit documentation in R/best_cut_node.R
 \name{best.cut.node}
 \alias{best.cut.node}
-\title{find best split variable and node}
+\title{find best splitting variable and node}
 \usage{
 best.cut.node(
   X,
@@ -34,7 +34,7 @@ or 'mse': mean square error (regression).}
 A list which contains:
 \itemize{
 \item BestCutVar: The best split variable.
-\item BestCutVal: The best split point for the best split variable.
+\item BestCutVal: The best split points for the best split variable.
 \item BestIndex: Each variable corresponds to the min gini impurity index, the max information gain or the min mean square error.
 }
 }

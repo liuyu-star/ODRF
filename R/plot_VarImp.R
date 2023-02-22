@@ -1,9 +1,9 @@
 #' Variable Importance Plot
 #'
-#' Dotchart of variable importance as measured by a Oblique Decision Random Forest.
+#' Dotchart of variable importance as measured by an Oblique Decision Random Forest.
 #'
 #' @param x An object of class \code{\link{VarImp}}.
-#' @param nvar How many variables to show.
+#' @param nvar number of variables to show.
 #' @param digits Integer indicating the number of decimal places (round) or significant digits (signif) to be used.
 #' @param main plot title.
 #' @param ... Arguments to be passed to methods.

@@ -1,11 +1,10 @@
-#' using training data to update an existing \code{ODRF}.
+#' using new training data to update an existing \code{ODRF}.
 #'
-#' Update existing \code{\link{ODRF}} using batches of data to improve the model.
-#'
+#' Update existing \code{\link{ODRF}} using new data to improve the model.
 #' @param obj An object of class \code{ODRF}.
-#' @param X An n by d numeric matrix (preferable) or data frame is used to update the object of class \code{ODRF}.
-#' @param y A response vector of length n is used to update the object of class \code{ODRF}.
-#' @param weights Vector of non-negative observational weights; fractional weights are allowed (default NULL).
+#' @param X An new n by d numeric matrix (preferable) or data frame  used to update the object of class \code{ODRF}.
+#' @param y A new response vector of length n used to update the object of class \code{ODRF}.
+#' @param weights A vector of non-negative observational weights; fractional weights are allowed (default NULL).
 #' @param ... Optional parameters to be passed to the low level function.
 #'
 #' @return The same result as \code{ODRF}.
@@ -16,12 +15,12 @@
 #' # Classification with Oblique Decision Random Forest
 #' data(seeds)
 #' set.seed(221212)
-#' train <- sample(1:209, 100)
+#' train <- sample(1:209, 80)
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
-#'   split = "gini", parallel = FALSE
+#'   split = "gini", parallel = FALSE, ntrees = 50
 #' )
 #' online_forest <- online(forest, train_data[-index, -8], train_data[-index, 8])
 #' pred <- predict(online_forest, test_data[, -8])

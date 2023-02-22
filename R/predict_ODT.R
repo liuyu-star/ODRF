@@ -1,8 +1,8 @@
-#' predict method for ODT objects
+#' making predict based on ODT objects
 #'
 #' Prediction of ODT for an input matrix or data frame.
 #'
-#' @param object An object of class ODT, as that created by the function \code{\link{ODT}}.
+#' @param object An object of class ODT, the same as that created by the function \code{\link{ODT}}.
 #' @param Xnew An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
 #' Note that if there are NA values in the data 'Xnew', which will be replaced with the average value.
 #' @param leafnode If or not output the leaf node sequence number that \code{Xnew} is partitioned. (default FALSE)

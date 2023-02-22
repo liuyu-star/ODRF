@@ -2,7 +2,7 @@
 % Please edit documentation in R/RotMat.R
 \name{RotMatMake}
 \alias{RotMatMake}
-\title{Create rotation matrix used to determine linear combination of features.}
+\title{Create rotation matrix used to determine the linear combination of features.}
 \usage{
 RotMatMake(
   X = NULL,

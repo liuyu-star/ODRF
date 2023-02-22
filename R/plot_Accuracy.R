@@ -17,7 +17,7 @@
 #' @examples
 #' data(breast_cancer)
 #' set.seed(221212)
-#' train <- sample(1:569, 200)
+#' train <- sample(1:569, 80)
 #' train_data <- data.frame(breast_cancer[train, -1])
 #' test_data <- data.frame(breast_cancer[-train, -1])
 #'

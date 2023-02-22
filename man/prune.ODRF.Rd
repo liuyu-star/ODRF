@@ -47,11 +47,11 @@ pred <- predict(prune_forest, test_data[, -8])
 # Regression with Oblique Decision Random Forest
 data(body_fat)
 set.seed(221212)
-train <- sample(1:252, 50)
+train <- sample(1:252,80)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 index <- seq(floor(nrow(train_data) / 2))
-forest <- ODRF(Density ~ ., train_data[index, ], split = "mse", parallel = FALSE)
+forest <- ODRF(Density ~ ., train_data[index, ], split = "mse", parallel = FALSE, ntrees = 50)
 prune_forest <- prune(forest, train_data[-index, -1], train_data[-index, 1], useOOB = FALSE)
 pred <- predict(prune_forest, test_data[, -1])
 # estimation error

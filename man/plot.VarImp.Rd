@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{An object of class \code{\link{VarImp}}.}
 
-\item{nvar}{How many variables to show.}
+\item{nvar}{number of variables to show.}
 
 \item{digits}{Integer indicating the number of decimal places (round) or significant digits (signif) to be used.}
 
@@ -21,7 +21,7 @@
 The horizontal axis is the increased error of ODRF after replacing the variable, the larger the increased error the more important the variable is.
 }
 \description{
-Dotchart of variable importance as measured by a Oblique Decision Random Forest.
+Dotchart of variable importance as measured by an Oblique Decision Random Forest.
 }
 \examples{
 data(breast_cancer)

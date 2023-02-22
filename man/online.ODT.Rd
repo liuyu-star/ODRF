@@ -2,16 +2,16 @@
 % Please edit documentation in R/online_ODT.R
 \name{online.ODT}
 \alias{online.ODT}
-\title{using training data to update an existing \code{ODT}.}
+\title{using new training data to update an existing \code{ODT}.}
 \usage{
 \method{online}{ODT}(obj, X = NULL, y = NULL, weights = NULL, ...)
 }
 \arguments{
 \item{obj}{an object of class \code{ODT}.}
 
-\item{X}{An n by d numeric matrix (preferable) or data frame is used to update the object of class \code{ODT}.}
+\item{X}{An new n by d numeric matrix (preferable) or data frame  used to update the object of class \code{ODT}.}
 
-\item{y}{A response vector of length n is used to update the object of class \code{ODT}.}
+\item{y}{A new response vector of length n used to update the object of class \code{ODT}.}
 
 \item{weights}{Vector of non-negative observational weights; fractional weights are allowed (default NULL).}
 
@@ -21,7 +21,7 @@
 The same result as \code{ODT}.
 }
 \description{
-Update existing \code{\link{ODT}} using batches of data to improve the model.
+Update existing \code{\link{ODT}} using new data to improve the model.
 }
 \examples{
 # Classification with Oblique Decision Tree

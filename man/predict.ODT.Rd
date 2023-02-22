@@ -2,12 +2,12 @@
 % Please edit documentation in R/predict_ODT.R
 \name{predict.ODT}
 \alias{predict.ODT}
-\title{predict method for ODT objects}
+\title{making predict based on ODT objects}
 \usage{
 \method{predict}{ODT}(object, Xnew, leafnode = FALSE, ...)
 }
 \arguments{
-\item{object}{An object of class ODT, as that created by the function \code{\link{ODT}}.}
+\item{object}{An object of class ODT, the same as that created by the function \code{\link{ODT}}.}
 
 \item{Xnew}{An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
 Note that if there are NA values in the data 'Xnew', which will be replaced with the average value.}

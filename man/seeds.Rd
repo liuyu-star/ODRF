@@ -30,12 +30,12 @@ The variables listed below, from left to right, are:
 \examples{
 data(seeds)
 set.seed(221212)
-train <- sample(1:209, 100)
+train <- sample(1:209, 80)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
-  split = "gini", parallel = FALSE
+  split = "gini", parallel = FALSE, ntrees = 50
 )
 pred <- predict(forest, test_data[, -8])
 # classification error

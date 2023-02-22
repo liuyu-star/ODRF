@@ -118,7 +118,7 @@ RotMatRand <- function(dimX, randDist = "Binary", numProj = ceiling(sqrt(dimX)),
 
 #' Create a Projection Matrix: Random Forest (RF)
 #'
-#' Create a projection matrix with coefficient 1 such that the ODRF (ODT) has the same partition variables as the Random Forest (CART).
+#' Create a projection matrix with coefficient 1 and 0 such that the ODRF (ODT) has the same partition variables as the Random Forest (CART).
 #'
 #' @param dimX The number of dimensions.
 #' @param numProj The number of projection directions (default ceiling(sqrt(\code{dimX}))).
@@ -381,7 +381,7 @@ RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, di
 }
 
 ##################################################################################
-#' Create rotation matrix used to determine linear combination of features.
+#' Create rotation matrix used to determine the linear combination of features.
 #'
 #' Create any projection matrix with a self-defined projection matrix function and projection optimization model function
 #'

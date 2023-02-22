@@ -1,4 +1,4 @@
-#' find best split variable and node
+#' find best splitting variable and node
 #'
 #' A function to select the splitting variables and nodes using one of three criteria.
 #'
@@ -14,7 +14,7 @@
 #' @return A list which contains:
 #' \itemize{
 #' \item BestCutVar: The best split variable.
-#' \item BestCutVal: The best split point for the best split variable.
+#' \item BestCutVal: The best split points for the best split variable.
 #' \item BestIndex: Each variable corresponds to the min gini impurity index, the max information gain or the min mean square error.
 #' }
 #'

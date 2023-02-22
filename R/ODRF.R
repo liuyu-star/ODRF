@@ -1,9 +1,9 @@
-#' Classification and Regression with Oblique Decision Random Forest
+#' Classification and Regression using Oblique Decision Random Forest
 #'
 #' Classification and regression implemented by the oblique decision random forest. ODRF usually produces more accurate predictions than RF, but needs longer computation time.
 #'
 #' @param formula Object of class \code{formula} with a response describing the model to fit. If this is a data frame, it is taken as the model frame. (see \code{\link{model.frame}})
-#' @param data Training data of class \code{data.frame} in which to interpret the variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.
+#' @param data Training data of class \code{data.frame} containing variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.
 #' @param X An n by d numeric matrix (preferable) or data frame.
 #' @param y A response vector of length n.
 #' @param split The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression;
@@ -69,12 +69,11 @@
 #' # Classification with Oblique Decision Randome Forest.
 #' data(seeds)
 #' set.seed(221212)
-#' train <- sample(1:209, 100)
+#' train <- sample(1:209, 80)
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data,
-#'   split = "entropy",
-#'   parallel = FALSE
+#'   split = "entropy",parallel = FALSE, ntrees = 50
 #' )
 #' pred <- predict(forest, test_data[, -8])
 #' # classification error

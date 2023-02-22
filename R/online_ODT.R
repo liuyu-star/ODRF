@@ -1,10 +1,10 @@
-#' using training data to update an existing \code{ODT}.
+#' using new training data to update an existing \code{ODT}.
 #'
-#' Update existing \code{\link{ODT}} using batches of data to improve the model.
+#' Update existing \code{\link{ODT}} using new data to improve the model.
 #'
 #' @param obj an object of class \code{ODT}.
-#' @param X An n by d numeric matrix (preferable) or data frame is used to update the object of class \code{ODT}.
-#' @param y A response vector of length n is used to update the object of class \code{ODT}.
+#' @param X An new n by d numeric matrix (preferable) or data frame  used to update the object of class \code{ODT}.
+#' @param y A new response vector of length n used to update the object of class \code{ODT}.
 #' @param weights Vector of non-negative observational weights; fractional weights are allowed (default NULL).
 #' @param ... optional parameters to be passed to the low level function.
 #'

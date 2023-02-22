@@ -11,7 +11,7 @@
 #'
 #' @examples
 #' data(iris)
-#' forest <- ODRF(Species ~ ., data = iris, parallel = FALSE)
+#' forest <- ODRF(Species ~ ., data = iris, parallel = FALSE, ntrees = 50)
 #' forest
 #'
 #' @keywords forest print

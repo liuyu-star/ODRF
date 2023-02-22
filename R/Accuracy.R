@@ -2,9 +2,9 @@
 #'
 #' Prediction accuracy of ODRF at different tree sizes.
 #'
-#' @param forest An object of class \code{ODRF}, as that created by the function \code{\link{ODRF}}.
+#' @param obj An object of class \code{ODRF}, as that created by the function \code{\link{ODRF}}.
 #' @param data Training data of class \code{data.frame} in \code{\link{ODRF}} is used to calculate the OOB error.
-#' @param newdata A data frame or matrix containing new data is used to calculate the test error. If it is missing, let it be \code{data}.
+#' @param newdata A data frame or matrix containing new data is used to calculate the test error. If it is missing, then it is replaced by \code{data}.
 #'
 #' @return OOB error and test error, misclassification rate (MR) for classification or mean square error (MSE) for regression.
 #'
@@ -13,7 +13,7 @@
 #' @examples
 #' data(breast_cancer)
 #' set.seed(221212)
-#' train <- sample(1:569, 200)
+#' train <- sample(1:569, 80)
 #' train_data <- data.frame(breast_cancer[train, -1])
 #' test_data <- data.frame(breast_cancer[-train, -1])
 #'
@@ -22,7 +22,8 @@
 #'
 #' @keywords forest
 #' @export
-Accuracy <- function(forest, data, newdata = NULL) {
+Accuracy <- function(obj, data, newdata = NULL) {
+  forest=obj
   vars <- all.vars(forest$terms)
   if (!all(vars[-1] %in% colnames(data))) {
     stop("The column name of 'data' does not match the training data.")
