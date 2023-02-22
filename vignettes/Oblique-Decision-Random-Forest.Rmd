@@ -23,20 +23,25 @@ knitr::opts_chunk$set(
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
+ODRF implements the well-known Oblique Decision Tree (ODT) and ODT-based Random Forest (ODRF), which uses linear combinations of predictors as partitioning variables for both traditional CART and Random Forest. A number of modifications have been adopted in the implementation; some new functions are also provided.
+<!--
 The goal of ODRF is to supplement classical CART and random forests for classification and regression. The use of linear combinations of predictors as splitting variables is one of the important extensions of CART and is known as Oblique Decision Trees (ODT) and ODT-based Random Forests (ODRF).
+-->
 
+<!--
+The ODRF R package allows users to define their own functions to find the projections of at each node, which is essential to the performance of the forests. We also provide a complete comparison and analysis for other ODT and ODRF. You can learn more about them in `vignette("ODRF")`.
+-->
 ## Overview
 
-The ODRF [R Package](https://cran.r-project.org/) consists of the S3 method as follows:
+The ODRF [R Package](https://cran.r-project.org/) consists of the following main functions:
 
-* `ODT()` classification and regression using an ODT in which each node is split by a linear combination of predictors.
-* `ODRF()` classification and regression implemented by the ODRF. It's an extension of random forest and include random forest as a special case. 
-* `Online()` online structural training to update existing `ODT` and `ODRF` by using batches of data.
-* `prune()` prune `ODT` from bottom to top with validation data based on prediction error.
+* `ODT()` classification and regression using an `ODT` in which each node is split by a linear combination of predictors.
+* `ODRF()` classification and regression implemented by the `ODRF` It’s an extension of random forest based on `ODT()` and includes random forest as a special case.
+* `Online()` online training to update existing `ODT` and `ODRF` by using new data sets.
+* `prune()`  prune `ODT` from bottom to top with validation data based on prediction error.
 * `print()`, `predict()` and `plot()` the base R functions in the base R Package to class `ODT` and `ODRF`.
 
-The ODRF R package allows users to define their own functions to find the projections of at each node, which is essential to the performance of the forests. We also provide a complete comparison and analysis for other ODT and ODRF. You can learn more about them in `vignette("ODRF")`.
-
+`ODRF` allows users to define their own functions to find the projections at each node, which is essential to the performance of the forests. We also provide a complete comparison and analysis for other `ODT` and `ODRF`, more details are available in `vignette("ODRF")`.
 
 ## Installation
 
@@ -151,4 +156,3 @@ If you encounter a clear bug, please file an issue with a minimal reproducible e
 
 Please note that this project is released with a [Contributor Code of Conduct](https://liuyu-star.github.io/ODRF/CONTRIBUTING).
 By participating in this project you agree to abide by its terms.
-
