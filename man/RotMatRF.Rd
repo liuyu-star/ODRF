@@ -24,7 +24,7 @@ A random matrix to use in running \code{\link{ODT}}.
 }
 }
 \description{
-Create a projection matrix with coefficient 1 such that the ODRF (ODT) has the same partition variables as the random forest (tree).
+Create a projection matrix with coefficient 1 such that the ODRF (ODT) has the same partition variables as the Random Forest (CART).
 }
 \examples{
 paramList <- list(dimX = 8, numProj = 3, catLabel = NULL)

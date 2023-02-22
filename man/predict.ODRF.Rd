@@ -23,7 +23,7 @@ A set of vectors in the following list:
 \itemize{
 \item \code{response}: the prediced values of the new data.
 \item \code{prob}: matrix of class probabilities (one column for each class and one row for each input). If \code{object$split} is \code{mse}, a vector of tree weights is returned.
-\item \code{tree}: it is a matrix where each column contains prediction by a tree in the forest.
+\item \code{tree}: It is a matrix where each column is a prediction for each tree.
 }
 }
 \description{

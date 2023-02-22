@@ -69,7 +69,7 @@ ODT(X, ...)
 \item{NodeRotateFun}{Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
 including \itemize{
 \item{"RotMatPPO": projection pursuit optimization model (\code{\link{PPO}}), see \code{\link{RotMatPPO}} (default, model="PPR").}
-\item{"RotMatRF": single feature similar to random forest, see \code{\link{RotMatRF}}.}
+\item{"RotMatRF": single feature similar to CART, see \code{\link{RotMatRF}}.}
 \item{"RotMatRand": random rotation, see \code{\link{RotMatRand}}.}
 \item{"RotMatMake": users can define this function, for details see \code{\link{RotMatMake}}.}
 }}

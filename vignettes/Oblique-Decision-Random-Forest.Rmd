@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# ODRF <a href='https://liuyu-star.github.io/ODRF'><img src='logo.png' align="right" height="139" /></a>
+# ODRF <a href='https://liuyu-star.github.io/ODRF'><img src="logo.png" align="right" height="139"/></a>
 
 <!-- badges: start -->
 [![Codecov test coverage](https://codecov.io/gh/liuyu-star/ODRF/branch/main/graph/badge.svg)](https://app.codecov.io/gh/liuyu-star/ODRF?branch=main)
@@ -52,15 +52,16 @@ devtools::install_github("liuyu-star/ODRF")
 We show how to use the ODRF package with examples.
 
 ### Classification and regression with functions `ODT()` and `ODRF()`
-Classification with Oblique Decision Tree.
+
+Classification with Oblique Decision Randome Forest.
 ```{r ODT}
 library(ODRF)
 data(seeds, package = "ODRF")
-set.seed(18)
-train <- sample(1:209, 120)
+set.seed(19)
+train <- sample(1:209, 150)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
-index <- seq(floor(nrow(train_data) / 2))
+index <- seq(floor(1*nrow(train_data) / 2))
 
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
   split = "gini", parallel = FALSE
@@ -96,14 +97,14 @@ print(c(
 ))
 ```
 
-Regression with Oblique Decision Randome Forest.
+Regression with Oblique Decision Tree.
 ```{r ODRF}
 data(body_fat, package = "ODRF")
-set.seed(9)
-train <- sample(1:252, 120)
+set.seed(42)
+train <- sample(1:252, 150)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
-index <- seq(floor(nrow(train_data) / 2))
+index <- seq(floor(1*nrow(train_data) / 2))
 
 tree <- ODT(Density ~ ., train_data, split = "mse")
 pred <- predict(tree, test_data[, -1])
@@ -126,7 +127,7 @@ print(c(
   tree.online = e.tree.online, tree.prune = e.tree.prune
 ))
 ```
-As shown in the classification and regression results above, the training data `train_data` is divided into two batches equally, then the first batch is used to train `ODT` and `ODRF`, and the second batch is used to update the model by `online()`. The error after the model update is significantly smaller than that of one batch of data alone, and the model is also pruned by `prune()` and the same effect is achieved.
+As shown in the classification and regression results above, the training data `train_data` is divided into two batches equally, then the first batch is used to train `ODT` and `ODRF`, and the second batch is used to update the model by `online()`. The error after the model update is significantly smaller than that of one batch of data alone.<!-- , and the model is also pruned by `prune()` and the same effect is achieved.-->
 
 ### Print the tree structure of class `ODT` and the model estimation error of class `ODRF`
 ```{r print}
@@ -150,3 +151,4 @@ If you encounter a clear bug, please file an issue with a minimal reproducible e
 
 Please note that this project is released with a [Contributor Code of Conduct](https://liuyu-star.github.io/ODRF/CONTRIBUTING).
 By participating in this project you agree to abide by its terms.
+

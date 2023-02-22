@@ -2,7 +2,7 @@
 #'
 #' Prediction accuracy of ODRF at different tree sizes.
 #'
-#' @param forest an object of class \code{ODRF}, as that created by the function \code{\link{ODRF}}.
+#' @param forest An object of class \code{ODRF}, as that created by the function \code{\link{ODRF}}.
 #' @param data Training data of class \code{data.frame} in \code{\link{ODRF}} is used to calculate the OOB error.
 #' @param newdata A data frame or matrix containing new data is used to calculate the test error. If it is missing, let it be \code{data}.
 #'

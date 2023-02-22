@@ -112,11 +112,5 @@ PPO <- function(X, y, model = "PPR", split = "gini", weights = NULL, ...) {
     }
   }
 
-  # projMat=matrix(0,p,3)
-  # projMat[,1]=1:p
-  # projMat[,2]=rep(1,p)
-  # projMat[,3]=projbest
-  # colnames(projMat)=c("Varible","Number of projections","Projection coefficient")
-  # return(list(projbest=projbest,indexbest=indexbest))
   return(as.vector(PP))
 }

@@ -58,7 +58,7 @@ We show how to use the ODRF package with examples.
 
 ### Classification and regression with functions `ODT()` and `ODRF()`
 
-Classification with Oblique Decision Tree.
+Classification with Oblique Decision Randome Forest.
 
 ``` r
 library(ODRF)
@@ -67,11 +67,11 @@ library(ODRF)
 #> Loading required package: libcoin
 #> Loading required package: mvtnorm
 data(seeds, package = "ODRF")
-set.seed(18)
-train <- sample(1:209, 120)
+set.seed(19)
+train <- sample(1:209, 150)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
-index <- seq(floor(nrow(train_data) / 2))
+index <- seq(floor(1*nrow(train_data) / 2))
 
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
   split = "gini", parallel = FALSE
@@ -106,18 +106,18 @@ print(c(
   forest.online = e.forest.online, forest.prune = e.forest.prune
 ))
 #>        forest       forest1       forest2 forest.online  forest.prune 
-#>    0.04494382    0.08988764    0.07865169    0.07865169    0.08988764
+#>    0.10169492    0.10169492    0.10169492    0.06779661    0.10169492
 ```
 
-Regression with Oblique Decision Randome Forest.
+Regression with Oblique Decision Tree.
 
 ``` r
 data(body_fat, package = "ODRF")
-set.seed(9)
-train <- sample(1:252, 120)
+set.seed(42)
+train <- sample(1:252, 150)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
-index <- seq(floor(nrow(train_data) / 2))
+index <- seq(floor(1*nrow(train_data) / 2))
 
 tree <- ODT(Density ~ ., train_data, split = "mse")
 pred <- predict(tree, test_data[, -1])
@@ -140,15 +140,15 @@ print(c(
   tree.online = e.tree.online, tree.prune = e.tree.prune
 ))
 #>         tree        tree1        tree2  tree.online   tree.prune 
-#> 2.103293e-05 3.592966e-05 5.485434e-05 3.599310e-05 3.592966e-05
+#> 2.619833e-05 4.165811e-05 7.627646e-05 3.634177e-05 4.165811e-05
 ```
 
 As shown in the classification and regression results above, the
 training data `train_data` is divided into two batches equally, then the
 first batch is used to train `ODT` and `ODRF`, and the second batch is
 used to update the model by `online()`. The error after the model update
-is significantly smaller than that of one batch of data alone, and the
-model is also pruned by `prune()` and the same effect is achieved.
+is significantly smaller than that of one batch of data
+alone.<!-- , and the model is also pruned by `prune()` and the same effect is achieved.-->
 
 ### Print the tree structure of class `ODT` and the model estimation error of class `ODRF`
 
@@ -163,8 +163,8 @@ tree
 #> =============================================================
 #> 
 #> 1) root
-#>    node2)# proj1*X < 0.01 -> (leaf1 = setosa)
-#>    node3)  proj1*X >= 0.01
+#>    node2)# proj1*X < 0.29 -> (leaf1 = setosa)
+#>    node3)  proj1*X >= 0.29
 #>       node4)# proj2*X < 0.88 -> (leaf2 = versicolor)
 #>       node5)# proj2*X >= 0.88 -> (leaf3 = virginica)
 forest <- ODRF(Species ~ ., data = iris, parallel = FALSE)

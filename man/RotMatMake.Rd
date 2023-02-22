@@ -21,9 +21,9 @@ RotMatMake(
 
 \item{RotMatFun}{A self-defined projection matrix function name, which can also be \code{\link{RotMatRand}} and \code{\link{RotMatPPO}}. Note that \code{(,...)} is necessary.}
 
-\item{PPFun}{A self-defined projection matrix function, which can also be \code{\link{PPO}}. Note that \code{(,...)} is necessary.}
+\item{PPFun}{A self-defined projection function name, which can also be \code{\link{PPO}}. Note that \code{(,...)} is necessary.}
 
-\item{FunDir}{The path to the \code{function} of the user-defined \code{NodeRotateFun}. (default current Workspace)}
+\item{FunDir}{The path to the \code{function} of the user-defined \code{NodeRotateFun} (default current Workspace).}
 
 \item{paramList}{List of parameters used by the functions \code{RotMatFun} and \code{PPFun}. If left unchanged, default values will be used, for details see \code{\link[ODRF]{defaults}}.}
 

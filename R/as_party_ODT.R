@@ -35,6 +35,10 @@ as.party.ODT <- function(obj, data, ...) {
   ppTree <- obj
   rm(obj)
 
+  if (prod(dim(data)) != ppTree$data$n * (ppTree$data$p+1)) {
+    stop("'data' must be the training data 'data' in class ODT.")
+  }
+
   vars <- all.vars(ppTree$terms)
   y <- data[, setdiff(colnames(data), vars[-1])]
   X <- data[, vars[-1]]

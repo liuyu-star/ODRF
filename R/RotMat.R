@@ -1,6 +1,6 @@
 #' Random Rotation Matrix
 #'
-#' Generate rotation matrices by different distributions, and it comes from the library code{rerf}.
+#' Generate rotation matrices by different distributions, and it comes from the library \code{rerf}.
 #'
 #' @param dimX The number of dimensions.
 #' @param randDist The probability distribution of the random projection direction, including "Binary": \eqn{B\{-1,1\}} binomial distribution (default),
@@ -118,7 +118,7 @@ RotMatRand <- function(dimX, randDist = "Binary", numProj = ceiling(sqrt(dimX)),
 
 #' Create a Projection Matrix: Random Forest (RF)
 #'
-#' Create a projection matrix with coefficient 1 such that the ODRF (ODT) has the same partition variables as the random forest (tree).
+#' Create a projection matrix with coefficient 1 such that the ODRF (ODT) has the same partition variables as the Random Forest (CART).
 #'
 #' @param dimX The number of dimensions.
 #' @param numProj The number of projection directions (default ceiling(sqrt(\code{dimX}))).
@@ -179,8 +179,8 @@ RotMatRF <- function(dimX, numProj, catLabel = NULL, ...) {
 #' or 'mse': mean square error (regression).
 #' @param weights A vector of length same as \code{data} that are positive weights. (default NULL)
 #' @param dimProj Number of variables to be projected, \code{dimProj}=min(ceiling(n^0.4),ceiling(ncol(X)*2/3)) (default) or dimProj="Rand": random from 1 to ncol(X).
-#' @param numProj The number of projection directions, when dimProj="Rand" default
-#' numProj = sample(ceiling(ncol(X)/3),1) otherwise default numProj=ceiling(p0/dimProj).
+#' @param numProj The number of projection directions, when \code{dimProj}="Rand" default
+#' \code{numProj} = sample(ceiling(ncol(\code{X})/3),1) otherwise default \code{numProj}=ceiling(ncol(\code{X})/\code{dimProj}).
 #' @param catLabel A category labels of class \code{list} in predictors. (default NULL, for details see Examples of \code{\link{ODT}})
 #' @param ... Used to handle superfluous arguments passed in using paramList.
 #'
@@ -388,8 +388,8 @@ RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, di
 #' @param X An n by d numeric matrix (preferable) or data frame.
 #' @param y A response vector of length n.
 #' @param RotMatFun A self-defined projection matrix function name, which can also be \code{\link{RotMatRand}} and \code{\link{RotMatPPO}}. Note that \code{(,...)} is necessary.
-#' @param PPFun A self-defined projection matrix function, which can also be \code{\link{PPO}}. Note that \code{(,...)} is necessary.
-#' @param FunDir The path to the \code{function} of the user-defined \code{NodeRotateFun}. (default current Workspace)
+#' @param PPFun A self-defined projection function name, which can also be \code{\link{PPO}}. Note that \code{(,...)} is necessary.
+#' @param FunDir The path to the \code{function} of the user-defined \code{NodeRotateFun} (default current Workspace).
 #' @param paramList List of parameters used by the functions \code{RotMatFun} and \code{PPFun}. If left unchanged, default values will be used, for details see \code{\link[ODRF]{defaults}}.
 #' @param ... Used to handle superfluous arguments passed in using paramList.
 #'

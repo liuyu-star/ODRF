@@ -50,15 +50,6 @@
 #' @method predict ODT
 #' @export
 predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
-  # ppTreeVar=c("split",names(ppTree$structure),names(ppTree$data),names(ppTree$tree))
-  # ppTree=do.call("c",ppTree)
-  # assign("Levels", as.vector(unlist(ppTree[c(2,3)])))
-  # ppTree=ppTree[-c(2,3)]
-  # for(v in seq(length(ppTreeVar))){
-  #  assign(ppTreeVar[v], ppTree[[v]])
-  # }
-  # rm(ppTree)
-  # address na values.
 
   ppTree <- object
   rm(object)

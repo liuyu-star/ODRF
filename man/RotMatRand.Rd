@@ -46,7 +46,7 @@ A random matrix to use in running \code{\link{ODT}}.
 }
 }
 \description{
-Generate rotation matrices by different distributions, and it comes from the library code{rerf}.
+Generate rotation matrices by different distributions, and it comes from the library \code{rerf}.
 }
 \examples{
 set.seed(1)

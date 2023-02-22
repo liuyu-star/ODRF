@@ -7,7 +7,7 @@
 Accuracy(forest, data, newdata = NULL)
 }
 \arguments{
-\item{forest}{an object of class \code{ODRF}, as that created by the function \code{\link{ODRF}}.}
+\item{forest}{An object of class \code{ODRF}, as that created by the function \code{\link{ODRF}}.}
 
 \item{data}{Training data of class \code{data.frame} in \code{\link{ODRF}} is used to calculate the OOB error.}
 
