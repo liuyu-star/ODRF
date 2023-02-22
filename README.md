@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# ODRF <a href='https://liuyu-star.github.io/ODRF/'><img src='man/figures/logo.png' align="right" height="139" /></a>
+# ODRF <a href='https://liuyu-star.github.io/ODRF'><img src='man/figures/logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
@@ -12,6 +12,7 @@ status](https://www.r-pkg.org/badges/version/ODRF)](https://CRAN.R-project.org/p
 [![R-CMD-check](https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![pkgdown](https://github.com/liuyu-star/ODRF/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/liuyu-star/ODRF/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
 ODRF implements the well-known Oblique Decision Tree (ODT) and ODT-based
@@ -207,5 +208,5 @@ reproducible example on
 ------------------------------------------------------------------------
 
 Please note that this project is released with a [Contributor Code of
-Conduct](https://liuyu-star.github.io/ODRF//CONTRIBUTING). By
+Conduct](https://liuyu-star.github.io/ODRF/CONTRIBUTING). By
 participating in this project you agree to abide by its terms.
