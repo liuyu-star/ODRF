@@ -55,7 +55,7 @@ devtools::install_github("liuyu-star/ODRF")
 
 We show how to use the ODRF package with examples.
 
-### Classification and regression with functions `ODT()` and `ODRF()`
+### Classification and regression with functions ODT() and ODRF()
 
 Classification with Oblique Decision Randome Forest.
 ```{r ODT}
