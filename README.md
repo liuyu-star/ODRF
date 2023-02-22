@@ -31,22 +31,22 @@ The ODRF R package allows users to define their own functions to find the projec
 The ODRF [R Package](https://cran.r-project.org/) consists of the
 following main functions:
 
-- `ODT()` classification and regression using an `ODT` in which each
-  node is split by a linear combination of predictors.
-- `ODRF()` classification and regression implemented by the `ODRF` It’s
-  an extension of random forest based on `ODT()` and includes random
-  forest as a special case.
-- `Online()` online training to update existing `ODT` and `ODRF` by
-  using new data sets.
-- `prune()` prune `ODT` from bottom to top with validation data based on
+- `ODT()` classification and regression using an ODT in which each node
+  is split by a linear combination of predictors.
+- `ODRF()` classification and regression implemented by the ODRF It’s an
+  extension of random forest based on ODT() and includes random forest
+  as a special case.
+- `Online()` online training to update existing ODT and ODRF by using
+  new data sets.
+- `prune()` prune ODT from bottom to top with validation data based on
   prediction error.
-- `print()`, `predict()` and `plot()` the base R functions in the base R
-  Package to class `ODT` and `ODRF`.
+- `print()`, predict() and plot() the base R functions in the base R
+  Package to class ODT and ODRF.
 
 `ODRF` allows users to define their own functions to find the
 projections at each node, which is essential to the performance of the
 forests. We also provide a complete comparison and analysis for other
-`ODT` and `ODRF`, more details are available in `vignette("ODRF")`.
+ODT and ODRF, more details are available in vignette(“ODRF”).
 
 ## Installation
 
