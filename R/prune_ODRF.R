@@ -30,7 +30,7 @@
 #' pred <- predict(prune_forest, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
-#'
+#'\donttest{
 #' # Regression with Oblique Decision Random Forest
 #' data(body_fat)
 #' set.seed(221212)
@@ -43,7 +43,7 @@
 #' pred <- predict(prune_forest, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
-#'
+#'}
 #' @keywords forest prune
 #' @rdname prune.ODRF
 #' @aliases prune.ODRF
