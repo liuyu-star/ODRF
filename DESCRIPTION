@@ -20,7 +20,7 @@ URL: https://liuyu-star.github.io/ODRF/
 BugReports: https://github.com/liuyu-star/ODRF/issues
 Depends: 
     partykit,
-    R (>= 3.5.0)
+    R (>= 3.1.0)
 Imports: 
     doParallel,
     foreach,
