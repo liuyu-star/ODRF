@@ -121,7 +121,7 @@
 
 
 <dt>data</dt>
-<dd><p>Training data of class <code>data.frame</code> in which to interpret the variables named in the formula. If <code>data</code> is missing it is obtained from the current environment by <code>formula</code>.</p></dd>
+<dd><p>Training data of class <code>data.frame</code> containing variables named in the formula. If <code>data</code> is missing it is obtained from the current environment by <code>formula</code>.</p></dd>
 
 
 <dt>split</dt>
@@ -203,7 +203,7 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>An object of class ODT Containing a list components:</p><ul><li><p><code>call</code>: The original call to ODT.</p></li>
+<p>An object of class ODT containing a list of components::</p><ul><li><p><code>call</code>: The original call to ODT.</p></li>
 <li><p><code>terms</code>: An object of class <code>c("terms", "formula")</code> (see <code><a href="https://rdrr.io/r/stats/terms.object.html" class="external-link">terms.object</a></code>) summarizing the formula. Used by various methods, but typically not of direct relevance to users.</p></li>
 <li><p><code>projections</code>: Projection direction for each split node.</p></li>
 <li><p><code>structure</code>: A set of tree structure data records.

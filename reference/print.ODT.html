@@ -111,31 +111,31 @@ Trees, Journal of Statistical Software.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =============================================================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1) root</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    node2)# proj1*X &lt; 0.25 -&gt; (leaf1 = setosa)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    node3)  proj1*X &gt;= 0.25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       node4)# proj2*X &lt; 0.52 -&gt; (leaf2 = versicolor)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       node5)# proj2*X &gt;= 0.52 -&gt; (leaf3 = virginica)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    node2)# proj1*X &lt; 0.29 -&gt; (leaf1 = setosa)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    node3)  proj1*X &gt;= 0.29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       node4)# proj2*X &lt; 0.87 -&gt; (leaf2 = versicolor)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       node5)# proj2*X &gt;= 0.87 -&gt; (leaf3 = virginica)</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tree</span>, projection <span class="op">=</span> <span class="cn">TRUE</span>, cutvalue <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ============================================================= </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Oblique Classification Tree structure </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =============================================================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1) root</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    node2)# proj1*X &lt; 0.25 -&gt; (leaf1 = setosa)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    node3)  proj1*X &gt;= 0.25</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       node4)# proj2*X &lt; 0.52 -&gt; (leaf2 = versicolor)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       node5)# proj2*X &gt;= 0.52 -&gt; (leaf3 = virginica)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    node2)# proj1*X &lt; 0.29 -&gt; (leaf1 = setosa)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    node3)  proj1*X &gt;= 0.29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       node4)# proj2*X &lt; 0.87 -&gt; (leaf2 = versicolor)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       node5)# proj2*X &gt;= 0.87 -&gt; (leaf3 = virginica)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Projection coefficient in each node </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> proj1       0.0000           0       1.0000           0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> proj2      -0.2009           0       0.9796           0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> proj1            0           0       0.0000      1.0000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> proj2            0           0       0.5908      0.8068</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cutoff values of each node </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -------------------------------------------------------------</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> CutValue1 CutValue2 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    0.2458    0.5223 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    0.2917    0.8662 </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
