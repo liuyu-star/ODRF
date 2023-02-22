@@ -107,7 +107,7 @@ The ODRF R package allows users to define their own functions to find the projec
 <div class="section level3">
 <h3 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h3>
-<p>The ODRF <a href="https://cran.r-project.org/" class="external-link">R Package</a> consists
+<p>The ODRF <a href="https://cran.r-project.org/" class="external-link">R package</a> consists
 of the following main functions:</p>
 <ul>
 <li>
@@ -228,16 +228,15 @@ other ODT and ODRF, more details are available in vignette(“ODRF”).</p>
 <span><span class="co">#&gt;         tree        tree1        tree2  tree.online   tree.prune </span></span>
 <span><span class="co">#&gt; 2.619833e-05 4.165811e-05 7.627646e-05 3.634177e-05 4.165811e-05</span></span></code></pre></div>
 <p>As shown in the classification and regression results above, the
-training data <code>train_data</code> is divided into two batches
-equally, then the first batch is used to train <code>ODT</code> and
-<code>ODRF</code>, and the second batch is used to update the model by
-<code><a href="../reference/online.html">online()</a></code>. The error after the model update is significantly
-smaller than that of one batch of data
+training data train_data is divided into two batches equally, then the
+first batch is used to train ODT and ODRF, and the second batch is used
+to update the model by online(). The error after the model update is
+significantly smaller than that of one batch of data
 alone.<!-- , and the model is also pruned by `prune()` and the same effect is achieved.--></p>
 </div>
 <div class="section level4">
-<h4 id="print-the-tree-structure-of-class-odt-and-the-model-estimation-error-of-class-odrf">Print the tree structure of class <code>ODT</code> and the model
-estimation error of class <code>ODRF</code><a class="anchor" aria-label="anchor" href="#print-the-tree-structure-of-class-odt-and-the-model-estimation-error-of-class-odrf"></a>
+<h4 id="print-the-tree-structure-of-class-odt-and-the-model-estimation-error-of-class-odrf">Print the tree structure of class ODT and the model estimation error
+of class ODRF<a class="anchor" aria-label="anchor" href="#print-the-tree-structure-of-class-odt-and-the-model-estimation-error-of-class-odrf"></a>
 </h4>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">iris</span>, package <span class="op">=</span> <span class="st">"datasets"</span><span class="op">)</span></span>
@@ -271,7 +270,7 @@ estimation error of class <code>ODRF</code><a class="anchor" aria-label="anchor"
 <span><span class="co">#&gt; virginica       0          3        47  0.05999988</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="plot-the-tree-structure-of-class-odt">Plot the tree structure of class <code>ODT</code><a class="anchor" aria-label="anchor" href="#plot-the-tree-structure-of-class-odt"></a>
+<h4 id="plot-the-tree-structure-of-class-odt">Plot the tree structure of class ODT<a class="anchor" aria-label="anchor" href="#plot-the-tree-structure-of-class-odt"></a>
 </h4>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tree</span><span class="op">)</span></span></code></pre></div>
