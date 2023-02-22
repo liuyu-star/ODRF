@@ -22,7 +22,7 @@
 #' tree <- ODT(Species ~ ., data = iris, split = "gini")
 #' plot(tree)
 #'
-#' @importFrom graphics abline axis dotchart legend matplot mtext par
+#' @importFrom graphics abline axis dotchart legend matplot mtext par plot
 #' @import grid
 #' @rdname plot.ODT
 #' @aliases plot.ODT

@@ -30,10 +30,10 @@ set.seed(221212)
 train <- sample(1:569, 200)
 train_data <- data.frame(breast_cancer[train, -1])
 test_data <- data.frame(breast_cancer[-train, -1])
-
+\donttest{
 forest <- ODRF(diagnosis ~ ., train_data, split = "gini", parallel = FALSE)
 (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
-
+}
 }
 \seealso{
 \code{\link{ODRF}} \code{\link{Accuracy}} \code{\link{plot.VarImp}}

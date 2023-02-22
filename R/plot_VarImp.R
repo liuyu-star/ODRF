@@ -18,11 +18,11 @@
 #' train <- sample(1:569, 200)
 #' train_data <- data.frame(breast_cancer[train, -1])
 #' test_data <- data.frame(breast_cancer[-train, -1])
-#'
+#'\donttest{
 #' forest <- ODRF(diagnosis ~ ., train_data, split = "entropy", parallel = FALSE)
 #' (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
 #' plot(varimp, digits = 0)
-#'
+#'}
 #' @keywords forest plot
 #' @rdname plot.VarImp
 #' @aliases plot.VarImp
