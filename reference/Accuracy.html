@@ -93,43 +93,29 @@
 <span class="r-in"><span><span class="va">train_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">breast_cancer</span><span class="op">[</span><span class="va">train</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">breast_cancer</span><span class="op">[</span><span class="op">-</span><span class="va">train</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="ODRF.html">ODRF</a></span><span class="op">(</span><span class="va">diagnosis</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span>, split <span class="op">=</span> <span class="st">"gini"</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="ODRF.html">ODRF</a></span><span class="op">(</span><span class="va">diagnosis</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span>, split <span class="op">=</span> <span class="st">"gini"</span>,</span></span>
+<span class="r-in"><span>parallel <span class="op">=</span> <span class="cn">FALSE</span>, ntrees <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">error</span> <span class="op">&lt;-</span> <span class="fu">Accuracy</span><span class="op">(</span><span class="va">forest</span>, <span class="va">train_data</span>, <span class="va">test_data</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $err.oob</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] 0.06666667 0.10909091 0.09836066 0.07246377 0.09333333 0.05333333</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [7] 0.03947368 0.06410256 0.08750000 0.03750000 0.03750000 0.02500000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [13] 0.03750000 0.03750000 0.01250000 0.00000000 0.00000000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [19] 0.01250000 0.01250000 0.00000000 0.00000000 0.00000000 0.01250000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [25] 0.00000000 0.01250000 0.00000000 0.02500000 0.02500000 0.00000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [31] 0.01250000 0.02500000 0.02500000 0.05000000 0.03750000 0.03750000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [37] 0.03750000 0.05000000 0.05000000 0.05000000 0.03750000 0.02500000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [43] 0.02500000 0.03750000 0.02500000 0.03750000 0.02500000 0.03750000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [49] 0.05000000 0.03750000 0.05000000 0.02500000 0.03750000 0.03750000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [55] 0.02500000 0.02500000 0.03750000 0.02500000 0.03750000 0.03750000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [61] 0.02500000 0.05000000 0.05000000 0.05000000 0.05000000 0.05000000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [67] 0.05000000 0.02500000 0.05000000 0.03750000 0.02500000 0.03750000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [73] 0.02500000 0.03750000 0.03750000 0.05000000 0.05000000 0.03750000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [79] 0.03750000 0.03750000 0.03750000 0.03750000 0.03750000 0.03750000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [85] 0.03750000 0.03750000 0.03750000 0.03750000 0.03750000 0.03750000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [91] 0.03750000 0.03750000 0.03750000 0.03750000 0.03750000 0.03750000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [97] 0.03750000 0.03750000 0.03750000 0.03750000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.06666667 0.10909091 0.09836066 0.07246377 0.05333333 0.06666667</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.06578947 0.02564103 0.07500000 0.05000000 0.03750000 0.03750000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [13] 0.05000000 0.02500000 0.02500000 0.00000000 0.00000000 0.01250000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [19] 0.02500000 0.01250000 0.02500000 0.00000000 0.00000000 0.01250000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [25] 0.01250000 0.01250000 0.00000000 0.03750000 0.01250000 0.01250000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [31] 0.01250000 0.01250000 0.02500000 0.01250000 0.05000000 0.05000000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [37] 0.03750000 0.05000000 0.05000000 0.05000000 0.03750000 0.02500000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [43] 0.02500000 0.02500000 0.02500000 0.02500000 0.02500000 0.03750000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [49] 0.05000000 0.03750000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $err.test</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] 0.4376278 0.4498978 0.4335378 0.4396728 0.4314928 0.4417178 0.4376278</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [8] 0.4376278 0.4519427 0.4560327 0.4560327 0.4642127 0.4417178 0.4233129</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [15] 0.4274029 0.4437628 0.4376278 0.4335378 0.4478528 0.4314928 0.4335378</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [22] 0.4376278 0.4458078 0.4417178 0.4396728 0.4417178 0.4396728 0.4355828</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [29] 0.4396728 0.4396728 0.4376278 0.4376278 0.4233129 0.4294479 0.4314928</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [36] 0.4294479 0.4233129 0.4253579 0.4233129 0.4274029 0.4314928 0.4192229</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [43] 0.4171779 0.4274029 0.4192229 0.4274029 0.4314928 0.4151329 0.4212679</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [50] 0.4274029 0.4233129 0.4212679 0.4335378 0.4335378 0.4192229 0.4253579</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [57] 0.4233129 0.4192229 0.4233129 0.4212679 0.4233129 0.4212679 0.4274029</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [64] 0.4314928 0.4376278 0.4396728 0.4355828 0.4376278 0.4376278 0.4376278</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [71] 0.4376278 0.4396728 0.4396728 0.4355828 0.4417178 0.4355828 0.4396728</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [78] 0.4294479 0.4294479 0.4253579 0.4294479 0.4212679 0.4314928 0.4294479</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [85] 0.4335378 0.4294479 0.4314928 0.4376278 0.4314928 0.4294479 0.4274029</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [92] 0.4151329 0.4130879 0.4192229 0.4110429 0.4110429 0.4233129 0.4089980</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [99] 0.4192229 0.4069530</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.4314928 0.4478528 0.4560327 0.4233129 0.4355828 0.4437628 0.4192229</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] 0.4274029 0.3967280 0.4028630 0.4110429 0.4171779 0.4089980 0.4008180</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [15] 0.4151329 0.4089980 0.4110429 0.4089980 0.4130879 0.4151329 0.4069530</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [22] 0.3987730 0.3987730 0.4069530 0.4089980 0.4028630 0.4049080 0.3987730</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [29] 0.3865031 0.3824131 0.3905930 0.4008180 0.3946830 0.3905930 0.3967280</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [36] 0.3926380 0.3946830 0.3987730 0.4069530 0.4008180 0.3987730 0.3905930</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [43] 0.4008180 0.4069530 0.4028630 0.3987730 0.4008180 0.3967280 0.3926380</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [50] 0.4008180</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $split</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "gini"</span>
