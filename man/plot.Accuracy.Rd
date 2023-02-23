@@ -30,7 +30,8 @@ train <- sample(1:569, 80)
 train_data <- data.frame(breast_cancer[train, -1])
 test_data <- data.frame(breast_cancer[-train, -1])
 
-forest <- ODRF(diagnosis ~ ., train_data, split = "gini", parallel = FALSE)
+forest <- ODRF(diagnosis ~ ., train_data, split = "gini",
+parallel = FALSE, ntrees = 30)
 (error <- Accuracy(forest, train_data, test_data))
 plot(error)
 

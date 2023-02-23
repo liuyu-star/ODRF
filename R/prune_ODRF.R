@@ -24,7 +24,7 @@
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data,
-#'   split = "entropy", parallel = FALSE
+#'   split = "entropy", parallel = FALSE, ntrees = 50
 #' )
 #' prune_forest <- prune(forest, train_data[, -8], train_data[, 8])
 #' pred <- predict(prune_forest, test_data[, -8])

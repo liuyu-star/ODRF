@@ -37,13 +37,13 @@ train <- sample(1:209, 80)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
-  split = "entropy", parallel = FALSE
+  split = "entropy", parallel = FALSE, ntrees = 50
 )
 prune_forest <- prune(forest, train_data[, -8], train_data[, 8])
 pred <- predict(prune_forest, test_data[, -8])
 # classification error
 (mean(pred != test_data[, 8]))
-
+\donttest{
 # Regression with Oblique Decision Random Forest
 data(body_fat)
 set.seed(221212)
@@ -56,7 +56,7 @@ prune_forest <- prune(forest, train_data[-index, -1], train_data[-index, 1], use
 pred <- predict(prune_forest, test_data[, -1])
 # estimation error
 mean((pred - test_data[, 1])^2)
-
+}
 }
 \seealso{
 \code{\link{ODRF}} \code{\link{online.ODRF}} \code{\link{prune.ODT}}
