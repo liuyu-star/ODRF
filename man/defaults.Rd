@@ -30,7 +30,7 @@ Default parameters of the RotMat* function.
 \item \code{dimX} An integer denoting the number of columns in the design matrix X.
 \item \code{dimProj} Number of variables to be projected, default \code{dimProj="Rand"}: random from 1 to ncol(X).
 \item \code{numProj} the number of projection directions.(default \code{ceiling(sqrt(dimX))})
-\item \code{catLabel} A category labels of class \code{list} in prediction variables，for details see Examples of \code{\link{ODRF}}.
+\item \code{catLabel} A category labels of class \code{list} in prediction variables, for details see Examples of \code{\link{ODRF}}.
 \item \code{weights} A vector of length same as \code{data} that are positive weights.(default NULL)
 \item \code{lambda} Parameter of the Poisson distribution (default 1).
 \item \code{sparsity} A real number in \eqn{(0,1)} that specifies the distribution of non-zero elements in the random matrix.
