@@ -17,11 +17,10 @@ knitr::opts_chunk$set(
 # ODRF <a href='https://liuyu-star.github.io/ODRF/'><img src="logo.png" align="right" height="139"/></a>
 
 <!-- badges: start -->
-[![Codecov test coverage](https://codecov.io/gh/liuyu-star/ODRF/branch/main/graph/badge.svg)](https://app.codecov.io/gh/liuyu-star/ODRF?branch=main)
 [![CRAN status](https://www.r-pkg.org/badges/version/ODRF)](https://CRAN.R-project.org/package=ODRF)
 [![R-CMD-check](https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml)
-[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 [![pkgdown](https://github.com/liuyu-star/ODRF/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/liuyu-star/ODRF/actions/workflows/pkgdown.yaml)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
 ODRF implements the well-known Oblique Decision Tree (ODT) and ODT-based Random Forest (ODRF), which uses linear combinations of predictors as partitioning variables for both traditional CART and Random Forest. A number of modifications have been adopted in the implementation; some new functions are also provided.
@@ -30,8 +29,13 @@ The goal of ODRF is to supplement classical CART and random forests for classifi
 -->
 
 <!--
+[![Codecov test coverage](https://codecov.io/gh/liuyu-star/ODRF/branch/main/graph/badge.svg)](https://app.codecov.io/gh/liuyu-star/ODRF?branch=main)
+-->
+
+<!--
 The ODRF R package allows users to define their own functions to find the projections of at each node, which is essential to the performance of the forests. We also provide a complete comparison and analysis for other ODT and ODRF. You can learn more about them in `vignette("ODRF")`.
 -->
+
 ## Overview
 
 The ODRF [R package](https://cran.r-project.org/) consists of the following main functions:

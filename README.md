@@ -5,14 +5,12 @@
 
 <!-- badges: start -->
 
-[![Codecov test
-coverage](https://codecov.io/gh/liuyu-star/ODRF/branch/main/graph/badge.svg)](https://app.codecov.io/gh/liuyu-star/ODRF?branch=main)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/ODRF)](https://CRAN.R-project.org/package=ODRF)
 [![R-CMD-check](https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/liuyu-star/ODRF/actions/workflows/R-CMD-check.yaml)
+[![pkgdown](https://github.com/liuyu-star/ODRF/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/liuyu-star/ODRF/actions/workflows/pkgdown.yaml)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
-[![pkgdown](https://github.com/liuyu-star/ODRF/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/liuyu-star/ODRF/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
 ODRF implements the well-known Oblique Decision Tree (ODT) and ODT-based
@@ -23,6 +21,9 @@ new functions are also provided. <!--
 The goal of ODRF is to supplement classical CART and random forests for classification and regression. The use of linear combinations of predictors as splitting variables is one of the important extensions of CART and is known as Oblique Decision Trees (ODT) and ODT-based Random Forests (ODRF).
 -->
 
+<!--
+[![Codecov test coverage](https://codecov.io/gh/liuyu-star/ODRF/branch/main/graph/badge.svg)](https://app.codecov.io/gh/liuyu-star/ODRF?branch=main)
+-->
 <!--
 The ODRF R package allows users to define their own functions to find the projections of at each node, which is essential to the performance of the forests. We also provide a complete comparison and analysis for other ODT and ODRF. You can learn more about them in `vignette("ODRF")`.
 -->
