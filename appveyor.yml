@@ -14,12 +14,12 @@ cache:
   - C:\RLibrary
 
 environment:
-  #global:
-    NOT_CRAN: true
-   # USE_RTOOLS: true
-   # _R_CHECK_FORCE_SUGGESTS: false
-   # _R_CHECK_CRAN_INCOMING_: true
-   # _R_CHECK_ARGS: "--run-dontrun"
+   global:
+     NOT_CRAN: true
+     USE_RTOOLS: true
+      _R_CHECK_FORCE_SUGGESTS_: false
+      _R_CHECK_CRAN_INCOMING_: false
+      _R_CHECK_ARGS: "--run-dontrun"
   # env vars that may need to be set, at least temporarily, from time to time
   # see https://github.com/krlmlr/r-appveyor#readme for details
   # USE_RTOOLS: true
