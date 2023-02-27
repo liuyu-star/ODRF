@@ -104,8 +104,9 @@ Trees, Journal of Statistical Software.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="ODT.html">ODT</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>You are creating a forest for classification</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>You are creating a tree for classification</span>
 <span class="r-in"><span><span class="va">tree</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ============================================================= </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Oblique Classification Tree structure </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =============================================================</span>
@@ -116,6 +117,7 @@ Trees, Journal of Statistical Software.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       node4)# proj2*X &lt; 0.87 -&gt; (leaf2 = versicolor)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       node5)# proj2*X &gt;= 0.87 -&gt; (leaf3 = virginica)</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">tree</span>, projection <span class="op">=</span> <span class="cn">TRUE</span>, cutvalue <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ============================================================= </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Oblique Classification Tree structure </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =============================================================</span>
