@@ -59,22 +59,22 @@ ind <-  ceiling(quantile(seq(150),seq(100)/100))
 
 set.seed(11)
 forest1 <- ODRF(Species ~ .,
-  data = iris, split = "gini", NodeRotateFun = "RotMatRand",
-  parallel = FALSE, ntrees = 50 #,subset = ind
+  data = iris[ind,], split = "gini", NodeRotateFun = "RotMatRand",
+  parallel = FALSE, ntrees = 50#, subset = ind
 )
 pred1 <- predict(forest1, Xnew = iris[-ind, -5])
 
 set.seed(11)
 forest2 <- ODRF(Species ~ .,
-  data = iris, split = "gini", NodeRotateFun = "RotMatRand",
-  parallel = FALSE, ntrees = 50 #,subset = ind
+  data = iris[ind,], split = "gini", NodeRotateFun = "RotMatRand",
+  parallel = FALSE, ntrees = 50# ,subset = ind
 )
 pred2 <- predict(forest2, Xnew = iris[-ind, -5])
 
 set.seed(22)
 forest3 <- ODRF(Species ~ .,
-  data = iris, split = "gini", NodeRotateFun = "RotMatRand",
-  parallel = FALSE, ntrees = 50 #,subset = ind
+  data = iris[ind,], split = "gini", NodeRotateFun = "RotMatRand",
+  parallel = FALSE, ntrees = 50#,subset = ind
 )
 pred3 <- predict(forest3, Xnew = iris[-ind, -5])
 

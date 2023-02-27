@@ -1,6 +1,6 @@
 ## Responses to Comments
 
-We are very grateful for your comments and have made the following changes in response to your suggestions.
+This is a resubmission after a feedback. We are very grateful for your comments and have made the following changes in response to your suggestions.
 
 1. Please always explain all acronyms in the description text. -> CART
 

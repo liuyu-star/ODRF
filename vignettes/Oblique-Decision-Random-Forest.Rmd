@@ -149,7 +149,7 @@ print(forest)
 ```
 
 ### Plot the tree structure of ODT
-```{r plot, fig.height=4.0,fig.width=5.0}
+```{r plot, fig.height=4.0,fig.width=7.0}
 plot(tree)
 ```
 
