@@ -35,7 +35,6 @@ The goal of ODRF is to supplement classical CART and random forests for classifi
 <!--
 The ODRF R package allows users to define their own functions to find the projections of at each node, which is essential to the performance of the forests. We also provide a complete comparison and analysis for other ODT and ODRF. You can learn more about them in `vignette("ODRF")`.
 -->
-
 ## Overview
 
 The ODRF [R package](https://cran.r-project.org/) consists of the following main functions:
@@ -61,95 +60,96 @@ devtools::install_github("liuyu-star/ODRF")
 
 We show how to use the ODRF package with examples.
 
-### Classification and regression with functions ODT() and ODRF()
+### Classification and regression using ODT and ODRF
 
-Classification with Oblique Decision Randome Forest.
-```{r ODT}
+Examples of classification and regression using ODRF and ODT are as follows.
+```{r classification and regression}
 library(ODRF)
 data(seeds, package = "ODRF")
-set.seed(19)
+set.seed(12)
 train <- sample(1:209, 150)
-train_data <- data.frame(seeds[train, ])
-test_data <- data.frame(seeds[-train, ])
-index <- seq(floor(1*nrow(train_data) / 2))
-
-forest <- ODRF(varieties_of_wheat ~ ., train_data,
-  split = "gini", parallel = FALSE
-)
-pred <- predict(forest, test_data[, -8])
-e.forest <- mean(pred != test_data[, 8])
-forest1 <- ODRF(varieties_of_wheat ~ ., train_data[index, ],
-  split = "gini", parallel = FALSE
-)
-pred <- predict(forest1, test_data[, -8])
-e.forest.1 <- mean(pred != test_data[, 8])
-forest2 <- ODRF(varieties_of_wheat ~ ., train_data[-index, ],
-  split = "gini", parallel = FALSE
-)
-pred <- predict(forest2, test_data[, -8])
-e.forest.2 <- mean(pred != test_data[, 8])
-
-forest.online <- online(
-  forest1, train_data[-index, -8],
-  train_data[-index, 8]
-)
-pred <- predict(forest.online, test_data[, -8])
-e.forest.online <- mean(pred != test_data[, 8])
-forest.prune <- prune(forest1, train_data[-index, -8],
-  train_data[-index, 8],
-  useOOB = FALSE
-)
-pred <- predict(forest.prune, test_data[, -8])
-e.forest.prune <- mean(pred != test_data[, 8])
-print(c(
-  forest = e.forest, forest1 = e.forest.1, forest2 = e.forest.2,
-  forest.online = e.forest.online, forest.prune = e.forest.prune
-))
-```
-
-Regression with Oblique Decision Tree.
-```{r ODRF}
+seeds_train <- data.frame(seeds[train, ])
+seeds_test <- data.frame(seeds[-train, ])
+forest <- ODRF(varieties_of_wheat ~ ., seeds_train, split = "gini", 
+  parallel = FALSE)
+pred <- predict(forest, seeds_test[, -8])
+(e.forest <- mean(pred != seeds_test[, 8]))
 data(body_fat, package = "ODRF")
-set.seed(42)
-train <- sample(1:252, 150)
-train_data <- data.frame(body_fat[train, ])
-test_data <- data.frame(body_fat[-train, ])
-index <- seq(floor(1*nrow(train_data) / 2))
-
-tree <- ODT(Density ~ ., train_data, split = "mse")
-pred <- predict(tree, test_data[, -1])
-e.tree <- mean((pred - test_data[, 1])^2)
-tree1 <- ODT(Density ~ ., train_data[index, ], split = "mse")
-pred <- predict(tree1, test_data[, -1])
-e.tree.1 <- mean((pred - test_data[, 1])^2)
-tree2 <- ODT(Density ~ ., train_data[-index, ], split = "mse")
-pred <- predict(tree2, test_data[, -1])
-e.tree.2 <- mean((pred - test_data[, 1])^2)
-
-tree.online <- online(tree1, train_data[-index, -1], train_data[-index, 1])
-pred <- predict(tree.online, test_data[, -1])
-e.tree.online <- mean((pred - test_data[, 1])^2)
-tree.prune <- prune(tree1, train_data[-index, -1], train_data[-index, 1])
-pred <- predict(tree.prune, test_data[, -1])
-e.tree.prune <- mean((pred - test_data[, 1])^2)
-print(c(
-  tree = e.tree, tree1 = e.tree.1, tree2 = e.tree.2,
-  tree.online = e.tree.online, tree.prune = e.tree.prune
-))
+train <- sample(1:252, 200)
+bodyfat_train <- data.frame(body_fat[train, ])
+bodyfat_test <- data.frame(body_fat[-train, ])
+tree <- ODT(Density ~ ., bodyfat_train, split = 'mse')
+pred <- predict(tree, bodyfat_test[, -1])
+(e.tree <- mean((pred - bodyfat_test[, 1])^2))
 ```
-As shown in the classification and regression results above, the training data train_data is divided into two batches equally, then the first batch is used to train ODT and ODRF, and the second batch is used to update the model by online(). The error after the model update is significantly smaller than that of one batch of data alone.<!-- , and the model is also pruned by `prune()` and the same effect is achieved.-->
 
-### Print the tree structure of class ODT and the model estimation error of class ODRF
+In the following example, suppose the training data are available in two batches. The first batch is used to train ODT and ODRF, and the second batch is used to update the model by online. The error after the model update is significantly smaller than that of one batch of data alone.
+
+Update existing ODT and ODRF with online.
+```{r online}
+set.seed(17)
+index <- sample(nrow(seeds_train), floor(nrow(seeds_train) / 2))
+forest1 <- ODRF(varieties_of_wheat ~ ., seeds_train[index, ],
+  split = "gini", parallel = FALSE)
+pred <- predict(forest1, seeds_test[, -8])
+(e.forest.1 <- mean(pred != seeds_test[, 8]))
+forest2 <- online(forest1, seeds_train[-index, -8], seeds_train[-index, 8])
+pred <- predict(forest2, seeds_test[, -8])
+(e.forest.online <- mean(pred != seeds_test[, 8]))
+index <- seq(floor(nrow(bodyfat_train) / 2))
+tree1 <- ODT(Density ~ ., bodyfat_train[index, ], split = 'mse')
+pred <- predict(tree1, bodyfat_test[, -1])
+(e.tree.1 <- mean((pred - bodyfat_test[, 1])^2))
+tree2 <- online(tree1, bodyfat_train[-index, -1], bodyfat_train[-index, 1])
+pred <- predict(tree2, bodyfat_test[, -1])
+(e.tree.online <- mean((pred - bodyfat_test[, 1])^2))
+```
+
+prune first judges whether the error of  new data is reduced or not if applied, starting from the last leaf nodes. For ODRF, if argument 'useOOB=TRUE' then it uses 'out-of-bag' for pruning. Examples are as follows.
+```{r prune}
+set.seed(4)
+bodyfat_train=rbind(as.matrix(bodyfat_train),matrix(rnorm(3000*5),5*200,15))
+seeds_train=rbind(as.matrix(seeds_train),matrix(rnorm(1200*5),5*150,8))
+bodyfat_train[-seq(200),1]=sample(bodyfat_train[seq(200),1],5*200,
+  replace = TRUE)
+seeds_train[-seq(150),8]=sample(seeds_train[seq(150),8],5*150,
+  replace = TRUE)
+index <- sample(nrow(seeds_train), floor(nrow(seeds_train) / 2))
+forest1 <- ODRF(seeds_train[index, -8], seeds_train[index, 8],
+  split = "gini", parallel = FALSE)
+pred <- predict(forest1, seeds_test[, -8])
+(e.forest.1 <- mean(pred != seeds_test[, 8]))
+forest2 <- prune(forest1, seeds_train[-index, -8], seeds_train[-index, 8], 
+  useOOB = FALSE)
+pred <- predict(forest2, seeds_test[, -8])
+(e.forest.prune1 <- mean(pred != seeds_test[, 8]))
+forest3 <- prune(forest1, seeds_train[index, -8], seeds_train[index, 8])
+pred <- predict(forest3, seeds_test[, -8])
+(e.forest.prune2 <- mean(pred != seeds_test[, 8]))
+index <- sample(nrow(bodyfat_train), floor(nrow(bodyfat_train) / 2))
+tree1 <- ODT(bodyfat_train[index, -1], bodyfat_train[index, 1], split = 'mse')
+pred <- predict(tree1, bodyfat_test[, -1])
+(e.tree.1 <- mean((pred - bodyfat_test[, 1])^2))
+tree2 <- prune(tree1, bodyfat_train[-index, -1], bodyfat_train[-index, 1])
+pred <- predict(tree2, bodyfat_test[, -1])
+(e.tree.prune <- mean((pred - bodyfat_test[, 1])^2))
+```
+Note that, prune does not always improve efficiency  because the number of observers in the training set is too small to build a simple tree structure. Therefore, we expand the training set with random numbers to make prune effective.
+
+
+### print the tree structure of ODT and  ODRF
 ```{r print}
 data(iris, package = "datasets")
 tree <- ODT(Species ~ ., data = iris)
-tree
+print(tree)
+party.tree <- as.party(tree, data = iris)
+print(party.tree)
 forest <- ODRF(Species ~ ., data = iris, parallel = FALSE)
-forest
+print(forest)
 ```
 
-### Plot the tree structure of class ODT
-```{r plot, fig.height=5.5,fig.width=7.2}
+### Plot the tree structure of ODT
+```{r plot, fig.height=4.0,fig.width=5.0}
 plot(tree)
 ```
 

@@ -114,7 +114,7 @@ print.ODT <- function(x, projection = FALSE, cutvalue = FALSE, verbose = TRUE, .
 
   TreePrint.output <-
     paste(
-      "=============================================================",
+      "\n=============================================================",
       "\nOblique", ifelse(ppTree$split == "mse", "Regression", "Classification"), "Tree structure",
       "\n=============================================================\n"
     )

@@ -521,7 +521,7 @@ RotMatMake <- function(X = NULL, y = NULL, RotMatFun = "RotMatPPO", PPFun = "PPO
 #'
 #' @examples
 #' set.seed(220828)
-#' (RandRot(100))
+#' (RandRot(10))
 #'
 #' @keywords tree rotation
 #' @importFrom stats rnorm

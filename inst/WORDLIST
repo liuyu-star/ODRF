@@ -2,12 +2,14 @@ BestCutVal
 BestCutVar
 BestIndex
 Biomedicine
+Breiman
 Buja
 CMD
 Charytanowicz
-Codecov
+DOI
 Dotchart
 EK
+ERRORs
 Ewa
 Falk
 GINI
@@ -24,6 +26,7 @@ Lukasik
 MF
 Mangasarian
 Mifflin
+NOTEs
 Niewczas
 ODT
 ODTs
@@ -34,6 +37,7 @@ PPtree
 PPtreeViz
 Patsolic
 Pietka
+RandRot
 Randome
 RotMat
 RotMatMake
@@ -44,8 +48,10 @@ Shen
 Springer
 Stuetzle
 Tomita
+VarImp
 Verlag
 Vogelstein
+WARNINGs
 WH
 WN
 Wickham
@@ -59,6 +65,7 @@ amongst
 arXiv
 bottomleft
 bottomright
+devtools
 dimProj
 friedmantukey
 gini
@@ -77,6 +84,7 @@ paramList
 piA
 pkgdown
 pois
+poune
 prediced
 preprint
 projectin
@@ -84,6 +92,4 @@ randomer
 signif
 topleft
 topright
-ODRF
-ODT
-ODTs
+useOOB

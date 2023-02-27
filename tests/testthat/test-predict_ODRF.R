@@ -3,13 +3,13 @@
 ## Tests
 test_that("predict returns good prediction", {
   data(seeds, package = "ODRF")
+  set.seed(230227)
   train <- sample(1:209, 100)
   train_data <- data.frame(seeds[train, ])
   test_data <- data.frame(seeds[-train, ])
   forest <- ODRF(varieties_of_wheat ~ ., train_data,
     split = "entropy",
-    parallel = FALSE,
-    seed = 230215
+    parallel = FALSE
   )
   pred <- predict(forest, test_data[, -8])
   expect_gt(mean(pred == test_data[, 8]), 0.9)

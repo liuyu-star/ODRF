@@ -2,7 +2,6 @@ Type: Package
 Package: ODRF
 Title: Oblique Decision Random Forest for Classification and Regression
 Version: 0.0.1
-Date: 2022-09-21
 Authors@R: c(
     person("Yu", "Liu", , "liuyuchina123@gmail.com", role = c("aut", "cre", "cph")),
     person("Yingcun", "Xia", , "staxyc@nus.edu.sg", role = "aut")

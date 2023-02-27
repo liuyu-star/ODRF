@@ -296,11 +296,11 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
                         MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
   if (is.factor(y) && (split == "auto")) {
     split <- "gini"
-    warning("You are creating a forest for classification")
+    warning("You are creating a tree for classification")
   }
   if (is.numeric(y) && (split == "auto")) {
     split <- "mse"
-    warning("You are creating a forest for regression")
+    warning("You are creating a tree for regression")
   }
   if (is.factor(y) && (split == "mse")) {
     stop(paste0("When ", formula[[2]], " is a factor type, 'split' cannot take 'mse'."))

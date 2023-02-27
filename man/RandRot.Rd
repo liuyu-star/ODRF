@@ -18,11 +18,11 @@ of a matrix with elements sampled iid from a standard normal distribution.
 }
 \examples{
 set.seed(220828)
-(ODRF:::RandRot(100))
+(RandRot(10))
 
 }
 \seealso{
 \code{\link{RotMatPPO}} \code{\link{RotMatRand}} \code{\link{RotMatRF}} \code{\link{RotMatMake}}
 }
-\keyword{internal}
+\keyword{rotation}
 \keyword{tree}

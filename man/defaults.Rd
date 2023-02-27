@@ -49,10 +49,10 @@ known general use case parameters.
 \examples{
 set.seed(1)
 paramList <- list(dimX = 8, numProj = 3, sparsity = 0.25, prob = 0.5)
-(paramList <- ODRF:::defaults(paramList, split = "entropy"))
+(paramList <- defaults(paramList, split = "entropy"))
 }
 \seealso{
 \code{\link{RotMatPPO}} \code{\link{RotMatRand}} \code{\link{RotMatRF}} \code{\link{RotMatMake}}
 }
-\keyword{internal}
+\keyword{rotation}
 \keyword{tree}

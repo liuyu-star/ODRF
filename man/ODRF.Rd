@@ -23,7 +23,6 @@ ODRF(X, ...)
   numOOB = 1/3,
   parallel = TRUE,
   numCores = Inf,
-  seed = 220924,
   MaxDepth = Inf,
   numNode = Inf,
   MinLeaf = 5,
@@ -52,7 +51,6 @@ ODRF(X, ...)
   numOOB = 1/3,
   parallel = TRUE,
   numCores = Inf,
-  seed = 220924,
   MaxDepth = Inf,
   numNode = Inf,
   MinLeaf = 5,
@@ -105,8 +103,6 @@ including \itemize{
 \item{parallel}{Parallel computing or not (default TRUE).}
 
 \item{numCores}{Number of cores to be used for parallel computing (default \code{Inf}).}
-
-\item{seed}{Random seeds in order to reproduce results.}
 
 \item{MaxDepth}{The maximum depth of the tree (default \code{Inf}).}
 
