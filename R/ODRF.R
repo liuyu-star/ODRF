@@ -25,7 +25,6 @@
 #' @param numOOB  Ratio of 'out-of-bag' (default 1/3).
 #' @param parallel Parallel computing or not (default TRUE).
 #' @param numCores Number of cores to be used for parallel computing (default \code{Inf}).
-#' @param seed Random seeds in order to reproduce results.
 #' @param MaxDepth The maximum depth of the tree (default \code{Inf}).
 #' @param numNode Number of nodes that can be used by the tree (default \code{Inf}).
 #' @param MinLeaf Minimal node size (Default 5).
@@ -173,7 +172,7 @@ ODRF <- function(X, ...) {
 #' @export
 ODRF.formula <- function(formula, data = NULL, split = "auto", lambda = "log", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
                          ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, numOOB = 1 / 3, parallel = TRUE,
-                         numCores = Inf, seed = 220924, MaxDepth = Inf, numNode = Inf, MinLeaf = 5, subset = NULL, weights = NULL,
+                         numCores = Inf, MaxDepth = Inf, numNode = Inf, MinLeaf = 5, subset = NULL, weights = NULL,
                          na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
   Call <- match.call()
   indx <- match(c("formula", "data", "subset", "na.action"), names(Call), nomatch = 0L) # , "weights"
@@ -231,7 +230,7 @@ ODRF.formula <- function(formula, data = NULL, split = "auto", lambda = "log", N
   forest <- ODRF.compute(
     formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList,
     ntrees, storeOOB, replacement, stratify, numOOB, parallel,
-    numCores, seed, MaxDepth, numNode, MinLeaf, subset, weights,
+    numCores, MaxDepth, numNode, MinLeaf, subset, weights,
     na.action, catLabel, Xcat, Xscale, TreeRandRotate
   )
 
@@ -246,7 +245,7 @@ ODRF.formula <- function(formula, data = NULL, split = "auto", lambda = "log", N
 #' @export
 ODRF.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
                          ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, numOOB = 1 / 3, parallel = TRUE,
-                         numCores = Inf, seed = 220924, MaxDepth = Inf, numNode = Inf, MinLeaf = 5, subset = NULL, weights = NULL,
+                         numCores = Inf, MaxDepth = Inf, numNode = Inf, MinLeaf = 5, subset = NULL, weights = NULL,
                          na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
   Call <- match.call()
   indx <- match(c("X", "y", "subset", "na.action"), names(Call), nomatch = 0L) # , "weights"
@@ -276,7 +275,7 @@ ODRF.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "
   ODRF.compute(
     formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList,
     ntrees, storeOOB, replacement, stratify, numOOB, parallel,
-    numCores, seed, MaxDepth, numNode, MinLeaf, subset, weights,
+    numCores, MaxDepth, numNode, MinLeaf, subset, weights,
     na.action, catLabel, Xcat, Xscale, TreeRandRotate
   )
 }
@@ -291,7 +290,7 @@ ODRF.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "
 #' @noRd
 ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList,
                          ntrees, storeOOB, replacement, stratify, numOOB, parallel,
-                         numCores, seed, MaxDepth, numNode, MinLeaf, subset, weights,
+                         numCores, MaxDepth, numNode, MinLeaf, subset, weights,
                          na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
   if (ntrees == 1) {
     stop("argument 'ntrees' must exceed 1")
@@ -463,13 +462,13 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
   ppForest$tree <- list(lambda = lambda, FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode, TreeRandRotate = TreeRandRotate)
   ppForest$forest <- list(
     ntrees = ntrees, numOOB = numOOB, storeOOB = storeOOB, replacement = replacement, stratify = stratify,
-    parallel = parallel, numCores = numCores, seed = seed
+    parallel = parallel, numCores = numCores
   )
 
   # Weights=weights
   # vars=all.vars(Terms)
   PPtree <- function(itree, ...) {
-    set.seed(seed + itree)
+    #set.seed(seed + itree)
 
     TDindx0 <- seq(n)
     TDindx <- TDindx0

@@ -52,7 +52,7 @@ plot.VarImp <- function(x, nvar = 30, digits = NULL, main = NULL, ...) {
 
 
   ## If there are more than two columns, just use the last two columns.
-  op <- par(xaxs = "i") #* 10^digits
+  #op <- par(xaxs = "i") #* 10^digits
   dotchart(sort(imp[, 2]),
     xlab = paste0("Increased error (*", 10^-digits, ")"), ylab = "", main = main, xaxt = "n",
     cex.lab = 1.5, cex.axis = 1.25, bg = "skyblue"
@@ -61,7 +61,7 @@ plot.VarImp <- function(x, nvar = 30, digits = NULL, main = NULL, ...) {
     round(seq(min(imp[, 2]), max(imp[, 2]), length.out = min(6, nvar)) * 10^digits, 2),
     cex.lab = 1.5, cex.axis = 1.25
   )
-  par(op)
+  #par(op)
 
   return(invisible(imp))
 }

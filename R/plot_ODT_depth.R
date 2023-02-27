@@ -40,7 +40,7 @@ plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, split = "gini",
     main <- paste0("Oblique ", ifelse(split == "mse", "Regression", "Classification"), " Tree")
   }
 
-  set.seed(221109)
+  #set.seed(seed)
   if (is.null(data)) {
     data <- data.frame(y = eval(formula[[2]]), eval(formula[[3]]))
     formula <- y~.
@@ -66,7 +66,7 @@ plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, split = "gini",
 
   err <- rep(0, Depth)
   for (d in 1:Depth) {
-    set.seed(221109)
+    #set.seed(seed)
     paramList$MaxDepth <- d
     tree <- do.call(ODT.formula, paramList)
     pred <- predict(tree, Xnew)

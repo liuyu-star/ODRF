@@ -29,11 +29,12 @@
 #'
 #' @seealso \code{\link{RotMatPPO}} \code{\link{RotMatRand}} \code{\link{RotMatRF}} \code{\link{RotMatMake}}
 #'
-#' @keywords internal tree
+#' @keywords tree rotation
 #' @examples
 #' set.seed(1)
 #' paramList <- list(dimX = 8, numProj = 3, sparsity = 0.25, prob = 0.5)
-#' (paramList <- ODRF:::defaults(paramList, split = "entropy"))
+#' (paramList <- defaults(paramList, split = "entropy"))
+#' @export
 defaults <- function(paramList, split = "entropy", dimX = NULL, weights = NULL, catLabel = NULL) {
   # public parameter.
   if (is.null(paramList[["dimX"]])) {

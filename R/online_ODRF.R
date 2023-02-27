@@ -69,7 +69,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
 
   subset <- weights <- na.action <- n <- p <- varName <- Xscale <- minCol <- maxminCol <- Xcat <- catLabel <- NULL
   lambda <- FunDir <- MaxDepth <- MinLeaf <- numNode <- TreeRandRotate <- NULL
-  ntrees <- numOOB <- storeOOB <- replacement <- stratify <- parallel <- numCores <- seed <- NULL
+  ntrees <- numOOB <- storeOOB <- replacement <- stratify <- parallel <- numCores <- NULL
 
   ppForest <- ppForest[c(9, 10, 11)]
   ppForestVar <- c(names(ppForest$data), names(ppForest$tree), names(ppForest$forest))
@@ -192,7 +192,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
   ppForest$tree <- list(lambda = lambda, FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode, TreeRandRotate = TreeRandRotate)
   ppForest$forest <- list(
     ntrees = ntrees, numOOB = numOOB, storeOOB = storeOOB, replacement = replacement, stratify = stratify,
-    parallel = parallel, numCores = numCores, seed = seed
+    parallel = parallel, numCores = numCores#, seed = seed
   )
 
 
@@ -202,7 +202,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
       ppTree <- ppTree[-(length(ppTree) - c(2, 1, 0))]
     }
     class(ppTree) <- "ODT"
-    set.seed(seed + itree)
+    #set.seed(seed + itree)
 
     TDindx0 <- seq_len(n)
     TDindx <- TDindx0
@@ -247,7 +247,6 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
 
     return(ppForestT)
   }
-
 
 
   if (parallel) {

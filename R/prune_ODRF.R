@@ -162,12 +162,9 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
   PPtree <- function(itree, ...) {
     ppTree <- ppTrees[[itree]] # [1:7]
     class(ppTree) <- "ODT"
-    set.seed(seed + itree)
+    #set.seed(seed + itree)
 
     if (useOOB) {
-      # data=data.frame(y=ynew[ppTree$oobIndex],Xnew[ppTree$oobIndex,])
-      # colnames(data)=vars
-      # weights1=weights[ppTree$oobIndex]
       ppForestT <- prune(ppTree, Xnew[ppTree$oobIndex, ], ynew[ppTree$oobIndex], MaxDepth) # [seq(7)]
       ppTree <- ppForestT[-length(ppForestT)]
     } else {

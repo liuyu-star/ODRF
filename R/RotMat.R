@@ -521,10 +521,11 @@ RotMatMake <- function(X = NULL, y = NULL, RotMatFun = "RotMatPPO", PPFun = "PPO
 #'
 #' @examples
 #' set.seed(220828)
-#' (ODRF:::RandRot(100))
+#' (RandRot(100))
 #'
-#' @keywords internal tree
+#' @keywords tree rotation
 #' @importFrom stats rnorm
+#' @export
 RandRot <- function(p) {
   RotMat <- qr.Q(qr(matrix(stats::rnorm(p^2), p, p)))
   if (det(RotMat) < 0) {

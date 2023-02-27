@@ -42,7 +42,7 @@ plot.prune.ODT <- function(x, position = "topleft", digits = NULL, main = NULL, 
   }
 
   # par(mfrow = c(1,2))
-  par(plt = c(0.2, 0.8, 0.2, 0.90))
+  op <- par(plt = c(0.2, 0.8, 0.2, 0.90))
   # par(plt = c(0.07, 0.93, 0.1, 0.90))
   # par(adj=0.5)
   minLen <- min(6, length(pruneError[, 1]))
@@ -64,8 +64,9 @@ plot.prune.ODT <- function(x, position = "topleft", digits = NULL, main = NULL, 
   axis(1, seq(min(x), max(x), length.out = minLen), round(seq(max(pruneError[, 1]), min(pruneError[, 1]), length.out = minLen)), cex.lab = 1.5, cex.axis = 1.25)
   axis(2, seq(min(pruneError[, 4]), max(pruneError[, 4]), length.out = minLen), round(seq(min(pruneError[, 4]), max(pruneError[, 4]), length.out = minLen) * 10^digits, 2), cex.lab = 1.5, cex.axis = 1.25)
   abline(h = pruneError[1, 4], lwd = 1.5, lty = 2, col = "red")
+  on.exit(par(op))
 
-  par(new = T)
+  op <- par(new = T)
   plot(x, pruneError[, 3], pch = 4, type = "p", lty = 3, xaxt = "n", yaxt = "n", ann = F, axes = F) # col = c("red"),
   abline(h = round(seq(1, max(pruneError[, 3]), length.out = minLen)), lwd = 1.5, lty = 2, col = "gray")
   # axis(1, seq(1,max(pruneError[,1]),length.out = minLen),round(seq(1,max(pruneError[,1]),length.out = minLen)),cex.lab = 1.5,cex.axis = 1.25)
@@ -75,6 +76,7 @@ plot.prune.ODT <- function(x, position = "topleft", digits = NULL, main = NULL, 
   mtext("Depth", side = 4, line = 3)
 
   legend(x = position, legend = c("Error", "Depth"), lty = c(1, 2), pch = c(21, 4), pt.bg = c("skyblue", "black"), col = c("black", "black"), bty = "n")
+  on.exit(par(op))
 
   return(invisible(pruneError))
 }
