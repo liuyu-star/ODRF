@@ -84,19 +84,15 @@ predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
   n <- nrow(Xnew)
 
   if (ppTree$split != "mse") {
-    nodeNumLabel=matrix(ppTree$structure$nodeNumLabel,ncol = length(ppTree$Levels))
-    nodeLabel <- ppTree$Levels[max.col(nodeNumLabel)]
-    #nodeLabel <- colnames(ppTree$structure$nodeNumLabel)[max.col(ppTree$structure$nodeNumLabel)] ## "random"
-    nodeLabel[which(rowSums(nodeNumLabel) == 0)] <- 0
+    nodeLabel <- colnames(ppTree$structure$nodeNumLabel)[max.col(ppTree$structure$nodeNumLabel)] ## "random"
+    nodeLabel[which(rowSums(ppTree$structure$nodeNumLabel) == 0)] <- 0
   } else {
     nodeLabel <- as.character(ppTree$structure$nodeNumLabel[, 1])
   }
 
   if (all(ppTree$structure$nodeCutValue == 0)) {
-    #nodeLabel <- names(ppTree$structure$nodeNumLabel)[which.max(ppTree$structure$nodeNumLabel)]
     pred <- rep(nodeLabel, n)
   } else {
-
     Xcat <- ppTree$data$Xcat
     catLabel <- ppTree$data$catLabel
     numCat <- 0
