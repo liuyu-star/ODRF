@@ -272,7 +272,7 @@ ODT.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "R
   )
 
   nodeRotaMat <- ppTree$structure$nodeRotaMat
-  cutNode <- which(ppTree$structure$nodeCutValue!= 0)# unique(nodeRotaMat[nodeRotaMat[, 1] != 0, 2])
+  cutNode <- unique(nodeRotaMat[, 2][nodeRotaMat[, 1] != 0])
   projections <- NULL
   if (length(cutNode) > 0) {
     projections <- matrix(0, length(cutNode), ppTree$data$p)
@@ -524,7 +524,7 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
 
       TF <- ifelse(currentNode > 1, (nodeLR[currentNode - 1] == nodeLR[currentNode]) && (nodeCutValue[currentNode - 1] == 0), FALSE)
       if (TF && (split != "mse") && (length(unique(max.col(nodeNumLabel[currentNode - c(1, 0), ]))) == 1)) {
-        idx <- which(nodeRotaMat[, 2] == nodeLR[currentNode])
+        idx <- sort(which(nodeRotaMat[, 2] == nodeLR[currentNode]))
         nodeRotaMat[idx[1], ] <- c(0, nodeLR[currentNode], 0)
         nodeRotaMat <- nodeRotaMat[-c(idx[-1], nrow(nodeRotaMat) - c(1, 0)), , drop = FALSE]
         nodeCutValue[nodeLR[currentNode]] <- 0
@@ -625,7 +625,7 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
 
       TF <- ifelse(currentNode > 1, (nodeLR[currentNode - 1] == nodeLR[currentNode]) && (nodeCutValue[currentNode - 1] == 0), FALSE)
       if (TF && (split != "mse") && (length(unique(max.col(nodeNumLabel[currentNode - c(1, 0), ]))) == 1)) {
-        idx <- which(nodeRotaMat[, 2] == nodeLR[currentNode])
+        idx <- sort(which(nodeRotaMat[, 2] == nodeLR[currentNode]))
         nodeRotaMat[idx[1], ] <- c(0, nodeLR[currentNode], 0)
         nodeRotaMat <- nodeRotaMat[-c(idx[-1], nrow(nodeRotaMat) - c(1, 0)), , drop = FALSE]
         nodeCutValue[nodeLR[currentNode]] <- 0
