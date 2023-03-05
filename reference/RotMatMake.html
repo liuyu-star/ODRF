@@ -108,9 +108,11 @@
 </ul></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>There are two ways for the user to define a projection direction function. The first way is to define a function directly, and just let the argument <code>RotMatFun</code> be the name of the defined function
-and let the argument <code>paramList</code> be the arguments used in the defined function; the second way is to use the function <code>RotMatMake</code> following the way in the example below.
-Note that the name of the defined function cannot be the name of an existing function in the ODRF package</p>
+    <p>There are two ways for the user to define a projection direction function. The first way is to connect two custom functions with the function <code>RotMatMake()</code>.
+Specifically, <code>RotMatFun()</code> is defined to determine the variables to be projected, the projection dimensions and the number of projections (the first two columns of the rotation matrix).
+<code>PPFun()</code> is defined to determine the projection coefficients (the third column of the rotation matrix). After that let the argument <code>RotMatFun="RotMatMake"</code>,
+and the argument <code>paramList</code> must contain the parameters <code>RotMatFun</code> and <code>PPFun</code>. The second way is to define a function directly,
+and just let the argument <code>RotMatFun</code> be the name of the defined function and let the argument <code>paramList</code> be the arguments list used in the defined function.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -159,8 +161,8 @@ Note that the name of the defined function cannot be the name of an existing fun
 <span class="r-out co"><span class="r-pr">#&gt;</span> [18,]        6      7   1.2121139</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [19,]        1      7   0.2975510</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## Define projection matrix function and projection optimization model function.##</span></span></span>
-<span class="r-in"><span><span class="co">## Note that (,...) is necessary.</span></span></span>
+<span class="r-in"><span><span class="co">## Define projection matrix function makeRotMat and projection pursuit function makePP.##</span></span></span>
+<span class="r-in"><span><span class="co">##  Note that '...' is necessary.</span></span></span>
 <span class="r-in"><span><span class="va">makeRotMat</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">dimX</span>, <span class="va">dimProj</span>, <span class="va">numProj</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="va">RotMat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">dimProj</span> <span class="op">*</span> <span class="va">numProj</span>, <span class="fl">3</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="kw">for</span> <span class="op">(</span><span class="va">np</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="va">numProj</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>

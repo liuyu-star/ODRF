@@ -58,7 +58,7 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for VarImp</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, nvar <span class="op">=</span> <span class="fl">30</span>, digits <span class="op">=</span> <span class="cn">NULL</span>, main <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">x</span>, nvar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">varImp</span><span class="op">)</span><span class="op">)</span>, digits <span class="op">=</span> <span class="cn">NULL</span>, main <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -106,36 +106,36 @@
 <span class="r-in"><span><span class="op">(</span><span class="va">varimp</span> <span class="op">&lt;-</span> <span class="fu"><a href="VarImp.html">VarImp</a></span><span class="op">(</span><span class="va">forest</span>, <span class="va">train_data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="va">train_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $varImp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                         varible increased_error</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> fractal_dimension_worst      30      0.43490865</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> symmetry_worst               29      0.43028082</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> concave.points_worst         28      0.42725550</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> concavity_worst              27      0.40279392</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> smoothness_worst             25      0.38215617</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> compactness_worst            26      0.38146144</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> area_worst                   24      0.36994124</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> perimeter_worst              23      0.30171146</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> texture_worst                22      0.24919533</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> radius_worst                 21      0.24183348</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> area_se                      14      0.20931244</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> smoothness_se                15      0.20884337</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> compactness_se               16      0.20281901</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> concavity_se                 17      0.20050678</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> perimeter_se                 13      0.19804784</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> texture_se                   12      0.19477449</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> symmetry_se                  19      0.19445920</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> concave.points_se            18      0.19437714</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> fractal_dimension_se         20      0.19402478</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> radius_se                    11      0.19216565</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> fractal_dimension_mean       10      0.18338081</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> symmetry_mean                 9      0.18194616</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> concave.points_mean           8      0.18124347</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> concavity_mean                7      0.16439826</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> compactness_mean              6      0.08339635</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> smoothness_mean               5      0.07250909</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> area_mean                     4      0.06646286</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> perimeter_mean                3      0.05031705</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> texture_mean                  2      0.03024858</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> radius_mean                   1      0.02417735</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> concavity_mean                7     0.107282797</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> area_worst                   24     0.102281737</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> perimeter_worst              23     0.083674179</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> radius_worst                 21     0.077759814</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> perimeter_mean                3     0.030524964</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> concave.points_mean           8     0.028861496</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> concavity_worst              27     0.027422979</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> concave.points_worst         28     0.027392778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> radius_mean                   1     0.024177346</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> area_mean                     4     0.020945770</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> area_se                      14     0.016225999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> compactness_mean              6     0.015473937</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> smoothness_worst             25     0.015380519</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> texture_worst                22     0.011987432</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> radius_se                    11     0.011407014</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> fractal_dimension_worst      30     0.009593773</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> compactness_worst            26     0.008280805</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> smoothness_mean               5     0.007558904</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> compactness_se               16     0.007508264</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> fractal_dimension_mean       10     0.007065902</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> texture_mean                  2     0.006780721</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> perimeter_se                 13     0.006351493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> concave.points_se            18     0.006095465</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> fractal_dimension_se         20     0.004711900</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> texture_se                   12     0.004506031</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> symmetry_mean                 9     0.003868733</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> smoothness_se                15     0.003808616</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> concavity_se                 17     0.003732007</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> symmetry_worst               29     0.003714025</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> symmetry_se                  19     0.002657047</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $split</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "entropy"</span>
