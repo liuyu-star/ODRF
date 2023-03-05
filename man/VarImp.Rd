@@ -4,10 +4,10 @@
 \alias{VarImp}
 \title{variable importance of oblique decision random forest}
 \usage{
-VarImp(forest, X, y)
+VarImp(object, X, y)
 }
 \arguments{
-\item{forest}{An object of class \code{\link{ODRF}}.}
+\item{object}{An object of class \code{\link{ODRF}}.}
 
 \item{X}{An n by d numerical matrix (preferably) or data frame is used in the \code{ODRF}.}
 

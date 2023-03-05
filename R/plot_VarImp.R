@@ -28,11 +28,9 @@
 #' @aliases plot.VarImp
 #' @method plot VarImp
 #' @export
-plot.VarImp <- function(x, nvar = 30, digits = NULL, main = NULL, ...) {
+plot.VarImp <- function(x, nvar = min(30,nrow(x$varImp)), digits = NULL, main = NULL, ...) {
   imp <- x$varImp
   imp <- imp[1:nvar, , drop = FALSE]
-
-  nvar <- min(nvar, nrow(x$varImp))
 
   if (is.null(main)) {
     main <- paste0("Oblique ", ifelse(x$split == "mse", "Regression", "Classification"), " Forest")

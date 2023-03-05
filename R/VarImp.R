@@ -2,7 +2,7 @@
 #'
 #' Variable importance is computed from permuting OOB data.
 #'
-#' @param forest An object of class \code{\link{ODRF}}.
+#' @param object An object of class \code{\link{ODRF}}.
 #' @param X An n by d numerical matrix (preferably) or data frame is used in the \code{ODRF}.
 #' @param y A response vector of length n is used in the \code{ODRF}.
 #'
@@ -26,7 +26,7 @@
 #'}
 #' @keywords forest
 #' @export
-VarImp <- function(forest, X, y) {
+VarImp <- function(object, X, y) {
   # vars=all.vars(forest$terms)
   # address na values.
   # if (any(is.na(data))) {
@@ -35,7 +35,19 @@ VarImp <- function(forest, X, y) {
   # }
   # y= data[,setdiff(colnames(data),vars[-1])]
   # X= data[,vars[-1]]
+
+  forest=object
   X <- as.matrix(X)
+  colnames(X)=forest$data$varName
+
+  pp <- forest$data$p
+  if (!is.null(forest$data$catLabel) && (sum(forest$data$Xcat) > 0)) {
+    pp <- pp - length(unlist(forest$data$catLabel)) + length(forest$data$Xcat)
+  }
+  if (ncol(X) != pp) {
+    stop("The dimensions of 'Xnew' and training data do not match")
+  }
+
 
   if (!is.null(forest$data$subset)) {
     X <- X[forest$data$subset, ]
@@ -91,37 +103,39 @@ VarImp <- function(forest, X, y) {
 
   runOOBErr <- function(tree, ...) {
     class(tree) <- "ODT"
-    oobErrs <- rep(0, p + 1)
+    oobErrs <- rep(0, p)
     oobIndex <- tree$oobIndex
-
-    Xi <- X[oobIndex, ]
-    yi <- y[oobIndex]
-    yn <- length(yi)
+    X0 <- X[oobIndex, ]
+    y0 <- y[oobIndex]
+    n0 <- length(y0)
     # if(forest$split=="regression"){
     #  e.0=mean((yi-mean(y[-oobIndex]))^2)
     # }
-    for (j in 1:(p + 1)) {
-      if (j != 1) {
-        Xi[, j - 1] <- Xi[sample(yn), j - 1] #+rnorm(length(oobIndex))
-      }
+
+    pred <- predict(tree, X0)
+    if (forest$split != "mse") {
+      oobErr0 <- mean(pred != y0)
+    } else {
+      oobErr0 <- mean((pred - y0)^2) # /e.0
+    }
+
+    for (j in seq(p)) {
+      Xi=X0
+      Xi[, j] <- Xi[sample(n0), j] #+rnorm(length(oobIndex))
       pred <- predict(tree, Xi)
       if (forest$split != "mse") {
-        oobErr <- mean(pred != yi)
+        oobErr <- mean(pred != y0)
       } else {
-        oobErr <- mean((pred - yi)^2) # /e.0
+        oobErr <- mean((pred - y0)^2) # /e.0
       }
 
-      if (j == 1) {
-        oobErrs[1] <- oobErr
-      } else {
-        oobErrs[j] <- abs(oobErr - oobErrs[1])
-      }
+      oobErrs[j] <- abs(oobErr - oobErr0)
     }
 
     return(oobErrs)
   }
 
-  oobErrVar <- sapply(forest$ppTrees, runOOBErr)[-1, ]
+  oobErrVar <- sapply(forest$ppTrees, runOOBErr)
   oobErrVar <- rowMeans(oobErrVar)
   varimport <- cbind(varible = seq(p), increased_error = oobErrVar)
   rownames(varimport) <- colnames(X)

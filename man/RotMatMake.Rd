@@ -41,9 +41,11 @@ A random matrix to use in running \code{\link{ODT}}.
 Create any projection matrix with a self-defined projection matrix function and projection optimization model function
 }
 \details{
-There are two ways for the user to define a projection direction function. The first way is to define a function directly, and just let the argument \code{RotMatFun} be the name of the defined function
-and let the argument \code{paramList} be the arguments used in the defined function; the second way is to use the function \code{RotMatMake} following the way in the example below.
-Note that the name of the defined function cannot be the name of an existing function in the ODRF package
+There are two ways for the user to define a projection direction function. The first way is to connect two custom functions with the function \code{RotMatMake()}.
+Specifically, \code{RotMatFun()} is defined to determine the variables to be projected, the projection dimensions and the number of projections (the first two columns of the rotation matrix).
+\code{PPFun()} is defined to determine the projection coefficients (the third column of the rotation matrix). After that let the argument \code{RotMatFun="RotMatMake"},
+and the argument \code{paramList} must contain the parameters \code{RotMatFun} and \code{PPFun}. The second way is to define a function directly,
+and just let the argument \code{RotMatFun} be the name of the defined function and let the argument \code{paramList} be the arguments list used in the defined function.
 }
 \examples{
 set.seed(220828)
@@ -53,8 +55,8 @@ y <- (rnorm(100) > 0) + 0
 library(nnet)
 (RotMat <- RotMatMake(X, y, "RotMatPPO", "PPO", paramList = list(model = "Log")))
 
-## Define projection matrix function and projection optimization model function.##
-## Note that (,...) is necessary.
+## Define projection matrix function makeRotMat and projection pursuit function makePP.##
+##  Note that '...' is necessary.
 makeRotMat <- function(dimX, dimProj, numProj, ...) {
   RotMat <- matrix(1, dimProj * numProj, 3)
   for (np in seq(numProj)) {

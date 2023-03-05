@@ -4,7 +4,7 @@
 \alias{plot.VarImp}
 \title{Variable Importance Plot}
 \usage{
-\method{plot}{VarImp}(x, nvar = 30, digits = NULL, main = NULL, ...)
+\method{plot}{VarImp}(x, nvar = min(30, nrow(x$varImp)), digits = NULL, main = NULL, ...)
 }
 \arguments{
 \item{x}{An object of class \code{\link{VarImp}}.}
