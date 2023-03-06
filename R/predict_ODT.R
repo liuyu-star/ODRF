@@ -121,11 +121,15 @@ predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
         xj <- xj1
       }
 
-      Xnew <- cbind(Xnew1, apply(Xnew[, -Xcat], 2, as.numeric))
+      #Xnew <- cbind(Xnew1, apply(Xnew[, -Xcat], 2, as.numeric))
+      Xnew <- cbind(Xnew1, Xnew[, -Xcat])
       p <- ncol(Xnew)
       numCat <- length(unlist(catLabel))
       rm(Xnew1)
       rm(Xnewj)
+    }
+    if (!is.numeric(Xnew)){
+      Xnew=apply(Xnew, 2, as.numeric)
     }
 
     # Variable scaling.

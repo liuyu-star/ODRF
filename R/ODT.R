@@ -329,6 +329,7 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
   if (split != "mse") {
     if (is.null(Levels)) {
       Levels <- levels(as.factor(y))
+      y <- as.integer(as.factor(y))
     }
     maxLabel <- length(Levels)
     if (length(Levels) == 1) {
@@ -365,6 +366,9 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
     varName <- c(paste(rep(seq_along(numCat), numCat), unlist(catLabel), sep = "."), varName[-Xcat])
     rm(X1)
     p <- ncol(X)
+  }
+  if (!is.numeric(X)){
+    X=apply(X, 2, as.numeric)
   }
   X <- as.matrix(X)
   colnames(X) <- varName

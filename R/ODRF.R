@@ -345,6 +345,9 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
     rm(X1)
     p <- ncol(X)
   }
+  if (!is.numeric(X)){
+    X=apply(X, 2, as.numeric)
+  }
   X <- as.matrix(X)
   colnames(X) <- varName
 

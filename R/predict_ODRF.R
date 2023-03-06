@@ -112,6 +112,9 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
     rm(Xnew1)
     rm(Xnewj)
   }
+  if (!is.numeric(Xnew)){
+    Xnew=apply(Xnew, 2, as.numeric)
+  }
 
   # Variable scaling.
   if (ppForest$data$Xscale != "No") {

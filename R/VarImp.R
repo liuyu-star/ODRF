@@ -93,6 +93,9 @@ VarImp <- function(object, X, y) {
     rm(X1)
     rm(Xj)
   }
+  if (!is.numeric(X)){
+    X=apply(X, 2, as.numeric)
+  }
 
   # Variable scaling.
   if (forest$data$Xscale != "No") {
