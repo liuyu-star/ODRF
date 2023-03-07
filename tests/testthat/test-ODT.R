@@ -22,8 +22,8 @@ test_that("no warning if data.frame has two classes", {
   expect_silent(ODT(Species ~ ., data = dat, split = "entropy"))
 })
 
-test_that("Error if subset is 0", {
-  expect_error(ODT(Species ~ ., data = iris, split = "gini", subset = c(0)))
+test_that("Error if subset is 1", {
+  expect_error(ODT(Species ~ ., data = iris, split = "gini", subset = c(1)))
 })
 
 test_that("Error if argument 'X' dimension equal to 1", {
