@@ -19,10 +19,8 @@
 #' train_data <- data.frame(breast_cancer[train, -1])
 #' forest <- ODRF(train_data[, -1], train_data[, 1], split = "gini",
 #'   parallel = FALSE)
-#' (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
-#' \donttest{
+#' varimp <- VarImp(forest, train_data[, -1], train_data[, 1])
 #' plot(varimp)
-#' }
 #' @keywords forest plot
 #' @rdname plot.VarImp
 #' @aliases plot.VarImp
