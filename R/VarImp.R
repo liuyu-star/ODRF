@@ -19,8 +19,8 @@
 #' set.seed(221212)
 #' train <- sample(1:569, 200)
 #' train_data <- data.frame(breast_cancer[train, -1])
-#' test_data <- data.frame(breast_cancer[-train, -1])
-#' forest <- ODRF(diagnosis ~ ., train_data, split = "gini", parallel = FALSE)
+#' forest <- ODRF(train_data[, -1], train_data[, 1], split = "gini",
+#'   parallel = FALSE)
 #' (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
 #' @keywords forest
 #' @export
@@ -136,12 +136,13 @@ VarImp <- function(obj, X, y) {
     return(oobErrs)
   }
 
-  oobErrVar <- sapply(forest$ppTrees, runOOBErr)
-  oobErrVar <- rowMeans(oobErrVar)
-  varimport <- cbind(varible = seq(p), increased_error = oobErrVar)
+  IncErr <- vapply(forest$ppTrees, runOOBErr, rep(0,p))
+  #IncErr <- sapply(forest$ppTrees, runOOBErr)
+  IncErr <- rowMeans(IncErr)
+  varimport <- cbind(varible = seq(p), increased_error = IncErr)
   rownames(varimport) <- colnames(X)
 
-  varimport <- list(varImp = varimport[order(oobErrVar, decreasing = T), ], split = forest$split)
+  varimport <- list(varImp = varimport[order(IncErr, decreasing = T), ], split = forest$split)
   class(varimport) <- "VarImp"
 
   return(varimport)
