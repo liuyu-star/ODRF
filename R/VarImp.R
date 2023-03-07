@@ -19,11 +19,10 @@
 #' set.seed(221212)
 #' train <- sample(1:569, 200)
 #' train_data <- data.frame(breast_cancer[train, -1])
-#' \donttest{
 #' forest <- ODRF(train_data[, -1], train_data[, 1], split = "gini",
 #'   parallel = FALSE)
-#' (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
-#' }
+#' varimp <- VarImp(forest, train_data[, -1], train_data[, 1])
+#' varimp
 #' @keywords forest
 #' @export
 VarImp <- function(obj, X, y) {

@@ -81,6 +81,7 @@ mf
 mse
 naturalhermite
 ncol
+numOOB
 paramList
 piA
 pkgdown
