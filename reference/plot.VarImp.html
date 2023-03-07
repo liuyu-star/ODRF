@@ -100,50 +100,13 @@
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">221212</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">569</span>, <span class="fl">200</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">train_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">breast_cancer</span><span class="op">[</span><span class="va">train</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">test_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">breast_cancer</span><span class="op">[</span><span class="op">-</span><span class="va">train</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="ODRF.html">ODRF</a></span><span class="op">(</span><span class="va">diagnosis</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">train_data</span>, split <span class="op">=</span> <span class="st">"entropy"</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">(</span><span class="va">varimp</span> <span class="op">&lt;-</span> <span class="fu"><a href="VarImp.html">VarImp</a></span><span class="op">(</span><span class="va">forest</span>, <span class="va">train_data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="va">train_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $varImp</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         varible increased_error</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> concavity_mean                7     0.107282797</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> area_worst                   24     0.102281737</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> perimeter_worst              23     0.083674179</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> radius_worst                 21     0.077759814</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> perimeter_mean                3     0.030524964</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> concave.points_mean           8     0.028861496</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> concavity_worst              27     0.027422979</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> concave.points_worst         28     0.027392778</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> radius_mean                   1     0.024177346</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> area_mean                     4     0.020945770</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> area_se                      14     0.016225999</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> compactness_mean              6     0.015473937</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> smoothness_worst             25     0.015380519</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> texture_worst                22     0.011987432</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> radius_se                    11     0.011407014</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> fractal_dimension_worst      30     0.009593773</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> compactness_worst            26     0.008280805</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> smoothness_mean               5     0.007558904</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> compactness_se               16     0.007508264</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> fractal_dimension_mean       10     0.007065902</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> texture_mean                  2     0.006780721</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> perimeter_se                 13     0.006351493</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> concave.points_se            18     0.006095465</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> fractal_dimension_se         20     0.004711900</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> texture_se                   12     0.004506031</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> symmetry_mean                 9     0.003868733</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> smoothness_se                15     0.003808616</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> concavity_se                 17     0.003732007</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> symmetry_worst               29     0.003714025</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> symmetry_se                  19     0.002657047</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $split</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "entropy"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VarImp"</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">varimp</span>, digits <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># \donttest{</span></span></span>
+<span class="r-in"><span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="ODRF.html">ODRF</a></span><span class="op">(</span><span class="va">train_data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="va">train_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, split <span class="op">=</span> <span class="st">"gini"</span>,</span></span>
+<span class="r-in"><span>  parallel <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">varimp</span> <span class="op">&lt;-</span> <span class="fu"><a href="VarImp.html">VarImp</a></span><span class="op">(</span><span class="va">forest</span>, <span class="va">train_data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="va">train_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">varimp</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plot.VarImp-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
