@@ -59,7 +59,15 @@ plot.prune.ODT <- function(x, position = "topleft", digits = NULL, main = NULL, 
     }
   }
 
-  plot(x, pruneError[, 4], pch = 21, bg = "skyblue", type = "b", lty = 1, xlab = "Split node", ylab = paste0("Error (*", 10^-digits, ")"), main = main, xaxt = "n", yaxt = "n") # , col = c("black")
+  if(digits==0){
+    ylab = paste0("Error")
+  }else if(digits==2){
+    ylab = paste0("Error (%)")
+  }else{
+    ylab = substitute(paste("Error ("*10^{-dig},")"),list(dig = digits))
+  }
+
+  plot(x, pruneError[, 4], pch = 21, bg = "skyblue", type = "b", lty = 1, xlab = "Split node", ylab = ylab, main = main, xaxt = "n", yaxt = "n") # , col = c("black")
   # plot(x, pruneError[,4],pch = 21, bg = "skyblue", type = "p",lty=1, xlab="The number of split nodes", ylab="Error",main=main,xaxt="n",yaxt="n")#, col = c("black")
   axis(1, seq(min(x), max(x), length.out = minLen), round(seq(max(pruneError[, 1]), min(pruneError[, 1]), length.out = minLen)), cex.lab = 1.5, cex.axis = 1.25)
   axis(2, seq(min(pruneError[, 4]), max(pruneError[, 4]), length.out = minLen), round(seq(min(pruneError[, 4]), max(pruneError[, 4]), length.out = minLen) * 10^digits, 2), cex.lab = 1.5, cex.axis = 1.25)

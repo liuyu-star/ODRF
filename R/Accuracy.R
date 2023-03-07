@@ -44,7 +44,7 @@ Accuracy <- function(obj, data, newdata = NULL) {
   nC <- length(forest$Levels)
   ny <- length(ynew)
 
-  treeVotes <- predict(forest, Xnew, split = "tree")
+  treeVotes <- predict(forest, Xnew, type = "tree")
   err.test <- rep(0, ntrees)
   if (forest$split == "mse") {
     pred <- rowSums(treeVotes)
@@ -68,7 +68,7 @@ Accuracy <- function(obj, data, newdata = NULL) {
     err.test[nt] <- mean(ynew != pred)
     treeC <- matrix(seq(nC), ny, nC, byrow = TRUE)
     for (t in seq(nt - 1, 1)) {
-      Votes <- Votes - (treeC == treeVotes[t + 1, ]) * 1
+      Votes <- Votes - (treeC == matrix(treeVotes[t + 1, ],ny,nC)) * 1
       # pred=apply(prob,1,which.max);
       pred <- forest$Levels[max.col(Votes)] ## "random"
       err.test[t] <- mean(ynew != pred)

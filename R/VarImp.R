@@ -2,7 +2,7 @@
 #'
 #' Variable importance is computed from permuting OOB data.
 #'
-#' @param object An object of class \code{\link{ODRF}}.
+#' @param obj An object of class \code{\link{ODRF}}.
 #' @param X An n by d numerical matrix (preferably) or data frame is used in the \code{ODRF}.
 #' @param y A response vector of length n is used in the \code{ODRF}.
 #'
@@ -20,13 +20,11 @@
 #' train <- sample(1:569, 200)
 #' train_data <- data.frame(breast_cancer[train, -1])
 #' test_data <- data.frame(breast_cancer[-train, -1])
-#'\donttest{
 #' forest <- ODRF(diagnosis ~ ., train_data, split = "gini", parallel = FALSE)
 #' (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
-#'}
 #' @keywords forest
 #' @export
-VarImp <- function(object, X, y) {
+VarImp <- function(obj, X, y) {
   # vars=all.vars(forest$terms)
   # address na values.
   # if (any(is.na(data))) {
@@ -36,7 +34,7 @@ VarImp <- function(object, X, y) {
   # y= data[,setdiff(colnames(data),vars[-1])]
   # X= data[,vars[-1]]
 
-  forest=object
+  forest=obj
   X <- as.matrix(X)
   colnames(X)=forest$data$varName
 

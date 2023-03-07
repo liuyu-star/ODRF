@@ -29,11 +29,10 @@ set.seed(221212)
 train <- sample(1:569, 200)
 train_data <- data.frame(breast_cancer[train, -1])
 test_data <- data.frame(breast_cancer[-train, -1])
-\donttest{
+
 forest <- ODRF(diagnosis ~ ., train_data, split = "entropy", parallel = FALSE)
 (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
 plot(varimp, digits = 0)
-}
 }
 \seealso{
 \code{\link{ODRF}} \code{\link{VarImp}}

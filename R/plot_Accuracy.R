@@ -39,7 +39,7 @@ plot.Accuracy <- function(x, lty = 1, digits = NULL, main = NULL, ...) {
 
   minErr <- strsplit(as.character(min(err)), "")[[1]]
   id <- which(minErr == "e")
-  if (Err$split != "mse") {
+  if (x$split != "mse") {
     digits <- 0
   } else if (is.null(digits)) {
     if (length(id) > 0) {
@@ -48,15 +48,24 @@ plot.Accuracy <- function(x, lty = 1, digits = NULL, main = NULL, ...) {
       digits <- which(minErr[-seq(which(minErr == "."))] != 0)[2]
     }
   }
+
+  if(digits==0){
+    ylab = paste0("Error")
+  }else if(digits==2){
+    ylab = paste0("Error (%)")
+  }else{
+    ylab = substitute(paste("Error ("*10^{-dig},")"),list(dig = digits))
+  }
+
   err <- round(err * 10^digits, 2)
 
   ntrees <- length(Err$err.oob)
   if (!is.null(Err$err.test)) {
     colnames(err) <- c("OOB", "Test")
-    matplot(1:ntrees, err, type = "l", lty = lty, xlab = "trees", ylab = paste0("Error (*", 10^-digits, ")"), col = c("black", "red"), main = main)
+    matplot(1:ntrees, err, type = "l", lty = lty, xlab = "trees", ylab = ylab, col = c("black", "red"), main = main)
     legend("topright", legend = c("OOB", "Test"), lty = rep(lty, 2), col = c("black", "red"), bty = "n") # , bty = "n"
   } else {
-    matplot(1:ntrees, err, type = "l", lty = lty, xlab = "trees", ylab = paste0("Error (*", 10^-digits, ")"), col = c("black"), main = main)
+    matplot(1:ntrees, err, type = "l", lty = lty, xlab = "trees", ylab = ylab, col = c("black"), main = main)
     legend("topright", legend = c("OOB"), lty = lty, col = c("black"), bty = "n")
   }
   # axis(1, seq(min(err[,2]),max(err[,2]),length.out = min(6,ntrees)),

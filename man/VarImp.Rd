@@ -4,10 +4,10 @@
 \alias{VarImp}
 \title{variable importance of oblique decision random forest}
 \usage{
-VarImp(object, X, y)
+VarImp(obj, X, y)
 }
 \arguments{
-\item{object}{An object of class \code{\link{ODRF}}.}
+\item{obj}{An object of class \code{\link{ODRF}}.}
 
 \item{X}{An n by d numerical matrix (preferably) or data frame is used in the \code{ODRF}.}
 
@@ -30,10 +30,8 @@ set.seed(221212)
 train <- sample(1:569, 200)
 train_data <- data.frame(breast_cancer[train, -1])
 test_data <- data.frame(breast_cancer[-train, -1])
-\donttest{
 forest <- ODRF(diagnosis ~ ., train_data, split = "gini", parallel = FALSE)
 (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
-}
 }
 \seealso{
 \code{\link{ODRF}} \code{\link{Accuracy}} \code{\link{plot.VarImp}}

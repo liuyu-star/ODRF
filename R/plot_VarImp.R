@@ -18,11 +18,10 @@
 #' train <- sample(1:569, 200)
 #' train_data <- data.frame(breast_cancer[train, -1])
 #' test_data <- data.frame(breast_cancer[-train, -1])
-#'\donttest{
+#'
 #' forest <- ODRF(diagnosis ~ ., train_data, split = "entropy", parallel = FALSE)
 #' (varimp <- VarImp(forest, train_data[, -1], train_data[, 1]))
 #' plot(varimp, digits = 0)
-#'}
 #' @keywords forest plot
 #' @rdname plot.VarImp
 #' @aliases plot.VarImp
@@ -48,11 +47,20 @@ plot.VarImp <- function(x, nvar = min(30,nrow(x$varImp)), digits = NULL, main = 
     }
   }
 
+  if(digits==0){
+    xlab = paste0("Increased error")
+  }else if(digits==2){
+    xlab = paste0("Increased error (%)")
+  }else{
+    xlab = substitute(paste("Increased error (*",10^{-dig},")"),list(dig = digits))
+  }
 
   ## If there are more than two columns, just use the last two columns.
   #op <- par(xaxs = "i") #* 10^digits
+
+
   dotchart(sort(imp[, 2]),
-    xlab = paste0("Increased error (*", 10^-digits, ")"), ylab = "", main = main, xaxt = "n",
+    xlab = xlab, ylab = "", main = main, xaxt = "n",
     cex.lab = 1.5, cex.axis = 1.25, bg = "skyblue"
   )
   axis(1, seq(min(imp[, 2]), max(imp[, 2]), length.out = min(6, nvar)),

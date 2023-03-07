@@ -93,8 +93,16 @@ plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, split = "gini",
     }
   }
 
+  if(digits==0){
+    ylab = paste0("Error")
+  }else if(digits==2){
+    ylab = paste0("Error (%)")
+  }else{
+    ylab = substitute(paste("Error ("*10^{-dig},")"),list(dig = digits))
+  }
+
   # type = "l",lty=1,
-  matplot(1:Depth, err, pch = 21, bg = "skyblue", type = "b", lty = 1, xlab = "Depth", ylab = paste0("Error (*", 10^-digits, ")"), col = c("black"), main = main, xaxt = "n", yaxt = "n")
+  matplot(1:Depth, err, pch = 21, bg = "skyblue", type = "b", lty = 1, xlab = "Depth", ylab = ylab, col = c("black"), main = main, xaxt = "n", yaxt = "n")
   axis(1, seq(1, Depth, length.out = min(6, Depth)), round(seq(1, Depth, length.out = min(6, Depth))), cex.lab = 1.5, cex.axis = 1.25)
   axis(2, seq(err[1], err[Depth], length.out = min(6, Depth)), round(seq(err[1], err[Depth], length.out = min(6, Depth)) * 10^digits, 2), cex.lab = 1.5, cex.axis = 1.25)
 
