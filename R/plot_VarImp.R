@@ -20,9 +20,7 @@
 #' forest <- ODRF(train_data[, -1], train_data[, 1], split = "gini",
 #'   parallel = FALSE)
 #' varimp <- VarImp(forest, train_data[, -1], train_data[, 1])
-#' \donttest{
 #' plot(varimp)
-#' }
 #' @keywords forest plot
 #' @rdname plot.VarImp
 #' @aliases plot.VarImp

@@ -57,7 +57,8 @@ VarImp <- function(obj, X, y) {
 
 
   if (forest$split != "mse") {
-    y <- factor(y, levels = forest$Levels)
+    #y <- factor(y, levels = forest$Levels)
+    y <- as.character(y)
   }
   # X=forest$data$X
   # y=forest$data$y
