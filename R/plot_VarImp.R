@@ -47,11 +47,11 @@ plot.VarImp <- function(x, nvar = min(30,nrow(x$varImp)), digits = NULL, main = 
   }
 
   if(digits==0){
-    xlab = paste0("Increased error")
+    xlab = paste0("Increased ",ifelse(x$split == "mse","MSE","MR"))
   }else if(digits==2){
-    xlab = paste0("Increased error (%)")
+    xlab = paste0("Increased ",ifelse(x$split == "mse","MSE","MR")," (%)")
   }else{
-    xlab = substitute(paste("Increased error (*",10^{-dig},")"),list(dig = digits))
+    xlab = substitute(paste("Increased ",ifelse(x$split == "mse","MSE","MR")," (*",10^{-dig},")"),list(dig = digits))
   }
 
   ## If there are more than two columns, just use the last two columns.

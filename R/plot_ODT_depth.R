@@ -98,7 +98,7 @@ plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, split = "gini",
   }else if(digits==2){
     ylab = paste0("Error (%)")
   }else{
-    ylab = substitute(paste("Error ("*10^{-dig},")"),list(dig = digits))
+    ylab = paste0("Error (*",10^-digits,")")
   }
 
   # type = "l",lty=1,

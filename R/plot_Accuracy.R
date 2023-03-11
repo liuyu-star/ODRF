@@ -54,7 +54,7 @@ plot.Accuracy <- function(x, lty = 1, digits = NULL, main = NULL, ...) {
   }else if(digits==2){
     ylab = paste0("Error (%)")
   }else{
-    ylab = substitute(paste("Error ("*10^{-dig},")"),list(dig = digits))
+    ylab = paste0("Error (*",10^-digits,")")
   }
 
   err <- round(err * 10^digits, 2)

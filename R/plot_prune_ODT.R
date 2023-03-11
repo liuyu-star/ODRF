@@ -41,10 +41,7 @@ plot.prune.ODT <- function(x, position = "topleft", digits = NULL, main = NULL, 
     main <- paste0("Oblique ", ifelse(ppTree$split == "mse", "Regression", "Classification"), " Tree")
   }
 
-  # par(mfrow = c(1,2))
-  op <- par(plt = c(0.2, 0.8, 0.2, 0.90))
-  # par(plt = c(0.07, 0.93, 0.1, 0.90))
-  # par(adj=0.5)
+
   minLen <- min(6, length(pruneError[, 1]))
   x <- seq_len(nrow(pruneError))
   minErr <- strsplit(as.character(min(pruneError[, 4])), "")[[1]]
@@ -64,9 +61,14 @@ plot.prune.ODT <- function(x, position = "topleft", digits = NULL, main = NULL, 
   }else if(digits==2){
     ylab = paste0("Error (%)")
   }else{
-    ylab = substitute(paste("Error ("*10^{-dig},")"),list(dig = digits))
+    ylab = paste0("Error (*",10^-digits,")")
   }
 
+  # par(mfrow = c(1,2))
+  op <- par(mar = c(5, 5, 3, 5))
+  #op <- par(plt = c(0.1, 0.9, 0.10, 0.90))
+  #op <- par(plt = c(0.07, 0.93, 0.1, 0.90))
+  # par(adj=0.5)
   plot(x, pruneError[, 4], pch = 21, bg = "skyblue", type = "b", lty = 1, xlab = "Split node", ylab = ylab, main = main, xaxt = "n", yaxt = "n") # , col = c("black")
   # plot(x, pruneError[,4],pch = 21, bg = "skyblue", type = "p",lty=1, xlab="The number of split nodes", ylab="Error",main=main,xaxt="n",yaxt="n")#, col = c("black")
   axis(1, seq(min(x), max(x), length.out = minLen), round(seq(max(pruneError[, 1]), min(pruneError[, 1]), length.out = minLen)), cex.lab = 1.5, cex.axis = 1.25)
@@ -75,12 +77,12 @@ plot.prune.ODT <- function(x, position = "topleft", digits = NULL, main = NULL, 
   on.exit(par(op))
 
   op <- par(new = T)
-  plot(x, pruneError[, 3], pch = 4, type = "p", lty = 3, xaxt = "n", yaxt = "n", ann = F, axes = F) # col = c("red"),
+  plot(x, pruneError[, 3], pch = 4, type = "p", lty = 3, xaxt = "n", yaxt = "n",xlab ="",ylab ="") # col = c("red"),, ann = F, axes = F
   abline(h = round(seq(1, max(pruneError[, 3]), length.out = minLen)), lwd = 1.5, lty = 2, col = "gray")
   # axis(1, seq(1,max(pruneError[,1]),length.out = minLen),round(seq(1,max(pruneError[,1]),length.out = minLen)),cex.lab = 1.5,cex.axis = 1.25)
   axis(4, round(seq(1, max(pruneError[, 3]), length.out = minLen)), cex.lab = 1.5, cex.axis = 1.25)
 
-  # axis(side = 4)
+  #axis(side = 4)
   mtext("Depth", side = 4, line = 3)
 
   legend(x = position, legend = c("Error", "Depth"), lty = c(1, 2), pch = c(21, 4), pt.bg = c("skyblue", "black"), col = c("black", "black"), bty = "n")
