@@ -81,10 +81,10 @@ as.party.ODT <- function(obj, data, ...) {
     Alpha[cn, nodeRotaMat[idx, 1]] <- nodeRotaMat[idx, 3]
   }
 
-  mf <- X %*% t(Alpha)
+  mf <- data.frame(X %*% t(Alpha))
   rownames(mf) <- rownames(X)
-  colnames(mf) <- paste0(paste0("proj", seq_len(ncol(mf)), "X"))
-  mf <- data.frame(mf)
+  colnames(mf) <- paste0("proj", seq_len(ncol(mf)), "*X")
+  #mf <- data.frame(mf)
 
   fit <- as.data.frame(matrix(nrow = NROW(mf), ncol = 0))
   # fit <- as.data.frame(matrix(nrow = NROW(mf), ncol = 0))
