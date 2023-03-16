@@ -153,7 +153,7 @@ pred <- predict(tree, test_data[, -1])
 # estimation error
 mean((pred - test_data[, 1])^2)
 
-# Projection analysis of the tre.。
+# Projection analysis of the oblique decision tree.
 data(iris)
 tree <- ODT(Species ~ ., data = iris, split="gini",
             paramList = list(model = "PPR", numProj = 1))
