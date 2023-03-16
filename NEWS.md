@@ -1,10 +1,9 @@
-# ODRF 0.0.2.9000 (development version)
+# ODRF 0.0.3
 
 * The function predicate.ODT() runs error when ODT is not split (depth=1), and we have fixed this bug.
 * We have fixed the function predict.ODRF with arguments numOOB and weight.tree related issues.
 * We have fixed the functions plot.ODT(), VarImp() and plot.VarImp().
-* We have modified the argument 'lambda' of the functions ODT() and ODRF().
-
+* We have fixed the argument 'lambda' of the functions ODT() and ODRF().
 
 # ODRF 0.0.2
 
