@@ -15,9 +15,12 @@ We have optimized the ODRF package and made significant changes. Therefore we re
 * This is the second version of the package. It currently has no ERRORs, WARNINGs, or NOTEs from devtools::check().
 
 
-## Reverse dependencies
+## revdepcheck results
 
-* We have run R CMD check on the downstream dependency and no problems were found related to this package.
+We checked 0 reverse dependencies, comparing R CMD check results across CRAN and dev versions of this package.
+
+ * We saw 0 new problems
+ * We failed to check 0 packages
 
 
 ---
