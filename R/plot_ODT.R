@@ -300,21 +300,26 @@ plot.ODT <- function(x, font.size = 17, width.size = 1, xadj = 0, main = NULL, s
   pushViewport(PPtree.Main.V)
   PPtree.title.V <- viewport(layout.pos.col = 2, layout.pos.row = 1)
   pushViewport(PPtree.title.V)
-  grid.text(
-    y = unit(1, "lines"),
-    paste("\n", main, sep = ""),
-    just = "center", gp = gpar(fontsize = font.size)
-  )
+  if(nchar(main)!=0){
+    grid.text(
+      y = unit(1, "lines"),
+      paste("\n", main, sep = ""),
+      just = "center", gp = gpar(fontsize = font.size)
+    )
+  }
+
   upViewport()
-  PPtree.Tree.V <- viewport(layout.pos.col = 2, layout.pos.row = 2, xscale = c(0, nx - xadj), yscale = c(0, ny + 1))
+  PPtree.Tree.V <- viewport(layout.pos.col = 2, layout.pos.row = 2, xscale = c(0, nx - xadj), yscale = c(0, ny + ifelse(nchar(main)==0,-1,1)))#(nchar(main)==0)))
   # xscale=c(0,nx),yscale=c(0,ny+1))
   pushViewport(PPtree.Tree.V)
 
 
-  plotPPtree(ppTree, 1, c(0, nx - xadj), ylim = c(1, ny + 1))
-  grid.text(
-    y = unit(1, "lines"),
-    sub,
-    just = "center", gp = gpar(fontsize = font.size * 0.7)
-  )
+  plotPPtree(ppTree, 1, xlim = c(0, nx - xadj), ylim = c(0, ny + ifelse(nchar(main)==0,0,1)))#(nchar(main)!=0))
+  if(!is.null(sub)){
+    grid.text(
+      y = unit(1, "lines"),
+      sub,
+      just = "center", gp = gpar(fontsize = font.size * 0.7)
+    )
+  }
 }
