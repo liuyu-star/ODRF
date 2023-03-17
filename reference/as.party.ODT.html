@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ODRF</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,15 +95,16 @@ and it must be the training data <code>data</code> in <code><a href="ODT.html">O
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="ODT.html">ODT</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span></span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>You are creating a forest for classification</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>You are creating a tree for classification</span>
 <span class="r-in"><span><span class="va">tree</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ============================================================= </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Oblique Classification Tree structure </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> =============================================================</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1) root</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    node2)# proj1*X &lt; 0.25 -&gt; (leaf1 = setosa)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    node3)  proj1*X &gt;= 0.25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    node2)# proj1*X &lt; 0.29 -&gt; (leaf1 = setosa)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    node3)  proj1*X &gt;= 0.29</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       node4)# proj2*X &lt; 0.87 -&gt; (leaf2 = versicolor)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       node5)# proj2*X &gt;= 0.87 -&gt; (leaf3 = virginica)</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">tree</span><span class="op">)</span></span></span>
@@ -116,10 +117,10 @@ and it must be the training data <code>data</code> in <code><a href="ODT.html">O
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Fitted party:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] root</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |   [2] proj1X &gt;= 0.24576</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |   |   [3] proj2X &gt;= 0.86619: virginica (n = 54, err = 7.4%)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |   |   [4] proj2X &lt; 0.86619: versicolor (n = 46, err = 0.0%)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> |   [5] proj1X &lt; 0.24576: setosa (n = 50, err = 0.0%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |   [2] proj1*X &gt;= 0.29167</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |   |   [3] proj2*X &gt;= 0.86619: virginica (n = 54, err = 7.4%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |   |   [4] proj2*X &lt; 0.86619: versicolor (n = 46, err = 0.0%)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> |   [5] proj1*X &lt; 0.29167: setosa (n = 50, err = 0.0%)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of inner nodes:    2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of terminal nodes: 3</span>

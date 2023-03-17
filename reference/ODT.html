@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ODRF</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -121,7 +121,7 @@
 
 
 <dt>data</dt>
-<dd><p>Training data of class <code>data.frame</code> in which to interpret the variables named in the formula. If <code>data</code> is missing it is obtained from the current environment by <code>formula</code>.</p></dd>
+<dd><p>Training data of class <code>data.frame</code> containing variables named in the formula. If <code>data</code> is missing it is obtained from the current environment by <code>formula</code>.</p></dd>
 
 
 <dt>split</dt>
@@ -130,7 +130,7 @@
 
 
 <dt>lambda</dt>
-<dd><p>The adjustment parameter of <code>split</code> is used to determine whether to split or not, with the available values being 0, 1 and 'log' (Default).</p></dd>
+<dd><p>The argument of <code>split</code> is used to determine the penalty level of the partition criterion. Three options are provided including, <code>lambda=0</code>: no penalty; <code>lambda=2</code>: AIC penalty; <code>lambda='log'</code> (Default): BIC penalty. In Addition, lambda can be any value from 0 to n (training set size).</p></dd>
 
 
 <dt>NodeRotateFun</dt>
@@ -203,7 +203,7 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>An object of class ODT Containing a list components:</p><ul><li><p><code>call</code>: The original call to ODT.</p></li>
+<p>An object of class ODT containing a list of components::</p><ul><li><p><code>call</code>: The original call to ODT.</p></li>
 <li><p><code>terms</code>: An object of class <code>c("terms", "formula")</code> (see <code><a href="https://rdrr.io/r/stats/terms.object.html" class="external-link">terms.object</a></code>) summarizing the formula. Used by various methods, but typically not of direct relevance to users.</p></li>
 <li><p><code>projections</code>: Projection direction for each split node.</p></li>
 <li><p><code>structure</code>: A set of tree structure data records.
@@ -260,6 +260,15 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&
 <span class="r-in"><span><span class="co"># estimation error</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span> <span class="op">-</span> <span class="va">test_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0005496953</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Projection analysis of the oblique decision tree.</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu">ODT</span><span class="op">(</span><span class="va">Species</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span>, split<span class="op">=</span><span class="st">"gini"</span>,</span></span>
+<span class="r-in"><span>            paramList <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>model <span class="op">=</span> <span class="st">"PPR"</span>, numProj <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">tree</span><span class="op">[[</span><span class="st">"projections"</span><span class="op">]</span><span class="op">]</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       Sepal.Length Sepal.Width Petal.Length Petal.Width</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> proj1       -0.177      -0.195        0.782       0.565</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> proj2       -0.087      -0.223        0.676       0.697</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">### Train ODT on one-of-K encoded categorical data ###</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">22</span><span class="op">)</span></span></span>

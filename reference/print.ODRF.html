@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ODRF</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.3</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,14 +85,14 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="ODRF.html">ODRF</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="ODRF.html">ODRF</a></span><span class="op">(</span><span class="va">Species</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">iris</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span>, ntrees <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>You are creating a forest for classification</span>
 <span class="r-in"><span><span class="va">forest</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Call:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  ODRF.formula(formula = Species ~ ., data = data, parallel = FALSE) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  ODRF.formula(formula = Species ~ ., data = data, ntrees = 50,      parallel = FALSE) </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                Type of oblique decision random forest: classification</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                       Number of trees: 100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                       Number of trees: 50</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                            OOB estimate of error rate: 4%</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Confusion matrix:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            setosa versicolor virginica class_error</span>
