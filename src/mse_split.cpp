@@ -5,7 +5,7 @@ void mse_split(double lambda, int M, int N, double* Labels, double* Data, int mi
             //, bool CV
     
     double *sorted_data, *sorted_labels;
-    double ah, bh, ch, sum_all, sum_all2, suml, suml2, sumr, sumr2, sr, sl, cl, t, tl, tr;
+    double ah, bh, bh0, ch, sum_all, sum_all2, suml, suml2, sumr, sumr2, sr, sl, cl, t, tl, tr;
     int i, j, mj;
     
     sorted_labels = new double[M];
@@ -28,6 +28,7 @@ void mse_split(double lambda, int M, int N, double* Labels, double* Data, int mi
     }
     bh = sum_all2 - sum_all*(sum_all/M);
     bh = bh*pow(M/(M-t),2);
+    bh0 = bh;
 
     for(i = 0;i<N;i++){
       ah=1e+10;
@@ -99,7 +100,7 @@ void mse_split(double lambda, int M, int N, double* Labels, double* Data, int mi
             }
         }
         
-        bestval[i]= ah;
+        bestval[i] = bh0-ah;
     }
     
     delete[] sorted_labels;
@@ -111,7 +112,7 @@ void mse_split(double lambda, int M, int N, double* Labels, double* Data, double
           int* bcvar, double* bcval, double* bestval){
     
     double *sorted_data, *sorted_labels, *sorted_w;
-    double ah, bh, ch, sum_W, sum_L, sum_wall, sum_wr, sum_wl, sum_all, sum_all2, suml, suml2, sumr, sumr2, sr, sl, cl, t, tl, tr;
+    double ah, bh, bh0, ch, sum_W, sum_L, sum_wall, sum_wr, sum_wl, sum_all, sum_all2, suml, suml2, sumr, sumr2, sr, sl, cl, t, tl, tr;
     int i, j, mj;
     
     sorted_labels = new double[M];
@@ -139,7 +140,8 @@ void mse_split(double lambda, int M, int N, double* Labels, double* Data, double
     }
     bh = sum_all2 + sum_W*(sum_all/M)*(sum_all/M) - 2*(sum_all/M)*sum_wall;
     bh = bh*pow(M/(M-t),2);
-    
+    bh0 = bh;
+
     for(i = 0;i<N;i++){
         ah=1e+10;
       
@@ -215,7 +217,7 @@ void mse_split(double lambda, int M, int N, double* Labels, double* Data, double
             }
         }
         
-        bestval[i]= ah;
+        bestval[i] = bh0-ah;
     }
     
     delete[] sorted_labels;

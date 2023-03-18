@@ -4,7 +4,7 @@ void gini_split(double lambda, int M, int N, double* Labels, double* Data, int m
           int numLabels, int* bcvar, double* bcval, double* bestval){
     
     double *sorted_data;
-    double ah, bh, ch, gr, gl, t, tl, tr;
+    double ah, bh, bh0, ch, gr, gl, t, tl, tr;
     int i, j, cl, nl, mj;
     int *diff_labels_l, *diff_labels_r, *diff_labels, *sorted_labels;
     
@@ -35,7 +35,7 @@ void gini_split(double lambda, int M, int N, double* Labels, double* Data, int m
     }
     bh = bh*pow(M,3)/pow(M-t,2);
     //bh = bh*pow(M/(M-1),2);
-    
+    bh0 = bh;
     
     for(i = 0;i<N;i++){
       ah=1e+10;
@@ -104,7 +104,7 @@ void gini_split(double lambda, int M, int N, double* Labels, double* Data, int m
             }
         }
         
-        bestval[i]= ah;
+        bestval[i]= bh0-ah;
     }
     
     delete[] diff_labels_l;
@@ -120,7 +120,7 @@ void gini_split(double lambda, int M, int N, double* Labels, double* Data, doubl
           int numLabels, int* bcvar, double* bcval, double* bestval){
     
     double *sorted_data, *sorted_w;
-    double ah, bh, ch, sum_W, sum_l, gr, gl, t, tl, tr;
+    double ah, bh, bh0, ch, sum_W, sum_l, gr, gl, t, tl, tr;
     int i, j, cl, nl, mj;
     double *diff_labels_l, *diff_labels_r, *diff_labels;
     int *sorted_labels;
@@ -157,6 +157,7 @@ void gini_split(double lambda, int M, int N, double* Labels, double* Data, doubl
     bh = bh*pow(M,3)/pow(M-t,2);
     //bh = bh*pow(M,3)/pow(M-1,2);
     //bh = bh*pow(M/(M-1),2);
+    bh0 = bh;
     
     for(i = 0;i<N;i++){
       ah=1e+10;
@@ -232,7 +233,7 @@ void gini_split(double lambda, int M, int N, double* Labels, double* Data, doubl
             }
         }
         
-        bestval[i]= ah;
+        bestval[i]= bh0-ah;
     }
     
     delete[] diff_labels_l;

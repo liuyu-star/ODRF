@@ -2,39 +2,49 @@
 % Please edit documentation in R/VarImp.R
 \name{VarImp}
 \alias{VarImp}
-\title{variable importance of oblique decision random forest}
+\title{Extract variable importance measure}
 \usage{
-VarImp(obj, X, y)
+VarImp(obj, X = NULL, y = NULL, type = "permutation")
 }
 \arguments{
-\item{obj}{An object of class \code{\link{ODRF}}.}
+\item{obj}{An object of class \code{\link{ODT}} and \code{\link{ODRF}}.}
 
 \item{X}{An n by d numerical matrix (preferably) or data frame is used in the \code{ODRF}.}
 
 \item{y}{A response vector of length n is used in the \code{ODRF}.}
+
+\item{type}{specifying the type of importance measure. "impurity": mean decrease in node impurity, "permutation" (default): mean decrease in accuracy.}
 }
 \value{
-A matrix of importance measure, first column is the predictors and second column is Increased error. Misclassification rate (MR) for classification or mean square error (MSE) for regression.
+A matrix of importance measure, first column is the predictors and second column is Increased error. Misclassification rate (MR) or gini for classification or mean square error (MSE) for regression.
 The larger the increased error the more important the variable is.
 }
 \description{
-Variable importance is computed from permuting OOB data.
+This is the extractor function for variable importance measures as produced by \code{\link{ODT}} and \code{\link{ODRF}}.
 }
 \details{
-A note from \code{randomForest} package, here are the definitions of the variable importance measures. The measure is computed from permuting OOB data: For each tree, the prediction error on the out-of-bag portion of the data is recorded.
+A note from \code{randomForest} package, here are the definitions of the variable importance measures.
+\itemize{
+\item The first measure is the total decrease in node impurities from splitting on the variable, averaged over all trees. For classification, the node impurity is measured by the Gini index. For regression, it is measured by residual sum of squares.
+\item The second measure is computed from permuting OOB data: For each tree, the prediction error on the out-of-bag portion of the data is recorded.
 Then the same is done after permuting each predictor variable. The difference between the two are then averaged over all trees.
 }
+}
 \examples{
-data(breast_cancer)
-set.seed(221212)
-train <- sample(1:569, 200)
-train_data <- data.frame(breast_cancer[train, -1])
-forest <- ODRF(train_data[, -1], train_data[, 1], split = "gini",
-  parallel = FALSE)
-varimp <- VarImp(forest, train_data[, -1], train_data[, 1])
-varimp
+data(body_fat)
+y=body_fat[,1]
+X=body_fat[,-1]
+
+tree <- ODT(X, y, split = "mse")
+(varimp <- VarImp(tree, type="impurity"))
+
+forest <- ODRF(X, y, split = "mse", parallel = FALSE)
+(varimp <- VarImp(forest, type="impurity"))
+(varimp <- VarImp(forest, X, y, type="permutation"))
+
 }
 \seealso{
 \code{\link{ODRF}} \code{\link{Accuracy}} \code{\link{plot.VarImp}}
 }
 \keyword{forest}
+\keyword{tree}

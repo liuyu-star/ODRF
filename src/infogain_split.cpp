@@ -102,14 +102,14 @@ void infogain_split(double lambda, int M, int N, double* Labels, double* Data, i
               }
             }
             
-            if (bh0-ch>ah){
+            if (ch<ah){
               if (fabs(sorted_data[j+1]-sorted_data[j])>1e-15){
-                ah=bh0-ch;
+                ah=ch;
               }
             }
         }
         
-        bestval[i]= ah;
+        bestval[i] = bh0-ah;
     }
     delete[] diff_labels_l;
     delete[] diff_labels_r;
@@ -225,14 +225,14 @@ void infogain_split(double lambda, int M, int N, double* Labels, double* Data, d
               }
             }
             
-            if (bh0-ch>ah){
+            if (ch<ah){
               if (fabs(sorted_data[j+1]-sorted_data[j])>1e-15){
-                ah=bh0-ch;
+                ah=ch;
               }
             }
         }
         
-        bestval[i]= ah;
+        bestval[i] = bh0-ah;
     }
     delete[] diff_labels_l;
     delete[] diff_labels_r;

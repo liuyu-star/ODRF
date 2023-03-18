@@ -1,5 +1,7 @@
 # ODRF (development version)
 
+* We fixed function VarImp(), adding the method of measuring the importance of variables with node purity.
+
 # ODRF 0.0.3
 
 * The function predicate.ODT() runs error when ODT is not split (depth=1), and we have fixed this bug.
