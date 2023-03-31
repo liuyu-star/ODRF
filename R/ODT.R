@@ -91,6 +91,8 @@
 #' print(round(tree[["projections"]],3))
 #'
 #' ### Train ODT on one-of-K encoded categorical data ###
+#' # Note that the category variable must be placed at the beginning of the predictor X
+#' # as in the following example.
 #' set.seed(22)
 #' Xcol1 <- sample(c("A", "B", "C"), 100, replace = TRUE)
 #' Xcol2 <- sample(c("1", "2", "3", "4", "5"), 100, replace = TRUE)
@@ -145,7 +147,7 @@
 #' #> $Xcol2
 #' #> [1] "1" "2" "3" "4" "5"
 #'
-#' tree <- ODT(X, y, split = "gini", Xcat = c(1, 2), catLabel = catLabel)
+#' tree <- ODT(X, y, split = "gini", Xcat = c(1, 2), catLabel = catLabel,NodeRotateFun = "RotMatRF")
 #'
 #' @import Rcpp
 #' @importFrom stats model.frame model.extract model.matrix na.fail
@@ -373,11 +375,12 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
     rm(X1)
     p <- ncol(X)
   }
+  X <- as.matrix(X)
+  colnames(X) <- varName
   if (!is.numeric(X)){
     X=apply(X, 2, as.numeric)
   }
-  X <- as.matrix(X)
-  colnames(X) <- varName
+
 
   if (all(apply(X, 2, is.character)) && (sum(Xcat) > 0)) {
     stop("The training data 'data' contains categorical variables, so that 'Xcal=NULL' can be automatically transformed into an one-of-K encode variables.")
@@ -385,7 +388,7 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
 
   # address na values.
   data <- data.frame(y, X)
-  if (any(is.na(as.list(data)))) {
+  if (any(is.na(data))) {
     warning("NA values exist in data frame")
   }
 

@@ -160,6 +160,7 @@ tree <- ODT(Species ~ ., data = iris, split="gini",
 print(round(tree[["projections"]],3))
 
 ### Train ODT on one-of-K encoded categorical data ###
+# Note that the category variable must be placed at the beginning of the predictor X as in the following example.
 set.seed(22)
 Xcol1 <- sample(c("A", "B", "C"), 100, replace = TRUE)
 Xcol2 <- sample(c("1", "2", "3", "4", "5"), 100, replace = TRUE)
@@ -214,7 +215,7 @@ catLabel
 #> $Xcol2
 #> [1] "1" "2" "3" "4" "5"
 
-tree <- ODT(X, y, split = "gini", Xcat = c(1, 2), catLabel = catLabel)
+tree <- ODT(X, y, split = "gini", Xcat = c(1, 2), catLabel = catLabel,NodeRotateFun = "RotMatRF")
 
 }
 \references{

@@ -94,6 +94,8 @@
 #' }
 #'
 #' ### Train ODRF on one-of-K encoded categorical data ###
+#' # Note that the category variable must be placed at the beginning of the predictor X
+#' # as in the following example.
 #' set.seed(22)
 #' Xcol1 <- sample(c("A", "B", "C"), 100, replace = TRUE)
 #' Xcol2 <- sample(c("1", "2", "3", "4", "5"), 100, replace = TRUE)

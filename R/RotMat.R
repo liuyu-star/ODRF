@@ -39,6 +39,8 @@
 RotMatRand <- function(dimX, randDist = "Binary", numProj = ceiling(sqrt(dimX)),
                        dimProj = "Rand", sparsity = ifelse(dimX >= 10, 3 / dimX, 1 / dimX),
                        prob = 0.5, lambda = 1, catLabel = NULL, ...) {
+  dimX <- dimX - (!is.null(catLabel)) * (length(unlist(catLabel)) - length(catLabel))
+
   if (dimProj != "Rand") {
     if (dimProj > dimX) {
       stop("ERROR: parameter dimProj is greater than the number of dimensions dimX.")
@@ -143,10 +145,10 @@ RotMatRand <- function(dimX, randDist = "Binary", numProj = ceiling(sqrt(dimX)),
 #'
 #' @export
 RotMatRF <- function(dimX, numProj, catLabel = NULL, ...) {
+  dimX <- dimX - (!is.null(catLabel)) * (length(unlist(catLabel)) - length(catLabel))
   if (numProj > dimX) {
     stop("ERROR: parameter numProj is greater than the number of dimensions dimX.")
   }
-
   randomMatrix <- cbind(sample.int(dimX, numProj, replace = FALSE), 1:numProj, rep(1L, numProj))
   if (!is.null(catLabel)) {
     ind <- randomMatrix[, 1]

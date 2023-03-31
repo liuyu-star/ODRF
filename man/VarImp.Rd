@@ -38,7 +38,7 @@ X=body_fat[,-1]
 tree <- ODT(X, y, split = "mse")
 (varimp <- VarImp(tree, type="impurity"))
 
-forest <- ODRF(X, y, split = "mse", parallel = FALSE)
+forest <- ODRF(X, y, split = "mse", parallel = FALSE, ntrees=50)
 (varimp <- VarImp(forest, type="impurity"))
 (varimp <- VarImp(forest, X, y, type="permutation"))
 
