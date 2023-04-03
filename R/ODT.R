@@ -216,6 +216,7 @@ ODT.formula <- function(formula, data = NULL, split = "auto", lambda = "log", No
   if (yname != as.character(formula)[2]) {
     varName <- c(yname, varName)
   }
+  if(NodeRotateFun=="RotMatRF"&&is.null(paramList$numProj)){paramList$numProj <- ncol(X)}
 
   ppTree <- ODT.compute(
     formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
@@ -273,6 +274,7 @@ ODT.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "R
     Call$X <- NULL
     Call$y <- NULL
   }
+  if(NodeRotateFun=="RotMatRF"&&is.null(paramList$numProj)){paramList$numProj <- ncol(X)}
 
   ppTree <- ODT.compute(
     formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
