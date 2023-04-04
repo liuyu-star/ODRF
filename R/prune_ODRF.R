@@ -305,6 +305,8 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
       oobPred <- rowMeans(oobVotes, na.rm = TRUE)
       ppForest$oobErr <- mean((oobPred - yy)^2) # / mean((yy - mean(yy))^2)
     }
+
+    ppForest$predicted <- oobPred
   }
 
   # class(ppTree) <- append(class(ppTree),"ODRF")

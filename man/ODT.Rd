@@ -95,11 +95,11 @@ including \itemize{
 \item{catLabel}{A category labels of class \code{list} in predictors. (default NULL, for details see Examples)}
 
 \item{Xcat}{A class \code{vector} is used to indicate which predictor is the categorical variable. The default Xcat=0 means that no special treatment is given to category variables.
-When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))<10) & (n>20) is judged to be a category variable.}
+When Xcat=NULL, the predictor x that satisfies the condition "\code{(length(table(x))<10) & (length(x)>20)}" is judged to be a category variable.}
 
 \item{Xscale}{Predictor standardization methods. " Min-max" (default), "Quantile", "No" denote Min-max transformation, Quantile transformation and No transformation respectively.}
 
-\item{TreeRandRotate}{If or not to randomly rotate the Training data before building the tree (default FALSE, see \code{\link[ODRF]{RandRot}}).}
+\item{TreeRandRotate}{If or not to randomly rotate the training data before building the tree (default FALSE, see \code{\link[ODRF]{RandRot}}).}
 
 \item{y}{A response vector of length n.}
 }
@@ -108,7 +108,12 @@ An object of class ODT containing a list of components::
 \itemize{
 \item{\code{call}: The original call to ODT.}
 \item{\code{terms}: An object of class \code{c("terms", "formula")} (see \code{\link{terms.object}}) summarizing the formula. Used by various methods, but typically not of direct relevance to users.}
+\item{\code{split}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
+\item{\code{predicted}: the predicted values of the training data.}
 \item{\code{projections}: Projection direction for each split node.}
+\item{\code{paramList}: Parameters in a named list to be used by \code{NodeRotateFun}.}
+\item{\code{data}: The list of data related parameters used to build the tree.}
+\item{\code{tree}: The list of tree related parameters used to build the tree.}
 \item{\code{structure}: A set of tree structure data records.
 \itemize{
 \item{\code{nodeRotaMat}: Record the split variables (first column), split node serial number (second column) and rotation direction (third column) for each node. (The first column and the third column are 0 means leaf nodes)}
@@ -118,10 +123,6 @@ An object of class ODT containing a list of components::
 \item{\code{childNode}: Record the number of child nodes after each splitting.}
 \item{\code{nodeDepth}: Record the depth of the tree where each node is located.}
 }}
-\item{\code{split}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
-\item{\code{paramList}: Parameters in a named list to be used by \code{NodeRotateFun}.}
-\item{\code{data}: The list of data related parameters used to build the tree.}
-\item{\code{tree}: The list of tree related parameters used to build the tree.}
 }
 }
 \description{

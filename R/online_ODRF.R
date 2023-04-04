@@ -71,7 +71,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
   lambda <- FunDir <- MaxDepth <- MinLeaf <- numNode <- TreeRandRotate <- NULL
   ntrees <- numOOB <- storeOOB <- replacement <- stratify <- parallel <- numCores <- NULL
 
-  ppForest <- ppForest[c(9, 10, 11)]
+  ppForest <- ppForest[(length(ppForest)-(3:1))]
   ppForestVar <- c(names(ppForest$data), names(ppForest$tree), names(ppForest$forest))
   ppForest <- do.call("c", ppForest)
 
@@ -112,11 +112,11 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
   #  X <- X * matrix(weights0,length(y),ncol(X))
   weights <- weights0
 
-
   ppForest <- list(
-    call = Call, terms = Terms, split = split, Levels = NULL,
-    NodeRotateFun = NodeRotateFun, paramList = paramList, oobErr = NULL, oobConfusionMat = NULL
+    call = Call, terms = Terms, split = split, Levels = NULL, NodeRotateFun = NodeRotateFun,
+    predicted=NULL, paramList = paramList, oobErr = NULL, oobConfusionMat = NULL
   )
+
   if (split != "mse") {
     # adjust y to go from 1 to numClass if needed
     if (is.factor(y)) {
@@ -326,6 +326,8 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
       oobPred <- rowMeans(oobVotes, na.rm = TRUE)
       ppForest$oobErr <- mean((oobPred - yy)^2) / mean((yy - mean(y))^2)
     }
+
+    ppForest$predicted <- oobPred
   }
 
   # class(ppTree) <- append(class(ppTree),"ODRF")

@@ -3,7 +3,7 @@ data(body_fat, package = "ODRF")
 test_that("classification seeds tree is of class ODRF with 10 elements", {
   tree <- ODT(Density ~ ., body_fat, split = "mse")
   expect_s3_class(tree, "ODT")
-  expect_length(tree, 10)
+  expect_length(tree, 11)
 })
 
 # test_that("no warning if use formula log(y)~X", {

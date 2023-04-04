@@ -118,8 +118,8 @@ including \itemize{
 
 \item{catLabel}{A category labels of class \code{list} in predictors. (default NULL, for details see Examples)}
 
-\item{Xcat}{A class \code{vector} is used to indicate which predictor is the categorical variable, the default \code{Xcat}=0 means that no special treatment is given to category variables.
-When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))<10) & (n>20) is judged to be a category variable.}
+\item{Xcat}{A class \code{vector} is used to indicate which predictor is the categorical variable. The default Xcat=0 means that no special treatment is given to category variables.
+When Xcat=NULL, the predictor x that satisfies the condition "\code{(length(table(x))<10) & (length(x)>20)}" is judged to be a category variable.}
 
 \item{Xscale}{Predictor standardization methods. " Min-max" (default), "Quantile", "No" denote Min-max transformation, Quantile transformation and No transformation respectively.}
 
@@ -132,16 +132,17 @@ An object of class ODRF Containing a list components:
 \itemize{
 \item{\code{call}: The original call to ODRF.}
 \item{\code{terms}: An object of class \code{c("terms", "formula")} (see \code{\link{terms.object}}) summarizing the formula. Used by various methods, but typically not of direct relevance to users.}
+\item{\code{split}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
+\item{\code{predicted}: the predicted values of the input data based on out-of-bag samples.}
+\item{\code{paramList}: Parameters in a named list to be used by \code{NodeRotateFun}.}
+\item{\code{oobErr}: 'out-of-bag' error for forest, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
+\item{\code{oobConfusionMat}: 'out-of-bag' confusion matrix for forest.}
 \item{\code{ppTrees}: Each tree used to build the forest. \itemize{
 \item{\code{oobErr}: 'out-of-bag' error for tree, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 \item{\code{oobIndex}: Which training data to use as 'out-of-bag'.}
 \item{\code{oobPred}: Predicted value for 'out-of-bag'.}
 \item{\code{other}: For other tree related values \code{\link{ODT}}.}
 }}
-\item{\code{oobErr}: 'out-of-bag' error for forest, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
-\item{\code{oobConfusionMat}: 'out-of-bag' confusion matrix for forest.}
-\item{\code{split}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
-\item{\code{paramList}: Parameters in a named list to be used by \code{NodeRotateFun}.}
 \item{\code{data}: The list of data related parameters used to build the forest.}
 \item{\code{tree}: The list of tree related parameters used to build the tree.}
 \item{\code{forest}: The list of forest related parameters used to build the forest.}

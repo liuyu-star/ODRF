@@ -56,8 +56,10 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
   split <- ppTree$split
   Levels <- ppTree$Levels
   NodeRotateFun <- ppTree$NodeRotateFun
+  predicted <- ppTree$predicted
   paramList <- ppTree$paramList
-  ppTree <- ppTree[-seq(5)]
+  ppTree <- ppTree[-seq(6)]
+  projections=NULL
   if ("projections" %in% names(ppTree)) {
     projections <- ppTree$projections
     ppTree <- ppTree[-1]
@@ -445,10 +447,38 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
   rownames(nodeRotaMat) <- rep(nodeDepth, table(nodeRotaMat[, 2]))
   rownames(nodeNumLabel) <- nodeDepth
 
-  ppTree <- list(call = Call, terms = Terms, split = split, Levels = Levels, NodeRotateFun = NodeRotateFun, paramList = paramList)
-  if ("projections" %in% ls(envir = .GlobalEnv)) {
-    ppTree <- c(ppTree[seq(5)], list(projections = projections), ppTree[-seq(5)])
+
+  ppTree <- list(call = Call, terms = Terms, split = split, Levels = Levels, NodeRotateFun = NodeRotateFun, predicted=NULL, paramList = paramList)
+
+  if (!is.null(projections)) {
+    cutNode <- unique(nodeRotaMat[, 2][nodeRotaMat[, 1] != 0])
+    projections <- matrix(0, length(cutNode), p)
+    for (cn in seq_along(cutNode)) {
+      idx <- which(nodeRotaMat[, 2] == cutNode[cn])
+      projections[cn, nodeRotaMat[idx, 1]] <- nodeRotaMat[idx, 3]
+    }
+    colnames(projections) <- varName
+    rownames(projections) <- paste("proj", seq_len(nrow(projections)), sep = "")
+    ppTree <- c(ppTree[seq(6)], list(projections = projections), ppTree[-seq(6)])
   }
+
+  predicted=rep(0,n)
+  idx=which(!is.na(nodeXIndx[1:(currentNode - 1)]))
+  if (split %in% c("gini","entropy")) {
+    if(all(nodeCutValue == 0)){
+      nodeNumLabel=matrix(nodeNumLabel,nrow = 1, ncol = length(Levels))
+    }
+    nodeLabel <- Levels[max.col(nodeNumLabel)]
+    nodeLabel[which(rowSums(nodeNumLabel) == 0)] <- "0"
+  }
+  if(split == "mse"){
+    nodeLabel <- nodeNumLabel[, 1]
+  }
+  for (i in idx) {
+    predicted[nodeXIndx[[i]]] <- nodeLabel[[i]]
+    names(predicted)[nodeXIndx[[i]]] <- i
+  }
+  ppTree$predicted <- predicted
 
   ppTree$data <- list(
     subset = subset, weights = weights, na.action = na.action, n = n, p = p, varName = varName,

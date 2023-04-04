@@ -6,7 +6,7 @@ forest <- ODRF(Species ~ ., data = iris, split = "entropy", parallel = FALSE)
 ## Basic tests (for all random forests equal)
 test_that("classification iris forest is of class ODRF with 12 elements", {
   expect_s3_class(forest, "ODRF")
-  expect_length(forest, 12)
+  expect_length(forest, 13)
 })
 
 test_that("Error if data is class matrix, classification", {

@@ -32,26 +32,27 @@
 #' @param weights Vector of non-negative observational weights; fractional weights are allowed (default NULL).
 #' @param na.action A function to specify the action to be taken if NAs are found. (NOTE: If given, this argument must be named.)
 #' @param catLabel A category labels of class \code{list} in predictors. (default NULL, for details see Examples)
-#' @param Xcat A class \code{vector} is used to indicate which predictor is the categorical variable, the default \code{Xcat}=0 means that no special treatment is given to category variables.
-#' When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))<10) & (n>20) is judged to be a category variable.
+#' @param Xcat A class \code{vector} is used to indicate which predictor is the categorical variable. The default Xcat=0 means that no special treatment is given to category variables.
+#' When Xcat=NULL, the predictor x that satisfies the condition "\code{(length(table(x))<10) & (length(x)>20)}" is judged to be a category variable.
 #' @param Xscale Predictor standardization methods. " Min-max" (default), "Quantile", "No" denote Min-max transformation, Quantile transformation and No transformation respectively.
-#' @param TreeRandRotate If or not to randomly rotate the Training data before building the tree (default FALSE, see \code{\link[ODRF]{RandRot}}).
+#' @param TreeRandRotate If or not to randomly rotate the training data before building the tree (default FALSE, see \code{\link[ODRF]{RandRot}}).
 #' @param ... Optional parameters to be passed to the low level function.
 #'
 #' @return An object of class ODRF Containing a list components:
 #' \itemize{
 #' \item{\code{call}: The original call to ODRF.}
 #' \item{\code{terms}: An object of class \code{c("terms", "formula")} (see \code{\link{terms.object}}) summarizing the formula. Used by various methods, but typically not of direct relevance to users.}
+#' \item{\code{split}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
+#' \item{\code{predicted}: the predicted values of the training data based on out-of-bag samples.}
+#' \item{\code{paramList}: Parameters in a named list to be used by \code{NodeRotateFun}.}
+#' \item{\code{oobErr}: 'out-of-bag' error for forest, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
+#' \item{\code{oobConfusionMat}: 'out-of-bag' confusion matrix for forest.}
 #' \item{\code{ppTrees}: Each tree used to build the forest. \itemize{
 #' \item{\code{oobErr}: 'out-of-bag' error for tree, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 #' \item{\code{oobIndex}: Which training data to use as 'out-of-bag'.}
 #' \item{\code{oobPred}: Predicted value for 'out-of-bag'.}
 #' \item{\code{other}: For other tree related values \code{\link{ODT}}.}
 #' }}
-#' \item{\code{oobErr}: 'out-of-bag' error for forest, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
-#' \item{\code{oobConfusionMat}: 'out-of-bag' confusion matrix for forest.}
-#' \item{\code{split}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
-#' \item{\code{paramList}: Parameters in a named list to be used by \code{NodeRotateFun}.}
 #' \item{\code{data}: The list of data related parameters used to build the forest.}
 #' \item{\code{tree}: The list of tree related parameters used to build the tree.}
 #' \item{\code{forest}: The list of forest related parameters used to build the forest.}
@@ -322,7 +323,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
 
   if (is.null(Xcat)) {
     Xcat <- which(apply(X, 2, function(x) {
-      (length(unique(x)) < 10) & (n > 20)
+      (length(table(x)) < 10) & (n > 20)
     }))
   }
 
@@ -400,8 +401,8 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
   rm(data)
 
   ppForest <- list(
-    call = Call, terms = Terms, split = split, Levels = NULL,
-    NodeRotateFun = NodeRotateFun, paramList = paramList, oobErr = NULL, oobConfusionMat = NULL
+    call = Call, terms = Terms, split = split, Levels = NULL, NodeRotateFun = NodeRotateFun,
+    predicted=NULL, paramList = paramList, oobErr = NULL, oobConfusionMat = NULL
   )
 
   if (split != "mse") {
@@ -602,6 +603,8 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
       oobPred <- rowMeans(oobVotes, na.rm = TRUE)
       ppForest$oobErr <- mean((oobPred - yy)^2) # / mean((yy - mean(y))^2)
     }
+
+    ppForest$predicted <- oobPred
   }
 
   class(ppForest) <- append(class(ppForest), "ODRF")

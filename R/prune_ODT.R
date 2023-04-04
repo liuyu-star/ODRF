@@ -154,8 +154,8 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
     prediction <- rep(nodeLabel, n)
   } else {
     prediction <- .Call("_ODRF_predict_ODT",
-      PACKAGE = "ODRF", Xnew, structure$nodeRotaMat,
-      structure$nodeCutValue, structure$childNode, nodeLabel
+                        PACKAGE = "ODRF", Xnew, structure$nodeRotaMat,
+                        structure$nodeCutValue, structure$childNode, nodeLabel
     )$prediction
   }
 
@@ -264,8 +264,8 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
       prediction <- rep(nodeLabel, n)
     } else {
       prediction <- .Call("_ODRF_predict_ODT",
-        PACKAGE = "ODRF", Xnew,
-        nodeRotaMat, nodeCutValue, childNode, nodeLabel
+                          PACKAGE = "ODRF", Xnew,
+                          nodeRotaMat, nodeCutValue, childNode, nodeLabel
       )$prediction
     }
 
@@ -317,6 +317,28 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
     ppTree$projections <- projections
   }
 
+  ####################################################
+  nodeNumLabel=ppTree$structure$nodeNumLabel
+  if (ppTree$split != "mse") {
+    if(all(ppTree$structure$nodeCutValue == 0)){
+      nodeNumLabel=matrix(nodeNumLabel,nrow = 1, ncol = length(ppTree$Levels))
+    }
+    nodeLabel <- ppTree$Levels[max.col(nodeNumLabel)]
+    nodeLabel[which(rowSums(nodeNumLabel) == 0)] <- "0"
+  } else {
+    nodeLabel <- as.character(nodeNumLabel[, 1])
+  }
+
+  pred <- .Call("_ODRF_predict_ODT",
+                PACKAGE = "ODRF", Xnew, ppTree$structure$nodeRotaMat,
+                ppTree$structure$nodeCutValue, ppTree$structure$childNode, nodeLabel
+  )$prediction
+  if (ppTree$split == "mse") {
+    pred <- as.numeric(pred)
+  }
+  ppTree$predicted=pred
+
   class(ppTree) <- append(class(ppTree), "prune.ODT")
+
   return(ppTree)
 }
