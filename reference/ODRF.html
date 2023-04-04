@@ -219,8 +219,8 @@ including</p><ul><li><p>"RotMatPPO": projection pursuit optimization model (<cod
 
 
 <dt>Xcat</dt>
-<dd><p>A class <code>vector</code> is used to indicate which predictor is the categorical variable, the default <code>Xcat</code>=0 means that no special treatment is given to category variables.
-When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&lt;10) &amp; (n&gt;20) is judged to be a category variable.</p></dd>
+<dd><p>A class <code>vector</code> is used to indicate which predictor is the categorical variable. The default Xcat=0 means that no special treatment is given to category variables.
+When Xcat=NULL, the predictor x that satisfies the condition "<code>(length(table(x))&lt;10) &amp; (length(x)&gt;20)</code>" is judged to be a category variable.</p></dd>
 
 
 <dt>Xscale</dt>
@@ -241,15 +241,16 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&
 
 <p>An object of class ODRF Containing a list components:</p><ul><li><p><code>call</code>: The original call to ODRF.</p></li>
 <li><p><code>terms</code>: An object of class <code>c("terms", "formula")</code> (see <code><a href="https://rdrr.io/r/stats/terms.object.html" class="external-link">terms.object</a></code>) summarizing the formula. Used by various methods, but typically not of direct relevance to users.</p></li>
+<li><p><code>split</code>, <code>Levels</code> and <code>NodeRotateFun</code> are important parameters for building the tree.</p></li>
+<li><p><code>predicted</code>: the predicted values of the input data based on out-of-bag samples.</p></li>
+<li><p><code>paramList</code>: Parameters in a named list to be used by <code>NodeRotateFun</code>.</p></li>
+<li><p><code>oobErr</code>: 'out-of-bag' error for forest, misclassification rate (MR) for classification or mean square error (MSE) for regression.</p></li>
+<li><p><code>oobConfusionMat</code>: 'out-of-bag' confusion matrix for forest.</p></li>
 <li><p><code>ppTrees</code>: Each tree used to build the forest. </p><ul><li><p><code>oobErr</code>: 'out-of-bag' error for tree, misclassification rate (MR) for classification or mean square error (MSE) for regression.</p></li>
 <li><p><code>oobIndex</code>: Which training data to use as 'out-of-bag'.</p></li>
 <li><p><code>oobPred</code>: Predicted value for 'out-of-bag'.</p></li>
 <li><p><code>other</code>: For other tree related values <code><a href="ODT.html">ODT</a></code>.</p></li>
 </ul></li>
-<li><p><code>oobErr</code>: 'out-of-bag' error for forest, misclassification rate (MR) for classification or mean square error (MSE) for regression.</p></li>
-<li><p><code>oobConfusionMat</code>: 'out-of-bag' confusion matrix for forest.</p></li>
-<li><p><code>split</code>, <code>Levels</code> and <code>NodeRotateFun</code> are important parameters for building the tree.</p></li>
-<li><p><code>paramList</code>: Parameters in a named list to be used by <code>NodeRotateFun</code>.</p></li>
 <li><p><code>data</code>: The list of data related parameters used to build the forest.</p></li>
 <li><p><code>tree</code>: The list of tree related parameters used to build the tree.</p></li>
 <li><p><code>forest</code>: The list of forest related parameters used to build the forest.</p></li>

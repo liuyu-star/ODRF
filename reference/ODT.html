@@ -184,7 +184,7 @@ including</p><ul><li><p>"RotMatPPO": projection pursuit optimization model (<cod
 
 <dt>Xcat</dt>
 <dd><p>A class <code>vector</code> is used to indicate which predictor is the categorical variable. The default Xcat=0 means that no special treatment is given to category variables.
-When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&lt;10) &amp; (n&gt;20) is judged to be a category variable.</p></dd>
+When Xcat=NULL, the predictor x that satisfies the condition "<code>(length(table(x))&lt;10) &amp; (length(x)&gt;20)</code>" is judged to be a category variable.</p></dd>
 
 
 <dt>Xscale</dt>
@@ -192,7 +192,7 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&
 
 
 <dt>TreeRandRotate</dt>
-<dd><p>If or not to randomly rotate the Training data before building the tree (default FALSE, see <code><a href="RandRot.html">RandRot</a></code>).</p></dd>
+<dd><p>If or not to randomly rotate the training data before building the tree (default FALSE, see <code><a href="RandRot.html">RandRot</a></code>).</p></dd>
 
 
 <dt>y</dt>
@@ -205,7 +205,12 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&
 
 <p>An object of class ODT containing a list of components::</p><ul><li><p><code>call</code>: The original call to ODT.</p></li>
 <li><p><code>terms</code>: An object of class <code>c("terms", "formula")</code> (see <code><a href="https://rdrr.io/r/stats/terms.object.html" class="external-link">terms.object</a></code>) summarizing the formula. Used by various methods, but typically not of direct relevance to users.</p></li>
+<li><p><code>split</code>, <code>Levels</code> and <code>NodeRotateFun</code> are important parameters for building the tree.</p></li>
+<li><p><code>predicted</code>: the predicted values of the training data.</p></li>
 <li><p><code>projections</code>: Projection direction for each split node.</p></li>
+<li><p><code>paramList</code>: Parameters in a named list to be used by <code>NodeRotateFun</code>.</p></li>
+<li><p><code>data</code>: The list of data related parameters used to build the tree.</p></li>
+<li><p><code>tree</code>: The list of tree related parameters used to build the tree.</p></li>
 <li><p><code>structure</code>: A set of tree structure data records.
 </p><ul><li><p><code>nodeRotaMat</code>: Record the split variables (first column), split node serial number (second column) and rotation direction (third column) for each node. (The first column and the third column are 0 means leaf nodes)</p></li>
 <li><p><code>nodeNumLabel</code>: Record each leaf node's category for classification or predicted value for regression (second column is data size). (Each column is 0 means it is not a leaf node)</p></li>
@@ -214,10 +219,6 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&
 <li><p><code>childNode</code>: Record the number of child nodes after each splitting.</p></li>
 <li><p><code>nodeDepth</code>: Record the depth of the tree where each node is located.</p></li>
 </ul></li>
-<li><p><code>split</code>, <code>Levels</code> and <code>NodeRotateFun</code> are important parameters for building the tree.</p></li>
-<li><p><code>paramList</code>: Parameters in a named list to be used by <code>NodeRotateFun</code>.</p></li>
-<li><p><code>data</code>: The list of data related parameters used to build the tree.</p></li>
-<li><p><code>tree</code>: The list of tree related parameters used to build the tree.</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
@@ -349,7 +350,6 @@ When Xcat=NULL, the predictor x that satisfies the condition (length(unique(x))&
 <span class="r-in"><span><span class="co">#&gt; [1] "1" "2" "3" "4" "5"</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu">ODT</span><span class="op">(</span><span class="va">X</span>, <span class="va">y</span>, split <span class="op">=</span> <span class="st">"gini"</span>, Xcat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, catLabel <span class="op">=</span> <span class="va">catLabel</span>,NodeRotateFun <span class="op">=</span> <span class="st">"RotMatRF"</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in (function (dimX, numProj, catLabel = NULL, ...) {    dimX &lt;- dimX - (!is.null(catLabel)) * (length(unlist(catLabel)) -         length(catLabel))    if (numProj &gt; dimX) {        stop("ERROR: parameter numProj is greater than the number of dimensions dimX.")    }    randomMatrix &lt;- cbind(sample.int(dimX, numProj, replace = FALSE),         1:numProj, rep(1L, numProj))    if (!is.null(catLabel)) {        ind &lt;- randomMatrix[, 1]        catVar &lt;- which(ind &lt;= length(catLabel))        randomMatrix[-catVar, 1L] &lt;- randomMatrix[-catVar, 1L] +             length(unlist(catLabel)) - length(catLabel)        catMap &lt;- 1        for (xj in unique(ind[catVar])) {            isj &lt;- which(ind == xj)            randomMatrix[isj, 1L] &lt;- sample(catMap:(catMap +                 length(catLabel[[xj]]) - 1), length(isj), replace = TRUE)            catMap &lt;- catMap + length(catLabel[[xj]])        }    }    colnames(randomMatrix) &lt;- c("Variable", "Number", "Coefficient")    return(randomMatrix)})(numProj = 11L, dimX = 11L, dimProj = "Rand", catLabel = list(    Xcol1 = c("A", "B", "C"), Xcol2 = c("1", "2", "3", "4", "5"    )), lambda = 1, sparsity = 0.272727272727273, prob = 0.5,     randDist = "Binary", split = "gini", model = "PPR"):</span> ERROR: parameter numProj is greater than the number of dimensions dimX.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
