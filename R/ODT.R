@@ -585,6 +585,7 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
         nodeNumLabel[nodeLR[currentNode], ] <- colSums(nodeNumLabel[currentNode - c(1, 0), ])
         nodeNumLabel <- nodeNumLabel[-(currentNode - c(1, 0)), ]
         nodeDepth <- nodeDepth[-(currentNode - c(1, 0))]
+        nodeXIndx[[nodeLR[currentNode]]] <- unlist(nodeXIndx[currentNode - c(1, 0)])
         nodeXIndx <- nodeXIndx[-(currentNode - c(1, 0))]
         nodeLR <- nodeLR[-(currentNode - c(1, 0))]
         freeNode <- freeNode - 2
@@ -686,6 +687,7 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
         nodeNumLabel[nodeLR[currentNode], ] <- colSums(nodeNumLabel[currentNode - c(1, 0), ])
         nodeNumLabel <- nodeNumLabel[-(currentNode - c(1, 0)), ]
         nodeDepth <- nodeDepth[-(currentNode - c(1, 0))]
+        nodeXIndx[[nodeLR[currentNode]]] <- unlist(nodeXIndx[currentNode - c(1, 0)])
         nodeXIndx <- nodeXIndx[-(currentNode - c(1, 0))]
         nodeLR <- nodeLR[-(currentNode - c(1, 0))]
         freeNode <- freeNode - 2
