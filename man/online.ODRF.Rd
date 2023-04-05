@@ -4,7 +4,7 @@
 \alias{online.ODRF}
 \title{using new training data to update an existing \code{ODRF}.}
 \usage{
-\method{online}{ODRF}(obj, X, y, weights = NULL, ...)
+\method{online}{ODRF}(obj, X, y, weights = NULL, MaxDepth = Inf, ...)
 }
 \arguments{
 \item{obj}{An object of class \code{ODRF}.}
@@ -14,6 +14,8 @@
 \item{y}{A new response vector of length n used to update the object of class \code{ODRF}.}
 
 \item{weights}{A vector of non-negative observational weights; fractional weights are allowed (default NULL).}
+
+\item{MaxDepth}{The maximum depth of the tree (default \code{Inf}).}
 
 \item{...}{Optional parameters to be passed to the low level function.}
 }

@@ -1,9 +1,16 @@
 data(body_fat, package = "ODRF")
 
-test_that("classification seeds tree is of class ODRF with 10 elements", {
-  tree <- ODT(Density ~ ., body_fat, split = "mse")
+test_that("classification seeds tree is of class ODT with 11 elements", {
+  tree <- ODT(Density ~ ., body_fat[seq(200),], split = "mse")
   expect_s3_class(tree, "ODT")
   expect_length(tree, 11)
+})
+
+test_that("online tree is of class ODT with 11 elements", {
+  tree <- ODT(Density ~ ., body_fat[seq(200),], split = "mse")
+  online_tree <- online(tree, body_fat[-seq(200),-1], body_fat[-seq(200),1])
+  expect_s3_class(online_tree, "ODT")
+  expect_length(online_tree, 11)
 })
 
 # test_that("no warning if use formula log(y)~X", {

@@ -4,7 +4,7 @@
 \alias{online.ODT}
 \title{using new training data to update an existing \code{ODT}.}
 \usage{
-\method{online}{ODT}(obj, X = NULL, y = NULL, weights = NULL, ...)
+\method{online}{ODT}(obj, X = NULL, y = NULL, weights = NULL, MaxDepth = Inf, ...)
 }
 \arguments{
 \item{obj}{an object of class \code{ODT}.}
@@ -14,6 +14,8 @@
 \item{y}{A new response vector of length n used to update the object of class \code{ODT}.}
 
 \item{weights}{Vector of non-negative observational weights; fractional weights are allowed (default NULL).}
+
+\item{MaxDepth}{The maximum depth of the tree (default \code{Inf}).}
 
 \item{...}{optional parameters to be passed to the low level function.}
 }

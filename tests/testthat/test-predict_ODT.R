@@ -9,6 +9,12 @@ test_that("predict returns good prediction", {
   expect_gt(mean(pred == test_data[, 8]), 0.8)
 })
 
+test_that("Error if the predicted value of the training set does not match the actual predicted value.", {
+  tree <- ODT(varieties_of_wheat ~ ., train_data, split = "entropy")
+  pred <- predict(tree, train_data[, -8])
+  expect_equal(pred, tree$predicted, ignore_attr = TRUE)
+})
+
 test_that("Error if the dimensions of Xnew are not matched with the dimensions of the training data", {
   tree <- ODT(varieties_of_wheat ~ ., train_data, split = "gini")
   expect_error(predict(tree, test_data))

@@ -5,6 +5,7 @@
 #' @param X An new n by d numeric matrix (preferable) or data frame  used to update the object of class \code{ODRF}.
 #' @param y A new response vector of length n used to update the object of class \code{ODRF}.
 #' @param weights A vector of non-negative observational weights; fractional weights are allowed (default NULL).
+#' @param MaxDepth The maximum depth of the tree (default \code{Inf}).
 #' @param ... Optional parameters to be passed to the low level function.
 #'
 #' @return The same result as \code{ODRF}.
@@ -52,35 +53,35 @@
 #' @aliases online.ODRF
 #' @method online ODRF
 #' @export
-online.ODRF <- function(obj, X, y, weights = NULL, ...) {
-  ppForest <- obj
-  rm(obj)
-  if (length(ppForest[["ppTrees"]][[1]][["structure"]][["nodeDepth"]]) == 1) {
+online.ODRF <- function(obj, X, y, weights = NULL, MaxDepth = Inf, ...) {
+  if (length(obj[["structure"]][[1]][["structure"]][["nodeDepth"]]) == 1) {
     stop("No tree structure to use 'online'!")
   }
+
+  MaxDepth0 <- MaxDepth
   weights0 <- weights
-  ppTrees <- ppForest$ppTrees
-  Levels <- ppForest$Levels
-  split <- ppForest$split
-  NodeRotateFun <- ppForest$NodeRotateFun
-  Call <- ppForest$call
-  Terms <- ppForest$terms
-  paramList <- ppForest$paramList
+  structure <- obj$structure
+  Levels <- obj$Levels
+  split <- obj$split
+  NodeRotateFun <- obj$NodeRotateFun
+  Call <- obj$call
+  Terms <- obj$terms
+  paramList <- obj$paramList
 
   subset <- weights <- na.action <- n <- p <- varName <- Xscale <- minCol <- maxminCol <- Xcat <- catLabel <- NULL
   lambda <- FunDir <- MaxDepth <- MinLeaf <- numNode <- TreeRandRotate <- NULL
   ntrees <- numOOB <- storeOOB <- replacement <- stratify <- parallel <- numCores <- NULL
 
-  ppForest <- ppForest[(length(ppForest)-(3:1))]
-  ppForestVar <- c(names(ppForest$data), names(ppForest$tree), names(ppForest$forest))
-  ppForest <- do.call("c", ppForest)
+  obj <- obj[(length(obj)-(3:1))]
+  ppForestVar <- c(names(obj$data), names(obj$tree), names(obj$forest))
+  obj <- do.call("c", obj)
 
   # env <- new.env()
   for (v in seq_along(ppForestVar)) {
-    assign(ppForestVar[v], ppForest[[v]]) # ,envir = env)
+    assign(ppForestVar[v], obj[[v]]) # ,envir = env)
   }
-  rm(ppForest)
-  # utils::globalVariables(ppForestVar)
+  rm(obj)
+  # utils::globalVariables(objVar)
 
   # vars=all.vars(Terms)
   if (sum(Xcat) > 0 && is.null(catLabel)) {
@@ -111,6 +112,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
   # if(!is.null(weights))
   #  X <- X * matrix(weights0,length(y),ncol(X))
   weights <- weights0
+  MaxDepth <- MaxDepth0
 
   ppForest <- list(
     call = Call, terms = Terms, split = split, Levels = NULL, NodeRotateFun = NodeRotateFun,
@@ -187,9 +189,9 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
 
   ppForest$data <- list(
     subset = subset, weights = weights, na.action = na.action, n = n, p = p, varName = varName,
-    Xscale = Xscale, minCol = minCol, maxminCol = maxminCol, Xcat = Xcat, catLabel = catLabel
+    Xscale = Xscale, minCol = minCol, maxminCol = maxminCol, Xcat = Xcat, catLabel = catLabel, TreeRandRotate = TreeRandRotate
   )
-  ppForest$tree <- list(lambda = lambda, FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode, TreeRandRotate = TreeRandRotate)
+  ppForest$tree <- list(lambda = lambda, FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode)
   ppForest$forest <- list(
     ntrees = ntrees, numOOB = numOOB, storeOOB = storeOOB, replacement = replacement, stratify = stratify,
     parallel = parallel, numCores = numCores#, seed = seed
@@ -197,9 +199,14 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
 
 
   PPtree <- function(itree, ...) {
-    ppTree <- ppTrees[[itree]] # [1:7]
+    ppTree=ppForest[seq(7)]
+    ppTree$data <- c(ppForest$data,structure[[itree]][c(1,2)])
+    ppTree$data$Xcat <- 0L
+    ppTree$data$Xscale <- "No"
+    ppTree$tree <- ppForest$tree
+    ppTree$structure <- structure[[itree]][-c(1,2)]
     if ((numOOB > 0) && storeOOB) {
-      ppTree <- ppTree[-(length(ppTree) - c(2, 1, 0))]
+      ppTree$structure <- ppTree$structure[-(length(ppTree$structure) - c(2, 1, 0))]
     }
     class(ppTree) <- "ODT"
     #set.seed(seed + itree)
@@ -228,8 +235,9 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
       TDindx <- sample.int(TDindx0, n - numOOB, replace = FALSE)
     }
 
-    weights1 <- weights[TDindx]
-    ppForestT <- online(ppTree, X[TDindx, ], y[TDindx], weights1)
+    ppForestT <- online(ppTree, X[TDindx, ], y[TDindx], weights[TDindx])
+
+    TreeRotate=list(rotdims=ppForestT[["data"]][["rotdims"]],rotmat=ppForestT[["data"]][["rotmat"]])
 
     if ((numOOB > 0) && storeOOB) {
       oobErr <- 1
@@ -242,10 +250,12 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
         oobErr <- mean((pred - y[NTD])^2)
       }
 
-      ppForestT <- c(ppForestT, list(oobErr = oobErr, oobIndex = NTD, oobPred = pred))
+      ppForestT <- c(ppForestT$structure, list(oobErr = oobErr, oobIndex = NTD, oobPred = pred))
+    }else{
+      ppForestT <- ppForestT$structure
     }
 
-    return(ppForestT)
+    return(c(TreeRotate,ppForestT))
   }
 
 
@@ -269,7 +279,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
     icore <- NULL
     ppForestT <- foreach::foreach(
       icore = seq_along(chunks), .combine = list, .multicombine = TRUE, .export = c("ODT.compute"),
-      .packages = "ODRF", .noexport = "ppForest"
+      .packages = "ODRF"
     ) %dopar% {
       lapply(chunks[[icore]], PPtree)
     }
@@ -277,14 +287,14 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
     parallel::stopCluster(cl)
 
     # do.call(rbind.fill,list1)
-    ppForest$ppTrees <- do.call("c", ppForestT)
-    # ppForest$ppTrees=NULL
+    ppForest$structure <- do.call("c", ppForestT)
+    # ppForest$structure=NULL
     # for (i in 1:numCores) {
-    #  ppForest$ppTrees=c(ppForest$ppTrees,ppForestT[[i]])
+    #  ppForest$structure=c(ppForest$structure,ppForestT[[i]])
     # }
   } else {
     # Use just one core.
-    ppForest$ppTrees <- lapply(1:ntrees, PPtree)
+    ppForest$structure <- lapply(1:ntrees, PPtree)
   }
 
 
@@ -292,7 +302,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, ...) {
   if ((numOOB > 0) && storeOOB) {
     oobVotes <- matrix(NA, n, ntrees)
     for (t in seq_len(ntrees)) {
-      oobVotes[ppForest$ppTrees[[t]]$oobIndex, t] <- ppForest$ppTrees[[t]]$oobPred
+      oobVotes[ppForest$structure[[t]]$oobIndex, t] <- ppForest$structure[[t]]$oobPred
     }
     idx <- which(rowSums(is.na(oobVotes)) < ntrees)
     oobVotes <- oobVotes[idx, , drop = FALSE]

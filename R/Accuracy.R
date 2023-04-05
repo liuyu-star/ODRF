@@ -24,8 +24,7 @@
 #' @keywords forest
 #' @export
 Accuracy <- function(obj, data, newdata = NULL) {
-  forest=obj
-  vars <- all.vars(forest$terms)
+  vars <- all.vars(obj$terms)
   if (!all(vars[-1] %in% colnames(data))) {
     stop("The column name of 'data' does not match the training data.")
   }
@@ -35,18 +34,18 @@ Accuracy <- function(obj, data, newdata = NULL) {
   ynew <- newdata[, setdiff(colnames(newdata), vars[-1])]
   Xnew <- newdata[, vars[-1]]
   Xnew <- as.matrix(Xnew)
-  if (forest$split != "mse") {
-    y <- factor(y, levels = forest$Levels)
+  if (obj$split != "mse") {
+    y <- factor(y, levels = obj$Levels)
   }
 
   n <- length(y)
-  nt <- ntrees <- forest$forest$ntrees
-  nC <- length(forest$Levels)
+  nt <- ntrees <- obj$forest$ntrees
+  nC <- length(obj$Levels)
   ny <- length(ynew)
 
-  treeVotes <- predict(forest, Xnew, type = "tree")
+  treeVotes <- predict(obj, Xnew, type = "tree")
   err.test <- rep(0, ntrees)
-  if (forest$split == "mse") {
+  if (obj$split == "mse") {
     pred <- rowSums(treeVotes)
     err.test[nt] <- mean((ynew - pred / nt)^2) # /e.0;
     for (t in seq(nt - 1, 1)) {
@@ -55,7 +54,7 @@ Accuracy <- function(obj, data, newdata = NULL) {
     }
   } else {
     weights <- rep(1, ny * nt)
-    Votes <- factor(c(t(treeVotes)), levels = forest$Levels)
+    Votes <- factor(c(t(treeVotes)), levels = obj$Levels)
     treeVotes <- matrix(as.integer(Votes), nt, ny)
 
     Votes <- c(treeVotes) + nC * rep(0:(ny - 1), rep(nt, ny))
@@ -64,48 +63,51 @@ Accuracy <- function(obj, data, newdata = NULL) {
 
     # prob=matrix(Votes,ny,nC,byrow = TRUE);
     Votes <- matrix(Votes, ny, nC, byrow = TRUE)
-    pred <- forest$Levels[max.col(Votes)] ## "random"
+    pred <- obj$Levels[max.col(Votes)] ## "random"
     err.test[nt] <- mean(ynew != pred)
     treeC <- matrix(seq(nC), ny, nC, byrow = TRUE)
     for (t in seq(nt - 1, 1)) {
       Votes <- Votes - (treeC == matrix(treeVotes[t + 1, ],ny,nC)) * 1
       # pred=apply(prob,1,which.max);
-      pred <- forest$Levels[max.col(Votes)] ## "random"
+      pred <- obj$Levels[max.col(Votes)] ## "random"
       err.test[t] <- mean(ynew != pred)
     }
   }
 
+  if (!obj$forest$storeOOB) {
+    stop("out-of-bag indices for each tree are not stored, so can't calculation accuracy!")
+  }
 
   err.oob <- rep(0, ntrees)
   for (tt in 1:ntrees) {
     oobVotes <- matrix(NA, n, tt)
     for (t in 1:tt) {
-      oobVotes[forest$ppTrees[[t]]$oobIndex, t] <- forest$ppTrees[[t]]$oobPred
+      oobVotes[obj$structure[[t]]$oobIndex, t] <- obj$structure[[t]]$oobPred
     }
     idx <- which(rowSums(is.na(oobVotes)) < tt)
     oobVotes <- oobVotes[idx, , drop = FALSE]
 
-    if (forest$split == "mse") {
+    if (obj$split == "mse") {
       pred <- rowMeans(oobVotes, na.rm = TRUE)
       err <- mean((y[idx] - pred)^2) # / mean((y[idx] - mean(y))^2)
     } else {
       ny <- length(y[idx])
       nt <- ncol(oobVotes)
       weights <- rep(1, ny * nt)
-      Votes <- factor(c(t(oobVotes)), levels = forest$Levels)
+      Votes <- factor(c(t(oobVotes)), levels = obj$Levels)
       Votes <- as.integer(Votes) + nC * rep(0:(ny - 1), rep(nt, ny))
       Votes <- aggregate(c(rep(0, ny * nC), weights), by = list(c(1:(ny * nC), Votes)), sum)[, 2]
 
       prob <- matrix(Votes, ny, nC, byrow = TRUE)
       # pred=apply(prob,1,which.max);
       pred <- max.col(prob) ## "random"
-      pred <- forest$Levels[pred]
+      pred <- obj$Levels[pred]
       err <- mean(y[idx] != pred)
     }
     err.oob[tt] <- err
   }
 
-  error <- list(err.oob = err.oob, err.test = err.test, split = forest$split)
+  error <- list(err.oob = err.oob, err.test = err.test, split = obj$split)
 
   class(error) <- "Accuracy"
   return(error)

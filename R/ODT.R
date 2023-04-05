@@ -564,7 +564,7 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
       }
       nodeNumLabel <- rbind(nodeNumLabel, leafLabel)
       nodeRotaMat <- rbind(nodeRotaMat, c(0, currentNode, 0))
-      nodeXIndx[currentNode] <- NA
+      #nodeXIndx[currentNode] <- NA
 
       TF <- ifelse(currentNode > 1, (nodeLR[currentNode - 1] == nodeLR[currentNode]) && (nodeCutValue[currentNode - 1] == 0), FALSE)
       if (TF && (split != "mse") && (length(unique(max.col(nodeNumLabel[currentNode - c(1, 0), ]))) == 1)) {
@@ -665,7 +665,7 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
       }
       nodeNumLabel <- rbind(nodeNumLabel, leafLabel)
       nodeRotaMat <- rbind(nodeRotaMat, c(0, currentNode, 0))
-      nodeXIndx[currentNode] <- NA
+      #nodeXIndx[currentNode] <- NA
 
       TF <- ifelse(currentNode > 1, (nodeLR[currentNode - 1] == nodeLR[currentNode]) && (nodeCutValue[currentNode - 1] == 0), FALSE)
       if (TF && (split != "mse") && (length(unique(max.col(nodeNumLabel[currentNode - c(1, 0), ]))) == 1)) {
@@ -741,7 +741,7 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
     nodeLabel <- nodeNumLabel[, 1]
   }
   for (i in idx) {
-    predicted[nodeXIndx[[i]]]=nodeLabel[[i]]
+    predicted[nodeXIndx[[i]]]=nodeLabel[i]
     names(predicted)[nodeXIndx[[i]]]=i
   }
 

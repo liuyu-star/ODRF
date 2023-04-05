@@ -123,7 +123,7 @@ When Xcat=NULL, the predictor x that satisfies the condition "\code{(length(tabl
 
 \item{Xscale}{Predictor standardization methods. " Min-max" (default), "Quantile", "No" denote Min-max transformation, Quantile transformation and No transformation respectively.}
 
-\item{TreeRandRotate}{If or not to randomly rotate the Training data before building the tree (default FALSE, see \code{\link[ODRF]{RandRot}}).}
+\item{TreeRandRotate}{If or not to randomly rotate the training data before building the tree (default FALSE, see \code{\link[ODRF]{RandRot}}).}
 
 \item{y}{A response vector of length n.}
 }
@@ -133,15 +133,15 @@ An object of class ODRF Containing a list components:
 \item{\code{call}: The original call to ODRF.}
 \item{\code{terms}: An object of class \code{c("terms", "formula")} (see \code{\link{terms.object}}) summarizing the formula. Used by various methods, but typically not of direct relevance to users.}
 \item{\code{split}, \code{Levels} and \code{NodeRotateFun} are important parameters for building the tree.}
-\item{\code{predicted}: the predicted values of the input data based on out-of-bag samples.}
+\item{\code{predicted}: the predicted values of the training data based on out-of-bag samples.}
 \item{\code{paramList}: Parameters in a named list to be used by \code{NodeRotateFun}.}
 \item{\code{oobErr}: 'out-of-bag' error for forest, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 \item{\code{oobConfusionMat}: 'out-of-bag' confusion matrix for forest.}
-\item{\code{ppTrees}: Each tree used to build the forest. \itemize{
+\item{\code{structure}: Each tree structure used to build the forest. \itemize{
 \item{\code{oobErr}: 'out-of-bag' error for tree, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 \item{\code{oobIndex}: Which training data to use as 'out-of-bag'.}
 \item{\code{oobPred}: Predicted value for 'out-of-bag'.}
-\item{\code{other}: For other tree related values \code{\link{ODT}}.}
+\item{\code{others}: Same tree structure return value as \code{\link{ODT}}.}
 }}
 \item{\code{data}: The list of data related parameters used to build the forest.}
 \item{\code{tree}: The list of tree related parameters used to build the tree.}

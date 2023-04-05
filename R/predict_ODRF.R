@@ -53,12 +53,10 @@
 #' @method predict ODRF
 #' @export
 predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, ...) {
-  ppForest <- object
-  rm(object)
 
-  pp <- ppForest$data$p
-  if (!is.null(ppForest$data$catLabel) && (sum(ppForest$data$Xcat) > 0)) {
-    pp <- pp - length(unlist(ppForest$data$catLabel)) + length(ppForest$data$Xcat)
+  pp <- object$data$p
+  if (!is.null(object$data$catLabel) && (sum(object$data$Xcat) > 0)) {
+    pp <- pp - length(unlist(object$data$catLabel)) + length(object$data$Xcat)
   }
   if (ncol(Xnew) != pp) {
     stop("The dimensions of 'Xnew' and training data do not match")
@@ -75,18 +73,18 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
   }
   Xnew <- as.matrix(Xnew)
 
-  # if (!is.null(ppForest$data$subset)) {
-  #  Xnew <- Xnew[ppForest$data$subset, ]
+  # if (!is.null(object$data$subset)) {
+  #  Xnew <- Xnew[object$data$subset, ]
   # }
 
   p <- ncol(Xnew)
   n <- nrow(Xnew)
-  nC <- length(ppForest$Levels)
-  ntrees <- length(ppForest$ppTrees)
+  nC <- length(object$Levels)
+  ntrees <- length(object$structure)
 
 
-  Xcat <- ppForest$data$Xcat
-  catLabel <- ppForest$data$catLabel
+  Xcat <- object$data$Xcat
+  catLabel <- object$data$catLabel
   numCat <- 0
   if (sum(Xcat) > 0) {
     xj <- 1
@@ -117,50 +115,50 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
   }
 
   # Variable scaling.
-  if (ppForest$data$Xscale != "No") {
+  if (object$data$Xscale != "No") {
     indp <- (sum(numCat) + 1):p
-    Xnew[, indp] <- (Xnew[, indp] - matrix(ppForest$data$minCol, n, length(indp), byrow = T)) /
-      matrix(ppForest$data$maxminCol, n, length(indp), byrow = T)
+    Xnew[, indp] <- (Xnew[, indp] - matrix(object$data$minCol, n, length(indp), byrow = T)) /
+      matrix(object$data$maxminCol, n, length(indp), byrow = T)
   }
 
   # Votes = matrix(0,ntrees,n);
   # oobErr = rep(0,ntrees);
   # for(i in 1:ntrees){
-  # Votes[i,] = PPtreePredict(Xnew,ppForest$trees[[i]]);
-  #  oobErr[i] = ppForest$trees[[i]]$oobErr;
+  # Votes[i,] = PPtreePredict(Xnew,object$trees[[i]]);
+  #  oobErr[i] = object$trees[[i]]$oobErr;
   # }
-  # Votes=t(sapply(seq(ntrees), function(i)PPtreePredict(Xnew,ppForest$trees[[i]])))
+  # Votes=t(sapply(seq(ntrees), function(i)PPtreePredict(Xnew,object$trees[[i]])))
 
-  VALUE <- rep(ifelse(ppForest$split == "mse", 0, as.character(0)), n)
-  TreePrediction <- vapply(ppForest$ppTrees, function(tree) {
-    class(tree) <- "ODT"
-    predict(tree, Xnew)
-  }, VALUE)
+  split=object$split
+  Levels=object$Levels
+
+  VALUE <- rep(ifelse(split == "mse", 0, "0"), n)
+  TreePrediction <- vapply(object$structure,function(tree){predictTree(tree,Xnew,split,Levels)$prediction}, VALUE)
   Votes <- t(TreePrediction)
 
 
   oobErr <- rep(1, ntrees)
   if (weight.tree) {
-    if (ppForest$forest$numOOB == 0){
+    if (object$forest$numOOB == 0){
       warning("numOOB=0, weight.tree = TRUE invalid")
       #stop("out-of-bag indices for each tree are not stored. ODRF must be called with storeOOB = TRUE.")
     }else{
-      oobErr <- sapply(ppForest$ppTrees, function(trees) trees$oobErr)
+      oobErr <- sapply(object$structure, function(trees) trees$oobErr)
     }
   }
 
   weights <- weight.tree * oobErr + (!weight.tree)
   weights <- weights / sum(weights)
-  if (ppForest$split != "mse") {
+  if (split != "mse") {
     # prob=matrix(0,n,nC)
     # for (i in 1:n) {
     #    prob[i,]=aggregate(c(rep(0,nC),weights[,i]), by=list(c(1:nC, f_votes[,i])),sum)[,2];
     #  }
-    # f_votes[i,] =sapply(f_votes[i,],function(pred)which(ppForest$Levels%in%pred));
+    # f_votes[i,] =sapply(f_votes[i,],function(pred)which(object$Levels%in%pred));
     # f_votes=as.numeric(as.factor(c(f_votes)))
 
-    # Levels=levels(as.factor(c(ppForest$Levels[1:nC],Votes[,1])))
-    # Levels=max.col(matrix(Levels,nC,nC)==matrix(ppForest$Levels,nC,nC,byrow = T))
+    # Levels=levels(as.factor(c(object$Levels[1:nC],Votes[,1])))
+    # Levels=max.col(matrix(Levels,nC,nC)==matrix(object$Levels,nC,nC,byrow = T))
     # prob=matrix(0,n,nC);
     # for (i in seq(n)) {
     #  prob[i,]=aggregate(c(rep(0,nC),weights), by=list(c(1:nC,as.integer(as.factor(Votes[,i])))),sum)[,2];
@@ -168,17 +166,17 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
     # prob[,Levels]=prob
 
     weights <- rep(weights, n)
-    Votes <- factor(c(Votes), levels = ppForest$Levels)
+    Votes <- factor(c(Votes), levels = Levels)
     Votes <- as.integer(Votes) + nC * rep(0:(n - 1), rep(ntrees, n))
     Votes <- aggregate(c(rep(0, n * nC), weights), by = list(c(1:(n * nC), Votes)), sum)[, 2]
 
     prob <- matrix(Votes, n, nC, byrow = TRUE)
     prob <- prob / matrix(rowSums(prob), n, nC)
-    colnames(prob) <- ppForest$Levels
+    colnames(prob) <- Levels
 
     # pred=apply(prob,1,which.max);
     pred <- max.col(prob) ## "random"
-    pred <- ppForest$Levels[pred]
+    pred <- Levels[pred]
   } else {
     prob <- weights / sum(weights)
     pred <- t(Votes) %*% prob

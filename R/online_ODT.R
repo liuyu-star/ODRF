@@ -6,6 +6,7 @@
 #' @param X An new n by d numeric matrix (preferable) or data frame  used to update the object of class \code{ODT}.
 #' @param y A new response vector of length n used to update the object of class \code{ODT}.
 #' @param weights Vector of non-negative observational weights; fractional weights are allowed (default NULL).
+#' @param MaxDepth The maximum depth of the tree (default \code{Inf}).
 #' @param ... optional parameters to be passed to the low level function.
 #'
 #' @return The same result as \code{ODT}.
@@ -44,42 +45,42 @@
 #' @aliases online.ODT
 #' @method online ODT
 #' @export
-online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
-  ppTree <- obj
-  rm(obj)
-  if (length(ppTree[["structure"]][["nodeDepth"]]) == 1) {
+online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, MaxDepth = Inf, ...) {
+  if (length(obj[["structure"]][["nodeDepth"]]) == 1) {
     stop("No tree structure to use 'online'!")
   }
+
+  MaxDepth0 <- MaxDepth
   weights0 <- weights
-  Call <- ppTree$call
-  Terms <- ppTree$terms
-  split <- ppTree$split
-  Levels <- ppTree$Levels
-  NodeRotateFun <- ppTree$NodeRotateFun
-  predicted <- ppTree$predicted
-  paramList <- ppTree$paramList
-  ppTree <- ppTree[-seq(6)]
+  Call <- obj$call
+  Terms <- obj$terms
+  split <- obj$split
+  Levels <- obj$Levels
+  NodeRotateFun <- obj$NodeRotateFun
+  predicted <- obj$predicted
+  paramList <- obj$paramList
+  obj <- obj[-seq(6)]
   projections=NULL
-  if ("projections" %in% names(ppTree)) {
-    projections <- ppTree$projections
-    ppTree <- ppTree[-1]
+  if ("projections" %in% names(obj)) {
+    projections <- obj$projections
+    obj <- obj[-1]
   }
-  ppTree <- ppTree[-1]
+  obj <- obj[-1]
 
   subset <- weights <- na.action <- n <- p <- varName <- Xscale <- minCol <- maxminCol <- NULL
   Xcat <- catLabel <- TreeRandRotate <- rotdims <- rotmat <- NULL
   lambda <- FunDir <- MaxDepth <- MinLeaf <- numNode <- NULL
   nodeRotaMat <- nodeNumLabel <- nodeCutValue <- nodeCutIndex <- childNode <- nodeDepth <- NULL
 
-  ppTreeVar <- c(names(ppTree$data), names(ppTree$tree), names(ppTree$structure))
-  ppTree <- do.call("c", ppTree)
-  # nameTree <- names(ppTree)
+  ppTreeVar <- c(names(obj$data), names(obj$tree), names(obj$structure))
+  obj <- do.call("c", obj)
+  # nameTree <- names(obj)
 
   # env <- new.env()
   for (v in seq_along(ppTreeVar)) {
-    assign(ppTreeVar[v], ppTree[[v]]) # ,envir = env)
+    assign(ppTreeVar[v], obj[[v]]) # ,envir = env)
   }
-  rm(ppTree)
+  rm(obj)
 
   # vars=all.vars(Terms)
   if (sum(Xcat) > 0 && is.null(catLabel)) {
@@ -166,9 +167,9 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
     X <- as.matrix(X)
     colnames(X) <- varName
 
-    if (!is.null(subset)) {
-      X <- X[subset, ]
-    }
+    #if (!is.null(subset)) {
+    #  X <- X[subset, ]
+    #}
 
     # weights=c(weights,paramList$weights)
     if (!is.null(weights)) {
@@ -190,7 +191,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
     # Nodes = ppCARTNode(X, nodeRotaMat, nodeCutValue, childNode)
     # Nodes = .Call(`_ppRF_ppCARTPredict`, X, nodeRotaMat, nodeCutValue, childNode, nodeLabel)$node
     Nodes <- .Call("_ODRF_predict_ODT", PACKAGE = "ODRF", X, nodeRotaMat, nodeCutValue, childNode, nodeLabel)$node
-    # , as.character(ppTree$nodeLabel)
+    # , as.character(obj$nodeLabel)
   }
 
   dimProj <- paramList$dimProj
@@ -198,14 +199,17 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
   paramList <- defaults(paramList, split, p, weights, catLabel)
 
 
+  MaxDepth <- MaxDepth0
+  numNode0 <- length(nodeCutValue)
   if (is.infinite(MaxDepth)) {
-    numNode <- max(numNode, sum(2^(0:ceiling(log2(n / MinLeaf)))))
+    numNode <- sum(2^(0:ceiling(log2(n / MinLeaf))))#max(numNode,
   } else {
     MaxDepth <- min(MaxDepth, ceiling(log2(n / MinLeaf)), n / MinLeaf - 1)
-    numNode <- min(numNode, sum(2^(0:MaxDepth)))
+    numNode <- sum(2^(0:MaxDepth))#min(numNode,
   }
+  numNode <- max(numNode, numNode0)
 
-  numNode0 <- length(nodeCutValue)
+
   nodeX <- sort(unique(Nodes))
   nodeXIndx <- vector("list", numNode + 1)
   nodeXIndx[seq(numNode0)] <- NA
@@ -229,7 +233,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
   # nodeNumLabel=c(nodeNumLabel,rep0);
 
 
-  # start create pptree
+  # start create obj
   ##############################################################################
   currentNode <- nodeX[1]
   freeNode <- ifelse(currentNode == 1, 2, childNode[max(which(childNode[seq(currentNode)] != 0))] + 2)
@@ -270,7 +274,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
         nodeNumLabel[currentNode, ] <- leafLabel
       }
 
-      nodeXIndx[currentNode] <- NA
+      #nodeXIndx[currentNode] <- NA
       currentNode <- currentNode + 1
       next
     }
@@ -362,7 +366,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, ...) {
         nodeNumLabel[currentNode, ] <- leafLabel
       }
 
-      nodeXIndx[currentNode] <- NA
+      #nodeXIndx[currentNode] <- NA
       currentNode <- currentNode + 1
       next
     }

@@ -50,34 +50,32 @@
 #' @method prune ODRF
 #' @export
 prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
-  ppForest <- obj
-  rm(obj)
-  if (length(ppForest[["ppTrees"]][[1]][["structure"]][["nodeDepth"]]) == 1) {
+  if (length(obj[["structure"]][[1]][["structure"]][["nodeDepth"]]) == 1) {
     stop("No tree structure to use 'prune'!")
   }
-  ppTrees <- ppForest$ppTrees
-  split <- ppForest$split
-  numOOB <- ppForest$forest$numOOB
-  storeOOB <- ppForest$forest$storeOOB
-  seed <- ppForest$forest$seed
-  replacement <- ppForest$forest$replacement
-  stratify <- ppForest$forest$stratify
-  numCores <- ppForest$forest$numCores
-  parallel <- ppForest$forest$parallel
+
+  structure <- obj$structure
+  split <- obj$split
+  numOOB <- obj$forest$numOOB
+  storeOOB <- obj$forest$storeOOB
+  replacement <- obj$forest$replacement
+  stratify <- obj$forest$stratify
+  numCores <- obj$forest$numCores
+  parallel <- obj$forest$parallel
 
   if ((!storeOOB) && useOOB) {
     stop("out-of-bag indices for each tree are not stored. ODRF must be called with storeOOB = TRUE.")
   }
 
-  Xcat <- ppForest$data$Xcat
-  catLabel <- ppForest$data$catLabel
+  Xcat <- obj$data$Xcat
+  catLabel <- obj$data$catLabel
   # vars=all.vars(ppTree$terms)
   if ((sum(Xcat) > 0) && is.null(catLabel)) {
     # vars=vars[-(1+seq(length(unlist(catLabel))))]
     # }else{
     stop("'Xcat!=0' however 'catLabel' does not exist!")
   }
-  # vars=all.vars(ppForest$terms)
+  # vars=all.vars(obj$terms)
   Xna <- is.na(X)
   if (any(Xna)) {
     xj <- which(colSums(Xna) > 0)
@@ -99,16 +97,16 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
 
   p <- ncol(Xnew)
   n <- nrow(Xnew)
-  nC <- length(ppForest$Levels)
+  nC <- length(obj$Levels)
   numClass <- nC
-  ntrees <- length(ppTrees)
+  ntrees <- length(structure)
 
   if (split != "mse") {
     classCt <- cumsum(table(ynew))
     if (stratify) {
       Cindex <- vector("list", numClass)
       for (m in 1L:numClass) {
-        Cindex[[m]] <- which(ynew == ppForest$Levels[m])
+        Cindex[[m]] <- which(ynew == obj$Levels[m])
       }
     }
   }
@@ -139,34 +137,40 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
     rm(Xnewj)
   }
   Xnew <- as.matrix(Xnew)
-  colnames(Xnew) <- ppForest$data$varName
+  colnames(Xnew) <- obj$data$varName
 
   if (useOOB) {
-    if (prod(dim(Xnew)) != ppForest$data$n * ppForest$data$p) {
+    if (prod(dim(Xnew)) != obj$data$n * obj$data$p) {
       stop("'data' must be the training data 'data' in class ODRF.")
     }
   }
 
-  # if (!is.null(ppForest$data$subset)) {
-  #  Xnew <- Xnew[ppForest$data$subset, ]
+  # if (!is.null(obj$data$subset)) {
+  #  Xnew <- Xnew[obj$data$subset, ]
   # }
 
   # Variable scaling.
-  if (ppForest$data$Xscale != "No") {
+  if (obj$data$Xscale != "No") {
     indp <- (sum(numCat) + 1):p
-    Xnew[, indp] <- (Xnew[, indp] - matrix(ppForest$data$minCol, n, length(indp), byrow = T)) /
-      matrix(ppForest$data$maxminCol, n, length(indp), byrow = T)
+    Xnew[, indp] <- (Xnew[, indp] - matrix(obj$data$minCol, n, length(indp), byrow = T)) /
+      matrix(obj$data$maxminCol, n, length(indp), byrow = T)
   }
 
 
   PPtree <- function(itree, ...) {
-    ppTree <- ppTrees[[itree]] # [1:7]
-    class(ppTree) <- "ODT"
     #set.seed(seed + itree)
+    ppTree=obj[seq(7)]
+    ppTree$data <- c(obj$data,structure[[itree]][c(1,2)])
+    ppTree$data$Xcat <- 0L
+    ppTree$data$Xscale <- "No"
+    ppTree$tree <- obj$tree
+    ppTree$structure <- structure[[itree]][-c(1,2)]
+    class(ppTree) <- "ODT"
 
     if (useOOB) {
-      ppForestT <- prune(ppTree, Xnew[ppTree$oobIndex, ], ynew[ppTree$oobIndex], MaxDepth) # [seq(7)]
-      ppTree <- ppForestT[-length(ppForestT)]
+      ppTree <- prune(ppTree, Xnew[ppTree$structure$oobIndex, ], ynew[ppTree$structure$oobIndex], MaxDepth) # [seq(7)]
+      TreeRotate=list(rotdims=ppTree[["data"]][["rotdims"]],rotmat=ppTree[["data"]][["rotmat"]])
+      ppTree <- ppTree$structure#[-length(ppForestT)]
     } else {
       TDindx0 <- seq(n)
       TDindx <- TDindx0
@@ -193,7 +197,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
       }
 
       if ((numOOB > 0) && storeOOB) {
-        ppTree <- ppTree[-(length(ppTree) - c(2, 1, 0))]
+        ppTree$structure <- ppTree$structure[-(length(ppTree$structure) - c(2, 1, 0))]
       }
       # data=data.frame(y=ynew[TDindx],Xnew[TDindx,])
       # colnames(data)=vars
@@ -202,6 +206,8 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
       ppTree <- prune(ppTree, Xnew[TDindx, ], ynew[TDindx], MaxDepth)
       ppTree <- ppTree[-length(ppTree)]
       class(ppTree) <- "ODT"
+
+      TreeRotate=list(rotdims=ppTree[["data"]][["rotdims"]],rotmat=ppTree[["data"]][["rotmat"]])
 
       if ((numOOB > 0) && storeOOB) {
         oobErr <- 1
@@ -218,11 +224,13 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
           oobErr <- mean((pred - ynew[NTD])^2)
         }
 
-        ppTree <- c(ppTree, list(oobErr = oobErr, oobIndex = NTD, oobPred = pred))
+        ppTree <- c(ppTree$structure, list(oobErr = oobErr, oobIndex = NTD, oobPred = pred))
+      }else{
+        ppTree <- ppTree$structure
       }
     }
 
-    return(ppTree)
+    return(c(TreeRotate,ppTree))
   }
 
 
@@ -248,7 +256,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
     icore <- NULL
     ppForestT <- foreach::foreach(
       icore = seq_along(chunks), .combine = list, .multicombine = TRUE, .export = c("ODT.compute"),
-      .packages = "ODRF", .noexport = "ppForest"
+      .packages = "ODRF"
     ) %dopar% {
       lapply(chunks[[icore]], PPtree)
     }
@@ -256,14 +264,14 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
     parallel::stopCluster(cl)
 
     # do.call(rbind.fill,list1)
-    ppForest$ppTrees <- do.call("c", ppForestT)
-    # ppForest$ppTrees=NULL
+    obj$structure <- do.call("c", ppForestT)
+    # ppForest$structure=NULL
     # for (i in 1:numCores) {
-    #  ppForest$ppTrees=c(ppForest$ppTrees,ppForestT[[i]])
+    #  ppForest$structure=c(ppForest$structure,ppForestT[[i]])
     # }
   } else {
     # Use just one core.
-    ppForest$ppTrees <- lapply(1:ntrees, PPtree)
+    obj$structure <- lapply(1:ntrees, PPtree)
   }
 
 
@@ -271,7 +279,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
   if ((numOOB > 0) && storeOOB && (!useOOB)) {
     oobVotes <- matrix(NA, n, ntrees)
     for (t in 1:ntrees) {
-      oobVotes[ppForest$ppTrees[[t]]$oobIndex, t] <- ppForest$ppTrees[[t]]$oobPred
+      oobVotes[obj$structure[[t]]$oobIndex, t] <- obj$structure[[t]]$oobPred
     }
     idx <- which(rowSums(is.na(oobVotes)) < ntrees)
     oobVotes <- oobVotes[idx, , drop = FALSE]
@@ -281,14 +289,14 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
       ny <- length(yy)
       nC <- numClass
       weights <- rep(1, ny * ntrees)
-      Votes <- factor(c(t(oobVotes)), levels = ppForest$Levels)
+      Votes <- factor(c(t(oobVotes)), levels = obj$Levels)
       Votes <- as.integer(Votes) + nC * rep(0:(ny - 1), rep(ntrees, ny))
       Votes <- aggregate(c(rep(0, ny * nC), weights), by = list(c(1:(ny * nC), Votes)), sum)[, 2]
 
       prob <- matrix(Votes, ny, nC, byrow = TRUE)
       pred <- max.col(prob) ## "random"
-      oobPred <- ppForest$Levels[pred]
-      ppForest$oobErr <- mean(yy != oobPred)
+      oobPred <- obj$Levels[pred]
+      obj$oobErr <- mean(yy != oobPred)
 
       # oobPred=rep(NA,noob)
       # for (i in 1:noob) {
@@ -300,16 +308,16 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
       XConfusionMat <- table(oobPred, yy)
       class_error <- (rowSums(XConfusionMat) - diag(XConfusionMat)) / rowSums(XConfusionMat)
       XConfusionMat <- cbind(XConfusionMat, class_error)
-      ppForest$oobConfusionMat <- XConfusionMat
+      obj$oobConfusionMat <- XConfusionMat
     } else {
       oobPred <- rowMeans(oobVotes, na.rm = TRUE)
-      ppForest$oobErr <- mean((oobPred - yy)^2) # / mean((yy - mean(yy))^2)
+      obj$oobErr <- mean((oobPred - yy)^2) # / mean((yy - mean(yy))^2)
     }
 
-    ppForest$predicted <- oobPred
+    obj$predicted <- oobPred
   }
 
   # class(ppTree) <- append(class(ppTree),"ODRF")
-  class(ppForest) <- c("ODRF", "prune.ODRF")
-  return(ppForest)
+  class(obj) <- c("ODRF", "prune.ODRF")
+  return(obj)
 }

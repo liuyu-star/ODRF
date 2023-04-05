@@ -51,20 +51,19 @@
 #' @method prune ODT
 #' @export
 prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
-  ppTree <- obj
-  rm(obj)
-  if (length(ppTree[["structure"]][["nodeDepth"]]) == 1) {
+
+  if (length(obj[["structure"]][["nodeDepth"]]) == 1) {
     stop("No tree structure to use 'online'!")
   }
-  structure <- ppTree$structure
+  structure <- obj$structure
   if (!is.null(MaxDepth)) {
     MaxDepth <- min(MaxDepth, max(structure$nodeDepth))
   }
   numNode <- length(structure$nodeCutValue)
 
-  # vars=all.vars(ppTree$terms)
-  Xcat <- ppTree$data$Xcat
-  catLabel <- ppTree$data$catLabel
+  # vars=all.vars(obj$terms)
+  Xcat <- obj$data$Xcat
+  catLabel <- obj$data$catLabel
   if ((sum(Xcat) > 0) && is.null(catLabel)) {
     # vars=vars[-(1+seq(length(unlist(catLabel))))]
     # }else{
@@ -89,8 +88,8 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
   rm(X)
   rm(y)
 
-  # weights0=c(ppTree$data$weights,ppTree$paramList$weights)
-  # if(!is.null(ppTree$data$weights))
+  # weights0=c(obj$data$weights,obj$paramList$weights)
+  # if(!is.null(obj$data$weights))
   #  Xnew <- Xnew * matrix(weights,length(y),ncol(Xnew))
 
   p <- ncol(Xnew)
@@ -122,48 +121,30 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
     rm(Xnewj)
   }
   Xnew <- as.matrix(Xnew)
-  colnames(Xnew) <- ppTree$data$varName
+  colnames(Xnew) <- obj$data$varName
 
-  # if (!is.null(ppTree$data$subset)) {
-  #  Xnew <- Xnew[ppTree$data$subset, ]
+  # if (!is.null(obj$data$subset)) {
+  #  Xnew <- Xnew[obj$data$subset, ]
   # }
 
   # Variable scaling.
-  if (ppTree$data$Xscale != "No") {
+  if (obj$data$Xscale != "No") {
     indp <- (numCat + 1):p
-    Xnew[, indp] <- (Xnew[, indp, drop = FALSE] - matrix(ppTree$data$minCol, n, length(indp), byrow = T)) /
-      matrix(ppTree$data$maxminCol, n, length(indp), byrow = T)
+    Xnew[, indp] <- (Xnew[, indp, drop = FALSE] - matrix(obj$data$minCol, n, length(indp), byrow = T)) /
+      matrix(obj$data$maxminCol, n, length(indp), byrow = T)
   }
 
-  if (ppTree$data$TreeRandRotate) {
-    Xnew[, ppTree$data$rotdims] <- Xnew[, ppTree$data$rotdims, drop = FALSE] %*% ppTree$data$rotmat
+  if (obj$data$TreeRandRotate) {
+    Xnew[, obj$data$rotdims] <- Xnew[, obj$data$rotdims, drop = FALSE] %*% obj$data$rotmat
   }
 
+  prediction <- predictTree(structure, Xnew, obj$split, obj$Levels)$prediction
 
-  if (ppTree$split != "mse") {
-    # nodeLabel=rep(0,NROW(structure$nodeNumLabel))
-    # leafid=which(rowSums(structure$nodeNumLabel)!=0)
-    # leafLabel=structure$nodeNumLabel[leafid,,drop = FALSE]
-    nodeLabel <- colnames(structure$nodeNumLabel)[max.col(structure$nodeNumLabel)] ## "random"
-    nodeLabel[which(rowSums(structure$nodeNumLabel) == 0)] <- 0
-  } else {
-    nodeLabel <- as.character(structure$nodeNumLabel[, 1])
-  }
-
-  if (all(structure$nodeCutValue == 0)) {
-    prediction <- rep(nodeLabel, n)
-  } else {
-    prediction <- .Call("_ODRF_predict_ODT",
-                        PACKAGE = "ODRF", Xnew, structure$nodeRotaMat,
-                        structure$nodeCutValue, structure$childNode, nodeLabel
-    )$prediction
-  }
-
-  if (ppTree$split != "mse") {
+  if (obj$split != "mse") {
     err0 <- mean(prediction != ynew)
   } else {
     # e.0 = mean((ynew-mean(y))^2)
-    err0 <- mean((as.numeric(prediction) - ynew)^2) # /e.0
+    err0 <- mean((prediction - ynew)^2) # /e.0
     # structure$nodeLabel=as.numeric(structure$nodeLabel)
   }
 
@@ -231,9 +212,9 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
 
     id <- idx[nodeCutValue[idx] == 0]
     # id=idx[!idx%in%cutNode]
-    # nodeLabel[currentNode]=ifelse(ppTree$split!="mse",nodeLabel[idx][which.max(structure$nodeNumLabel[idx])],
+    # nodeLabel[currentNode]=ifelse(obj$split!="mse",nodeLabel[idx][which.max(structure$nodeNumLabel[idx])],
     #                              structure$nodeNumLabel[idx]*nodeLabel[idx]/sum(structure$nodeNumLabel[idx]))
-    if (ppTree$split != "mse") {
+    if (obj$split != "mse") {
       # nnl=rep(nodeLabel[id],nodeNumLabel[id])
       # nnl=table(nnl)
       # nodeLabel[currentNode]=names(nnl)[which.max(nnl)]
@@ -253,7 +234,7 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
     nodeCutValue[currentNode] <- 0
     nodeCutValue <- nodeCutValue[-idx]
 
-    if (ppTree$split != "mse") {
+    if (obj$split != "mse") {
       nodeLabel <- colnames(nodeNumLabel)[max.col(nodeNumLabel)] ## "random"
       # nodeLabel[which(rowSums(structure$nodeNumLabel)==0),]=0
     } else {
@@ -269,7 +250,7 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
       )$prediction
     }
 
-    if (ppTree$split != "mse") {
+    if (obj$split != "mse") {
       err <- mean(prediction != ynew)
     } else {
       err <- mean((as.numeric(prediction) - ynew)^2) # /e.0
@@ -299,46 +280,27 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
   # rownames(nodeRotaMat)=rep(structure$nodeDepth,table(nodeRotaMat[,2]))
   # rownames(nodeNumLabel)=structure$nodeDepth
 
-  ppTree$structure <- structure
+  obj$structure <- structure
   pruneError <- pruneError[(ncut + 1):(length(cutNode) + 1), ]
-  ppTree$pruneError <- pruneError[order(pruneError[, 1], decreasing = TRUE), ]
-  # ppTree$tree$MaxDepth=MaxDepth
+  obj$pruneError <- pruneError[order(pruneError[, 1], decreasing = TRUE), ]
+  # obj$tree$MaxDepth=MaxDepth
 
-  if ("projections" %in% names(ppTree)) {
-    nodeRotaMat <- ppTree$structure$nodeRotaMat
+  if ("projections" %in% names(obj)) {
+    nodeRotaMat <- obj$structure$nodeRotaMat
     cutNode <- unique(nodeRotaMat[, 2][nodeRotaMat[, 1] != 0])
-    projections <- matrix(0, length(cutNode), ppTree$data$p)
+    projections <- matrix(0, length(cutNode), obj$data$p)
     for (cn in seq_along(cutNode)) {
       idx <- which(nodeRotaMat[, 2] == cutNode[cn])
       projections[cn, nodeRotaMat[idx, 1]] <- nodeRotaMat[idx, 3]
     }
-    colnames(projections) <- ppTree$data$varName
+    colnames(projections) <- obj$data$varName
     rownames(projections) <- paste("proj", seq_len(nrow(projections)), sep = "")
-    ppTree$projections <- projections
+    obj$projections <- projections
   }
 
-  ####################################################
-  nodeNumLabel=ppTree$structure$nodeNumLabel
-  if (ppTree$split != "mse") {
-    if(all(ppTree$structure$nodeCutValue == 0)){
-      nodeNumLabel=matrix(nodeNumLabel,nrow = 1, ncol = length(ppTree$Levels))
-    }
-    nodeLabel <- ppTree$Levels[max.col(nodeNumLabel)]
-    nodeLabel[which(rowSums(nodeNumLabel) == 0)] <- "0"
-  } else {
-    nodeLabel <- as.character(nodeNumLabel[, 1])
-  }
+  obj$predicted = predictTree(obj$structure, Xnew, obj$split, obj$Levels)$prediction
 
-  pred <- .Call("_ODRF_predict_ODT",
-                PACKAGE = "ODRF", Xnew, ppTree$structure$nodeRotaMat,
-                ppTree$structure$nodeCutValue, ppTree$structure$childNode, nodeLabel
-  )$prediction
-  if (ppTree$split == "mse") {
-    pred <- as.numeric(pred)
-  }
-  ppTree$predicted=pred
+  class(obj) <- append(class(obj), "prune.ODT")
 
-  class(ppTree) <- append(class(ppTree), "prune.ODT")
-
-  return(ppTree)
+  return(obj)
 }

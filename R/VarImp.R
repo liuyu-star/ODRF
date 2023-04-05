@@ -64,8 +64,8 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
     }
 
     if("ODRF"%in%class(obj)){
-      DecImpurity <- vapply(obj$ppTrees, function(tree){
-        if(length(tree[["structure"]][["nodeCutIndex"]])==1){
+      DecImpurity <- vapply(obj$structure, function(tree){
+        if(length(tree[["nodeCutIndex"]])==1){
           rep(0,p)
         }else{
           VarImp.impurity(tree)
@@ -92,39 +92,43 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
         stop("training data 'X' and 'y' argument is required")
       }
 
-      forest <- obj
-      X <- as.matrix(X)
-      colnames(X) <- forest$data$varName
+      if (!obj$forest$storeOOB) {
+        stop("out-of-bag indices for each tree are not stored, so can't use permutation method!")
+      }
 
-      pp <- forest$data$p
-      if (!is.null(forest$data$catLabel) && (sum(forest$data$Xcat) > 0)) {
-        pp <- pp - length(unlist(forest$data$catLabel)) + length(forest$data$Xcat)
+
+      X <- as.matrix(X)
+      colnames(X) <- obj$data$varName
+
+      pp <- obj$data$p
+      if (!is.null(obj$data$catLabel) && (sum(obj$data$Xcat) > 0)) {
+        pp <- pp - length(unlist(obj$data$catLabel)) + length(obj$data$Xcat)
       }
       if (ncol(X) != pp) {
         stop("The dimensions of 'Xnew' and training data do not match")
       }
 
 
-      if (!is.null(forest$data$subset)) {
-        X <- X[forest$data$subset, ]
+      if (!is.null(obj$data$subset)) {
+        X <- X[obj$data$subset, ]
       }
       # if(!is.null(weights))
       #  X <- X * matrix(weights0,length(y),ncol(X))
       # weights=weights0
 
 
-      if (forest$split != "mse") {
-        #y <- factor(y, levels = forest$Levels)
+      if (obj$split != "mse") {
+        #y <- factor(y, levels = obj$Levels)
         y <- as.character(y)
       }
-      # X=forest$data$X
-      # y=forest$data$y
-      # ntrees=forest$tree$ntrees
+      # X=obj$data$X
+      # y=obj$data$y
+      # ntrees=obj$tree$ntrees
       n <- length(y)
       p <- ncol(X)
 
-      Xcat <- forest$data$Xcat
-      catLabel <- forest$data$catLabel
+      Xcat <- obj$data$Xcat
+      catLabel <- obj$data$catLabel
       numCat <- 0
       if (sum(Xcat) > 0) {
         xj <- 1
@@ -155,25 +159,26 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
       }
 
       # Variable scaling.
-      if (forest$data$Xscale != "No") {
+      if (obj$data$Xscale != "No") {
         indp <- (sum(numCat) + 1):p
-        X[, indp] <- (X[, indp] - matrix(forest$data$minCol, n, length(indp), byrow = T)) /
-          matrix(forest$data$maxminCol, n, length(indp), byrow = T)
+        X[, indp] <- (X[, indp] - matrix(obj$data$minCol, n, length(indp), byrow = T)) /
+          matrix(obj$data$maxminCol, n, length(indp), byrow = T)
       }
 
+      split=obj$split
+      Levels=obj$Levels
       runOOBErr <- function(tree, ...) {
-        class(tree) <- "ODT"
         oobErrs <- rep(0, p)
         oobIndex <- tree$oobIndex
         X0 <- X[oobIndex, ]
         y0 <- y[oobIndex]
         n0 <- length(y0)
-        # if(forest$split=="regression"){
+        # if(obj$split=="regression"){
         #  e.0=mean((yi-mean(y[-oobIndex]))^2)
         # }
 
-        pred <- predict(tree, X0)
-        if (forest$split != "mse") {
+        pred <- predictTree(tree,X0,split,Levels)$prediction
+        if (split != "mse") {
           oobErr0 <- mean(pred != y0)
         } else {
           oobErr0 <- mean((pred - y0)^2) # /e.0
@@ -182,8 +187,8 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
         for (j in seq(p)) {
           Xi=X0
           Xi[, j] <- Xi[sample(n0), j] #+rnorm(length(oobIndex))
-          pred <- predict(tree, Xi)
-          if (forest$split != "mse") {
+          pred <- predictTree(tree,Xi,split,Levels)$prediction
+          if (split != "mse") {
             oobErr <- mean(pred != y0)
           } else {
             oobErr <- mean((pred - y0)^2) # /e.0
@@ -195,8 +200,8 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
         return(oobErrs)
       }
 
-      IncErr <- vapply(forest$ppTrees, runOOBErr, rep(0,p))
-      #IncErr <- sapply(forest$ppTrees, runOOBErr)
+      IncErr <- vapply(obj$structure, runOOBErr, rep(0,p))
+      #IncErr <- sapply(obj$ppTrees, runOOBErr)
       IncErr <- rowMeans(IncErr)
       varimport <- cbind(varible = seq(p), increased_error = IncErr)
       rownames(varimport) <- colnames(X)

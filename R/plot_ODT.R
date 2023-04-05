@@ -30,6 +30,8 @@
 #' @export
 plot.ODT <- function(x, font.size = 17, width.size = 1, xadj = 0, main = NULL, sub = NULL, ...) {
   ppTree <- x
+  rm(x)
+
   if (is.null(main)) {
     main <- paste0("Oblique ", ifelse(ppTree$split == "mse", "Regression", "Classification"), " Tree")
   }

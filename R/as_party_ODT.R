@@ -32,35 +32,33 @@ as.party.ODT <- function(obj, data, ...) {
   # if(is.null(data)){
   #  data <- data.frame(y=eval(formula[[2]]),eval(formula[[3]]))
   # }
-  ppTree <- obj
-  rm(obj)
 
-  if (prod(dim(data)) != ppTree$data$n * (ppTree$data$p+1)) {
+  if (prod(dim(data)) != obj$data$n * (obj$data$p+1)) {
     stop("'data' must be the training data 'data' in class ODT.")
   }
 
-  vars <- all.vars(ppTree$terms)
+  vars <- all.vars(obj$terms)
   y <- data[, setdiff(colnames(data), vars[-1])]
   X <- data[, vars[-1]]
   X <- as.matrix(X)
 
-  numNode <- length(ppTree$structure$nodeCutValue)
-  cutNode <- which(ppTree$structure$nodeCutValue != 0)
+  numNode <- length(obj$structure$nodeCutValue)
+  cutNode <- which(obj$structure$nodeCutValue != 0)
 
   TS <- matrix(0, numNode, 5)
   TS[, 1] <- seq(numNode)
-  TS[, 2] <- ppTree[["structure"]][["childNode"]]
-  if (ppTree$split != "mse") {
-    TS[setdiff(seq(numNode), cutNode), 3] <- max.col(ppTree$structure$nodeNumLabel)[setdiff(seq(numNode), cutNode)]
+  TS[, 2] <- obj[["structure"]][["childNode"]]
+  if (obj$split != "mse") {
+    TS[setdiff(seq(numNode), cutNode), 3] <- max.col(obj$structure$nodeNumLabel)[setdiff(seq(numNode), cutNode)]
   } else {
-    TS[setdiff(seq(numNode), cutNode), 3] <- round(ppTree$structure$nodeNumLabel[, 1][setdiff(seq(numNode), cutNode)], 3)
+    TS[setdiff(seq(numNode), cutNode), 3] <- round(obj$structure$nodeNumLabel[, 1][setdiff(seq(numNode), cutNode)], 3)
   }
   TS[cutNode, 3] <- TS[cutNode, 2] + 1
   TS[cutNode, 4] <- seq_along(cutNode)
-  TS[cutNode, 5] <- ppTree[["structure"]][["nodeCutIndex"]][cutNode]
+  TS[cutNode, 5] <- obj[["structure"]][["nodeCutIndex"]][cutNode]
   colnames(TS) <- c("node", "left_node", "right_node/leaf_label", "cut_node", "cut_node_index")
   TS <- data.frame(TS)
-  CutValue <- ppTree$structure$nodeCutValue[cutNode]
+  CutValue <- obj$structure$nodeCutValue[cutNode]
 
 
   n <- nrow(TS)
@@ -74,8 +72,8 @@ as.party.ODT <- function(obj, data, ...) {
   primary <- numeric(n)
   primary[!is.leaf] <- index[c(!is.leaf, FALSE)]
 
-  nodeRotaMat <- ppTree[["structure"]][["nodeRotaMat"]]
-  Alpha <- matrix(0, length(cutNode), ppTree[["data"]][["p"]])
+  nodeRotaMat <- obj[["structure"]][["nodeRotaMat"]]
+  Alpha <- matrix(0, length(cutNode), obj[["data"]][["p"]])
   for (cn in seq_along(cutNode)) {
     idx <- which(nodeRotaMat[, 2] == cutNode[cn])
     Alpha[cn, nodeRotaMat[idx, 1]] <- nodeRotaMat[idx, 3]
@@ -88,13 +86,13 @@ as.party.ODT <- function(obj, data, ...) {
 
   fit <- as.data.frame(matrix(nrow = NROW(mf), ncol = 0))
   # fit <- as.data.frame(matrix(nrow = NROW(mf), ncol = 0))
-  # if(ppTree$split!="regression"){
-  #  pred=as.numeric(factor(predict_ppCART(ppTree,X),levels = ppTree$Levels))
+  # if(obj$split!="regression"){
+  #  pred=as.numeric(factor(predict_ppCART(obj,X),levels = obj$Levels))
   # }else{
-  #  pred=predict_ppCART(ppTree,X)
+  #  pred=predict_ppCART(obj,X)
   # }
   # fit[["(fitted)"]] <- apply(matrix(pred,ncol=1),1,function(x) which((TS[,3]==x)*is.leaf==1))
-  fit[["(fitted)"]] <- predict(ppTree, X, leafnode = TRUE)
+  fit[["(fitted)"]] <- predict(obj, X, leafnode = TRUE)
   fit[["(response)"]] <- y
 
   # fitted <- predict_ppCART(tree,X)
@@ -150,7 +148,7 @@ as.party.ODT <- function(obj, data, ...) {
     node = node,
     data = mf, # if (data) mf else mf[0L, ],
     fitted = fit,
-    terms = ppTree$terms,
+    terms = obj$terms,
     info = list(method = "ODT")
   )
   class(rval) <- c("constparty", class(rval))

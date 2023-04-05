@@ -51,12 +51,9 @@
 #' @export
 predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
 
-  ppTree <- object
-  rm(object)
-
-  pp <- ppTree$data$p
-  if (!is.null(ppTree$data$catLabel) && (sum(ppTree$data$Xcat) > 0)) {
-    pp <- pp - length(unlist(ppTree$data$catLabel)) + length(ppTree$data$Xcat)
+  pp <- object$data$p
+  if (!is.null(object$data$catLabel) && (sum(object$data$Xcat) > 0)) {
+    pp <- pp - length(unlist(object$data$catLabel)) + length(object$data$Xcat)
   }
   if (ncol(Xnew) != pp) {
     stop("The dimensions of 'Xnew' and training data do not match")
@@ -64,7 +61,7 @@ predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
 
   Xna <- is.na(Xnew)
   if (any(Xna)) {
-    # Xnew <- ppTree$data$na.action(data.frame(Xnew))
+    # Xnew <- object$data$na.action(data.frame(Xnew))
     xj <- which(colSums(Xna) > 0)
     warning("There are NA values in columns ", paste(xj, collapse = ", "), " of the data 'Xnew', which will be replaced with the average value.")
     for (j in xj) {
@@ -73,90 +70,65 @@ predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
   }
   Xnew <- as.matrix(Xnew)
 
-  # if (!is.null(ppTree$data$subset)) {
-  #  Xnew <- Xnew[ppTree$data$subset, ]
+  # if (!is.null(object$data$subset)) {
+  #  Xnew <- Xnew[object$data$subset, ]
   # }
-  # weights0=c(ppTree$data$weights,ppTree$paramList$weights)
-  # if(!is.null(ppTree$data$weights))
+  # weights0=c(object$data$weights,object$paramList$weights)
+  # if(!is.null(object$data$weights))
   #  Xnew <- Xnew * matrix(weights,length(y),ncol(Xnew))
 
   p <- ncol(Xnew)
   n <- nrow(Xnew)
 
-  nodeNumLabel=ppTree$structure$nodeNumLabel
-  if (ppTree$split != "mse") {
-    if(all(ppTree$structure$nodeCutValue == 0)){
-      nodeNumLabel=matrix(nodeNumLabel,nrow = 1, ncol = length(ppTree$Levels))
-    }
-    nodeLabel <- ppTree$Levels[max.col(nodeNumLabel)]
-    #nodeLabel <- colnames(ppTree$structure$nodeNumLabel)[max.col(ppTree$structure$nodeNumLabel)] ## "random"
-    nodeLabel[which(rowSums(nodeNumLabel) == 0)] <- "0"
-  } else {
-    nodeLabel <- as.character(nodeNumLabel[, 1])
-  }
+  Xcat <- object$data$Xcat
+  catLabel <- object$data$catLabel
+  numCat <- 0
+  if (sum(Xcat) > 0) {
+    xj <- 1
+    Xnew1 <- matrix(0, nrow = n, ncol = length(unlist(catLabel))) # initialize training data matrix X
+    # one-of-K encode each categorical feature and store in X
+    for (j in seq_along(Xcat)) {
+      catMap <- which(catLabel[[j]] %in% unique(Xnew[, Xcat[j]]))
+      indC <- catLabel[[j]][catMap]
+      Xnewj <- (matrix(Xnew[, Xcat[j]], n, length(indC)) == matrix(indC, n, length(indC), byrow = TRUE)) + 0
 
-  if (all(ppTree$structure$nodeCutValue == 0)) {
-    #nodeLabel <- names(ppTree$structure$nodeNumLabel)[which.max(ppTree$structure$nodeNumLabel)]
-    pred <- rep(nodeLabel, n)
-  } else {
-
-    Xcat <- ppTree$data$Xcat
-    catLabel <- ppTree$data$catLabel
-    numCat <- 0
-    if (sum(Xcat) > 0) {
-      xj <- 1
-      Xnew1 <- matrix(0, nrow = n, ncol = length(unlist(catLabel))) # initialize training data matrix X
-      # one-of-K encode each categorical feature and store in X
-      for (j in seq_along(Xcat)) {
-        catMap <- which(catLabel[[j]] %in% unique(Xnew[, Xcat[j]]))
-        indC <- catLabel[[j]][catMap]
-        Xnewj <- (matrix(Xnew[, Xcat[j]], n, length(indC)) == matrix(indC, n, length(indC), byrow = TRUE)) + 0
-
-        if (length(indC) > length(catLabel[[j]])) {
-          Xnewj <- Xnewj[, seq_along(catLabel[[j]])]
-        }
-
-        xj1 <- xj + length(catLabel[[j]])
-        Xnew1[, (xj:(xj1 - 1))[catMap]] <- Xnewj
-        xj <- xj1
+      if (length(indC) > length(catLabel[[j]])) {
+        Xnewj <- Xnewj[, seq_along(catLabel[[j]])]
       }
 
-      #Xnew <- cbind(Xnew1, apply(Xnew[, -Xcat], 2, as.numeric))
-      Xnew <- cbind(Xnew1, Xnew[, -Xcat])
-      p <- ncol(Xnew)
-      numCat <- length(unlist(catLabel))
-      rm(Xnew1)
-      rm(Xnewj)
-    }
-    if (!is.numeric(Xnew)){
-      Xnew=apply(Xnew, 2, as.numeric)
+      xj1 <- xj + length(catLabel[[j]])
+      Xnew1[, (xj:(xj1 - 1))[catMap]] <- Xnewj
+      xj <- xj1
     }
 
-    # Variable scaling.
-    if (ppTree$data$Xscale != "No") {
-      indp <- (numCat + 1):p
-      Xnew[, indp] <- (Xnew[, indp] - matrix(ppTree$data$minCol, n, length(indp), byrow = T)) /
-        matrix(ppTree$data$maxminCol, n, length(indp), byrow = T)
-    }
-
-    if (ppTree$data$TreeRandRotate) {
-      Xnew[, ppTree$data$rotdims] <- Xnew[, ppTree$data$rotdims, drop = FALSE] %*% ppTree$data$rotmat
-    }
-
-    pred <- .Call("_ODRF_predict_ODT",
-      PACKAGE = "ODRF", Xnew, ppTree$structure$nodeRotaMat,
-      ppTree$structure$nodeCutValue, ppTree$structure$childNode, nodeLabel
-    )
-
-    if (leafnode) {
-      pred <- as.integer(pred$node)
-    } else {
-      pred <- pred$prediction
-    }
+    #Xnew <- cbind(Xnew1, apply(Xnew[, -Xcat], 2, as.numeric))
+    Xnew <- cbind(Xnew1, Xnew[, -Xcat])
+    p <- ncol(Xnew)
+    numCat <- length(unlist(catLabel))
+    rm(Xnew1)
+    rm(Xnewj)
+  }
+  if (!is.numeric(Xnew)){
+    Xnew=apply(Xnew, 2, as.numeric)
   }
 
-  if ((ppTree$split == "mse") && (!leafnode)) {
-    pred <- as.numeric(pred)
+  # Variable scaling.
+  if (object$data$Xscale != "No") {
+    indp <- (numCat + 1):p
+    Xnew[, indp] <- (Xnew[, indp] - matrix(object$data$minCol, n, length(indp), byrow = T)) /
+      matrix(object$data$maxminCol, n, length(indp), byrow = T)
+  }
+
+  if (object$data$TreeRandRotate) {
+    Xnew[, object$data$rotdims] <- Xnew[, object$data$rotdims, drop = FALSE] %*% object$data$rotmat
+  }
+
+  predict_tree <- predictTree(object$structure, Xnew, object$split, object$Levels)
+
+  if (leafnode) {
+    pred <- predict_tree$leafnode
+  } else {
+    pred <- predict_tree$prediction
   }
 
   return(pred)

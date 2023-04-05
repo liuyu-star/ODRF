@@ -47,11 +47,11 @@
 #' \item{\code{paramList}: Parameters in a named list to be used by \code{NodeRotateFun}.}
 #' \item{\code{oobErr}: 'out-of-bag' error for forest, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 #' \item{\code{oobConfusionMat}: 'out-of-bag' confusion matrix for forest.}
-#' \item{\code{ppTrees}: Each tree used to build the forest. \itemize{
+#' \item{\code{structure}: Each tree structure used to build the forest. \itemize{
 #' \item{\code{oobErr}: 'out-of-bag' error for tree, misclassification rate (MR) for classification or mean square error (MSE) for regression.}
 #' \item{\code{oobIndex}: Which training data to use as 'out-of-bag'.}
 #' \item{\code{oobPred}: Predicted value for 'out-of-bag'.}
-#' \item{\code{other}: For other tree related values \code{\link{ODT}}.}
+#' \item{\code{others}: Same tree structure return value as \code{\link{ODT}}.}
 #' }}
 #' \item{\code{data}: The list of data related parameters used to build the forest.}
 #' \item{\code{tree}: The list of tree related parameters used to build the tree.}
@@ -463,9 +463,9 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
 
   ppForest$data <- list(
     subset = subset, weights = weights, na.action = na.action, n = n, p = p, varName = varName,
-    Xscale = Xscale, minCol = minCol, maxminCol = maxminCol, Xcat = Xcat, catLabel = catLabel
+    Xscale = Xscale, minCol = minCol, maxminCol = maxminCol, Xcat = Xcat, catLabel = catLabel,TreeRandRotate = TreeRandRotate
   )
-  ppForest$tree <- list(lambda = lambda, FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode, TreeRandRotate = TreeRandRotate)
+  ppForest$tree <- list(lambda = lambda, FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode)
   ppForest$forest <- list(
     ntrees = ntrees, numOOB = numOOB, storeOOB = storeOOB, replacement = replacement, stratify = stratify,
     parallel = parallel, numCores = numCores
@@ -503,12 +503,12 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
 
     # data=data.frame(y[TDindx],X[TDindx,])
     # colnames(data)=vars
-    weights1 <- weights[TDindx]
     ppForestT <- ODT.compute(formula, Call0, varName,
       X = X[TDindx, ], y = y[TDindx], split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
-      MinLeaf, Levels, subset = NULL, weights = weights1, na.action = NULL, catLabel, Xcat = 0L, Xscale = "No", TreeRandRotate
+      MinLeaf, Levels, subset = NULL, weights = weights[TDindx], na.action = NULL, catLabel, Xcat = 0L, Xscale = "No", TreeRandRotate
     )
 
+    TreeRotate=list(rotdims=ppForestT[["data"]][["rotdims"]],rotmat=ppForestT[["data"]][["rotmat"]])
     if ((numOOB > 0) && storeOOB) {
       oobErr <- 1
       NTD <- setdiff(TDindx0, TDindx)
@@ -520,10 +520,12 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
         oobErr <- mean((pred - y[NTD])^2)
       }
 
-      ppForestT <- c(ppForestT, list(oobErr = oobErr, oobIndex = NTD, oobPred = pred))
+      ppForestT <- c(ppForestT$structure, list(oobErr = oobErr, oobIndex = NTD, oobPred = pred))
+    }else{
+      ppForestT <- ppForestT$structure
     }
 
-    return(ppForestT)
+    return(c(TreeRotate,ppForestT))
   }
 
 
@@ -555,21 +557,21 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
     parallel::stopCluster(cl)
 
     # do.call(rbind.fill,list1)
-    ppForest$ppTrees <- do.call("c", ppForestT)
-    # ppForest$ppTrees=NULL
+    ppForest$structure <- do.call("c", ppForestT)
+    # ppForest$structure=NULL
     # for (i in 1:numCores) {
-    #  ppForest$ppTrees=c(ppForest$ppTrees,ppForestT[[i]])
+    #  ppForest$structure=c(ppForest$structure,ppForestT[[i]])
     # }
   } else {
     # Use just one core.
-    ppForest$ppTrees <- lapply(1:ntrees, PPtree)
+    ppForest$structure <- lapply(1:ntrees, PPtree)
   }
 
   ####################################
   if ((numOOB > 0) && storeOOB) {
     oobVotes <- matrix(NA, n, ntrees)
     for (t in 1:ntrees) {
-      oobVotes[ppForest$ppTrees[[t]]$oobIndex, t] <- ppForest$ppTrees[[t]]$oobPred
+      oobVotes[ppForest$structure[[t]]$oobIndex, t] <- ppForest$structure[[t]]$oobPred
     }
     idx <- which(rowSums(is.na(oobVotes)) < ntrees)
     oobVotes <- oobVotes[idx, , drop = FALSE]

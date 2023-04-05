@@ -13,6 +13,7 @@ ERRORs
 Ewa
 Falk
 GINI
+Gini
 Houghton
 JW
 Jacek
@@ -28,6 +29,7 @@ Mangasarian
 Mifflin
 NOTEs
 Niewczas
+NodeRotateFun
 ODT
 ODTs
 OL
@@ -42,7 +44,9 @@ RotMat
 RotMatMake
 RotMatPPO
 RotMatRF
+RotMatRF’
 RotMatRand
+RotMatRand’
 Shen
 Springer
 Stuetzle
