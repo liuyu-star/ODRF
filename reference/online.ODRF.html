@@ -58,7 +58,7 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># S3 method for ODRF</span></span>
-<span><span class="fu"><a href="online.html">online</a></span><span class="op">(</span><span class="va">obj</span>, <span class="va">X</span>, <span class="va">y</span>, weights <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="online.html">online</a></span><span class="op">(</span><span class="va">obj</span>, <span class="va">X</span>, <span class="va">y</span>, weights <span class="op">=</span> <span class="cn">NULL</span>, MaxDepth <span class="op">=</span> <span class="cn">Inf</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -77,6 +77,10 @@
 
 <dt>weights</dt>
 <dd><p>A vector of non-negative observational weights; fractional weights are allowed (default NULL).</p></dd>
+
+
+<dt>MaxDepth</dt>
+<dd><p>The maximum depth of the tree (default <code>Inf</code>).</p></dd>
 
 
 <dt>...</dt>
@@ -130,7 +134,7 @@
 <span class="r-in"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">online_forest</span>, <span class="va">test_data</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># estimation error</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span> <span class="op">-</span> <span class="va">test_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4.495801e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 4.503374e-05</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
