@@ -30,7 +30,7 @@
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data,
 #'   split = "entropy", parallel = FALSE,ntrees = 50
 #' )
-#' pred <- predict(forest, test_data[, -8])
+#' pred <- predict(forest, test_data[, -8], weight.tree = TRUE)
 #' # classification error
 #' (mean(pred != test_data[, 8]))
 #'
@@ -137,17 +137,18 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
   Votes <- t(TreePrediction)
 
 
-  oobErr <- rep(1, ntrees)
+  weights <- rep(1, ntrees)
   if (weight.tree) {
     if (object$forest$numOOB == 0){
       warning("numOOB=0, weight.tree = TRUE invalid")
       #stop("out-of-bag indices for each tree are not stored. ODRF must be called with storeOOB = TRUE.")
     }else{
       oobErr <- sapply(object$structure, function(trees) trees$oobErr)
+      weights <- 1/(oobErr+1e-5)
     }
   }
 
-  weights <- weight.tree * oobErr + (!weight.tree)
+  #weights <- weight.tree * oobErr + (!weight.tree)
   weights <- weights / sum(weights)
   if (split != "mse") {
     # prob=matrix(0,n,nC)
@@ -178,7 +179,7 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
     pred <- max.col(prob) ## "random"
     pred <- Levels[pred]
   } else {
-    prob <- weights / sum(weights)
+    prob <- weights #/ sum(weights)
     pred <- t(Votes) %*% prob
     # pred=colMeans(Votes);
     # prob=NULL
