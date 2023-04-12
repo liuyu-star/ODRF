@@ -129,11 +129,19 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
   # }
   # Votes=t(sapply(seq(ntrees), function(i)PPtreePredict(Xnew,object$trees[[i]])))
 
+  #VALUE <- rep(ifelse(split == "mse", 0, "0"), n)
+  #TreePrediction <- vapply(object$structure,function(tree){predictTree(tree,Xnew,split,Levels)$prediction}, VALUE)
+  #Votes <- t(TreePrediction)
   split=object$split
   Levels=object$Levels
-
+  Rotate=object$data$TreeRandRotate
   VALUE <- rep(ifelse(split == "mse", 0, "0"), n)
-  TreePrediction <- vapply(object$structure,function(tree){predictTree(tree,Xnew,split,Levels)$prediction}, VALUE)
+  TreePrediction <- vapply(object$structure,function(tree){
+    XXnew=Xnew
+    if (Rotate) {
+      XXnew[, tree$rotdims] <- XXnew[, tree$rotdims, drop = FALSE] %*% tree$rotmat
+    }
+    predictTree(tree,XXnew,split,Levels)$prediction}, VALUE)
   Votes <- t(TreePrediction)
 
 
