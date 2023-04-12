@@ -41,7 +41,8 @@
 #' train <- sample(1:252, 80)
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
-#' forest <- ODRF(Density ~ ., train_data, split = "mse", parallel = FALSE, ntrees = 50)
+#' forest <- ODRF(Density ~ ., train_data, split = "mse", parallel = FALSE,
+#' ntrees = 50, TreeRandRotate=TRUE)
 #' pred <- predict(forest, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
