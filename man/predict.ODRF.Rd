@@ -39,7 +39,7 @@ test_data <- data.frame(seeds[-train, ])
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
   split = "entropy", parallel = FALSE,ntrees = 50
 )
-pred <- predict(forest, test_data[, -8])
+pred <- predict(forest, test_data[, -8], weight.tree = TRUE)
 # classification error
 (mean(pred != test_data[, 8]))
 
@@ -50,7 +50,8 @@ set.seed(221212)
 train <- sample(1:252, 80)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
-forest <- ODRF(Density ~ ., train_data, split = "mse", parallel = FALSE, ntrees = 50)
+forest <- ODRF(Density ~ ., train_data, split = "mse", parallel = FALSE,
+ntrees = 50, TreeRandRotate=TRUE)
 pred <- predict(forest, test_data[, -1])
 # estimation error
 mean((pred - test_data[, 1])^2)
