@@ -194,7 +194,7 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
             oobErr <- mean((pred - y0)^2) # /e.0
           }
 
-          oobErrs[j] <- abs(oobErr - oobErr0)
+          oobErrs[j] <- oobErr - oobErr0#abs()
         }
 
         return(oobErrs)
