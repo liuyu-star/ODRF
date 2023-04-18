@@ -16,7 +16,7 @@ VarImp(obj, X = NULL, y = NULL, type = "permutation")
 \item{type}{specifying the type of importance measure. "impurity": mean decrease in node impurity, "permutation" (default): mean decrease in accuracy.}
 }
 \value{
-A matrix of importance measure, first column is the predictors and second column is Increased error. Misclassification rate (MR) or gini for classification or mean square error (MSE) for regression.
+A matrix of importance measure, first column is the predictors and second column is Increased error. Misclassification rate (MR) for classification or mean square error (MSE) for regression.
 The larger the increased error the more important the variable is.
 }
 \description{

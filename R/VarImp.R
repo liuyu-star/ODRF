@@ -7,7 +7,7 @@
 #' @param X An n by d numerical matrix (preferably) or data frame is used in the \code{ODRF}.
 #' @param y A response vector of length n is used in the \code{ODRF}.
 #'
-#' @return A matrix of importance measure, first column is the predictors and second column is Increased error. Misclassification rate (MR) or gini for classification or mean square error (MSE) for regression.
+#' @return A matrix of importance measure, first column is the predictors and second column is Increased error. Misclassification rate (MR) for classification or mean square error (MSE) for regression.
 #' The larger the increased error the more important the variable is.
 #'
 #' @details A note from \code{randomForest} package, here are the definitions of the variable importance measures.
@@ -41,8 +41,8 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
     VarImp.impurity <- function(tree){
       DecImpurity=rep(0,p)
 
-      nodeRotaMat=tree[["structure"]][["nodeRotaMat"]]
-      if(length(tree[["structure"]][["nodeCutIndex"]])==1){
+      nodeRotaMat=tree[["nodeRotaMat"]]
+      if(length(tree[["nodeCutIndex"]])==1){
         stop("No tree structure to measure the importance of variables!")
       }else{
         cutNodes=unique(nodeRotaMat[nodeRotaMat[,1]!=0,2])
@@ -51,7 +51,7 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
       for (node in  cutNodes) {
         idx=which(nodeRotaMat[,2]==node)
         DecImpurity[nodeRotaMat[idx,1]]=DecImpurity[nodeRotaMat[idx,1]]+
-          (nodeRotaMat[idx,3])^2*tree[["structure"]][["nodeCutIndex"]][node]
+          (nodeRotaMat[idx,3])^2*tree[["nodeCutIndex"]][node]
       }
 
       DecImpurity <- DecImpurity/length(cutNodes)
