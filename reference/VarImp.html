@@ -82,7 +82,7 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>A matrix of importance measure, first column is the predictors and second column is Increased error. Misclassification rate (MR) or gini for classification or mean square error (MSE) for regression.
+<p>A matrix of importance measure, first column is the predictors and second column is Increased error. Misclassification rate (MR) for classification or mean square error (MSE) for regression.
 The larger the increased error the more important the variable is.</p>
     </div>
     <div class="section level2">
@@ -106,31 +106,6 @@ Then the same is done after permuting each predictor variable. The difference be
 <span class="r-in"><span><span class="op">(</span><span class="va">varimp</span> <span class="op">&lt;-</span> <span class="fu">VarImp</span><span class="op">(</span><span class="va">tree</span>, type<span class="op">=</span><span class="st">"impurity"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $varImp</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         varible decreas_impurity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BodyFat       1     5.985098e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hip           8     1.388495e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Abdomen       7     8.268911e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Wrist        14     7.487262e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Height        4     7.191171e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ankle        11     4.633104e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Biceps       12     3.746748e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Knee         10     1.684484e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Age           2     1.568994e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Neck          5     1.045494e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Thigh         9     8.405908e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Forearm      13     6.621663e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chest         6     1.472029e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Weight        3     1.198331e-09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $split</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mse"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VarImp"</span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="ODRF.html">ODRF</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">y</span>, split <span class="op">=</span> <span class="st">"mse"</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span>, ntrees<span class="op">=</span><span class="fl">50</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">(</span><span class="va">varimp</span> <span class="op">&lt;-</span> <span class="fu">VarImp</span><span class="op">(</span><span class="va">forest</span>, type<span class="op">=</span><span class="st">"impurity"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $varImp</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         varible decreas_impurity</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> BodyFat       1              NaN</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Age           2              NaN</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Weight        3              NaN</span>
@@ -145,6 +120,31 @@ Then the same is done after permuting each predictor variable. The difference be
 <span class="r-out co"><span class="r-pr">#&gt;</span> Biceps       12              NaN</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Forearm      13              NaN</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Wrist        14              NaN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $split</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mse"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VarImp"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="ODRF.html">ODRF</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">y</span>, split <span class="op">=</span> <span class="st">"mse"</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span>, ntrees<span class="op">=</span><span class="fl">50</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">varimp</span> <span class="op">&lt;-</span> <span class="fu">VarImp</span><span class="op">(</span><span class="va">forest</span>, type<span class="op">=</span><span class="st">"impurity"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $varImp</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         varible decreas_impurity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> BodyFat       1     3.536018e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Weight        3     3.454507e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Abdomen       7     1.430011e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Height        4     1.294990e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Thigh         9     9.089121e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Ankle        11     6.935579e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hip           8     6.807814e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chest         6     5.835472e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Neck          5     4.937802e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Wrist        14     3.528603e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Knee         10     1.820711e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Biceps       12     1.444451e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Forearm      13     8.782072e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Age           2     3.991877e-07</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $split</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mse"</span>
