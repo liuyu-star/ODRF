@@ -38,11 +38,11 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
   p=obj[["data"]][["p"]]
 
   if(type=="impurity"){
-    VarImp.impurity <- function(tree){
+    VarImp.impurity <- function(structure){
       DecImpurity=rep(0,p)
 
-      nodeRotaMat=tree[["nodeRotaMat"]]
-      if(length(tree[["nodeCutIndex"]])==1){
+      nodeRotaMat=structure[["nodeRotaMat"]]
+      if(length(structure[["nodeCutIndex"]])==1){
         stop("No tree structure to measure the importance of variables!")
       }else{
         cutNodes=unique(nodeRotaMat[nodeRotaMat[,1]!=0,2])
@@ -51,7 +51,7 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
       for (node in  cutNodes) {
         idx=which(nodeRotaMat[,2]==node)
         DecImpurity[nodeRotaMat[idx,1]]=DecImpurity[nodeRotaMat[idx,1]]+
-          (nodeRotaMat[idx,3])^2*tree[["nodeCutIndex"]][node]
+          (nodeRotaMat[idx,3])^2*structure[["nodeCutIndex"]][node]
       }
 
       DecImpurity <- DecImpurity/length(cutNodes)
@@ -60,15 +60,15 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
     }
 
     if("ODT"%in%class(obj)){
-      DecImpurity=VarImp.impurity(obj)
+      DecImpurity=VarImp.impurity(obj$structure)
     }
 
     if("ODRF"%in%class(obj)){
-      DecImpurity <- vapply(obj$structure, function(tree){
-        if(length(tree[["nodeCutIndex"]])==1){
+      DecImpurity <- vapply(obj$structure, function(structure){
+        if(length(structure[["nodeCutIndex"]])==1){
           rep(0,p)
         }else{
-          VarImp.impurity(tree)
+          VarImp.impurity(structure)
         }
         } , rep(0,p))
 
@@ -167,9 +167,9 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
 
       split=obj$split
       Levels=obj$Levels
-      runOOBErr <- function(tree, ...) {
+      runOOBErr <- function(structure, ...) {
         oobErrs <- rep(0, p)
-        oobIndex <- tree$oobIndex
+        oobIndex <- structure$oobIndex
         X0 <- X[oobIndex, ]
         y0 <- y[oobIndex]
         n0 <- length(y0)
@@ -177,7 +177,7 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
         #  e.0=mean((yi-mean(y[-oobIndex]))^2)
         # }
 
-        pred <- predictTree(tree,X0,split,Levels)$prediction
+        pred <- predictTree(structure,X0,split,Levels)$prediction
         if (split != "mse") {
           oobErr0 <- mean(pred != y0)
         } else {
@@ -187,7 +187,7 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
         for (j in seq(p)) {
           Xi=X0
           Xi[, j] <- Xi[sample(n0), j] #+rnorm(length(oobIndex))
-          pred <- predictTree(tree,Xi,split,Levels)$prediction
+          pred <- predictTree(structure,Xi,split,Levels)$prediction
           if (split != "mse") {
             oobErr <- mean(pred != y0)
           } else {
