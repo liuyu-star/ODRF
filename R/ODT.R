@@ -367,8 +367,9 @@ ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
 
   if (split != "mse") {
     if (is.null(Levels)) {
-      Levels <- levels(as.factor(y))
-      y <- as.integer(as.factor(y))
+      y <- as.factor(y)
+      Levels <- levels(y)
+      y <- as.integer(y)
     }
     maxLabel <- length(Levels)
     if (length(Levels) == 1) {

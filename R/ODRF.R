@@ -406,18 +406,9 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
   )
 
   if (split != "mse") {
-    # adjust y to go from 1 to numClass if needed
-    if (is.factor(y)) {
-      ppForest$Levels <- levels(y)
-      y <- as.integer(y)
-    } else if (is.numeric(y)) {
-      ppForest$Levels <- sort(unique(y))
-      y <- as.integer(as.factor(y))
-    } else {
-      ppForest$Levels <- levels(as.factor(y))
-      y <- as.integer(as.factor(y))
-      # stop("Incompatible X type. y must be of type factor or numeric.")
-    }
+    y <- as.factor(y)
+    ppForest$Levels <- levels(y)
+    y <- as.integer(y)
     if (length(ppForest$Levels) == 1) {
       stop("the number of factor levels of response variable must be greater than one")
     }
