@@ -22,7 +22,7 @@
 #' @param storeOOB If TRUE then the samples omitted during the creation of a tree are stored as part of the tree (default TRUE).
 #' @param replacement if TRUE then n samples are chosen, with replacement, from training data (default TRUE).
 #' @param stratify If TRUE then class sample proportions are maintained during the random sampling. Ignored if replacement = FALSE (default TRUE).
-#' @param numOOB  Ratio of 'out-of-bag' (default 1/3).
+#' @param ratOOB  Ratio of 'out-of-bag' (default 1/3).
 #' @param parallel Parallel computing or not (default TRUE).
 #' @param numCores Number of cores to be used for parallel computing (default \code{Inf}).
 #' @param MaxDepth The maximum depth of the tree (default \code{Inf}).
@@ -174,7 +174,7 @@ ODRF <- function(X, ...) {
 #' @aliases ODRF.formula
 #' @export
 ODRF.formula <- function(formula, data = NULL, split = "auto", lambda = "log", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
-                         ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, numOOB = 1 / 3, parallel = TRUE,
+                         ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, ratOOB = 1 / 3, parallel = TRUE,
                          numCores = Inf, MaxDepth = Inf, numNode = Inf, MinLeaf = 5, subset = NULL, weights = NULL,
                          na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
   Call <- match.call()
@@ -232,7 +232,7 @@ ODRF.formula <- function(formula, data = NULL, split = "auto", lambda = "log", N
 
   forest <- ODRF.compute(
     formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList,
-    ntrees, storeOOB, replacement, stratify, numOOB, parallel,
+    ntrees, storeOOB, replacement, stratify, ratOOB, parallel,
     numCores, MaxDepth, numNode, MinLeaf, subset, weights,
     na.action, catLabel, Xcat, Xscale, TreeRandRotate
   )
@@ -247,7 +247,7 @@ ODRF.formula <- function(formula, data = NULL, split = "auto", lambda = "log", N
 #' @aliases ODRF.default
 #' @export
 ODRF.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
-                         ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, numOOB = 1 / 3, parallel = TRUE,
+                         ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, ratOOB = 1 / 3, parallel = TRUE,
                          numCores = Inf, MaxDepth = Inf, numNode = Inf, MinLeaf = 5, subset = NULL, weights = NULL,
                          na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
   Call <- match.call()
@@ -277,7 +277,7 @@ ODRF.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "
 
   ODRF.compute(
     formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList,
-    ntrees, storeOOB, replacement, stratify, numOOB, parallel,
+    ntrees, storeOOB, replacement, stratify, ratOOB, parallel,
     numCores, MaxDepth, numNode, MinLeaf, subset, weights,
     na.action, catLabel, Xcat, Xscale, TreeRandRotate
   )
@@ -292,7 +292,7 @@ ODRF.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "
 #' @keywords internal
 #' @noRd
 ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList,
-                         ntrees, storeOOB, replacement, stratify, numOOB, parallel,
+                         ntrees, storeOOB, replacement, stratify, ratOOB, parallel,
                          numCores, MaxDepth, numNode, MinLeaf, subset, weights,
                          na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
   if (ntrees == 1) {
@@ -458,7 +458,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
   )
   ppForest$tree <- list(lambda = lambda, FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode)
   ppForest$forest <- list(
-    ntrees = ntrees, numOOB = numOOB, storeOOB = storeOOB, replacement = replacement, stratify = stratify,
+    ntrees = ntrees, ratOOB = ratOOB, storeOOB = storeOOB, replacement = replacement, stratify = stratify,
     parallel = parallel, numCores = numCores
   )
 
@@ -488,7 +488,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
         go <- all(TDindx0 %in% TDindx)
       }
     } else {
-      TDindx <- sample(TDindx0, n * (1 - numOOB), replace = FALSE)
+      TDindx <- sample(TDindx0, ceiling(n * (1 - ratOOB)), replace = FALSE)
     }
 
 
@@ -500,7 +500,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
     )
 
     TreeRotate=list(rotdims=ppForestT[["data"]][["rotdims"]],rotmat=ppForestT[["data"]][["rotmat"]])
-    if ((numOOB > 0) && storeOOB) {
+    if ((ratOOB > 0) && storeOOB) {
       oobErr <- 1
       NTD <- setdiff(TDindx0, TDindx)
       pred <- predict(ppForestT, X[NTD, ])
@@ -559,7 +559,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
   }
 
   ####################################
-  if ((numOOB > 0) && storeOOB) {
+  if ((ratOOB > 0) && storeOOB) {
     oobVotes <- matrix(NA, n, ntrees)
     for (t in 1:ntrees) {
       oobVotes[ppForest$structure[[t]]$oobIndex, t] <- ppForest$structure[[t]]$oobPred

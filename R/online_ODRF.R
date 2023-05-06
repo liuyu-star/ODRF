@@ -70,7 +70,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, MaxDepth = Inf, ...) {
 
   subset <- weights <- na.action <- n <- p <- varName <- Xscale <- minCol <- maxminCol <- Xcat <- catLabel <- NULL
   lambda <- FunDir <- MaxDepth <- MinLeaf <- numNode <- TreeRandRotate <- NULL
-  ntrees <- numOOB <- storeOOB <- replacement <- stratify <- parallel <- numCores <- NULL
+  ntrees <-  ratOOB <- storeOOB <- replacement <- stratify <- parallel <- numCores <- NULL
 
   obj <- obj[(length(obj)-(3:1))]
   ppForestVar <- c(names(obj$data), names(obj$tree), names(obj$forest))
@@ -184,7 +184,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, MaxDepth = Inf, ...) {
   )
   ppForest$tree <- list(lambda = lambda, FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode)
   ppForest$forest <- list(
-    ntrees = ntrees, numOOB = numOOB, storeOOB = storeOOB, replacement = replacement, stratify = stratify,
+    ntrees = ntrees,  ratOOB =  ratOOB, storeOOB = storeOOB, replacement = replacement, stratify = stratify,
     parallel = parallel, numCores = numCores#, seed = seed
   )
 
@@ -196,7 +196,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, MaxDepth = Inf, ...) {
     ppTree$data$Xscale <- "No"
     ppTree$tree <- ppForest$tree
     ppTree$structure <- structure[[itree]][-c(1,2)]
-    if ((numOOB > 0) && storeOOB) {
+    if (( ratOOB > 0) && storeOOB) {
       ppTree$structure <- ppTree$structure[-(length(ppTree$structure) - c(2, 1, 0))]
     }
     class(ppTree) <- "ODT"
@@ -223,14 +223,14 @@ online.ODRF <- function(obj, X, y, weights = NULL, MaxDepth = Inf, ...) {
         go <- all(TDindx0 %in% TDindx)
       }
     } else {
-      TDindx <- sample.int(TDindx0, n - numOOB, replace = FALSE)
+      TDindx <- sample.int(TDindx0, ceiling(n * (1 - ratOOB)), replace = FALSE)
     }
 
     ppForestT <- online(ppTree, X[TDindx, ], y[TDindx], weights[TDindx])
 
     TreeRotate=list(rotdims=ppForestT[["data"]][["rotdims"]],rotmat=ppForestT[["data"]][["rotmat"]])
 
-    if ((numOOB > 0) && storeOOB) {
+    if (( ratOOB > 0) && storeOOB) {
       oobErr <- 1
       NTD <- setdiff(TDindx0, TDindx)
       pred <- predict(ppForestT, X[NTD, ])
@@ -290,7 +290,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, MaxDepth = Inf, ...) {
 
 
   ####################################
-  if ((numOOB > 0) && storeOOB) {
+  if (( ratOOB > 0) && storeOOB) {
     oobVotes <- matrix(NA, n, ntrees)
     for (t in seq_len(ntrees)) {
       oobVotes[ppForest$structure[[t]]$oobIndex, t] <- ppForest$structure[[t]]$oobPred

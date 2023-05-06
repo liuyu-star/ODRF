@@ -56,7 +56,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
 
   structure <- obj$structure
   split <- obj$split
-  numOOB <- obj$forest$numOOB
+  ratOOB <- obj$forest$ratOOB
   storeOOB <- obj$forest$storeOOB
   replacement <- obj$forest$replacement
   stratify <- obj$forest$stratify
@@ -193,10 +193,10 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
           go <- all(TDindx0 %in% TDindx)
         }
       } else {
-        TDindx <- sample.int(TDindx0, n - numOOB, replace = FALSE)
+        TDindx <- sample.int(TDindx0, ceiling(n * (1 - ratOOB)), replace = FALSE)
       }
 
-      if ((numOOB > 0) && storeOOB) {
+      if ((ratOOB > 0) && storeOOB) {
         ppTree$structure <- ppTree$structure[-(length(ppTree$structure) - c(2, 1, 0))]
       }
       # data=data.frame(y=ynew[TDindx],Xnew[TDindx,])
@@ -209,7 +209,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
 
       TreeRotate=list(rotdims=ppTree[["data"]][["rotdims"]],rotmat=ppTree[["data"]][["rotmat"]])
 
-      if ((numOOB > 0) && storeOOB) {
+      if ((ratOOB > 0) && storeOOB) {
         oobErr <- 1
         # if(useOOB){
         #  NTD = ppTree$oobIndex
@@ -276,7 +276,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
 
 
   ####################################
-  if ((numOOB > 0) && storeOOB && (!useOOB)) {
+  if ((ratOOB > 0) && storeOOB && (!useOOB)) {
     oobVotes <- matrix(NA, n, ntrees)
     for (t in 1:ntrees) {
       oobVotes[obj$structure[[t]]$oobIndex, t] <- obj$structure[[t]]$oobPred

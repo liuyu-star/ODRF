@@ -148,8 +148,8 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
 
   weights <- rep(1, ntrees)
   if (weight.tree) {
-    if (object$forest$numOOB == 0){
-      warning("numOOB=0, weight.tree = TRUE invalid")
+    if (object$forest$ratOOB == 0){
+      warning("ratOOB=0, weight.tree = TRUE invalid")
       #stop("out-of-bag indices for each tree are not stored. ODRF must be called with storeOOB = TRUE.")
     }else{
       oobErr <- sapply(object$structure, function(trees) trees$oobErr)

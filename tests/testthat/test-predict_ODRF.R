@@ -59,7 +59,7 @@ test_that("Inbag count matrix if of right size, storeOOB = FALSE and weight.tree
   expect_error(predict(rf, iris[, -5], type = "prob", weight.tree = TRUE))
 })
 
-test_that("Inbag count matrix if of right size, numOOB = 0 and weight.tree=TRUE", {
-  rf <- ODRF(Species ~ ., iris, split = "entropy", ntrees = 10, numOOB = 0, parallel = FALSE)
+test_that("Inbag count matrix if of right size, ratOOB = 0 and weight.tree=TRUE", {
+  rf <- ODRF(Species ~ ., iris, split = "entropy", ntrees = 10, ratOOB = 0, parallel = FALSE)
   expect_warning(predict(rf, iris[, -5], type = "prob", weight.tree = TRUE))
 })

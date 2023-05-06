@@ -20,7 +20,7 @@ ODRF(X, ...)
   storeOOB = TRUE,
   replacement = TRUE,
   stratify = TRUE,
-  numOOB = 1/3,
+  ratOOB = 1/3,
   parallel = TRUE,
   numCores = Inf,
   MaxDepth = Inf,
@@ -48,7 +48,7 @@ ODRF(X, ...)
   storeOOB = TRUE,
   replacement = TRUE,
   stratify = TRUE,
-  numOOB = 1/3,
+  ratOOB = 1/3,
   parallel = TRUE,
   numCores = Inf,
   MaxDepth = Inf,
@@ -98,7 +98,7 @@ including \itemize{
 
 \item{stratify}{If TRUE then class sample proportions are maintained during the random sampling. Ignored if replacement = FALSE (default TRUE).}
 
-\item{numOOB}{Ratio of 'out-of-bag' (default 1/3).}
+\item{ratOOB}{Ratio of 'out-of-bag' (default 1/3).}
 
 \item{parallel}{Parallel computing or not (default TRUE).}
 

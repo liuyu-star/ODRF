@@ -27,7 +27,7 @@ print.ODRF <- function(x, ...) {
   )
   cat("                                      Number of trees: ", x$forest$ntrees, "\n", sep = "")
   # cat("No. of variables tried at each split: ", x$mtrforest, "\n\n", sep="")
-  if (x$forest$numOOB == 0) {
+  if (x$forest$ratOOB == 0) {
     cat("The number of OOBs is 0")
   }
   if (!is.null(x$oobErr)) {
