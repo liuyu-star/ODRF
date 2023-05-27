@@ -1,4 +1,4 @@
-# ODRF (development version)
+# ODRF 0.0.4
 
 * Fixed function VarImp(), adding the method of measuring the importance of variables with node purity, and now VarImp() can be used for both class ODT and ODRF. 
 * When the argument “Xcat ! = 0”, i.e., the category variable in predictor X is transformed to one-of-K encode. however for the argument “NodeRotateFun=‘RotMatRF’ (‘RotMatRand’)“ run error, we have now fixed it. 
