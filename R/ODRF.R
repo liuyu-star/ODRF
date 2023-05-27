@@ -160,6 +160,12 @@
 #' )
 #' }
 #'
+#' @useDynLib ODRF, .registration = TRUE
+#' @import Rcpp
+#' @import doParallel
+#' @import foreach
+#' @importFrom parallel detectCores makeCluster clusterSplit stopCluster
+#' @importFrom stats model.frame model.extract model.matrix na.fail
 #' @import rlang
 #' @importFrom glue glue
 #' @importFrom lifecycle deprecated
@@ -283,12 +289,6 @@ ODRF.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "
   )
 }
 
-#' @useDynLib ODRF, .registration = TRUE
-#' @import Rcpp
-#' @import doParallel
-#' @import foreach
-#' @importFrom parallel detectCores makeCluster clusterSplit stopCluster
-#' @importFrom stats model.frame model.extract model.matrix na.fail
 #' @keywords internal
 #' @noRd
 ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList,

@@ -1,11 +1,12 @@
-## Update ODRF version to 0.0.3
+## Update ODRF version to 0.0.4
 
-We have optimized the ODRF package and made significant changes. Therefore we request to update the ODRF version. The main changes as follows.
+We have fixed some known bugs and added some new functions for the ODRF package. Therefore we request to update the ODRF version. The main changes as follows.
 
-* The function predicate.ODT() runs error when ODT is not split (depth=1), and we have fixed this bug.
-* We have fixed the function predict.ODRF with arguments numOOB and weight.tree related issues.
-* We have fixed the functions plot.ODT(), VarImp() and plot.VarImp().
-* We have fixed the argument 'lambda' of the functions ODT() and ODRF().
+* Fixed function VarImp(), adding the method of measuring the importance of variables with node purity, and now VarImp() can be used for both class ODT and ODRF. 
+* When the argument “Xcat ! = 0”, i.e., the category variable in predictor X is transformed to one-of-K encode. however for the argument “NodeRotateFun=‘RotMatRF’ (‘RotMatRand’)“ run error, we have now fixed it. 
+* Added predicted values of training data for class ODT and ODRF.
+* Fixed issue related to function predict.ODRF() when argument "weight.tree = TRUE".
+* Optimized some other known issues.
 
 
 ## R CMD check results
