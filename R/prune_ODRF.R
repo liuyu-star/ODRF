@@ -255,7 +255,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
     # set.seed(seed)
     icore <- NULL
     ppForestT <- foreach::foreach(
-      icore = seq_along(chunks), .combine = list, .multicombine = TRUE, .export = c("ODT.compute"),
+      icore = seq_along(chunks), .combine = list, .multicombine = TRUE, .export = c("ODT_compute"),
       .packages = "ODRF"
     ) %dopar% {
       lapply(chunks[[icore]], PPtree)

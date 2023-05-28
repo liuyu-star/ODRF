@@ -269,7 +269,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, MaxDepth = Inf, ...) {
     # set.seed(seed)
     icore <- NULL
     ppForestT <- foreach::foreach(
-      icore = seq_along(chunks), .combine = list, .multicombine = TRUE, .export = c("ODT.compute"),
+      icore = seq_along(chunks), .combine = list, .multicombine = TRUE, .export = c("ODT_compute"),
       .packages = "ODRF"
     ) %dopar% {
       lapply(chunks[[icore]], PPtree)

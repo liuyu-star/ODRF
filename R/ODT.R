@@ -233,7 +233,7 @@ ODT.formula <- function(formula, data = NULL, split = "auto", lambda = "log", No
   }
 
 
-  ppTree <- ODT.compute(
+  ppTree <- ODT_compute(
     formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
     MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate
   )
@@ -305,7 +305,7 @@ ODT.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "R
   }
 
 
-  ppTree <- ODT.compute(
+  ppTree <- ODT_compute(
     formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
     MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate
   )
@@ -331,7 +331,7 @@ ODT.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "R
 
 #' @keywords internal
 #' @noRd
-ODT.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
+ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
                         MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
   if (is.factor(y) && (split == "auto")) {
     split <- "gini"

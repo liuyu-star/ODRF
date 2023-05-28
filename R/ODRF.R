@@ -236,7 +236,7 @@ ODRF.formula <- function(formula, data = NULL, split = "auto", lambda = "log", N
     varName <- c(yname, varName)
   }
 
-  forest <- ODRF.compute(
+  forest <- ODRF_compute(
     formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList,
     ntrees, storeOOB, replacement, stratify, ratOOB, parallel,
     numCores, MaxDepth, numNode, MinLeaf, subset, weights,
@@ -281,7 +281,7 @@ ODRF.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "
     Call$y <- NULL
   }
 
-  ODRF.compute(
+  ODRF_compute(
     formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList,
     ntrees, storeOOB, replacement, stratify, ratOOB, parallel,
     numCores, MaxDepth, numNode, MinLeaf, subset, weights,
@@ -291,7 +291,7 @@ ODRF.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "
 
 #' @keywords internal
 #' @noRd
-ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList,
+ODRF_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList,
                          ntrees, storeOOB, replacement, stratify, ratOOB, parallel,
                          numCores, MaxDepth, numNode, MinLeaf, subset, weights,
                          na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
@@ -494,7 +494,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
 
     # data=data.frame(y[TDindx],X[TDindx,])
     # colnames(data)=vars
-    ppForestT <- ODT.compute(formula, Call0, varName,
+    ppForestT <- ODT_compute(formula, Call0, varName,
       X = X[TDindx, ], y = y[TDindx], split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
       MinLeaf, Levels, subset = NULL, weights = weights[TDindx], na.action = NULL, catLabel, Xcat = 0L, Xscale = "No", TreeRandRotate
     )
@@ -539,7 +539,7 @@ ODRF.compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
     # set.seed(seed)
     icore <- NULL
     ppForestT <- foreach::foreach(
-      icore = seq_along(chunks), .combine = list, .multicombine = TRUE, .export = c("ODT.compute"),
+      icore = seq_along(chunks), .combine = list, .multicombine = TRUE, .export = c("ODT_compute"),
       .packages = c("ODRF"), .noexport = "ppForest"
     ) %dopar% {
       lapply(chunks[[icore]], PPtree)
