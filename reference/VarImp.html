@@ -104,70 +104,28 @@ Then the same is done after permuting each predictor variable. The difference be
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="ODT.html">ODT</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">y</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">varimp</span> <span class="op">&lt;-</span> <span class="fu">VarImp</span><span class="op">(</span><span class="va">tree</span>, type<span class="op">=</span><span class="st">"impurity"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $varImp</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         varible decreas_impurity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BodyFat       1     5.985098e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hip           8     1.388494e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Abdomen       7     8.268897e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Wrist        14     7.487498e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Height        4     7.191170e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ankle        11     4.633147e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Biceps       12     3.746768e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Knee         10     1.684495e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Age           2     1.568993e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Neck          5     1.045500e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Thigh         9     8.405915e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Forearm      13     6.621724e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chest         6     1.472028e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Weight        3     1.198327e-09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $split</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mse"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VarImp"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in array(x, c(length(x), 1L), if (!is.null(names(x))) list(names(x),     NULL) else NULL):</span> 'data' must be of a vector type, was 'NULL'</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">forest</span> <span class="op">&lt;-</span> <span class="fu"><a href="ODRF.html">ODRF</a></span><span class="op">(</span><span class="va">X</span>, <span class="va">y</span>, split <span class="op">=</span> <span class="st">"mse"</span>, parallel <span class="op">=</span> <span class="cn">FALSE</span>, ntrees<span class="op">=</span><span class="fl">50</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">varimp</span> <span class="op">&lt;-</span> <span class="fu">VarImp</span><span class="op">(</span><span class="va">forest</span>, type<span class="op">=</span><span class="st">"impurity"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $varImp</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         varible decreas_impurity</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BodyFat       1     3.536018e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Weight        3     3.454507e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Abdomen       7     1.430011e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Height        4     1.294990e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Thigh         9     9.089121e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ankle        11     6.935579e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hip           8     6.807814e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chest         6     5.835472e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Neck          5     4.937802e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Wrist        14     3.528603e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Knee         10     1.820711e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Biceps       12     1.444451e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Forearm      13     8.782072e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Age           2     3.991877e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $split</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mse"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"class")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "VarImp"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in array(x, c(length(x), 1L), if (!is.null(names(x))) list(names(x),     NULL) else NULL):</span> 'data' must be of a vector type, was 'NULL'</span>
 <span class="r-in"><span><span class="op">(</span><span class="va">varimp</span> <span class="op">&lt;-</span> <span class="fu">VarImp</span><span class="op">(</span><span class="va">forest</span>, <span class="va">X</span>, <span class="va">y</span>, type<span class="op">=</span><span class="st">"permutation"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $varImp</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         varible increased_error</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> BodyFat       1    6.895483e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Weight        3    3.540741e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Thigh         9    1.286703e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Hip           8    9.485006e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Ankle        11    7.919036e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Knee         10    6.297860e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Abdomen       7    5.934018e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Neck          5    5.512524e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Chest         6    5.354998e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Age           2    4.518536e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Forearm      13    1.970960e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Height        4   -2.007132e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Wrist        14   -3.065903e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Biceps       12   -4.805390e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         varible decrease_accuracy</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> BodyFat       1      6.895483e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Weight        3      3.540741e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Thigh         9      1.286703e-06</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Hip           8      9.485006e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Ankle        11      7.919036e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Knee         10      6.297860e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Abdomen       7      5.934018e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Neck          5      5.512524e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Chest         6      5.354998e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Age           2      4.518536e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Forearm      13      1.970960e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Height        4     -2.007132e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Wrist        14     -3.065903e-07</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Biceps       12     -4.805390e-07</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $split</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mse"</span>
