@@ -390,12 +390,12 @@ ODRF_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
   # data=model.frame(formula, data, drop.unused.levels = TRUE)
   # y <- data[,1]
   # X <- data[,-1]
-  y <- c(model.extract(temp, "response"))
-  X <- model.matrix(Terms0, temp)
-  int <- match("(Intercept)", dimnames(X)[[2]], nomatch = 0)
-  if (int > 0) {
-    X <- X[, -int, drop = FALSE]
-  }
+  #y <- c(model.extract(temp, "response"))
+  #X <- model.matrix(Terms0, temp)
+  #int <- match("(Intercept)", dimnames(X)[[2]], nomatch = 0)
+  #if (int > 0) {
+  #  X <- X[, -int, drop = FALSE]
+  #}
   n <- length(y)
   p <- ncol(X)
   rm(data)
@@ -438,18 +438,18 @@ ODRF_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
   if (Xscale != "No") {
     indp <- (sum(numCat) + 1):p
     if (Xscale == "Min-max") {
-      minCol <- apply(X[, indp], 2, min)
-      maxminCol <- apply(X[, indp], 2, function(x) {
+      minCol <- apply(X[, indp,drop=F], 2, min)
+      maxminCol <- apply(X[, indp,drop=F], 2, function(x) {
         max(x) - min(x)
       })
     }
     if (Xscale == "Quantile") {
-      minCol <- apply(X[, indp], 2, quantile, 0.05)
-      maxminCol <- apply(X[, indp], 2, function(x) {
+      minCol <- apply(X[, indp,drop=F], 2, quantile, 0.05)
+      maxminCol <- apply(X[, indp,drop=F], 2, function(x) {
         quantile(x, 0.95) - quantile(x, 0.05)
       })
     }
-    X[, indp] <- (X[, indp] - matrix(minCol, n, length(indp), byrow = T)) / matrix(maxminCol, n, length(indp), byrow = T)
+    X[, indp] <- (X[, indp,drop=F] - matrix(minCol, n, length(indp), byrow = T)) / matrix(maxminCol, n, length(indp), byrow = T)
   }
 
   ppForest$data <- list(

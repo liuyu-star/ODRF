@@ -398,7 +398,7 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
     for (j in seq_along(Xcat)) {
       catMap <- (col.idx + 1L):(col.idx + numCat[j])
       # convert categorical feature to K dummy variables
-      catLabel[[j]] <- levels(as.factor(X[, Xcat[j]]))
+      catLabel[[j]] <-  unique(X[, Xcat[j]]) #levels(as.factor(X[, Xcat[j]]))
       X1[, catMap] <- (matrix(X[, Xcat[j]], n, numCat[j]) == matrix(catLabel[[j]], n, numCat[j], byrow = TRUE)) + 0
       col.idx <- col.idx + numCat[j]
     }
@@ -449,12 +449,12 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
   # data=model.frame(formula, data, drop.unused.levels = TRUE)
   # y <- data[,1]
   # X <- data[,-1]
-  y <- c(model.extract(temp, "response"))
-  X <- model.matrix(Terms0, temp)
-  int <- match("(Intercept)", dimnames(X)[[2]], nomatch = 0)
-  if (int > 0) {
-    X <- X[, -int, drop = FALSE]
-  }
+#   y <- c(model.extract(temp, "response"))
+#  X <- model.matrix(Terms0, temp)
+#  int <- match("(Intercept)", dimnames(X)[[2]], nomatch = 0)
+#  if (int > 0) {
+#    X <- X[, -int, drop = FALSE]
+#  }
   n <- length(y)
   p <- ncol(X)
   if (!is.integer(y) && split != "mse") {
@@ -478,18 +478,20 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
   if (Xscale != "No") {
     indp <- (sum(numCat) + 1):p
     if (Xscale == "Min-max") {
-      minCol <- apply(X[, indp], 2, min)
-      maxminCol <- apply(X[, indp], 2, function(x) {
+      minCol <- apply(X[, indp,drop=F], 2, min)
+      maxminCol <- apply(X[, indp,drop=F], 2, function(x) {
         max(x) - min(x)
       })
     }
     if (Xscale == "Quantile") {
-      minCol <- apply(X[, indp], 2, quantile, 0.05)
-      maxminCol <- apply(X[, indp], 2, function(x) {
+      minCol <- apply(X[, indp,drop=F], 2, quantile, 0.05)
+      maxminCol <- apply(X[, indp,drop=F], 2, function(x) {
         quantile(x, 0.95) - quantile(x, 0.05)
       })
     }
-    X[, indp] <- (X[, indp] - matrix(minCol, n, length(indp), byrow = T)) / matrix(maxminCol, n, length(indp), byrow = T)
+
+    maxminCol=maxminCol+1e-4
+    X[, indp] <- (X[, indp,drop=F] - matrix(minCol, n, length(indp), byrow = T)) / matrix(maxminCol, n, length(indp), byrow = T)
   }
 
   # rotate the data?
@@ -500,7 +502,7 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
     if (p > 1000L) {
       rotmat <- RandRot(1000L)
       rotdims <- sample.int(p, 1000L)
-      X[, rotdims] <- X[, rotdims] %*% rotmat
+      X[, rotdims] <- X[, rotdims,drop=F] %*% rotmat
     } else {
       rotdims <- 1:p
       rotmat <- RandRot(p)
