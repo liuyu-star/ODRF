@@ -35,7 +35,26 @@
 #' @export
 VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
 
-  p=obj[["data"]][["p"]]
+  p=obj$data$p
+
+  X <- as.matrix(X)
+  varName <- obj$data$varName
+  pp <- obj$data$p
+  Xcat <- obj$data$Xcat
+  catLabel <- obj$data$catLabel
+  Rep=rep(seq(p),rep(1,pp))
+  sp=seq(pp)
+  if (!is.null(catLabel) && (sum(Xcat) > 0)) {
+    pp <- pp - length(unlist(catLabel)) + length(Xcat)
+    varName <-c(names(catLabel),varName[-seq(length(unlist(catLabel)))])
+    Rep=rep(seq(pp),c(unlist(lapply(catLabel, length)),rep(1,pp-length(Xcat))))
+    sp=seq(pp)
+    sp=c(Xcat,sp[-Xcat])
+  }
+  colnames(X) <- varName
+  if (ncol(X) != pp) {
+    stop("The dimensions of 'Xnew' and training data do not match")
+  }
 
   if(type=="impurity"){
     VarImp.impurity <- function(structure){
@@ -75,8 +94,10 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
       DecImpurity <- rowMeans(DecImpurity)
     }
 
-    varimport <- cbind(varible = seq(p), decreas_impurity = DecImpurity)
-    rownames(varimport) <- obj[["data"]][["varName"]]
+    DecImpurity <- aggregate(DecImpurity, list(Rep), mean)[-1]
+    varimport <- cbind(sp,DecImpurity)
+    colnames(varimport) <- c("varible","decrease_accuracy")
+    rownames(varimport) <- varName
   }
 
 
@@ -96,19 +117,6 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
         stop("out-of-bag indices for each tree are not stored, so can't use permutation method!")
       }
 
-
-      X <- as.matrix(X)
-      colnames(X) <- obj$data$varName
-
-      pp <- obj$data$p
-      if (!is.null(obj$data$catLabel) && (sum(obj$data$Xcat) > 0)) {
-        pp <- pp - length(unlist(obj$data$catLabel)) + length(obj$data$Xcat)
-      }
-      if (ncol(X) != pp) {
-        stop("The dimensions of 'Xnew' and training data do not match")
-      }
-
-
       if (!is.null(obj$data$subset)) {
         X <- X[obj$data$subset, ]
       }
@@ -127,8 +135,6 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
       n <- length(y)
       p <- ncol(X)
 
-      Xcat <- obj$data$Xcat
-      catLabel <- obj$data$catLabel
       numCat <- 0
       if (sum(Xcat) > 0) {
         xj <- 1
@@ -203,8 +209,10 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
       IncErr <- vapply(obj$structure, runOOBErr, rep(0,p))
       #IncErr <- sapply(obj$ppTrees, runOOBErr)
       IncErr <- rowMeans(IncErr)
-      varimport <- cbind(varible = seq(p), increased_error = IncErr)
-      rownames(varimport) <- colnames(X)
+      IncErr <- aggregate(IncErr, list(Rep), mean)[-1]
+      varimport <- cbind(sp,IncErr)
+      colnames(varimport) <- c("varible","decrease_accuracy")
+      rownames(varimport) <- varName
     }
   }
 
