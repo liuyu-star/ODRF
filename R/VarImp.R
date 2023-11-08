@@ -36,8 +36,6 @@
 VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
 
   p=obj$data$p
-
-  X <- as.matrix(X)
   varName <- obj$data$varName
   pp <- obj$data$p
   Xcat <- obj$data$Xcat
@@ -50,10 +48,6 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
     Rep=rep(seq(pp),c(unlist(lapply(catLabel, length)),rep(1,pp-length(Xcat))))
     sp=seq(pp)
     sp=c(Xcat,sp[-Xcat])
-  }
-  colnames(X) <- varName
-  if (ncol(X) != pp) {
-    stop("The dimensions of 'Xnew' and training data do not match")
   }
 
   if(type=="impurity"){
@@ -103,6 +97,11 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
 
   #####################################################################
   if(type=="permutation"){
+    X <- as.matrix(X)
+    colnames(X) <- varName
+    if (ncol(X) != pp) {
+      stop("The dimensions of 'Xnew' and training data do not match")
+    }
 
     if("ODT"%in%class(obj)){
       stop("Tree structure can't use permutation method to measure the importance of variables!")

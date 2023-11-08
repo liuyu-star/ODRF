@@ -446,15 +446,15 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
     Call <- Call0
   }
 
-  # data=model.frame(formula, data, drop.unused.levels = TRUE)
-  # y <- data[,1]
-  # X <- data[,-1]
-#   y <- c(model.extract(temp, "response"))
-#  X <- model.matrix(Terms0, temp)
-#  int <- match("(Intercept)", dimnames(X)[[2]], nomatch = 0)
-#  if (int > 0) {
-#    X <- X[, -int, drop = FALSE]
-#  }
+   #data=model.frame(formula, data, drop.unused.levels = TRUE)
+   #y <- data[,1]
+   #X <- data[,-1]
+   y <- c(model.extract(temp, "response"))
+  X <- model.matrix(Terms0, temp)
+  int <- match("(Intercept)", dimnames(X)[[2]], nomatch = 0)
+  if (int > 0) {
+    X <- X[, -int, drop = FALSE]
+  }
   n <- length(y)
   p <- ncol(X)
   if (!is.integer(y) && split != "mse") {
@@ -462,7 +462,9 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
   }
 
   rm(data)
-
+  if(length(y)==1){
+    stop("The size of training data must be greater than 1.")
+  }
 
   # weights=c(weights,paramList$weights)
   if (!is.null(subset)) {

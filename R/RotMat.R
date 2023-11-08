@@ -347,7 +347,8 @@ RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, di
         }
 
         if (inherits(PP, "try-error")) {
-          LM <- lm(y ~ ., data = data.frame(y=Yi,Xi), weights)
+          #LM <- lm(y ~ ., data = data.frame(y=Yi,Xi), weights)
+          LM <- lm(Yi ~ ., data = data.frame(Xi), weights)
           if (length(indC) > 2) {
             theta.i <- as.matrix(LM$coefficients)[-1, , drop = FALSE]
             for (j in seq(ncol(theta.i))) {

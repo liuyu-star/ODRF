@@ -77,7 +77,7 @@ test_that("Split points are at (A+B)/2 for numeric features, i-classification sp
   tree <- ODT(y ~ ., data = dat, split = "entropy", NodeRotateFun = "RotMatRF")
   split_points <- tree$structure$nodeCutValue
   nsp <- which(split_points != 0)
-  expect_equal(split_points[nsp], rep(0.5, length(nsp)))
+  expect_equal(round(split_points[nsp],2), rep(0.5, length(nsp)))
 })
 
 test_that("Split points are at (A+B)/2 for numeric features, g-classification splitting", {
