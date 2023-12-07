@@ -247,7 +247,8 @@ RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, di
 
   # ceiling(sqrt(p))#d#round(p/3)#
   # if((n>Q)&(n>10)&(p>1)){
-  sparseM1 <- NULL
+  #sparseM1 <- NULL
+  sparseM1=matrix(0,0,3)
   if (n > 10) {
     numProj <- min(p0, numProj)
     d1 <- numProj
