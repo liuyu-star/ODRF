@@ -1,7 +1,7 @@
 Type: Package
 Package: ODRF
 Title: Oblique Decision Random Forest for Classification and Regression
-Version: 0.0.4.9000
+Version: 0.0.4.9001
 Authors@R: c(
     person("Yu", "Liu", , "liuyuchina123@gmail.com", role = c("aut", "cre", "cph")),
     person("Yingcun", "Xia", , "staxyc@nus.edu.sg", role = "aut")
@@ -34,7 +34,8 @@ Imports:
     Pursuit,
     Rcpp,
     rlang (>= 0.4.11),
-    stats
+    stats,
+        glmnet
 Suggests: 
     knitr,
     rmarkdown,
