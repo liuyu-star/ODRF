@@ -53,7 +53,7 @@
 prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
 
   if (length(obj[["structure"]][["nodeDepth"]]) == 1) {
-    stop("No tree structure to use 'online'!")
+    stop("No tree structure to use 'prune'!")
   }
   structure <- obj$structure
   if (!is.null(MaxDepth)) {
@@ -140,7 +140,7 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
 
   prediction <- predictTree(structure, Xnew, obj$split, obj$Levels)$prediction
 
-  if (obj$split != "mse") {
+  if (obj$split %in% c("gini","entropy")) {
     err0 <- mean(prediction != ynew)
   } else {
     # e.0 = mean((ynew-mean(y))^2)
@@ -214,7 +214,7 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
     # id=idx[!idx%in%cutNode]
     # nodeLabel[currentNode]=ifelse(obj$split!="mse",nodeLabel[idx][which.max(structure$nodeNumLabel[idx])],
     #                              structure$nodeNumLabel[idx]*nodeLabel[idx]/sum(structure$nodeNumLabel[idx]))
-    if (obj$split != "mse") {
+    if (obj$split %in% c("gini","entropy")) {
       # nnl=rep(nodeLabel[id],nodeNumLabel[id])
       # nnl=table(nnl)
       # nodeLabel[currentNode]=names(nnl)[which.max(nnl)]
@@ -234,7 +234,7 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
     nodeCutValue[currentNode] <- 0
     nodeCutValue <- nodeCutValue[-idx]
 
-    if (obj$split != "mse") {
+    if (obj$split %in% c("gini","entropy")) {
       nodeLabel <- colnames(nodeNumLabel)[max.col(nodeNumLabel)] ## "random"
       # nodeLabel[which(rowSums(structure$nodeNumLabel)==0),]=0
     } else {
@@ -250,7 +250,7 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
       )$prediction
     }
 
-    if (obj$split != "mse") {
+    if (obj$split %in% c("gini","entropy")) {
       err <- mean(prediction != ynew)
     } else {
       err <- mean((as.numeric(prediction) - ynew)^2) # /e.0

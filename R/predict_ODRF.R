@@ -136,7 +136,7 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
   split=object$split
   Levels=object$Levels
   Rotate=object$data$TreeRandRotate
-  VALUE <- rep(ifelse(split == "mse", 0, "0"), n)
+  VALUE <- rep(ifelse(split %in% c("gini","entropy"), "0", 0), n)
   TreePrediction <- vapply(object$structure,function(tree){
     XXnew=Xnew
     if (Rotate) {
@@ -159,7 +159,7 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
 
   #weights <- weight.tree * oobErr + (!weight.tree)
   weights <- weights / sum(weights)
-  if (split != "mse") {
+  if (split %in% c("gini","entropy")) {
     # prob=matrix(0,n,nC)
     # for (i in 1:n) {
     #    prob[i,]=aggregate(c(rep(0,nC),weights[,i]), by=list(c(1:nC, f_votes[,i])),sum)[,2];

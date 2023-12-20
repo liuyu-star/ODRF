@@ -4,13 +4,15 @@
 \alias{predict.ODT}
 \title{making predict based on ODT objects}
 \usage{
-\method{predict}{ODT}(object, Xnew, leafnode = FALSE, ...)
+\method{predict}{ODT}(object, Xnew, Xsplit = NULL, leafnode = FALSE, ...)
 }
 \arguments{
 \item{object}{An object of class ODT, the same as that created by the function \code{\link{ODT}}.}
 
 \item{Xnew}{An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
 Note that if there are NA values in the data 'Xnew', which will be replaced with the average value.}
+
+\item{Xsplit}{Splitting variables used to construct linear model trees. The default value is NULL and is only valid when split="linear".}
 
 \item{leafnode}{If or not output the leaf node sequence number that \code{Xnew} is partitioned. (default FALSE)}
 

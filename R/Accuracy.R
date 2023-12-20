@@ -34,7 +34,7 @@ Accuracy <- function(obj, data, newdata = NULL) {
   ynew <- newdata[, setdiff(colnames(newdata), vars[-1])]
   Xnew <- newdata[, vars[-1]]
   Xnew <- as.matrix(Xnew)
-  if (obj$split != "mse") {
+  if (obj$split %in% c("gini","entropy")) {
     y <- factor(y, levels = obj$Levels)
   }
 
@@ -45,7 +45,7 @@ Accuracy <- function(obj, data, newdata = NULL) {
 
   treeVotes <- predict(obj, Xnew, type = "tree")
   err.test <- rep(0, ntrees)
-  if (obj$split == "mse") {
+  if (!obj$split %in% c("gini","entropy")) {
     pred <- rowSums(treeVotes)
     err.test[nt] <- mean((ynew - pred / nt)^2) # /e.0;
     for (t in seq(nt - 1, 1)) {
@@ -87,7 +87,7 @@ Accuracy <- function(obj, data, newdata = NULL) {
     idx <- which(rowSums(is.na(oobVotes)) < tt)
     oobVotes <- oobVotes[idx, , drop = FALSE]
 
-    if (obj$split == "mse") {
+    if (!obj$split %in% c("gini","entropy")) {
       pred <- rowMeans(oobVotes, na.rm = TRUE)
       err <- mean((y[idx] - pred)^2) # / mean((y[idx] - mean(y))^2)
     } else {

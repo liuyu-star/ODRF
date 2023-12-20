@@ -295,7 +295,7 @@ RotMatPPO <- function(X, y, model = "PPR", split = "entropy", weights = NULL, di
   if (n > 10 && nrow(sparseM1) > 1) {
     Yi <- c(y)
     indC <- 0L
-    if (split != "mse") {
+    if (split %in% c("gini","entropy")) {
       y <- as.factor(y)
       indC <- levels(y)
       if (length(indC) > 2) {

@@ -73,7 +73,7 @@ PPO <- function(X, y, model = "PPR", split = "gini", weights = NULL, ...) {
 
     Y <- c(y)
     indC <- 0L
-    if (split != "mse") {
+    if (split %in% c("gini","entropy")) {
       y <- as.factor(y)
       indC <- levels(y)
       if (length(indC) > 2) {

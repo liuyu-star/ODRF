@@ -36,7 +36,7 @@ plot.VarImp <- function(x, nvar = min(30,nrow(x$varImp)), digits = NULL, main = 
 
   minErr <- strsplit(as.character(min(imp[, 2])), "")[[1]]
   id <- which(minErr == "e")
-  if (x$split != "mse") {
+  if (x$split %in% c("gini","entropy")) {
     digits <- 0
   } else if (is.null(digits)) {
     if (length(id) > 0) {
@@ -47,11 +47,11 @@ plot.VarImp <- function(x, nvar = min(30,nrow(x$varImp)), digits = NULL, main = 
   }
 
   if(digits==0){
-    xlab = paste0("Increased ",ifelse(x$split == "mse","MSE","MR"))
+    xlab = paste0("Increased ",ifelse(x$split %in% c("gini","entropy"),"MR","MSE"))
   }else if(digits==2){
-    xlab = paste0("Increased ",ifelse(x$split == "mse","MSE","MR")," (%)")
+    xlab = paste0("Increased ",ifelse(x$split %in% c("gini","entropy"),"MR","MSE")," (%)")
   }else{
-    xlab = substitute(paste("Increased ",ifelse(x$split == "mse","MSE","MR")," (*",10^{-dig},")"),list(dig = digits))
+    xlab = substitute(paste("Increased ",ifelse(x$split %in% c("gini","entropy"),"MR","MSE")," (*",10^{-dig},")"),list(dig = digits))
   }
 
   ## If there are more than two columns, just use the last two columns.

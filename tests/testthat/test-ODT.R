@@ -72,7 +72,7 @@ test_that("holdout mode holding out data with 0 weight", {
 })
 
 
-test_that("Split points are at (A+B)/2 for numeric features, i-classification splitting", {
+test_that("Split points are at (A+B)/2 for numeric features, entropy splitting", {
   dat <- data.frame(y = rbinom(100, 1, .5), matrix(rbinom(5 * 100, 1, .5), 100, 5))
   tree <- ODT(y ~ ., data = dat, split = "entropy", NodeRotateFun = "RotMatRF")
   split_points <- tree$structure$nodeCutValue
@@ -80,7 +80,7 @@ test_that("Split points are at (A+B)/2 for numeric features, i-classification sp
   expect_equal(round(split_points[nsp],2), rep(0.5, length(nsp)))
 })
 
-test_that("Split points are at (A+B)/2 for numeric features, g-classification splitting", {
+test_that("Split points are at (A+B)/2 for numeric features, gini splitting", {
   dat <- data.frame(y = rbinom(100, 1, .5), matrix(rbinom(5 * 100, 1, .5), 100, 5))
   tree <- ODT(y ~ ., data = dat, split = "gini", NodeRotateFun = "RotMatRF")
   split_points <- tree$structure$nodeCutValue

@@ -6,8 +6,9 @@
 #' @param data Training data of class \code{data.frame} containing variables named in the formula. If \code{data} is missing it is obtained from the current environment by \code{formula}.
 #' @param X An n by d numeric matrix (preferable) or data frame.
 #' @param y A response vector of length n.
-#' @param split The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression;
-#' 'auto' (default): If the response in \code{data} or \code{y} is a factor, "gini" is used, otherwise regression is assumed.
+#' @param Xsplit Splitting variables used to construct linear model trees. The default value is NULL and is only valid when split="linear".
+#' @param split The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression; "linear": mean square error for multiple linear regression.
+#' 'auto' (default): If the response in \code{data} or \code{y} is a factor, "gini" is used, otherwise "mse" is assumed.
 #' @param lambda The argument of \code{split} is used to determine the penalty level of the partition criterion. Three options are provided including, \code{lambda=0}: no penalty; \code{lambda=2}: AIC penalty; \code{lambda='log'} (Default): BIC penalty. In Addition, lambda can be any value from 0 to n (training set size).
 #' @param NodeRotateFun Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
 #' including \itemize{
@@ -18,6 +19,8 @@
 #' }
 #' @param FunDir The path to the \code{function} of the user-defined \code{NodeRotateFun} (default current working directory).
 #' @param paramList List of parameters used by the functions \code{NodeRotateFun}. If left unchanged, default values will be used, for details see \code{\link[ODRF]{defaults}}.
+#' @param glmnetParList List of parameters used by the functions \code{glmnet} and \code{cv.glmnet} in package \code{glmnet}.glmnetParList=list(lambda = 0) is Ordinary Least Squares (OLS) regression.
+#' If left unchanged, default values will be used, for details see \code{\link[glmnet]{glmnet}} and \code{\link[glmnet]{cv.glmnet}}.
 #' @param MaxDepth The maximum depth of the tree (default \code{Inf}).
 #' @param numNode Number of nodes that can be used by the tree (default \code{Inf}).
 #' @param MinLeaf Minimal node size (Default 10).
@@ -50,6 +53,8 @@
 #' \item{\code{nodeCutIndex}: Record the index values of the partitioning variables selected based on the partition criterion \code{split}.}
 #' \item{\code{childNode}: Record the number of child nodes after each splitting.}
 #' \item{\code{nodeDepth}: Record the depth of the tree where each node is located.}
+#' \item{\code{nodeIndex}: Record the indices of the data used in each node.}
+#' \item{\code{glmnetFit}: Record the model fitted by function \code{glmnet} used in each node.}
 #' }}
 #' }
 #'
@@ -84,6 +89,25 @@
 #' pred <- predict(tree, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
+#'
+#' # Use "Xsplit" as the splitting variable to build a linear model tree for "X" and "y".
+#' set.seed(10)
+#' cutpoint=50
+#' X=matrix(rnorm(100*10),100,10)
+#' age=sample(seq(20,80),100,replace = TRUE)
+#' height=sample(seq(50,200),100,replace = TRUE)
+#' weight=sample(seq(5,150),100,replace = TRUE)
+#' Xsplit=cbind(age=age,height=height,weight=weight)
+#' mu=rep(0,100)
+#' mu[age<=cutpoint]=X[age<=cutpoint,1]+X[age<=cutpoint,2]
+#' mu[age>cutpoint]=X[age>cutpoint,1]+X[age>cutpoint,3]
+#' y=mu+rnorm(100)
+#' tree <- ODT(X, y, Xsplit, split = "linear", NodeRotateFun = "RotMatRF",
+#' glmnetParList=list(lambda = 0))
+#' pred <- predict(tree, X, Xsplit)
+#' # fitting error
+#' mean((pred - y)^2)
+#' mean((tree$predicted - y)^2)
 #'
 #' # Projection analysis of the oblique decision tree.
 #' data(iris)
@@ -152,6 +176,7 @@
 #'
 #' @import Rcpp
 #' @importFrom stats model.frame model.extract model.matrix na.fail
+#' @importFrom glmnet cv.glmnet glmnet predict.glmnet
 #' @export
 ODT <- function(X, ...) {
   UseMethod("ODT")
@@ -162,8 +187,8 @@ ODT <- function(X, ...) {
 #' @method ODT formula
 #' @aliases ODT.formula
 #' @export
-ODT.formula <- function(formula, data = NULL, split = "auto", lambda = "log", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
-                        MaxDepth = Inf, numNode = Inf, MinLeaf = 10, Levels = NULL, subset = NULL, weights = NULL, na.action = na.fail,
+ODT.formula <- function(formula, data = NULL, Xsplit=NULL, split = "auto", lambda = "log", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
+                        glmnetParList=NULL,MaxDepth = Inf, numNode = Inf, MinLeaf = 10, Levels = NULL, subset = NULL, weights = NULL, na.action = na.fail,
                         catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
   Call <- match.call()
   indx <- match(c("formula", "data", "subset", "na.action"), names(Call), nomatch = 0L) # , "weights"
@@ -225,29 +250,29 @@ ODT.formula <- function(formula, data = NULL, split = "auto", lambda = "log", No
         (length(table(x)) < 10) & (n > 20)
       }))
     }
+    p=ncol(X)
     if (sum(Xcat) > 0) {
       numCat <- apply(X[, Xcat, drop = FALSE], 2, function(x) length(table(x)))
       p=ncol(X) - sum(numCat) - length(Xcat)
-      paramList$numProj <- ceiling(sqrt(p))
+      #paramList$numProj <- ceiling(sqrt(p))
     }
+    paramList$numProj <- ifelse(is.null(Xsplit),p,NCOL(Xsplit))
   }
 
 
-  ppTree <- ODT_compute(
-    formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
-    MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate
-  )
+  ppTree <- ODT_compute(formula, Call, varName, X, y, Xsplit, split, lambda, NodeRotateFun, FunDir, paramList, glmnetParList,
+                        MaxDepth, numNode, MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate)
 
   nodeRotaMat <- ppTree$structure$nodeRotaMat
-  cutNode <- unique(nodeRotaMat[, 2][nodeRotaMat[, 1] != 0])
+  cutNode <- which(ppTree$structure$nodeCutValue!= 0)# unique(nodeRotaMat[nodeRotaMat[, 1] != 0, 2])
   projections <- NULL
   if (length(cutNode) > 0) {
-    projections <- matrix(0, length(cutNode), ppTree$data$p)
+    projections <- matrix(0, length(cutNode), ifelse(is.null(Xsplit),ppTree$data$p,NCOL(Xsplit)))
     for (cn in seq_along(cutNode)) {
       idx <- which(nodeRotaMat[, 2] == cutNode[cn])
       projections[cn, nodeRotaMat[idx, 1]] <- nodeRotaMat[idx, 3]
     }
-    colnames(projections) <- ppTree$data$varName
+    colnames(projections) <- if(is.null(Xsplit)) ppTree$data$varName else dimnames(Xsplit)[[2]]
     rownames(projections) <- paste("proj", seq_along(cutNode), sep = "")
   }
 
@@ -262,8 +287,8 @@ ODT.formula <- function(formula, data = NULL, split = "auto", lambda = "log", No
 #' @method ODT default
 #' @aliases ODT.default
 #' @export
-ODT.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
-                        MaxDepth = Inf, numNode = Inf, MinLeaf = 10, Levels = NULL, subset = NULL, weights = NULL, na.action = na.fail,
+ODT.default <- function(X, y, Xsplit=NULL, split = "auto", lambda = "log", NodeRotateFun = "RotMatPPO", FunDir = getwd(), paramList = NULL,
+                        glmnetParList=NULL,MaxDepth = Inf, numNode = Inf, MinLeaf = 10, Levels = NULL, subset = NULL, weights = NULL, na.action = na.fail,
                         catLabel = NULL, Xcat = 0, Xscale = "Min-max", TreeRandRotate = FALSE, ...) {
   Call <- match.call()
   indx <- match(c("X", "y", "subset", "na.action"), names(Call), nomatch = 0L) # , "weights"
@@ -297,29 +322,29 @@ ODT.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "R
         (length(table(x)) < 10) & (n > 20)
       }))
     }
+    p=ncol(X)
     if (sum(Xcat) > 0) {
       numCat <- apply(X[, Xcat, drop = FALSE], 2, function(x) length(table(x)))
       p=ncol(X) - sum(numCat) - length(Xcat)
-      paramList$numProj <- ceiling(sqrt(p))
+      #paramList$numProj <- ceiling(sqrt(p))
     }
+    paramList$numProj <- ifelse(is.null(Xsplit),p,NCOL(Xsplit))
   }
 
 
-  ppTree <- ODT_compute(
-    formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
-    MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate
-  )
+  ppTree <- ODT_compute(formula, Call, varName, X, y, Xsplit, split, lambda, NodeRotateFun, FunDir, paramList, glmnetParList,
+                        MaxDepth, numNode, MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate)
 
   nodeRotaMat <- ppTree$structure$nodeRotaMat
   cutNode <- which(ppTree$structure$nodeCutValue!= 0)# unique(nodeRotaMat[nodeRotaMat[, 1] != 0, 2])
   projections <- NULL
   if (length(cutNode) > 0) {
-    projections <- matrix(0, length(cutNode), ppTree$data$p)
+    projections <- matrix(0, length(cutNode), ifelse(is.null(Xsplit),ppTree$data$p,NCOL(Xsplit)))
     for (cn in seq_along(cutNode)) {
       idx <- which(nodeRotaMat[, 2] == cutNode[cn])
       projections[cn, nodeRotaMat[idx, 1]] <- nodeRotaMat[idx, 3]
     }
-    colnames(projections) <- ppTree$data$varName
+    colnames(projections) <- if(is.null(Xsplit)) ppTree$data$varName else dimnames(Xsplit)[[2]]
     rownames(projections) <- paste("proj", seq_along(cutNode), sep = "")
   }
 
@@ -331,8 +356,8 @@ ODT.default <- function(X, y, split = "auto", lambda = "log", NodeRotateFun = "R
 
 #' @keywords internal
 #' @noRd
-ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
-                        MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
+ODT_compute <- function(formula, Call, varName, X, y, Xsplit=NULL, split, lambda, NodeRotateFun, FunDir, paramList, glmnetParList=NULL,
+                        MaxDepth, numNode, MinLeaf, Levels, subset, weights, na.action, catLabel, Xcat, Xscale, TreeRandRotate) {
   if (is.factor(y) && (split == "auto")) {
     split <- "gini"
     warning("You are creating a tree for classification")
@@ -365,11 +390,10 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
     varName <- varName[-1]
   }
 
-  if (split != "mse") {
+  if (split %in% c("gini","entropy")) {
     if (is.null(Levels)) {
-      y <- as.factor(y)
-      Levels <- levels(y)
-      y <- as.integer(y)
+      Levels <- levels(as.factor(y))
+      y <- as.integer(as.factor(y))
     }
     maxLabel <- length(Levels)
     if (length(Levels) == 1) {
@@ -457,7 +481,7 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
   }
   n <- length(y)
   p <- ncol(X)
-  if (!is.integer(y) && split != "mse") {
+  if (!is.integer(y) && (split %in% c("gini","entropy"))) {
     y <- as.integer(as.factor(y))
   }
 
@@ -469,6 +493,7 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
   # weights=c(weights,paramList$weights)
   if (!is.null(subset)) {
     weights <- weights[subset]
+    Xsplit <- Xsplit[subset,]
   }
   if (!is.null(weights)) {
     X <- X * matrix(weights, n, p)
@@ -512,9 +537,14 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
     }
   }
 
+  catLabel0=catLabel
+  if(is.null(Xsplit)){Xsplit=X}else{catLabel0=NULL}
+
   dimProj <- paramList$dimProj
   numProj <- paramList$numProj
-  paramList <- defaults(paramList, split, p, weights, catLabel)
+  ps=NCOL(Xsplit)
+  paramList <- defaults(paramList, split, ps, weights, catLabel0)
+  #if((NodeRotateFun=="RotMatRF")&&(split == "linear")) paramList$numProj <- p
 
   if ((split == "mse") && (!paramList$model %in% c("PPR", "Rand", "Log"))) {
     stop(paste0("'model = ", paramList$model, "' can only be used for classification"))
@@ -530,7 +560,7 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
   nodeXIndx <- vector("list", numNode + 1)
   nodeXIndx[[1]] <- 1:n
 
-  if (split != "mse") {
+  if (split %in% c("gini","entropy")) {
     nodeNumLabel <- matrix(0, 0, maxLabel)
     colnames(nodeNumLabel) <- Levels
     sl <- seq(maxLabel)
@@ -548,6 +578,24 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
   childNode <- nodeCutValue
   nodeLR <- nodeCutValue
 
+  lambda0=glmnetParList$lambda
+  #glmnetFit=vector("list", numNode + 1)
+  if(split=="linear"){
+    glmnetFit=vector("list", numNode + 1)
+    glmnetParList$x <- X
+    glmnetParList$y <- y
+    if(length(lambda0)==1){
+      glmnetFit[[1]]<- do.call(glmnet, glmnetParList)
+    }else{
+      glmnetFit[[1]]<- do.call(cv.glmnet, glmnetParList)
+      glmnetParList$lambda=glmnetFit[[1]]$lambda.min
+      glmnetFit[[1]]<- do.call(glmnet, glmnetParList)
+    }
+    glmnetParList$lambda <- lambda0
+    glmnetParList$x <- NULL
+    glmnetParList$y <- NULL
+  }
+
   # start create Oblique Decision Tree.
   ##############################################################################
   currentNode <- 1
@@ -557,7 +605,7 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
       (length(nodeXIndx[[currentNode]]) <= (2 * MinLeaf)) ||
       (nodeDepth[currentNode] >= MaxDepth) ||
       (freeNode >= numNode)) {
-      if (split != "mse") {
+      if (split %in% c("gini","entropy")) {
         leafLabel <- table(Levels[c(sl, y[nodeXIndx[[currentNode]]])]) - 1
         # nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
         # nodeNumLabel[currentNode]=max(leafLabel)
@@ -572,7 +620,7 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
       #nodeXIndx[currentNode] <- NA
 
       TF <- ifelse(currentNode > 1, (nodeLR[currentNode - 1] == nodeLR[currentNode]) && (nodeCutValue[currentNode - 1] == 0), FALSE)
-      if (TF && (split != "mse") && (length(unique(max.col(nodeNumLabel[currentNode - c(1, 0), ]))) == 1)) {
+      if (TF && (split %in% c("gini","entropy")) && (length(unique(max.col(nodeNumLabel[currentNode - c(1, 0), ]))) == 1)) {
         idx <- which(nodeRotaMat[, 2] == nodeLR[currentNode])
         nodeRotaMat[idx[1], ] <- c(0, nodeLR[currentNode], 0)
         nodeRotaMat <- nodeRotaMat[-c(idx[-1], nrow(nodeRotaMat) - c(1, 0)), , drop = FALSE]
@@ -611,13 +659,13 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
     ##########################################
     if (NodeRotateFun == "RotMatMake") {
       sparseM <- RotMatMake(
-        X[nodeXIndx[[currentNode]], ], y[nodeXIndx[[currentNode]]],
+        Xsplit[nodeXIndx[[currentNode]], ], y[nodeXIndx[[currentNode]]],
         paramList$RotMatFun, paramList$PPFun, FunDir, paramList
       )
     }
 
     if (!NodeRotateFun %in% ls("package:ODRF", pattern = "RotMat")) {
-      paramList$X <- X[nodeXIndx[[currentNode]], ]
+      paramList$X <- Xsplit[nodeXIndx[[currentNode]], ]
       paramList$y <- y[nodeXIndx[[currentNode]]]
       sparseM <- do.call(FUN, paramList)
       paramList$X <- NULL
@@ -632,31 +680,35 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
       paramList$dimProj <- dimProj
       paramList$numProj <- numProj
       if (is.null(paramList$dimProj)) {
-        paramList$dimProj <- min(ceiling(length(y[nodeXIndx[[currentNode]]])^0.4), ceiling(p * 2 / 3))
+        paramList$dimProj <- min(ceiling(length(y[nodeXIndx[[currentNode]]])^0.4), ceiling(ps * 2 / 3))
       }
       if (is.null(paramList$numProj)) {
-        paramList$numProj <- ifelse(paramList$dimProj == "Rand", sample(floor(p / 3), 1), ceiling(p / paramList$dimProj))
+        paramList$numProj <- ifelse(paramList$dimProj == "Rand", sample(floor(ps / 3), 1), ceiling(ps / paramList$dimProj))
       }
       sparseM <- RotMatPPO(
-        X = X[nodeXIndx[[currentNode]], ], y = y[nodeXIndx[[currentNode]]], model = paramList$model,
+        X = Xsplit[nodeXIndx[[currentNode]], ], y = y[nodeXIndx[[currentNode]]], model = paramList$model,
         split = paramList$split, weights = paramList$weights, dimProj = paramList$dimProj,
         numProj = paramList$numProj, catLabel = paramList$catLabel
       )
     }
 
     numDr <- unique(sparseM[, 2])
-    rotaX <- matrix(0, p, length(numDr))
-    for (i in seq_along(numDr)) {
-      lrows <- which(sparseM[, 2] == numDr[i])
-      rotaX[sparseM[lrows, 1], i] <- sparseM[lrows, 3]
+    if(NodeRotateFun=="RotMatRF"){
+      rotaX <- Xsplit[nodeXIndx[[currentNode]],sparseM[, 1], drop = FALSE]
+    }else{
+      rotaX <- matrix(0, ps, length(numDr))
+      for (i in seq_along(numDr)) {
+        lrows <- which(sparseM[, 2] == numDr[i])
+        rotaX[sparseM[lrows, 1], i] <- sparseM[lrows, 3]
+      }
+      rotaX <- Xsplit[nodeXIndx[[currentNode]], , drop = FALSE] %*% rotaX
     }
 
     ###################################################################
 
-    rotaX <- X[nodeXIndx[[currentNode]], , drop = FALSE] %*% rotaX
-
-    # bestCut <- best_cut_node(split0, rotaX, y[nodeXIndx[[currentNode]]], Wcd, MinLeaf, maxLabel)
-    bestCut <- best.cut.node(rotaX, y[nodeXIndx[[currentNode]]], split, lambda, Wcd, MinLeaf, maxLabel)
+    # bestCut <- best_cut_node(split0, rotaX, y[nodeXIndx[[currentNode]]], Wcd, MinLeaf, maxLabel) p
+    bestCut <- best.cut.node(X[nodeXIndx[[currentNode]], , drop = FALSE], y[nodeXIndx[[currentNode]]],
+                             rotaX, split, lambda, Wcd, MinLeaf, maxLabel, glmnetParList)
     if (bestCut$BestCutVar == -1) {
       TF <- TRUE
     } else {
@@ -664,7 +716,7 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
       TF <- min(length(Lindex), length(nodeXIndx[[currentNode]]) - length(Lindex)) <= MinLeaf
     }
     if (TF) {
-      if (split != "mse") {
+      if (split %in% c("gini","entropy")) {
         leafLabel <- table(Levels[c(sl, y[nodeXIndx[[currentNode]]])]) - 1
       } else {
         leafLabel <- c(mean(y[nodeXIndx[[currentNode]]]), length(y[nodeXIndx[[currentNode]]]))
@@ -674,7 +726,7 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
       #nodeXIndx[currentNode] <- NA
 
       TF <- ifelse(currentNode > 1, (nodeLR[currentNode - 1] == nodeLR[currentNode]) && (nodeCutValue[currentNode - 1] == 0), FALSE)
-      if (TF && (split != "mse") && (length(unique(max.col(nodeNumLabel[currentNode - c(1, 0), ]))) == 1)) {
+      if (TF && (split %in% c("gini","entropy")) && (length(unique(max.col(nodeNumLabel[currentNode - c(1, 0), ]))) == 1)) {
         idx <- which(nodeRotaMat[, 2] == nodeLR[currentNode])
         nodeRotaMat[idx[1], ] <- c(0, nodeLR[currentNode], 0)
         nodeRotaMat <- nodeRotaMat[-c(idx[-1], nrow(nodeRotaMat) - c(1, 0)), , drop = FALSE]
@@ -720,16 +772,19 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
     nodeDepth[freeNode + c(0, 1)] <- nodeDepth[currentNode] + 1
     nodeLR[freeNode + c(0, 1)] <- currentNode
 
+    if(split=="linear"){
+      glmnetFit[[freeNode]]<- bestCut$fitL
+      glmnetFit[[freeNode + 1]]<- bestCut$fitR
+    }
     nodeNumLabel <- rbind(nodeNumLabel, 0)
 
-    nodeXIndx[currentNode] <- NA
+    #nodeXIndx[currentNode] <- NA
     freeNode <- freeNode + 2
     currentNode <- currentNode + 1
   }
 
   nodeDepth <- nodeDepth[1:(currentNode - 1)]
   colnames(nodeRotaMat) <- c("var", "node", "coef")
-  #
   if (length(nodeDepth) > 1) {
     rownames(nodeRotaMat) <- rep(nodeDepth, table(nodeRotaMat[, 2]))
     rownames(nodeNumLabel) <- nodeDepth
@@ -747,10 +802,18 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
   if(split == "mse"){
     nodeLabel <- nodeNumLabel[, 1]
   }
-  for (i in idx) {
-    predicted[nodeXIndx[[i]]]=nodeLabel[i]
-    names(predicted)[nodeXIndx[[i]]]=i
+  if(split=="linear"){
+    for (i in idx) {
+      predicted[nodeXIndx[[i]]]=predict(glmnetFit[[i]],X[nodeXIndx[[i]],])
+      names(predicted)[nodeXIndx[[i]]]=i
+    }
+  }else{
+    for (i in idx) {
+      predicted[nodeXIndx[[i]]]=nodeLabel[[i]]
+      names(predicted)[nodeXIndx[[i]]]=i
+    }
   }
+
 
   ppTree <- list(call = Call, terms = Terms, split = split, Levels = Levels, NodeRotateFun = NodeRotateFun, predicted=predicted, paramList = paramList)
   ppTree$data <- list(
@@ -764,6 +827,11 @@ ODT_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotateF
     nodeCutIndex = nodeCutIndex[1:(currentNode - 1)], childNode = childNode[1:(currentNode - 1)],
     nodeDepth = nodeDepth
   )
+  if(split=="linear"){
+    ppTree$structure$nodeIndex=nodeXIndx[1:(currentNode - 1)]
+    ppTree$structure$glmnetFit=glmnetFit[1:(currentNode - 1)]
+    ppTree$data$ps=ps
+  }
   # class(ppTree) <- "ODT"
   class(ppTree) <- append(class(ppTree), "ODT")
   return(ppTree)

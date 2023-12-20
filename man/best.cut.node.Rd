@@ -7,11 +7,13 @@
 best.cut.node(
   X,
   y,
+  Xsplit = X,
   split,
   lambda = "log",
   weights = 1,
   MinLeaf = 10,
-  numLabels = ifelse(split == "mse", 0, length(unique(y)))
+  numLabels = ifelse(split \%in\% c("gini", "entropy"), length(unique(y)), 0),
+  glmnetParList = NULL
 )
 }
 \arguments{
@@ -19,8 +21,9 @@ best.cut.node(
 
 \item{y}{A response vector of length n.}
 
-\item{split}{One of three criteria, 'gini': gini impurity index (classification), 'entropy': information gain (classification)
-or 'mse': mean square error (regression).}
+\item{Xsplit}{Splitting variables used to construct linear model trees. The default value is NULL and is only valid when split="linear".}
+
+\item{split}{The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "": mean square error for regression; "linear": mean square error for multiple linear regression.}
 
 \item{lambda}{The argument of \code{split} is used to determine the penalty level of the partition criterion. Three options are provided including, \code{lambda=0}: no penalty; \code{lambda=2}: AIC penalty; \code{lambda='log'} (Default): BIC penalty. In Addition, lambda can be any value from 0 to n (training set size).}
 
@@ -29,6 +32,8 @@ or 'mse': mean square error (regression).}
 \item{MinLeaf}{Minimal node size (Default 10).}
 
 \item{numLabels}{The number of categories.}
+
+\item{glmnetParList}{List of parameters used by the functions \code{glmnet} and \code{cv.glmnet} in package \code{glmnet}. If left unchanged, default values will be used, for details see \code{\link[glmnet]{glmnet}} and \code{\link[glmnet]{cv.glmnet}}.}
 }
 \value{
 A list which contains:
@@ -36,17 +41,39 @@ A list which contains:
 \item BestCutVar: The best split variable.
 \item BestCutVal: The best split points for the best split variable.
 \item BestIndex: Each variable corresponds to maximum decrease in gini impurity index, information gain, and mean square error.
+\item fitL and fitR: The multivariate linear models for the left and right nodes after splitting are trained using the function \code{\link{glmnet}}.
 }
 }
 \description{
-A function to select the splitting variables and nodes using one of three criteria.
+A function to select the splitting variables and nodes using one of four criteria.
 }
 \examples{
 ### Find the best split variable ###
+#Classification
 data(iris)
 X <- as.matrix(iris[, 1:4])
 y <- iris[[5]]
-bestcut <- best.cut.node(X, y, split = "gini")
-print(bestcut)
+(bestcut <- best.cut.node(X, y, split = "gini"))
+(bestcut <- best.cut.node(X, y, split = "entropy"))
+
+#Regression
+data(body_fat)
+X=body_fat[, -1]
+y=body_fat[, 1]
+(bestcut <- best.cut.node(X, y, split = "mse"))
+
+set.seed(10)
+cutpoint=50
+X=matrix(rnorm(100*10),100,10)
+age=sample(seq(20,80),100,replace = TRUE)
+height=sample(seq(50,200),100,replace = TRUE)
+weight=sample(seq(5,150),100,replace = TRUE)
+Xsplit=cbind(age=age,height=height,weight=weight)
+mu=rep(0,100)
+mu[age<=cutpoint]=X[age<=cutpoint,1]+X[age<=cutpoint,2]
+mu[age>cutpoint]=X[age>cutpoint,1]+X[age>cutpoint,3]
+y=mu+rnorm(100)
+bestcut <- best.cut.node(X, y, Xsplit, split = "linear",
+           glmnetParList=list(lambda = 0))
 
 }

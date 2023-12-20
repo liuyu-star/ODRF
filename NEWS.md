@@ -1,5 +1,9 @@
 # ODRF (development version)
 
+* Added linear model tree. Specifically, use parameter Xsplit as the splitting variable for ODT and fit a linear model for each split using the function "gmlnet". The corresponding parameter is split="linear".
+
+* Optimized some other known issues.
+
 # ODRF 0.0.4
 
 * Fixed function VarImp(), adding the method of measuring the importance of variables with node purity, and now VarImp() can be used for both class ODT and ODRF. 

@@ -33,7 +33,7 @@ plot.ODT <- function(x, font.size = 17, width.size = 1, xadj = 0, main = NULL, s
   rm(x)
 
   if (is.null(main)) {
-    main <- paste0("Oblique ", ifelse(ppTree$split == "mse", "Regression", "Classification"), " Tree")
+    main <- paste0("Oblique ", ifelse(ppTree$split %in% c("gini","entropy"), "Classification","Regression"), " Tree")
   }
 
   numNode <- length(ppTree$structure$nodeCutValue)
@@ -42,7 +42,7 @@ plot.ODT <- function(x, font.size = 17, width.size = 1, xadj = 0, main = NULL, s
   TS <- matrix(0, numNode, 5)
   TS[, 1] <- seq(numNode)
   TS[, 2] <- ppTree[["structure"]][["childNode"]]
-  if (ppTree$split != "mse") {
+  if (ppTree$split %in% c("gini","entropy")) {
     TS[setdiff(seq(numNode), cutNode), 3] <- max.col(ppTree$structure$nodeNumLabel)[setdiff(seq(numNode), cutNode)]
   } else {
     TS[setdiff(seq(numNode), cutNode), 3] <- round(ppTree$structure$nodeNumLabel[, 1][setdiff(seq(numNode), cutNode)], 3)
@@ -238,7 +238,7 @@ plot.ODT <- function(x, font.size = 17, width.size = 1, xadj = 0, main = NULL, s
 
   node.terminal.PPtree <- function(ppTree, node.id) {
     # gName<-names(table(PPtreeobj$origclass)) print xscale
-    gN <- ifelse(ppTree$split != "mse", ppTree$Levels[TS[node.id, 3]], TS[node.id, 3])
+    gN <- ifelse(ppTree$split %in% c("gini","entropy"), ppTree$Levels[TS[node.id, 3]], TS[node.id, 3])
     # gN<-ppTree$Levels[TS[node.id,3]]
     temp <- strsplit(as.character(gN), split = "")[[1]]
     gN.width <- length(temp)

@@ -32,14 +32,14 @@
 #' @export
 plot.Accuracy <- function(x, lty = 1, digits = NULL, main = NULL, ...) {
   if (is.null(main)) {
-    main <- paste0("Oblique ", ifelse(x$split == "mse", "Regression", "Classification"), " Forest")
+    main <- paste0("Oblique ", ifelse(x$split %in% c("gini","entropy"), "Classification","Regression"), " Forest")
   }
   Err <- x
   err <- cbind(Err$err.oob, Err$err.test)
 
   minErr <- strsplit(as.character(min(err)), "")[[1]]
   id <- which(minErr == "e")
-  if (x$split != "mse") {
+  if (x$split %in% c("gini","entropy")) {
     digits <- 0
   } else if (is.null(digits)) {
     if (length(id) > 0) {

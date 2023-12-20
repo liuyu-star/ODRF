@@ -5,6 +5,7 @@
 #' @param object An object of class ODT, the same as that created by the function \code{\link{ODT}}.
 #' @param Xnew An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
 #' Note that if there are NA values in the data 'Xnew', which will be replaced with the average value.
+#' @param Xsplit Splitting variables used to construct linear model trees. The default value is NULL and is only valid when split="linear".
 #' @param leafnode If or not output the leaf node sequence number that \code{Xnew} is partitioned. (default FALSE)
 #' @param ... Arguments to be passed to methods.
 #'
@@ -44,12 +45,13 @@
 #' mean((pred - test_data[, 1])^2)
 #'
 #' @importFrom stats aggregate as.formula na.action predict quantile runif
+#' @importFrom glmnet predict.glmnet
 #' @keywords tree predict
 #' @rdname predict.ODT
 #' @aliases predict.ODT
 #' @method predict ODT
 #' @export
-predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
+predict.ODT <- function(object, Xnew, Xsplit=NULL, leafnode = FALSE, ...) {
 
   pp <- object$data$p
   if (!is.null(object$data$catLabel) && (sum(object$data$Xcat) > 0)) {
@@ -123,12 +125,26 @@ predict.ODT <- function(object, Xnew, leafnode = FALSE, ...) {
     Xnew[, object$data$rotdims] <- Xnew[, object$data$rotdims, drop = FALSE] %*% object$data$rotmat
   }
 
-  predict_tree <- predictTree(object$structure, Xnew, object$split, object$Levels)
+  if(is.null(Xsplit))Xsplit=Xnew
+  predict_tree <- predictTree(object$structure, Xsplit, object$split, object$Levels)
 
+  LeafNode <- predict_tree$leafnode
   if (leafnode) {
-    pred <- predict_tree$leafnode
+    pred <- LeafNode
   } else {
     pred <- predict_tree$prediction
+    # if (!object$split %in% c("mse" ,"gini","entropy")){
+    #    pred[pred<min(object$predicted)]=min(object$predicted)
+    #    pred[pred>max(object$predicted)]=max(object$predicted)
+    # }
+    if(object$split=="linear"){
+      nodeSeq=which(object$structure$nodeNumLabel[,2]!=0)
+      pred=rep(0,n)
+      for (node in nodeSeq) {
+        idx=which(LeafNode==node)
+        pred[idx]=predict(object$structure$glmnetFit[[node]],Xnew[idx,])
+      }
+    }
   }
 
   return(pred)

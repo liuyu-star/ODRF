@@ -409,7 +409,7 @@ ODRF_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
     predicted=NULL, paramList = paramList, oobErr = NULL, oobConfusionMat = NULL
   )
 
-  if (split != "mse") {
+  if (split %in% c("gini","entropy")) {
     y <- as.factor(y)
     ppForest$Levels <- levels(y)
     y <- as.integer(y)
@@ -477,7 +477,7 @@ ODRF_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
       go <- TRUE
       while (go) {
         # make sure each class is represented in proportion to classes in initial dataset
-        if (stratify && (split != "mse")) {
+        if (stratify && (split %in% c("gini","entropy"))) {
           if (classCt[1L] != 0L) {
             TDindx[1:classCt[1L]] <- sample(Cindex[[1L]], classCt[1L], replace = TRUE)
           }
@@ -498,9 +498,9 @@ ODRF_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
 
     # data=data.frame(y[TDindx],X[TDindx,])
     # colnames(data)=vars
-    ppForestT <- ODT_compute(formula, Call0, varName,
-      X = X[TDindx, ], y = y[TDindx], split, lambda, NodeRotateFun, FunDir, paramList, MaxDepth, numNode,
-      MinLeaf, Levels, subset = NULL, weights = weights[TDindx], na.action = NULL, catLabel, Xcat = 0L, Xscale = "No", TreeRandRotate
+    ppForestT <- ODT_compute(formula=formula, Call=Call0, varName=varName,
+      X = X[TDindx, ], y = y[TDindx], split=split, lambda=lambda, NodeRotateFun=NodeRotateFun, FunDir=FunDir, paramList=paramList, MaxDepth=MaxDepth, numNode=numNode,
+      MinLeaf=MinLeaf, Levels=Levels, subset = NULL, weights = weights[TDindx], na.action = NULL, catLabel=catLabel, Xcat = 0L, Xscale = "No", TreeRandRotate=TreeRandRotate
     )
 
     TreeRotate=list(rotdims=ppForestT[["data"]][["rotdims"]],rotmat=ppForestT[["data"]][["rotmat"]])
@@ -509,7 +509,7 @@ ODRF_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
       NTD <- setdiff(TDindx0, TDindx)
       pred <- predict(ppForestT, X[NTD, ])
 
-      if (split != "mse") {
+      if (split %in% c("gini","entropy")) {
         oobErr <- mean(pred != Levels[y[NTD]])
       } else {
         oobErr <- mean((pred - y[NTD])^2)
@@ -572,7 +572,7 @@ ODRF_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
     oobVotes <- oobVotes[idx, , drop = FALSE]
     yy <- y[idx]
 
-    if (split != "mse") {
+    if (split %in% c("gini","entropy")) {
       ny <- length(yy)
       nC <- numClass
       tree_weights <- rep(1, ny * ntrees)

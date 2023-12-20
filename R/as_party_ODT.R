@@ -48,7 +48,7 @@ as.party.ODT <- function(obj, data, ...) {
   TS <- matrix(0, numNode, 5)
   TS[, 1] <- seq(numNode)
   TS[, 2] <- obj[["structure"]][["childNode"]]
-  if (obj$split != "mse") {
+  if (obj$split %in% c("gini","entropy")) {
     TS[setdiff(seq(numNode), cutNode), 3] <- max.col(obj$structure$nodeNumLabel)[setdiff(seq(numNode), cutNode)]
   } else {
     TS[setdiff(seq(numNode), cutNode), 3] <- round(obj$structure$nodeNumLabel[, 1][setdiff(seq(numNode), cutNode)], 3)

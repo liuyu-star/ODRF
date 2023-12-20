@@ -119,7 +119,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, MaxDepth = Inf, ...) {
     predicted=NULL, paramList = paramList, oobErr = NULL, oobConfusionMat = NULL
   )
 
-  if (split != "mse") {
+  if (split %in% c("gini","entropy")) {
     y <- as.factor(y)
     ppForest$Levels <- levels(y)
     y <- as.integer(y)
@@ -208,7 +208,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, MaxDepth = Inf, ...) {
       go <- TRUE
       while (go) {
         # make sure each class is represented in proportion to classes in initial dataset
-        if (stratify && (split != "mse")) {
+        if (stratify && (split %in% c("gini","entropy"))) {
           if (classCt[1L] != 0L) {
             TDindx[1:classCt[1L]] <- sample(Cindex[[1L]], classCt[1L], replace = TRUE)
           }
@@ -235,7 +235,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, MaxDepth = Inf, ...) {
       NTD <- setdiff(TDindx0, TDindx)
       pred <- predict(ppForestT, X[NTD, ])
 
-      if (split != "mse") {
+      if (split %in% c("gini","entropy")) {
         oobErr <- mean(pred != Levels[y[NTD]])
       } else {
         oobErr <- mean((pred - y[NTD])^2)
@@ -299,7 +299,7 @@ online.ODRF <- function(obj, X, y, weights = NULL, MaxDepth = Inf, ...) {
     oobVotes <- oobVotes[idx, , drop = FALSE]
     yy <- y[idx]
 
-    if (split != "mse") {
+    if (split %in% c("gini","entropy")) {
       ny <- length(yy)
       nC <- numClass
       weights <- rep(1, ny * ntrees)

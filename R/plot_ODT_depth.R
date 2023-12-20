@@ -37,7 +37,7 @@
 plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, split = "gini", NodeRotateFun = "RotMatPPO",
                            paramList = NULL, digits = NULL, main = NULL, ...) {
   if (is.null(main)) {
-    main <- paste0("Oblique ", ifelse(split == "mse", "Regression", "Classification"), " Tree")
+    main <- paste0("Oblique ", ifelse(split %in% c("gini","entropy"), "Classification","Regression"), " Tree")
   }
 
   #set.seed(seed)
@@ -71,7 +71,7 @@ plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, split = "gini",
     tree <- do.call(ODT.formula, paramList)
     pred <- predict(tree, Xnew)
 
-    if (split != "mse") {
+    if (split %in% c("gini","entropy")) {
       err[d] <- mean(pred != ynew)
     } else {
       err[d] <- mean((pred - ynew)^2) # /mean((ynew-mean(y))^2);
@@ -83,7 +83,7 @@ plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, split = "gini",
   # err=round(err,errid)
   minErr <- strsplit(as.character(min(err)), "")[[1]]
   id <- which(minErr == "e")
-  if (split != "mse") {
+  if (split %in% c("gini","entropy")) {
     digits <- 0
   } else if (is.null(digits)) {
     if (length(id) > 0) {

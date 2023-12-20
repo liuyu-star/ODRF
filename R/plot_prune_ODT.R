@@ -38,7 +38,7 @@ plot.prune.ODT <- function(x, position = "topleft", digits = NULL, main = NULL, 
   pruneError <- ppTree$pruneError
 
   if (is.null(main)) {
-    main <- paste0("Oblique ", ifelse(ppTree$split == "mse", "Regression", "Classification"), " Tree")
+    main <- paste0("Oblique ", ifelse(ppTree$split %in% c("gini","entropy"), "Classification","Regression"), " Tree")
   }
 
 

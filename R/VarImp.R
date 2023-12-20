@@ -124,7 +124,7 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
       # weights=weights0
 
 
-      if (obj$split != "mse") {
+      if (obj$split %in% c("gini","entropy")) {
         #y <- factor(y, levels = obj$Levels)
         y <- as.character(y)
       }
@@ -183,7 +183,7 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
         # }
 
         pred <- predictTree(structure,X0,split,Levels)$prediction
-        if (split != "mse") {
+        if (split %in% c("gini","entropy")) {
           oobErr0 <- mean(pred != y0)
         } else {
           oobErr0 <- mean((pred - y0)^2) # /e.0
@@ -193,7 +193,7 @@ VarImp <- function(obj, X=NULL, y=NULL, type="permutation") {
           Xi=X0
           Xi[, j] <- Xi[sample(n0), j] #+rnorm(length(oobIndex))
           pred <- predictTree(structure,Xi,split,Levels)$prediction
-          if (split != "mse") {
+          if (split %in% c("gini","entropy")) {
             oobErr <- mean(pred != y0)
           } else {
             oobErr <- mean((pred - y0)^2) # /e.0

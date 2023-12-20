@@ -101,7 +101,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
   numClass <- nC
   ntrees <- length(structure)
 
-  if (split != "mse") {
+  if (split %in% c("gini","entropy")) {
     classCt <- cumsum(table(ynew))
     if (stratify) {
       Cindex <- vector("list", numClass)
@@ -178,7 +178,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
         go <- TRUE
         while (go) {
           # make sure each class is represented in proportion to classes in initial dataset
-          if (stratify && (split != "mse")) {
+          if (stratify && (split %in% c("gini","entropy"))) {
             if (classCt[1L] != 0L) {
               TDindx[1:classCt[1L]] <- sample(Cindex[[1L]], classCt[1L], replace = TRUE)
             }
@@ -218,7 +218,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
         # }
         pred <- predict(ppTree, Xnew[NTD, ])
 
-        if (split != "mse") {
+        if (split %in% c("gini","entropy")) {
           oobErr <- mean(pred != ynew[NTD])
         } else {
           oobErr <- mean((pred - ynew[NTD])^2)
@@ -285,7 +285,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
     oobVotes <- oobVotes[idx, , drop = FALSE]
     yy <- ynew[idx]
 
-    if (split != "mse") {
+    if (split %in% c("gini","entropy")) {
       ny <- length(yy)
       nC <- numClass
       weights <- rep(1, ny * ntrees)

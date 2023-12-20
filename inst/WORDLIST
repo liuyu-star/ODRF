@@ -62,6 +62,7 @@ Wickham
 Wolberg
 Xcat
 Xnew
+Xsplit
 Zak
 Zhan
 accoding
@@ -72,8 +73,12 @@ bottomleft
 bottomright
 devtools
 dimProj
+fitL
+fitR
 friedmantukey
 gini
+glmnetParList
+gmlnet
 hermite
 kurtosismax
 kurtosismin
