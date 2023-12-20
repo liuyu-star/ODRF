@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ODRF</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,11 +63,13 @@
 <span><span class="fu">ODT</span><span class="op">(</span></span>
 <span>  <span class="va">formula</span>,</span>
 <span>  data <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  Xsplit <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  split <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  lambda <span class="op">=</span> <span class="st">"log"</span>,</span>
 <span>  NodeRotateFun <span class="op">=</span> <span class="st">"RotMatPPO"</span>,</span>
 <span>  FunDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  paramList <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  glmnetParList <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  MaxDepth <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  numNode <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  MinLeaf <span class="op">=</span> <span class="fl">10</span>,</span>
@@ -86,11 +88,13 @@
 <span><span class="fu">ODT</span><span class="op">(</span></span>
 <span>  <span class="va">X</span>,</span>
 <span>  <span class="va">y</span>,</span>
+<span>  Xsplit <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  split <span class="op">=</span> <span class="st">"auto"</span>,</span>
 <span>  lambda <span class="op">=</span> <span class="st">"log"</span>,</span>
 <span>  NodeRotateFun <span class="op">=</span> <span class="st">"RotMatPPO"</span>,</span>
 <span>  FunDir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/getwd.html" class="external-link">getwd</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  paramList <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  glmnetParList <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  MaxDepth <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  numNode <span class="op">=</span> <span class="cn">Inf</span>,</span>
 <span>  MinLeaf <span class="op">=</span> <span class="fl">10</span>,</span>
@@ -124,9 +128,13 @@
 <dd><p>Training data of class <code>data.frame</code> containing variables named in the formula. If <code>data</code> is missing it is obtained from the current environment by <code>formula</code>.</p></dd>
 
 
+<dt>Xsplit</dt>
+<dd><p>Splitting variables used to construct linear model trees. The default value is NULL and is only valid when split="linear".</p></dd>
+
+
 <dt>split</dt>
-<dd><p>The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression;
-'auto' (default): If the response in <code>data</code> or <code>y</code> is a factor, "gini" is used, otherwise regression is assumed.</p></dd>
+<dd><p>The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression; "linear": mean square error for multiple linear regression.
+'auto' (default): If the response in <code>data</code> or <code>y</code> is a factor, "gini" is used, otherwise "mse" is assumed.</p></dd>
 
 
 <dt>lambda</dt>
@@ -148,6 +156,11 @@ including</p><ul><li><p>"RotMatPPO": projection pursuit optimization model (<cod
 
 <dt>paramList</dt>
 <dd><p>List of parameters used by the functions <code>NodeRotateFun</code>. If left unchanged, default values will be used, for details see <code><a href="defaults.html">defaults</a></code>.</p></dd>
+
+
+<dt>glmnetParList</dt>
+<dd><p>List of parameters used by the functions <code>glmnet</code> and <code>cv.glmnet</code> in package <code>glmnet</code>.glmnetParList=list(lambda = 0) is Ordinary Least Squares (OLS) regression.
+If left unchanged, default values will be used, for details see <code><a href="https://glmnet.stanford.edu/reference/glmnet.html" class="external-link">glmnet</a></code> and <code><a href="https://glmnet.stanford.edu/reference/cv.glmnet.html" class="external-link">cv.glmnet</a></code>.</p></dd>
 
 
 <dt>MaxDepth</dt>
@@ -218,6 +231,8 @@ When Xcat=NULL, the predictor x that satisfies the condition "<code>(length(tabl
 <li><p><code>nodeCutIndex</code>: Record the index values of the partitioning variables selected based on the partition criterion <code>split</code>.</p></li>
 <li><p><code>childNode</code>: Record the number of child nodes after each splitting.</p></li>
 <li><p><code>nodeDepth</code>: Record the depth of the tree where each node is located.</p></li>
+<li><p><code>nodeIndex</code>: Record the indices of the data used in each node.</p></li>
+<li><p><code>glmnetFit</code>: Record the model fitted by function <code>glmnet</code> used in each node.</p></li>
 </ul></li>
 </ul></div>
     <div class="section level2">
@@ -261,6 +276,27 @@ When Xcat=NULL, the predictor x that satisfies the condition "<code>(length(tabl
 <span class="r-in"><span><span class="co"># estimation error</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span> <span class="op">-</span> <span class="va">test_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.0005496953</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Use "Xsplit" as the splitting variable to build a linear model tree for "X" and "y".</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">cutpoint</span><span class="op">=</span><span class="fl">50</span></span></span>
+<span class="r-in"><span><span class="va">X</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">*</span><span class="fl">10</span><span class="op">)</span>,<span class="fl">100</span>,<span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">age</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">20</span>,<span class="fl">80</span><span class="op">)</span>,<span class="fl">100</span>,replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">height</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">50</span>,<span class="fl">200</span><span class="op">)</span>,<span class="fl">100</span>,replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">weight</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">150</span><span class="op">)</span>,<span class="fl">100</span>,replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">Xsplit</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>age<span class="op">=</span><span class="va">age</span>,height<span class="op">=</span><span class="va">height</span>,weight<span class="op">=</span><span class="va">weight</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mu</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">mu</span><span class="op">[</span><span class="va">age</span><span class="op">&lt;=</span><span class="va">cutpoint</span><span class="op">]</span><span class="op">=</span><span class="va">X</span><span class="op">[</span><span class="va">age</span><span class="op">&lt;=</span><span class="va">cutpoint</span>,<span class="fl">1</span><span class="op">]</span><span class="op">+</span><span class="va">X</span><span class="op">[</span><span class="va">age</span><span class="op">&lt;=</span><span class="va">cutpoint</span>,<span class="fl">2</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">mu</span><span class="op">[</span><span class="va">age</span><span class="op">&gt;</span><span class="va">cutpoint</span><span class="op">]</span><span class="op">=</span><span class="va">X</span><span class="op">[</span><span class="va">age</span><span class="op">&gt;</span><span class="va">cutpoint</span>,<span class="fl">1</span><span class="op">]</span><span class="op">+</span><span class="va">X</span><span class="op">[</span><span class="va">age</span><span class="op">&gt;</span><span class="va">cutpoint</span>,<span class="fl">3</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">y</span><span class="op">=</span><span class="va">mu</span><span class="op">+</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu">ODT</span><span class="op">(</span><span class="va">X</span>, <span class="va">y</span>, <span class="va">Xsplit</span>, split <span class="op">=</span> <span class="st">"linear"</span>, NodeRotateFun <span class="op">=</span> <span class="st">"RotMatRF"</span>,</span></span>
+<span class="r-in"><span>glmnetParList<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lambda <span class="op">=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">tree</span>, <span class="va">X</span>, <span class="va">Xsplit</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># fitting error</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span> <span class="op">-</span> <span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1511594</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">tree</span><span class="op">$</span><span class="va">predicted</span> <span class="op">-</span> <span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.1511594</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Projection analysis of the oblique decision tree.</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span></span>

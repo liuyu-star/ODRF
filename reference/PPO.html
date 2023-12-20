@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ODRF</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -131,23 +131,22 @@ The following models can only be used for classification, i.e. the <code>split</
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># classification</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">seeds</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, <span class="va">seeds</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"Log"</span>, split <span class="op">=</span> <span class="st">"entropy"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  0.11096391  0.65950360 -0.56409203  0.63046759  0.41730804  0.37415242</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [7] -0.07099719</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  -2.309383   2.847194  31.625381  35.243198   3.104818  -1.524764 -36.500103</span>
 <span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, <span class="va">seeds</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"PPR"</span>, split <span class="op">=</span> <span class="st">"entropy"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.04663995 -0.01700724 -0.92771564 -0.23227466  0.20425324  0.01478790</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [7]  0.20245882</span>
 <span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">seeds</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">7</span><span class="op">]</span>, <span class="va">seeds</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"LDA"</span>, split <span class="op">=</span> <span class="st">"entropy"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  0.55905137 -0.08711650  0.47433380  0.23465499 -0.47604317 -0.03557025</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [7]  0.41464975</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.18579584 -0.38830262  0.79096768 -0.23851549 -0.33785977  0.02884637</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [7] -0.13114931</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># regression</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">body_fat</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">body_fat</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"Log"</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  0.50875169 -0.22703474 -0.55576085 -0.11938812 -0.03304331 -0.52452121</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [7] -0.46437581  0.23739312 -0.62170050  0.17228904  0.08729890  0.04990067</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [13]  0.41816924 -0.20154397</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1]  0.576428167 -0.660665448 -0.064453715  0.525631193 -0.472349313</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [6]  0.536074208 -0.123738306  0.473947709 -0.011705711  0.382371005</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [11]  0.003063609 -0.412904055  0.583918320  0.593973852</span>
 <span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">body_fat</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"Rand"</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -1 -1 -1  1  1 -1 -1 -1  1 -1  1 -1 -1 -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -1  1 -1 -1  1  1  1  1  1  1  1  1 -1 -1</span>
 <span class="r-in"><span><span class="op">(</span><span class="va">PP</span> <span class="op">&lt;-</span> <span class="fu">PPO</span><span class="op">(</span><span class="va">body_fat</span><span class="op">[</span>, <span class="fl">2</span><span class="op">:</span><span class="fl">15</span><span class="op">]</span>, <span class="va">body_fat</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span>, model <span class="op">=</span> <span class="st">"PPR"</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] -0.973615195  0.007627492  0.018938292 -0.002055055  0.013834544</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [6]  0.030809259 -0.069084891  0.039733024 -0.039890401 -0.005993149</span>
