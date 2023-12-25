@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">ODRF</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.4.9002</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,7 @@
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="odrf-development-version">ODRF (development version)<a class="anchor" aria-label="anchor" href="#odrf-development-version"></a></h2>
 <ul><li><p>Added linear model tree. Specifically, use parameter Xsplit as the splitting variable for ODT and fit a linear model for each split using the function “gmlnet”. The corresponding parameter is split=“linear”.</p></li>
+<li><p>Added a classification and regression model tree. Changed the parameter “leafnode” to “type” in the function predict.ODT(), and for classification tasks, added category probability output.</p></li>
 <li><p>Optimized some other known issues.</p></li>
 </ul></div>
     <div class="section level2">
