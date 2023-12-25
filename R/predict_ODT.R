@@ -32,6 +32,7 @@
 #' pred <- predict(tree, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
+#' (prob=predict(tree, test_data[, -8],type = "prob"))
 #'
 #' # Regression with Oblique Decision Tree.
 #' data(body_fat)
@@ -158,7 +159,12 @@ predict.ODT <- function(object, Xnew, Xsplit=NULL, type = c("pred","leafnode","p
   predict_tree <- predictTree(object$structure, Xsplit, object$split, object$Levels)
 
   LeafNode <- predict_tree$leafnode
-  nodeSeq=which(object$structure$nodeNumLabel[,2]!=0)
+  if(is.null(object$Levels)){
+    nodeSeq=which(object$structure$nodeNumLabel[,2]!=0)
+  }else{
+    nodeSeq=which(rowSums(object$structure$nodeNumLabel)!=0)
+  }
+
   if (type =="leafnode") {
     pred <- LeafNode
   }
@@ -181,16 +187,20 @@ predict.ODT <- function(object, Xnew, Xsplit=NULL, type = c("pred","leafnode","p
   }
   if (type =="prob") {
     pred=matrix(0,n,length(object$Levels))
+    colnames(pred)=object$Levels
     for (node in nodeSeq) {
       idx=which(LeafNode==node)
       #do.call(glmnet, glmnetParList)
       if(object$split=="linear"){
         pred[idx,]=predict(object$structure$glmnetFit[[node]], Xnew[idx,], type ="response")
       }else{
-        pred[idx,]=object$structure$nodeNumLabel[idx,]
+        pred[idx,]=matrix(object$structure$nodeNumLabel[node,]/sum(object$structure$nodeNumLabel[node,]),length(idx),length(object$Levels),byrow = T)
       }
     }
-    colnames(pred)=object$Levels
+    TFclass=ifelse(is.null(object$glmnetParList$family),FALSE,object$glmnetParList$family=="binomial")
+    if(object$split=="linear" & TFclass){
+      pred[,1]=1-pred[,1]
+    }
   }
 
   return(pred)

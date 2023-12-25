@@ -47,6 +47,7 @@ tree <- ODT(varieties_of_wheat ~ ., train_data, split = "entropy")
 pred <- predict(tree, test_data[, -8])
 # classification error
 (mean(pred != test_data[, 8]))
+(prob=predict(tree, test_data[, -8],type = "prob"))
 
 # Regression with Oblique Decision Tree.
 data(body_fat)

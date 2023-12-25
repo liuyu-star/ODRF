@@ -593,7 +593,7 @@ ODT_compute <- function(formula, Call, varName, X, y, Xsplit=NULL, split, lambda
   if(split=="linear"){
     if(is.null(glmnetParList$family)) glmnetParList$family="gaussian"
     if(glmnetParList$family%in%c("binomial","multinomial")){
-      Levels=unique(y)
+      Levels=levels(as.factor(y))
       maxLabel=length(Levels)
     }
 
