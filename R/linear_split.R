@@ -1,7 +1,11 @@
 #' @keywords internal
 #' @noRd
+#' @importFrom glmnet cv.glmnet glmnet predict.glmnet assess.glmnet
 #library(glmnet)
-linear_split=function(X, Xsplit, y, minleaf=10, glmnetParList=list(lambda = NULL)){
+linear_split=function(X, y, Xsplit, minleaf=10, lambda=0, numLabels, glmnetParList=list(lambda = NULL)){
+  y=c(y)
+  n=length(y)
+  p=NCOL(X)
   glmnetParList$x <- X
   glmnetParList$y <- y
   if(length(glmnetParList$lambda)==1){
@@ -14,17 +18,20 @@ linear_split=function(X, Xsplit, y, minleaf=10, glmnetParList=list(lambda = NULL
   }
   #glmnetParList$X <- NULL
   #glmnetParList$y <- NULL
-  rss0=sum((y-yhat)^2)
+  rss0=sum((y-yhat)^2) #rss0+2*p
+  TFclass=ifelse(is.null(glmnetParList$family),FALSE,glmnetParList$family%in%c("binomial","multinomial"))
+  t=ifelse(lambda == "log",log(n),lambda)
+  if(TFclass)rss0=rss0+2*p else rss0=rss0*(n/(n-t))^2
   rss00=rss0
 
   bcvar=-1
   bcval=0
   fitL0=fitR0=NULL
-  n=length(y)
-  p=ncol(X)
+  #n=length(y)
+  #p=ncol(X)
   ps=ncol(Xsplit)
   bestval=rep(0,ps)
-  sps=seq(minleaf,n-minleaf,length.out = min(n-2*minleaf+1,max(ceiling(n/10),100)))
+  sps=ceiling(seq(minleaf,n-minleaf,length.out = min(n-2*minleaf+1,max(ceiling(n/10),100))))
   for(sv in seq(ps)){
    #x=Xsplit[,sv]
    xs=sort(Xsplit[,sv],index.return = TRUE)
@@ -42,15 +49,48 @@ linear_split=function(X, Xsplit, y, minleaf=10, glmnetParList=list(lambda = NULL
       idx0=idx[seq(sp)]
       glmnetParList$x <- X[idx0,]
       glmnetParList$y <- y[idx0]
+      if(TFclass){
+        ty=table(glmnetParList$y)
+        if(min(ty)<2|length(ty)!=numLabels){
+          next
+          #jdx=which(glmnetParList$y==names(ty)[which.min(ty)])
+          #glmnetParList$y=c(glmnetParList$y,glmnetParList$y[jdx])
+          #glmnetParList$x=rbind(glmnetParList$x,glmnetParList$x[jdx,])
+        }
+      }
       fitL=do.call(glmnet, glmnetParList)
-      yhat=predict(fitL,glmnetParList$x)
-      rss=sum((glmnetParList$y-yhat)^2)
+      rssL=c(assess.glmnet(fitL, newx = glmnetParList$x, newy = glmnetParList$y)[[1]])
+      #yhat=predict(fitL,glmnetParList$x)
+      #rss=sum((glmnetParList$y-yhat)^2)
 
       glmnetParList$x <- X[-idx0,]
       glmnetParList$y <- y[-idx0]
+      if(TFclass){
+        ty=table(glmnetParList$y)
+        if(min(ty)<2|length(ty)!=numLabels){
+          next
+          #jdx=which(glmnetParList$y==names(ty)[which.min(ty)])
+          #glmnetParList$y=c(glmnetParList$y,glmnetParList$y[jdx])
+          #glmnetParList$x=rbind(glmnetParList$x,glmnetParList$x[jdx,])
+        }
+      }
       fitR=do.call(glmnet, glmnetParList)
-      yhat=predict(fitR,glmnetParList$x)
-      rss=rss+sum((glmnetParList$y-yhat)^2)
+      rssR=c(assess.glmnet(fitR, newx = glmnetParList$x, newy = glmnetParList$y)[[1]])
+      #yhat=predict(fitR,glmnetParList$x)
+      #rss=rss+sum((glmnetParList$y-yhat)^2)
+
+      if (lambda=="log"){
+        tl=log(sp);
+        tr=log(n-sp);
+      }else{
+        tl=lambda;
+        tr=lambda;
+      }
+      if(TFclass){
+        rss=rssL+2*p+ rssR+2*p
+      }else{
+        rss=rssL*(sp/(sp-tl))^2+ rssR*((n-sp)/((n-sp)-tr))^2
+      }
 
       if(rss<rss0){
         rss0=rss;

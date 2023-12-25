@@ -64,14 +64,12 @@ best.cut.node <- function(X, y, Xsplit=X, split, lambda = "log", weights = 1, Mi
     y <- c(y)
   }
 
-  if (lambda == "log") {
-    lambda <- length(y)
-  }
 
   if(split == "linear"){
-    glmnetParList$weights=if(length(weights)==1)NULL
-    bestcut=linear_split(X, Xsplit, y, MinLeaf, glmnetParList)
+    if(length(weights)==1)glmnetParList$weights=NULL
+    bestcut=linear_split(X, y, Xsplit, MinLeaf, lambda, numLabels, glmnetParList)
   }else{
+    if (lambda == "log") lambda <- length(y)
     #if (split == "") method <- "r"
     #if (split == "entropy") method <- "i"
     #if (split == "gini") method <- "g"

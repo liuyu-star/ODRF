@@ -7,7 +7,7 @@
 #' @param X An n by d numeric matrix (preferable) or data frame.
 #' @param y A response vector of length n.
 #' @param Xsplit Splitting variables used to construct linear model trees. The default value is NULL and is only valid when split="linear".
-#' @param split The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression; "linear": mean square error for multiple linear regression.
+#' @param split The criterion used for splitting the nodes. "entropy": information gain and "gini": gini impurity index for classification; "mse": mean square error for regression; "linear": mean square error for linear model.
 #' 'auto' (default): If the response in \code{data} or \code{y} is a factor, "gini" is used, otherwise "mse" is assumed.
 #' @param lambda The argument of \code{split} is used to determine the penalty level of the partition criterion. Three options are provided including, \code{lambda=0}: no penalty; \code{lambda=2}: AIC penalty; \code{lambda='log'} (Default): BIC penalty. In Addition, lambda can be any value from 0 to n (training set size).
 #' @param NodeRotateFun Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
@@ -19,8 +19,9 @@
 #' }
 #' @param FunDir The path to the \code{function} of the user-defined \code{NodeRotateFun} (default current working directory).
 #' @param paramList List of parameters used by the functions \code{NodeRotateFun}. If left unchanged, default values will be used, for details see \code{\link[ODRF]{defaults}}.
-#' @param glmnetParList List of parameters used by the functions \code{glmnet} and \code{cv.glmnet} in package \code{glmnet}.glmnetParList=list(lambda = 0) is Ordinary Least Squares (OLS) regression.
-#' If left unchanged, default values will be used, for details see \code{\link[glmnet]{glmnet}} and \code{\link[glmnet]{cv.glmnet}}.
+#' @param glmnetParList List of parameters used by the functions \code{glmnet} and \code{cv.glmnet} in package \code{glmnet}.
+#' \code{glmnetParList=list(lambda = 0)} is Ordinary Least Squares (OLS) regression, \code{glmnetParList=list(family = "gaussian")} (default) is regression model
+#' and \code{glmnetParList=list(family = "binomial" or "multinomial")} is classification model. If left unchanged, default values will be used, for details see \code{\link[glmnet]{glmnet}} and \code{\link[glmnet]{cv.glmnet}}.
 #' @param MaxDepth The maximum depth of the tree (default \code{Inf}).
 #' @param numNode Number of nodes that can be used by the tree (default \code{Inf}).
 #' @param MinLeaf Minimal node size (Default 10).
@@ -90,24 +91,33 @@
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
 #'
-#' # Use "Xsplit" as the splitting variable to build a linear model tree for "X" and "y".
+#' # Use "Z" as the splitting variable to build a linear model tree for "X" and "y".
 #' set.seed(10)
 #' cutpoint=50
 #' X=matrix(rnorm(100*10),100,10)
 #' age=sample(seq(20,80),100,replace = TRUE)
 #' height=sample(seq(50,200),100,replace = TRUE)
 #' weight=sample(seq(5,150),100,replace = TRUE)
-#' Xsplit=cbind(age=age,height=height,weight=weight)
+#' Z=cbind(age=age,height=height,weight=weight)
 #' mu=rep(0,100)
 #' mu[age<=cutpoint]=X[age<=cutpoint,1]+X[age<=cutpoint,2]
 #' mu[age>cutpoint]=X[age>cutpoint,1]+X[age>cutpoint,3]
 #' y=mu+rnorm(100)
-#' tree <- ODT(X, y, Xsplit, split = "linear", NodeRotateFun = "RotMatRF",
-#' glmnetParList=list(lambda = 0))
-#' pred <- predict(tree, X, Xsplit)
+#' # Regression model tree
+#' my.tree <- ODT(X=X, y=y, Xsplit=Z, split = "linear", lambda = 0,
+#' NodeRotateFun = "RotMatRF",
+#' glmnetParList=list(lambda = 0, family = "gaussian"))
+#' pred <- predict(my.tree, X, Xsplit=Z)
 #' # fitting error
 #' mean((pred - y)^2)
-#' mean((tree$predicted - y)^2)
+#' mean((my.tree$predicted - y)^2)
+#' # Classification model tree
+#' y1 = (y>0)*1
+#' my.tree <- ODT(X=X, y=y1, Xsplit=Z, split = "linear",lambda = 0,
+#'                NodeRotateFun = "RotMatRF",MinLeaf = 10, MaxDepth = 5,
+#'                glmnetParList=list(family = "binomial"))
+#' (class <- predict(my.tree, X, Xsplit=Z, type="pred"))
+#' (prob <- predict(my.tree, X, Xsplit=Z, type="prob"))
 #'
 #' # Projection analysis of the oblique decision tree.
 #' data(iris)
@@ -581,6 +591,12 @@ ODT_compute <- function(formula, Call, varName, X, y, Xsplit=NULL, split, lambda
   lambda0=glmnetParList$lambda
   #glmnetFit=vector("list", numNode + 1)
   if(split=="linear"){
+    if(is.null(glmnetParList$family)) glmnetParList$family="gaussian"
+    if(glmnetParList$family%in%c("binomial","multinomial")){
+      Levels=unique(y)
+      maxLabel=length(Levels)
+    }
+
     glmnetFit=vector("list", numNode + 1)
     glmnetParList$x <- X
     glmnetParList$y <- y
@@ -803,8 +819,9 @@ ODT_compute <- function(formula, Call, varName, X, y, Xsplit=NULL, split, lambda
     nodeLabel <- nodeNumLabel[, 1]
   }
   if(split=="linear"){
+    type0 =ifelse(glmnetParList$family%in%c("binomial","multinomial"),"class","link")
     for (i in idx) {
-      predicted[nodeXIndx[[i]]]=predict(glmnetFit[[i]],X[nodeXIndx[[i]],])
+      predicted[nodeXIndx[[i]]]=predict(glmnetFit[[i]],X[nodeXIndx[[i]],],type=type0)
       names(predicted)[nodeXIndx[[i]]]=i
     }
   }else{
@@ -831,6 +848,7 @@ ODT_compute <- function(formula, Call, varName, X, y, Xsplit=NULL, split, lambda
     ppTree$structure$nodeIndex=nodeXIndx[1:(currentNode - 1)]
     ppTree$structure$glmnetFit=glmnetFit[1:(currentNode - 1)]
     ppTree$data$ps=ps
+    ppTree$glmnetParList=glmnetParList
   }
   # class(ppTree) <- "ODT"
   class(ppTree) <- append(class(ppTree), "ODT")

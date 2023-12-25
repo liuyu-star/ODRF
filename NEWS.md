@@ -2,6 +2,8 @@
 
 * Added linear model tree. Specifically, use parameter Xsplit as the splitting variable for ODT and fit a linear model for each split using the function "gmlnet". The corresponding parameter is split="linear".
 
+* Added a classification and regression model tree. Changed the parameter "leafnode" to "type" in the function predict.ODT(), and for classification tasks, added category probability output.
+
 * Optimized some other known issues.
 
 # ODRF 0.0.4

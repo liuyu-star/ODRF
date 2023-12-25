@@ -5,14 +5,16 @@
 #' @param object An object of class ODT, the same as that created by the function \code{\link{ODT}}.
 #' @param Xnew An n by d numeric matrix (preferable) or data frame. The rows correspond to observations and columns correspond to features.
 #' Note that if there are NA values in the data 'Xnew', which will be replaced with the average value.
-#' @param Xsplit Splitting variables used to construct linear model trees. The default value is NULL and is only valid when split="linear".
-#' @param leafnode If or not output the leaf node sequence number that \code{Xnew} is partitioned. (default FALSE)
+#' @param Xsplit Splitting variables used to construct linear model trees. The default value is NULL and is only valid when \code{split="linear"}.
+#' @param type Type of prediction required. Choosing \code{"pred"} (default) gives the prediction result, and choosing \code{"leafnode"} gives the leaf node sequence number that \code{Xnew} is partitioned into.
+#' For classification tasks, including classification trees (\code{split= "gini" or "entropy"}) and linear classification models (\code{split= "linear" and glmnetParList= list(family="binomial" or "multinomial")}). Setting \code{type="prob"} gives the prediction probabilities.
 #' @param ... Arguments to be passed to methods.
 #'
 #' @return A vector of the following:
 #' \itemize{
-#' \item prediction: the prediced response of the new data.
+#' \item pred: the prediced response of the new data.
 #' \item leafnode: the leaf node sequence number that the new data is partitioned.
+#' \item prob: the prediction probabilities for classification tasks.
 #' }
 #'
 #' @references Zhan, H., Liu, Y., & Xia, Y. (2022). Consistency of The Oblique Decision Tree and Its Random Forest. arXiv preprint arXiv:2211.12653.
@@ -26,7 +28,6 @@
 #' train <- sample(1:209, 100)
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
-#'
 #' tree <- ODT(varieties_of_wheat ~ ., train_data, split = "entropy")
 #' pred <- predict(tree, test_data[, -8])
 #' # classification error
@@ -38,11 +39,39 @@
 #' train <- sample(1:252, 100)
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
-#'
 #' tree <- ODT(Density ~ ., train_data, split = "mse")
 #' pred <- predict(tree, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
+#'
+#' # Use "Z" as the splitting variable to build a linear model tree for "X" and "y".
+#' set.seed(1)
+#' n = 200
+#' p = 10
+#' q = 5
+#' X = matrix(rnorm(n*p), n, p)
+#' Z = matrix(rnorm(n*q), n, q)
+#' y = (Z[,1] > 1)*(X[,1] - X[,2] + 2)  +
+#' (Z[,1] < 1)*(Z[,2] > 0)*(X[,1] + X[,2] + 0) +
+#' (Z[,1] < 1)*(Z[,2] < 0)*(X[,3] - 2)
+#' my.tree <- ODT(X=X, y=y, Xsplit=Z, split = "linear",
+#'                NodeRotateFun = "RotMatRF",MinLeaf = 10, MaxDepth = 5,
+#'                glmnetParList=list(lambda = 0.1,family = "gaussian"))
+#' (leafnode <- predict(my.tree, X, Xsplit=Z, type="leafnode"))
+#'
+#' y1 = (y>0)*1
+#' my.tree <- ODT(X=X, y=y1, Xsplit=Z, split = "linear",
+#'                NodeRotateFun = "RotMatRF",MinLeaf = 10, MaxDepth = 5,
+#'                glmnetParList=list(family = "binomial"))
+#' (class <- predict(my.tree, X, Xsplit=Z, type="pred"))
+#' (prob <- predict(my.tree, X, Xsplit=Z, type="prob"))
+#'
+#' y2 = (y < -2.5)*1+(y>=-2.5&y<2.5)*2+(y>=2.5)*3
+#' my.tree <- ODT(X=X, y=y2, Xsplit=Z, split = "linear",
+#'                NodeRotateFun = "RotMatRF",MinLeaf = 10, MaxDepth = 5,
+#'                glmnetParList=list(family = "multinomial"))
+#' (prob <- predict(my.tree, X, Xsplit=Z, type="prob"))
+#'
 #'
 #' @importFrom stats aggregate as.formula na.action predict quantile runif
 #' @importFrom glmnet predict.glmnet
@@ -51,7 +80,7 @@
 #' @aliases predict.ODT
 #' @method predict ODT
 #' @export
-predict.ODT <- function(object, Xnew, Xsplit=NULL, leafnode = FALSE, ...) {
+predict.ODT <- function(object, Xnew, Xsplit=NULL, type = c("pred","leafnode","prob")[1], ...) {
 
   pp <- object$data$p
   if (!is.null(object$data$catLabel) && (sum(object$data$Xcat) > 0)) {
@@ -129,22 +158,39 @@ predict.ODT <- function(object, Xnew, Xsplit=NULL, leafnode = FALSE, ...) {
   predict_tree <- predictTree(object$structure, Xsplit, object$split, object$Levels)
 
   LeafNode <- predict_tree$leafnode
-  if (leafnode) {
+  nodeSeq=which(object$structure$nodeNumLabel[,2]!=0)
+  if (type =="leafnode") {
     pred <- LeafNode
-  } else {
+  }
+  if (type =="pred") {
     pred <- predict_tree$prediction
     # if (!object$split %in% c("mse" ,"gini","entropy")){
     #    pred[pred<min(object$predicted)]=min(object$predicted)
     #    pred[pred>max(object$predicted)]=max(object$predicted)
     # }
     if(object$split=="linear"){
-      nodeSeq=which(object$structure$nodeNumLabel[,2]!=0)
+      type0 =ifelse(object$glmnetParList$family%in%c("binomial","multinomial"),"class","link")
+      #nodeSeq=which(object$structure$nodeNumLabel[,2]!=0)
       pred=rep(0,n)
       for (node in nodeSeq) {
         idx=which(LeafNode==node)
-        pred[idx]=predict(object$structure$glmnetFit[[node]],Xnew[idx,])
+        #do.call(glmnet, glmnetParList)
+        pred[idx]=predict(object$structure$glmnetFit[[node]],Xnew[idx,],type=type0)
       }
     }
+  }
+  if (type =="prob") {
+    pred=matrix(0,n,length(object$Levels))
+    for (node in nodeSeq) {
+      idx=which(LeafNode==node)
+      #do.call(glmnet, glmnetParList)
+      if(object$split=="linear"){
+        pred[idx,]=predict(object$structure$glmnetFit[[node]], Xnew[idx,], type ="response")
+      }else{
+        pred[idx,]=object$structure$nodeNumLabel[idx,]
+      }
+    }
+    colnames(pred)=object$Levels
   }
 
   return(pred)

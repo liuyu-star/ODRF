@@ -92,7 +92,7 @@ as.party.ODT <- function(obj, data, ...) {
   #  pred=predict_ppCART(obj,X)
   # }
   # fit[["(fitted)"]] <- apply(matrix(pred,ncol=1),1,function(x) which((TS[,3]==x)*is.leaf==1))
-  fit[["(fitted)"]] <- predict(obj, X, leafnode = TRUE)
+  fit[["(fitted)"]] <- predict(obj, X, type="leafnode")
   fit[["(response)"]] <- y
 
   # fitted <- predict_ppCART(tree,X)

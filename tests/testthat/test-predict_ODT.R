@@ -55,13 +55,13 @@ test_that("predict works for single observations, classification", {
 })
 
 test_that("Terminal nodes returned by predict are node ids, classification", {
-  pred <- predict(tree, iris[, -5], leafnode = TRUE)
+  pred <- predict(tree, iris[, -5], type = "leafnode")
   expect_type(pred, "integer")
 })
 
 test_that("Terminal nodes returned by predict are node ids, regression", {
   data(body_fat, package = "ODRF")
   tree <- ODT(Density ~ ., body_fat, split = "mse")
-  pred <- predict(tree, body_fat[, -1], leafnode = TRUE)
+  pred <- predict(tree, body_fat[, -1], type = "leafnode")
   expect_type(pred, "integer")
 })
