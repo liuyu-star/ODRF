@@ -31,21 +31,34 @@ linear_split=function(X, y, Xsplit, minleaf=10, lambda=0, numLabels, glmnetParLi
   #p=ncol(X)
   ps=ncol(Xsplit)
   bestval=rep(0,ps)
-  sps=ceiling(seq(minleaf,n-minleaf,length.out = min(n-2*minleaf+1,max(ceiling(n/10),100))))
+  #sps=ceiling(seq(minleaf,n-minleaf,length.out = min(n-2*minleaf+1,100)))#max(ceiling(n/10),100))))
+  #ns=length(sps)
   for(sv in seq(ps)){
    #x=Xsplit[,sv]
-   xs=sort(Xsplit[,sv],index.return = TRUE)
+   Xs=Xsplit[,sv]
+   xs=sort(Xs,index.return = TRUE)
    idx=xs$ix
    xs=xs$x
    #ys=y[idx]
 
-   xs0=-Inf
+   tx=unique(Xs)
+   nx=length(tx)
+   itx=rep(0,nx)
+   for (i in seq(nx)) {
+     itx[i]=min(which(Xs==tx[i]))
+   }
+   #itx=unique(quantile(unique(Xs), (1:100)/100, type=1))
+   #if(length(itx)<100)sps=itx else sps=union(sps,itx)
+   itx=itx[seq.int(1,nx,length.out = min(nx,50))]
+   sps=itx[itx>=minleaf&itx<=n-minleaf]
+
+   #xs0=-Inf
    minrss=Inf
     for(sp in sps){
-      if(xs[sp]==xs0){
-        next
-      }
-      xs0=xs[sp]
+      #if(xs[sp]==xs0){
+       # next
+      #}
+      #xs0=xs[sp]
       idx0=idx[seq(sp)]
       glmnetParList$x <- X[idx0,]
       glmnetParList$y <- y[idx0]
