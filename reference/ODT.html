@@ -297,9 +297,9 @@ When Xcat=NULL, the predictor x that satisfies the condition "<code>(length(tabl
 <span class="r-in"><span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">my.tree</span>, <span class="va">X</span>, Xsplit<span class="op">=</span><span class="va">Z</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># fitting error</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span> <span class="op">-</span> <span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.09685</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.9035932</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">my.tree</span><span class="op">$</span><span class="va">predicted</span> <span class="op">-</span> <span class="va">y</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.09685</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.9035932</span>
 <span class="r-in"><span><span class="co"># Classification model tree</span></span></span>
 <span class="r-in"><span><span class="va">y1</span> <span class="op">=</span> <span class="op">(</span><span class="va">y</span><span class="op">&gt;</span><span class="fl">0</span><span class="op">)</span><span class="op">*</span><span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="va">my.tree</span> <span class="op">&lt;-</span> <span class="fu">ODT</span><span class="op">(</span>X<span class="op">=</span><span class="va">X</span>, y<span class="op">=</span><span class="va">y1</span>, Xsplit<span class="op">=</span><span class="va">Z</span>, split <span class="op">=</span> <span class="st">"linear"</span>,lambda <span class="op">=</span> <span class="fl">0</span>,</span></span>
@@ -335,146 +335,117 @@ When Xcat=NULL, the predictor x that satisfies the condition "<code>(length(tabl
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
 <span class="r-in"><span><span class="op">(</span><span class="va">class</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">my.tree</span>, <span class="va">X</span>, Xsplit<span class="op">=</span><span class="va">Z</span>, type<span class="op">=</span><span class="st">"pred"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] "1" "1" "0" "1" "0" "1" "1" "0" "0" "1" "1" "1" "1" "1" "1" "1" "1" "1"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [19] "1" "1" "1" "0" "0" "0" "0" "1" "1" "0" "1" "1" "0" "1" "1" "1" "0" "0"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [37] "1" "0" "1" "1" "1" "1" "0" "1" "0" "1" "1" "1" "1" "1" "1" "1" "1" "1"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [55] "1" "1" "0" "1" "0" "1" "0" "0" "0" "1" "1" "1" "1" "1" "1" "0" "1" "0"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [73] "0" "1" "0" "1" "0" "1" "1" "1" "1" "1" "1" "1" "1" "1" "1" "1" "1" "1"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [91] "1" "1" "1" "1" "1" "0" "0" "1" "1" "1"</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>number of rows of result is not a multiple of vector length (arg 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [19] "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [37] "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [55] "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [73] "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [91] "0" "0" "0" "0" "0" "0" "0" "0" "0" "0"</span>
 <span class="r-in"><span><span class="op">(</span><span class="va">prob</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">my.tree</span>, <span class="va">X</span>, Xsplit<span class="op">=</span><span class="va">Z</span>, type<span class="op">=</span><span class="st">"prob"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 0          1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [1,] 0.38298501 0.61701499</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [2,] 0.46579853 0.53420147</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [3,] 0.96391161 0.03608839</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [4,] 0.49622554 0.50377446</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,] 0.76099761 0.23900239</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [6,] 0.26405620 0.73594380</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [7,] 0.48894884 0.51105116</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [8,] 0.93627120 0.06372880</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [9,] 0.67919825 0.32080175</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [10,] 0.40102349 0.59897651</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [11,] 0.24048079 0.75951921</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [12,] 0.28533386 0.71466614</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [13,] 0.40509672 0.59490328</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [14,] 0.30881368 0.69118632</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [15,] 0.36914923 0.63085077</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [16,] 0.26517144 0.73482856</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [17,] 0.45785066 0.54214934</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [18,] 0.40263504 0.59736496</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [19,] 0.27781748 0.72218252</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [20,] 0.39109723 0.60890277</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [21,] 0.49872184 0.50127816</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [22,] 0.98551065 0.01448935</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [23,] 0.90555804 0.09444196</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [24,] 0.72629093 0.27370907</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [25,] 0.94401299 0.05598701</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [26,] 0.43492383 0.56507617</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [27,] 0.46240391 0.53759609</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [28,] 0.94743961 0.05256039</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [29,] 0.46752649 0.53247351</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [30,] 0.48338311 0.51661689</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [31,] 0.66006830 0.33993170</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [32,] 0.43917007 0.56082993</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [33,] 0.26069760 0.73930240</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [34,] 0.39572662 0.60427338</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [35,] 0.58473085 0.41526915</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [36,] 0.60304738 0.39695262</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [37,] 0.37712492 0.62287508</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [38,] 0.59661067 0.40338933</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [39,] 0.39547190 0.60452810</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [40,] 0.48592242 0.51407758</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [41,] 0.29863040 0.70136960</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [42,] 0.47152977 0.52847023</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [43,] 0.55680247 0.44319753</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [44,] 0.28564596 0.71435404</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [45,] 0.53188689 0.46811311</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [46,] 0.35698066 0.64301934</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [47,] 0.37435380 0.62564620</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [48,] 0.49250026 0.50749974</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [49,] 0.49239019 0.50760981</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [50,] 0.25457899 0.74542101</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [51,] 0.49815293 0.50184707</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [52,] 0.37591901 0.62408099</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [53,] 0.15178342 0.84821658</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [54,] 0.13200131 0.86799869</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [55,] 0.30766631 0.69233369</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [56,] 0.26731214 0.73268786</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [57,] 0.51068080 0.48931920</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [58,] 0.31318422 0.68681578</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [59,] 0.52389935 0.47610065</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [60,] 0.33365029 0.66634971</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [61,] 0.91442752 0.08557248</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [62,] 0.53172147 0.46827853</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [63,] 0.51063740 0.48936260</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [64,] 0.38428617 0.61571383</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [65,] 0.24807220 0.75192780</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [66,] 0.18961045 0.81038955</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [67,] 0.22630966 0.77369034</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [68,] 0.42951757 0.57048243</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [69,] 0.31834760 0.68165240</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [70,] 0.57611041 0.42388959</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [71,] 0.31483570 0.68516430</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [72,] 0.52405219 0.47594781</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [73,] 0.58979666 0.41020334</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [74,] 0.40961476 0.59038524</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [75,] 0.56174419 0.43825581</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [76,] 0.27736023 0.72263977</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [77,] 0.94979246 0.05020754</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [78,] 0.49195361 0.50804639</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [79,] 0.45618987 0.54381013</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [80,] 0.23774409 0.76225591</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [81,] 0.29143464 0.70856536</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [82,] 0.41123313 0.58876687</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [83,] 0.34023678 0.65976322</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [84,] 0.32126974 0.67873026</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [85,] 0.27448689 0.72551311</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [86,] 0.34198276 0.65801724</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [87,] 0.30190950 0.69809050</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [88,] 0.07694469 0.92305531</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [89,] 0.49949404 0.50050596</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [90,] 0.40912069 0.59087931</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [91,] 0.49019776 0.50980224</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [92,] 0.40347621 0.59652379</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [93,] 0.43177557 0.56822443</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [94,] 0.24041333 0.75958667</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [95,] 0.23271484 0.76728516</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [96,] 0.58157950 0.41842050</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [97,] 0.67213256 0.32786744</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [98,] 0.26099018 0.73900982</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [99,] 0.33225332 0.66774668</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [100,] 0.20547016 0.79452984</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>number of rows of result is not a multiple of vector length (arg 1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        0 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [1,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [2,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [3,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [4,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [6,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [7,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [8,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [9,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [10,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [11,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [12,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [13,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [14,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [15,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [16,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [17,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [18,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [19,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [20,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [21,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [22,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [23,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [24,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [25,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [26,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [27,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [28,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [29,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [30,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [31,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [32,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [33,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [34,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [35,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [36,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [37,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [38,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [39,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [40,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [41,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [42,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [43,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [44,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [45,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [46,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [47,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [48,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [49,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [50,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [51,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [52,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [53,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [54,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [55,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [56,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [57,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [58,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [59,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [60,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [61,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [62,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [63,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [64,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [65,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [66,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [67,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [68,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [69,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [70,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [71,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [72,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [73,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [74,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [75,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [76,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [77,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [78,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [79,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [80,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [81,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [82,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [83,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [84,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [85,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [86,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [87,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [88,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [89,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [90,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [91,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [92,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [93,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [94,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [95,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [96,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [97,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [98,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [99,] 1 0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [100,] 1 0</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Projection analysis of the oblique decision tree.</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span></span></span>

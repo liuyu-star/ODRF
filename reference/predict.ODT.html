@@ -259,14 +259,12 @@ For classification tasks, including classification trees (<code>split= "gini" or
 <span class="r-in"><span>               NodeRotateFun <span class="op">=</span> <span class="st">"RotMatRF"</span>,MinLeaf <span class="op">=</span> <span class="fl">10</span>, MaxDepth <span class="op">=</span> <span class="fl">5</span>,</span></span>
 <span class="r-in"><span>               glmnetParList<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>lambda <span class="op">=</span> <span class="fl">0.1</span>,family <span class="op">=</span> <span class="st">"gaussian"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">leafnode</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">my.tree</span>, <span class="va">X</span>, Xsplit<span class="op">=</span><span class="va">Z</span>, type<span class="op">=</span><span class="st">"leafnode"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] 17 16  7 14 14 17 15 13 12 14 14 13 17 15 17  7 12 12 15  7 16 12 13 17  7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [26] 13 12 16 13 17 17 13 14 15  6  6  7 12 12 17 15 17 17 12 17  7 11  6 15 15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [51]  7 13 13 15 13 15 12 17 17 11  7 14 11 17 17 17 17 15 14 17  6 13 12 14 17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [76]  7 14 15 17  6 17 16 17 17 15 12 17 17 11 12 17 14 13 17 15 17  6 12 17 17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [101] 13 17  7  6 17 11  7 15 13 11 17  6  7 17 16 17  6 11 12 17 12 12  7 14  7</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [126] 14 17 11 16  6 17 16 11 17  7 14 16 17 13 12 17 16  7 15 15 17  7 17 11 17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [151] 17  7 15  7 17 17 15 17 12 17 13 12 17  6 14 16 14 17  6 11  6 14 11  6 17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [176] 17 13  7 17 17 13 14 13 17 14 17 16 17 12 17  6 17 17 13 15  7 17 11 14  6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] 5 5 3 4 4 5 4 4 4 4 4 4 5 4 5 3 4 4 4 3 5 4 4 5 3 4 4 5 4 5 5 4 4 4 3 3 3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [38] 4 4 3 4 5 5 4 5 3 5 3 4 4 3 4 4 4 4 4 4 5 5 5 3 4 5 5 5 5 5 4 4 5 3 4 4 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [75] 5 3 4 4 5 3 5 5 5 5 4 4 5 5 5 4 4 4 4 5 4 5 3 4 5 5 4 5 3 3 5 5 3 4 4 5 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [112] 3 3 5 5 5 3 5 4 5 4 4 3 4 3 4 5 5 5 3 5 5 5 5 3 4 5 5 4 4 5 5 3 4 4 5 3 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [149] 5 5 5 3 4 3 5 5 4 5 4 5 4 4 5 3 4 5 3 5 3 5 3 4 5 3 4 5 4 3 5 5 4 4 4 5 4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [186] 5 5 5 4 5 3 3 5 4 4 3 3 5 4 3</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y1</span> <span class="op">=</span> <span class="op">(</span><span class="va">y</span><span class="op">&gt;</span><span class="fl">0</span><span class="op">)</span><span class="op">*</span><span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="va">my.tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="ODT.html">ODT</a></span><span class="op">(</span>X<span class="op">=</span><span class="va">X</span>, y<span class="op">=</span><span class="va">y1</span>, Xsplit<span class="op">=</span><span class="va">Z</span>, split <span class="op">=</span> <span class="st">"linear"</span>,</span></span>
@@ -303,140 +301,6 @@ For classification tasks, including classification trees (<code>split= "gini" or
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>from glmnet C++ code (error code -1); Convergence for 1th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>an empty model has been returned; probably a convergence issue</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>from glmnet C++ code (error code -1); Convergence for 1th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>an empty model has been returned; probably a convergence issue</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>from glmnet C++ code (error code -1); Convergence for 1th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>an empty model has been returned; probably a convergence issue</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>from glmnet C++ code (error code -1); Convergence for 1th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>an empty model has been returned; probably a convergence issue</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>from glmnet C++ code (error code -1); Convergence for 1th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>an empty model has been returned; probably a convergence issue</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>from glmnet C++ code (error code -1); Convergence for 1th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>an empty model has been returned; probably a convergence issue</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>from glmnet C++ code (error code -1); Convergence for 1th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>an empty model has been returned; probably a convergence issue</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>from glmnet C++ code (error code -1); Convergence for 1th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>an empty model has been returned; probably a convergence issue</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>from glmnet C++ code (error code -1); Convergence for 1th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>an empty model has been returned; probably a convergence issue</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>from glmnet C++ code (error code -1); Convergence for 1th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>an empty model has been returned; probably a convergence issue</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
@@ -935,217 +799,217 @@ For classification tasks, including classification trees (<code>split= "gini" or
 <span class="r-out co"><span class="r-pr">#&gt;</span>   [1] "0" "1" "0" "0" "0" "1" "0" "0" "0" "0" "0" "0" "0" "0" "1" "1" "0" "0"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [19] "0" "1" "0" "0" "0" "0" "1" "0" "0" "0" "0" "1" "1" "0" "0" "0" "1" "1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [37] "1" "0" "0" "1" "0" "1" "1" "0" "1" "1" "0" "1" "0" "0" "1" "0" "0" "0"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [55] "0" "0" "0" "0" "1" "0" "1" "1" "1" "1" "1" "1" "0" "0" "0" "1" "1" "0"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [55] "0" "0" "0" "0" "1" "0" "1" "0" "1" "1" "1" "1" "0" "0" "0" "1" "1" "0"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [73] "0" "0" "0" "1" "0" "0" "0" "1" "0" "0" "1" "0" "1" "1" "1" "1" "1" "0"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [91] "0" "1" "0" "0" "1" "1" "1" "0" "0" "0" "0" "0" "0" "1" "1" "1" "1" "0"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [109] "0" "1" "1" "1" "1" "0" "0" "1" "1" "0" "0" "1" "0" "0" "1" "0" "1" "0"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [127] "0" "1" "0" "1" "0" "0" "1" "0" "1" "0" "1" "0" "0" "0" "0" "1" "1" "0"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [145] "0" "0" "1" "0" "0" "1" "1" "1" "0" "1" "1" "0" "0" "0" "0" "1" "0" "0"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [163] "1" "1" "0" "1" "0" "0" "1" "0" "1" "0" "0" "1" "0" "0" "0" "1" "1" "1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [163] "1" "1" "0" "1" "1" "0" "1" "0" "1" "0" "0" "1" "0" "0" "0" "1" "1" "1"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [181] "0" "0" "0" "0" "0" "0" "0" "0" "0" "0" "1" "1" "1" "0" "0" "1" "1" "0"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [199] "0" "1"</span>
 <span class="r-in"><span><span class="op">(</span><span class="va">prob</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">my.tree</span>, <span class="va">X</span>, Xsplit<span class="op">=</span><span class="va">Z</span>, type<span class="op">=</span><span class="st">"prob"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   0            1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [1,] 9.999465e-01 5.351265e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [2,] 6.189254e-06 9.999938e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [3,] 5.594900e-01 4.405100e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [4,] 1.000000e+00 4.416566e-10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,] 1.000000e+00 5.542571e-11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [6,] 6.710421e-05 9.999329e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [7,] 9.999475e-01 5.249283e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [8,] 1.000000e+00 2.434399e-12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [9,] 9.998675e-01 1.325173e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [10,] 1.000000e+00 1.342801e-11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [11,] 1.000000e+00 3.790476e-10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [12,] 9.999951e-01 4.925342e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [13,] 9.999778e-01 2.218080e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [14,] 9.999999e-01 1.201780e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [15,] 1.222938e-05 9.999878e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [16,] 3.662820e-02 9.633718e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [17,] 9.999419e-01 5.812258e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [18,] 1.000000e+00 5.497905e-11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [19,] 1.000000e+00 9.630563e-09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [20,] 4.015181e-03 9.959848e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [21,] 9.999788e-01 2.123753e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [22,] 1.000000e+00 1.922419e-10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [23,] 9.999997e-01 2.664614e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [24,] 1.000000e+00 3.379111e-10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [25,] 1.896612e-03 9.981034e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [26,] 9.976843e-01 2.315674e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [27,] 1.000000e+00 4.325015e-09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [28,] 1.000000e+00 4.122031e-20</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [29,] 9.999990e-01 9.938942e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [30,] 8.568759e-04 9.991431e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [31,] 7.521138e-04 9.992479e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [32,] 9.999983e-01 1.717324e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [33,] 1.000000e+00 3.418172e-15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [34,] 9.998911e-01 1.089055e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [35,] 1.633768e-01 8.366232e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [36,] 9.966945e-03 9.900331e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [37,] 2.392481e-02 9.760752e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [38,] 1.000000e+00 3.771713e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [39,] 1.000000e+00 3.804072e-09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [40,] 1.033285e-05 9.999897e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [41,] 1.000000e+00 1.766543e-09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [42,] 4.497492e-04 9.995503e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [43,] 9.230656e-10 1.000000e+00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [44,] 9.999918e-01 8.246001e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [45,] 3.121930e-04 9.996878e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [46,] 4.375163e-03 9.956248e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [47,] 9.993172e-01 6.827553e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [48,] 1.630176e-02 9.836982e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [49,] 9.999999e-01 7.654728e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [50,] 1.000000e+00 1.363352e-18</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [51,] 1.576080e-02 9.842392e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [52,] 1.000000e+00 5.873711e-11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [53,] 1.000000e+00 2.951915e-13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [54,] 1.000000e+00 2.295116e-09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [55,] 1.000000e+00 3.438801e-14</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [56,] 1.000000e+00 5.659025e-09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [57,] 9.999896e-01 1.036957e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [58,] 9.995845e-01 4.154796e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [59,] 6.325710e-03 9.936743e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [60,] 9.995177e-01 4.823264e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [61,] 1.307747e-02 9.869225e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [62,] 9.426285e-04 9.990574e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [63,] 2.255545e-10 1.000000e+00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [64,] 9.297564e-07 9.999991e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [65,] 5.878772e-04 9.994121e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [66,] 5.047264e-05 9.999495e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [67,] 1.000000e+00 1.018676e-14</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [68,] 9.997502e-01 2.498150e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [69,] 9.983344e-01 1.665588e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [70,] 5.385362e-03 9.946146e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [71,] 7.301957e-03 9.926980e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [72,] 9.999999e-01 8.852357e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [73,] 1.000000e+00 1.446564e-10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [74,] 9.999999e-01 1.425320e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [75,] 1.000000e+00 7.586681e-12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [76,] 2.979686e-02 9.702031e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [77,] 1.000000e+00 1.704209e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [78,] 1.000000e+00 5.508305e-10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [79,] 1.000000e+00 1.285674e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [80,] 5.710122e-02 9.428988e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [81,] 9.998366e-01 1.634294e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [82,] 9.999810e-01 1.896995e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [83,] 2.107866e-03 9.978921e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [84,] 9.999986e-01 1.394435e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [85,] 8.509563e-04 9.991490e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [86,] 3.255664e-03 9.967443e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [87,] 2.205338e-04 9.997795e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [88,] 8.825719e-05 9.999117e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [89,] 4.550849e-04 9.995449e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [90,] 9.999965e-01 3.522656e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [91,] 1.000000e+00 1.114305e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [92,] 2.733533e-03 9.972665e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [93,] 1.000000e+00 1.111683e-12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [94,] 1.000000e+00 4.118475e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [95,] 2.227941e-06 9.999978e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [96,] 1.149141e-07 9.999999e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [97,] 3.993594e-01 6.006406e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [98,] 1.000000e+00 1.355638e-11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [99,] 9.999999e-01 1.131730e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [100,] 9.999958e-01 4.194348e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [101,] 1.000000e+00 1.585445e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [102,] 9.996140e-01 3.859643e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [103,] 7.448349e-01 2.551651e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [104,] 6.242381e-03 9.937576e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [105,] 5.144929e-04 9.994855e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [106,] 1.277188e-09 1.000000e+00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [107,] 2.291055e-02 9.770895e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [108,] 9.997957e-01 2.043028e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [109,] 9.993878e-01 6.121598e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [110,] 5.349055e-13 1.000000e+00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [111,] 4.024010e-04 9.995976e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [112,] 1.581612e-02 9.841839e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [113,] 2.085658e-03 9.979143e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [114,] 9.949783e-01 5.021703e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [115,] 9.996209e-01 3.790557e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [116,] 3.921806e-08 1.000000e+00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [117,] 3.834331e-02 9.616567e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [118,] 9.996036e-01 3.963875e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [119,] 1.000000e+00 1.182116e-10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [120,] 1.293988e-03 9.987060e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [121,] 1.000000e+00 5.366867e-13</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [122,] 9.999996e-01 4.495645e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [123,] 2.241581e-02 9.775842e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [124,] 1.000000e+00 2.940623e-09</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [125,] 3.748162e-02 9.625184e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [126,] 1.000000e+00 1.138900e-17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [127,] 9.999953e-01 4.735509e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [128,] 1.807887e-05 9.999819e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [129,] 9.999997e-01 2.716651e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [130,] 4.731324e-02 9.526868e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [131,] 9.999562e-01 4.383364e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [132,] 1.000000e+00 1.088071e-11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [133,] 8.177372e-05 9.999182e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [134,] 9.975757e-01 2.424317e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [135,] 8.022669e-03 9.919773e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [136,] 1.000000e+00 3.215812e-11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [137,] 3.186847e-05 9.999681e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [138,] 9.999463e-01 5.367365e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [139,] 9.999489e-01 5.107906e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [140,] 1.000000e+00 1.391795e-10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [141,] 1.000000e+00 3.906587e-11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [142,] 6.770398e-04 9.993230e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [143,] 8.319903e-02 9.168010e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [144,] 1.000000e+00 2.986374e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [145,] 9.995615e-01 4.385298e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [146,] 1.000000e+00 9.919144e-15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [147,] 4.250823e-02 9.574918e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [148,] 9.970639e-01 2.936104e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [149,] 9.999355e-01 6.450950e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [150,] 2.741431e-03 9.972586e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [151,] 1.065814e-14 1.000000e+00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [152,] 2.769106e-02 9.723089e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [153,] 1.000000e+00 1.692493e-12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [154,] 2.083712e-02 9.791629e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [155,] 7.540990e-03 9.924590e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [156,] 9.999465e-01 5.346924e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [157,] 1.000000e+00 2.563860e-17</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [158,] 9.996784e-01 3.216214e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [159,] 1.000000e+00 6.317599e-12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [160,] 4.766143e-11 1.000000e+00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [161,] 1.000000e+00 6.748141e-15</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [162,] 9.997646e-01 2.353996e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [163,] 2.888151e-03 9.971118e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [164,] 8.605717e-03 9.913943e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [165,] 1.000000e+00 6.086968e-16</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [166,] 0.000000e+00 1.000000e+00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [167,] 1.000000e+00 3.141320e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [168,] 9.999773e-01 2.269471e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [169,] 2.363840e-02 9.763616e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [170,] 9.999999e-01 1.181593e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [171,] 7.697824e-03 9.923022e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [172,] 9.999989e-01 1.122573e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [173,] 9.991818e-01 8.182323e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [174,] 6.092128e-03 9.939079e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [175,] 1.000000e+00 2.788621e-12</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [176,] 9.972017e-01 2.798306e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [177,] 9.999851e-01 1.494636e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [178,] 3.430333e-03 9.965697e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [179,] 1.410151e-07 9.999999e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [180,] 0.000000e+00 1.000000e+00</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [181,] 9.999989e-01 1.072201e-06</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [182,] 9.999998e-01 1.576462e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [183,] 9.984830e-01 1.516998e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [184,] 9.999994e-01 6.453618e-07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [185,] 9.999869e-01 1.306325e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [186,] 9.856326e-01 1.436740e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [187,] 9.996753e-01 3.247227e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [188,] 9.993160e-01 6.840335e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [189,] 9.999180e-01 8.196890e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [190,] 1.000000e+00 1.032741e-10</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [191,] 4.251873e-01 5.748127e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [192,] 1.274675e-07 9.999999e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [193,] 3.095571e-06 9.999969e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [194,] 1.000000e+00 4.203549e-11</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [195,] 1.000000e+00 6.824627e-21</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [196,] 3.742494e-03 9.962575e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [197,] 5.251654e-07 9.999995e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [198,] 9.990844e-01 9.156267e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [199,] 1.000000e+00 4.392334e-08</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [200,] 5.953093e-02 9.404691e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [1,] 7.361984e-01 2.638016e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [2,] 5.614501e-03 9.943855e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [3,] 5.809401e-01 4.190599e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [4,] 9.952352e-01 4.764753e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,] 9.954732e-01 4.526754e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [6,] 6.607188e-03 9.933928e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [7,] 9.949961e-01 5.003895e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [8,] 9.942252e-01 5.774821e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [9,] 8.348773e-01 1.651227e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [10,] 9.974380e-01 2.561992e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [11,] 9.952092e-01 4.790824e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [12,] 9.616973e-01 3.830274e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [13,] 9.461532e-01 5.384682e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [14,] 9.977972e-01 2.202804e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [15,] 2.587238e-03 9.974128e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [16,] 4.667517e-02 9.533248e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [17,] 9.228440e-01 7.715601e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [18,] 9.936824e-01 6.317612e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [19,] 9.994198e-01 5.801747e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [20,] 3.313809e-02 9.668619e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [21,] 9.306931e-01 6.930693e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [22,] 9.975037e-01 2.496263e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [23,] 9.908083e-01 9.191700e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [24,] 9.991579e-01 8.420794e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [25,] 2.685172e-03 9.973148e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [26,] 7.814873e-01 2.185127e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [27,] 9.996191e-01 3.809421e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [28,] 9.998866e-01 1.134419e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [29,] 9.971283e-01 2.871722e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [30,] 1.470187e-01 8.529813e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [31,] 2.621479e-01 7.378521e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [32,] 9.715553e-01 2.844471e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [33,] 9.995281e-01 4.718828e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [34,] 9.900370e-01 9.963029e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [35,] 2.618100e-01 7.381900e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [36,] 1.567081e-02 9.843292e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [37,] 4.162082e-02 9.583792e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [38,] 9.900513e-01 9.948671e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [39,] 9.971657e-01 2.834272e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [40,] 8.229623e-02 9.177038e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [41,] 9.956316e-01 4.368444e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [42,] 7.923239e-02 9.207676e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [43,] 6.536988e-02 9.346301e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [44,] 9.435624e-01 5.643756e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [45,] 2.378245e-01 7.621755e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [46,] 9.825755e-03 9.901742e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [47,] 7.023141e-01 2.976859e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [48,] 1.374405e-02 9.862559e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [49,] 9.831646e-01 1.683540e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [50,] 9.999090e-01 9.097536e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [51,] 2.367199e-02 9.763280e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [52,] 9.969065e-01 3.093521e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [53,] 9.977097e-01 2.290329e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [54,] 9.995504e-01 4.496194e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [55,] 9.994473e-01 5.527075e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [56,] 9.882691e-01 1.173091e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [57,] 9.710798e-01 2.892020e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [58,] 8.149363e-01 1.850637e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [59,] 8.053859e-02 9.194614e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [60,] 8.684725e-01 1.315275e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [61,] 7.261438e-03 9.927386e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [62,] 5.377990e-01 4.622010e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [63,] 2.920704e-01 7.079296e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [64,] 6.921289e-02 9.307871e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [65,] 4.492427e-02 9.550757e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [66,] 2.168222e-01 7.831778e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [67,] 9.982178e-01 1.782170e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [68,] 9.634895e-01 3.651046e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [69,] 8.238482e-01 1.761518e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [70,] 3.127447e-02 9.687255e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [71,] 8.345488e-03 9.916545e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [72,] 9.996046e-01 3.954405e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [73,] 9.915972e-01 8.402791e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [74,] 9.747391e-01 2.526090e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [75,] 9.708486e-01 2.915137e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [76,] 1.557076e-02 9.844292e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [77,] 9.782946e-01 2.170541e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [78,] 9.832753e-01 1.672472e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [79,] 9.772084e-01 2.279165e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [80,] 9.944429e-02 9.005557e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [81,] 6.477719e-01 3.522281e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [82,] 8.444649e-01 1.555351e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [83,] 8.834760e-04 9.991165e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [84,] 9.986516e-01 1.348395e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [85,] 4.441043e-01 5.558957e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [86,] 3.966614e-01 6.033386e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [87,] 2.932546e-01 7.067454e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [88,] 1.402287e-01 8.597713e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [89,] 1.033928e-01 8.966072e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [90,] 9.707759e-01 2.922408e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [91,] 9.988449e-01 1.155075e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [92,] 4.773340e-01 5.226660e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [93,] 9.982498e-01 1.750178e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [94,] 9.230684e-01 7.693160e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [95,] 3.960538e-02 9.603946e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [96,] 1.075109e-01 8.924891e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [97,] 4.292088e-01 5.707912e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [98,] 9.988825e-01 1.117467e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [99,] 9.741490e-01 2.585100e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [100,] 9.060536e-01 9.394636e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [101,] 9.877650e-01 1.223497e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [102,] 9.431436e-01 5.685640e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [103,] 7.016110e-01 2.983890e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [104,] 4.629971e-02 9.537003e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [105,] 5.768612e-02 9.423139e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [106,] 8.766523e-05 9.999123e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [107,] 3.217938e-02 9.678206e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [108,] 9.936626e-01 6.337446e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [109,] 8.997076e-01 1.002924e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [110,] 3.710176e-03 9.962898e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [111,] 2.318858e-01 7.681142e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [112,] 1.620768e-02 9.837923e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [113,] 5.783552e-03 9.942164e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [114,] 9.830564e-01 1.694358e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [115,] 6.516742e-01 3.483258e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [116,] 1.357144e-01 8.642856e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [117,] 1.862108e-02 9.813789e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [118,] 8.055981e-01 1.944019e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [119,] 9.949898e-01 5.010219e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [120,] 3.077004e-01 6.922996e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [121,] 9.976364e-01 2.363621e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [122,] 9.812554e-01 1.874458e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [123,] 5.815020e-02 9.418498e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [124,] 9.841056e-01 1.589444e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [125,] 6.198875e-02 9.380113e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [126,] 9.996539e-01 3.461128e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [127,] 8.058943e-01 1.941057e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [128,] 3.728543e-01 6.271457e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [129,] 9.885991e-01 1.140090e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [130,] 1.421219e-01 8.578781e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [131,] 7.585505e-01 2.414495e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [132,] 9.982655e-01 1.734520e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [133,] 3.094094e-01 6.905906e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [134,] 6.282343e-01 3.717657e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [135,] 3.204202e-02 9.679580e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [136,] 9.977859e-01 2.214072e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [137,] 1.475878e-01 8.524122e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [138,] 8.341364e-01 1.658636e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [139,] 9.652878e-01 3.471215e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [140,] 9.943559e-01 5.644062e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [141,] 9.751336e-01 2.486637e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [142,] 4.791231e-01 5.208769e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [143,] 1.154605e-01 8.845395e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [144,] 9.891247e-01 1.087532e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [145,] 8.665846e-01 1.334154e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [146,] 9.981867e-01 1.813264e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [147,] 3.786805e-02 9.621319e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [148,] 6.448327e-01 3.551673e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [149,] 8.328005e-01 1.671995e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [150,] 3.337966e-01 6.662034e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [151,] 3.414607e-03 9.965854e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [152,] 2.562229e-02 9.743777e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [153,] 9.989055e-01 1.094479e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [154,] 1.443614e-02 9.855639e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [155,] 4.717371e-01 5.282629e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [156,] 8.105132e-01 1.894868e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [157,] 9.999070e-01 9.303201e-05</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [158,] 9.101187e-01 8.988126e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [159,] 9.961887e-01 3.811251e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [160,] 8.743745e-03 9.912563e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [161,] 9.991032e-01 8.967719e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [162,] 9.899880e-01 1.001200e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [163,] 2.494082e-01 7.505918e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [164,] 1.756523e-02 9.824348e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [165,] 9.969209e-01 3.079139e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [166,] 2.411388e-04 9.997589e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [167,] 2.826215e-01 7.173785e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [168,] 9.300752e-01 6.992476e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [169,] 1.151274e-02 9.884873e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [170,] 9.684758e-01 3.152420e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [171,] 2.112066e-03 9.978879e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [172,] 9.439466e-01 5.605337e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [173,] 7.797773e-01 2.202227e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [174,] 2.641557e-02 9.735844e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [175,] 9.440357e-01 5.596426e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [176,] 5.720634e-01 4.279366e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [177,] 9.670529e-01 3.294707e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [178,] 8.908167e-03 9.910918e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [179,] 7.363893e-02 9.263611e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [180,] 2.076778e-04 9.997923e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [181,] 9.993533e-01 6.466713e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [182,] 9.853368e-01 1.466319e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [183,] 7.909454e-01 2.090546e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [184,] 9.753683e-01 2.463170e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [185,] 9.722575e-01 2.774250e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [186,] 7.520352e-01 2.479648e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [187,] 8.744222e-01 1.255778e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [188,] 7.964764e-01 2.035236e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [189,] 9.777777e-01 2.222228e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [190,] 9.934724e-01 6.527559e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [191,] 4.450502e-01 5.549498e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [192,] 4.595539e-02 9.540446e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [193,] 2.344225e-01 7.655775e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [194,] 9.987123e-01 1.287668e-03</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [195,] 9.998554e-01 1.446417e-04</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [196,] 1.672380e-02 9.832762e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [197,] 1.280865e-01 8.719135e-01</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [198,] 9.429641e-01 5.703590e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [199,] 9.376825e-01 6.231752e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [200,] 3.474767e-02 9.652523e-01</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y2</span> <span class="op">=</span> <span class="op">(</span><span class="va">y</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">2.5</span><span class="op">)</span><span class="op">*</span><span class="fl">1</span><span class="op">+</span><span class="op">(</span><span class="va">y</span><span class="op">&gt;=</span><span class="op">-</span><span class="fl">2.5</span><span class="op">&amp;</span><span class="va">y</span><span class="op">&lt;</span><span class="fl">2.5</span><span class="op">)</span><span class="op">*</span><span class="fl">2</span><span class="op">+</span><span class="op">(</span><span class="va">y</span><span class="op">&gt;=</span><span class="fl">2.5</span><span class="op">)</span><span class="op">*</span><span class="fl">3</span></span></span>
 <span class="r-in"><span><span class="va">my.tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="ODT.html">ODT</a></span><span class="op">(</span>X<span class="op">=</span><span class="va">X</span>, y<span class="op">=</span><span class="va">y2</span>, Xsplit<span class="op">=</span><span class="va">Z</span>, split <span class="op">=</span> <span class="st">"linear"</span>,</span></span>
@@ -1538,188 +1402,7 @@ For classification tasks, including classification trees (<code>split= "gini" or
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>from glmnet C++ code (error code -94); Convergence for 94th lambda value not reached after maxit=100000 iterations; solutions for larger lambdas returned</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
@@ -1775,207 +1458,207 @@ For classification tasks, including classification trees (<code>split= "gini" or
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>one multinomial or binomial class has fewer than 8  observations; dangerous ground</span>
 <span class="r-in"><span><span class="op">(</span><span class="va">prob</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">my.tree</span>, <span class="va">X</span>, Xsplit<span class="op">=</span><span class="va">Z</span>, type<span class="op">=</span><span class="st">"prob"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   1          2            3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [1,] 1.686228e-02 0.96171330 2.142442e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [2,] 1.231075e-02 0.94701579 4.067346e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [3,] 1.209398e-01 0.84912794 2.993227e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [4,] 4.317333e-02 0.87725183 7.957484e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,] 2.772297e-01 0.66869198 5.407830e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [6,] 1.136391e-01 0.86462055 2.174032e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [7,] 3.577272e-02 0.85988800 1.043393e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [8,] 8.374531e-02 0.81362946 1.026252e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   [9,] 4.734541e-03 0.91736664 7.789881e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [10,] 1.750791e-01 0.78557975 3.934113e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [11,] 6.488615e-02 0.73002387 2.050900e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [12,] 6.098008e-02 0.84615825 9.286168e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [13,] 2.104673e-02 0.95813171 2.082156e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [14,] 1.940895e-01 0.79812969 7.780766e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [15,] 1.277079e-01 0.72226656 1.500256e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [16,] 2.186988e-02 0.96032771 1.780241e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [17,] 5.228200e-03 0.89067732 1.040945e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [18,] 9.318412e-02 0.75812680 1.486891e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [19,] 2.964477e-01 0.58007808 1.234743e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [20,] 5.547558e-04 0.48453770 5.149075e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [21,] 1.294553e-02 0.89505464 9.199983e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [22,] 1.780050e-01 0.70869348 1.133015e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [23,] 2.410873e-02 0.93548608 4.040520e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [24,] 6.933547e-02 0.86234881 6.831572e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [25,] 4.245024e-02 0.87068795 8.686181e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [26,] 1.709733e-02 0.93811643 4.478624e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [27,] 2.755943e-01 0.67908005 4.532566e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [28,] 1.751946e-01 0.81057102 1.423438e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [29,] 2.659666e-01 0.69123681 4.279662e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [30,] 1.410714e-01 0.77217583 8.675277e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [31,] 3.766088e-01 0.43101366 1.923775e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [32,] 6.328980e-02 0.88055223 5.615797e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [33,] 8.543018e-01 0.04718624 9.851193e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [34,] 8.157087e-02 0.85881644 5.961269e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [35,] 4.137846e-02 0.94389493 1.472661e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [36,] 9.841769e-02 0.86791130 3.367101e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [37,] 2.461520e-02 0.95000746 2.537734e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [38,] 8.379290e-02 0.86509723 5.110988e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [39,] 7.652327e-01 0.08061438 1.541529e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [40,] 2.841573e-03 0.19386758 8.032908e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [41,] 1.026139e-01 0.85523944 4.214664e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [42,] 8.047685e-03 0.89944230 9.251001e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [43,] 5.563079e-02 0.84104863 1.033206e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [44,] 1.669047e-02 0.94801867 3.529086e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [45,] 4.164986e-02 0.93606530 2.228485e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [46,] 1.090601e-01 0.16417818 7.267617e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [47,] 2.984826e-01 0.62723980 7.427762e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [48,] 1.179582e-01 0.75006026 1.319816e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [49,] 3.940119e-02 0.92808171 3.251710e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [50,] 4.256405e-01 0.45397050 1.203890e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [51,] 1.092270e-02 0.93231424 5.676306e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [52,] 6.157960e-01 0.24470506 1.394989e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [53,] 2.170876e-01 0.70515786 7.775455e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [54,] 9.072071e-01 0.06640348 2.638945e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [55,] 8.520084e-01 0.05606905 9.192255e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [56,] 4.453927e-02 0.67638864 2.790721e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [57,] 1.129935e-01 0.84731590 3.969060e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [58,] 5.102240e-01 0.46975799 2.001798e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [59,] 2.352463e-01 0.64486363 1.198901e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [60,] 3.076202e-02 0.93060218 3.863580e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [61,] 9.426119e-03 0.16855203 8.220218e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [62,] 1.016675e-04 0.98683300 1.306533e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [63,] 1.666012e-02 0.89827736 8.506251e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [64,] 3.311285e-02 0.92009134 4.679581e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [65,] 1.552367e-02 0.98411482 3.615081e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [66,] 6.704617e-02 0.85803566 7.491817e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [67,] 2.095048e-01 0.77902770 1.146746e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [68,] 3.110802e-02 0.77865235 1.902396e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [69,] 1.101107e-02 0.94960060 3.938834e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [70,] 2.019258e-02 0.71560178 2.642056e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [71,] 2.715942e-01 0.04855194 6.798538e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [72,] 3.208106e-01 0.65527202 2.391735e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [73,] 1.190735e-01 0.77210898 1.088175e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [74,] 4.490326e-02 0.95418936 9.073826e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [75,] 2.697227e-02 0.96062113 1.240660e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [76,] 2.626426e-02 0.94142883 3.230691e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [77,] 2.309199e-03 0.97803476 1.965605e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [78,] 5.366665e-02 0.90365878 4.267457e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [79,] 2.586098e-02 0.85616245 1.179766e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [80,] 6.287101e-02 0.92869273 8.436257e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [81,] 7.331820e-02 0.91995435 6.727445e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [82,] 2.192324e-01 0.73654702 4.422062e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [83,] 1.232285e-01 0.12837970 7.483918e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [84,] 2.257570e-02 0.97567995 1.744346e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [85,] 5.245324e-03 0.94167164 5.308303e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [86,] 1.599048e-03 0.95960100 3.879995e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [87,] 2.070395e-02 0.84326135 1.360347e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [88,] 1.363847e-02 0.98079226 5.569263e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [89,] 4.418445e-01 0.49431249 6.384299e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [90,] 4.382893e-02 0.89538288 6.078819e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [91,] 2.914558e-01 0.67035315 3.819109e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [92,] 4.664425e-05 0.73176135 2.681920e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [93,] 1.794338e-01 0.64164858 1.789177e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [94,] 5.575059e-02 0.87023617 7.401324e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [95,] 3.521561e-03 0.98708709 9.391346e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [96,] 2.244447e-01 0.66642078 1.091345e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [97,] 6.722451e-02 0.91354812 1.922737e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [98,] 2.944899e-01 0.66418639 4.132375e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [99,] 1.151246e-01 0.86657345 1.830192e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [100,] 2.187576e-01 0.74082870 4.041374e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [101,] 5.753389e-02 0.92031320 2.215292e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [102,] 2.206994e-01 0.76852716 1.077345e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [103,] 2.799266e-01 0.68701725 3.305616e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [104,] 1.225524e-01 0.27472998 6.027176e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [105,] 3.903123e-02 0.93470959 2.625918e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [106,] 5.000987e-02 0.09238695 8.576032e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [107,] 2.268976e-01 0.65371821 1.193842e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [108,] 7.573126e-02 0.79062554 1.336432e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [109,] 2.320314e-02 0.90148711 7.530975e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [110,] 2.131654e-01 0.49476947 2.920652e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [111,] 5.193770e-01 0.45744949 2.317349e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [112,] 2.488397e-01 0.71213363 3.902671e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [113,] 1.793103e-02 0.34396383 6.381051e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [114,] 2.276958e-02 0.91641212 6.081831e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [115,] 1.258558e-01 0.82260621 5.153800e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [116,] 6.168244e-02 0.90002483 3.829273e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [117,] 1.118815e-01 0.85533213 3.278637e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [118,] 2.569719e-02 0.92283491 5.146790e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [119,] 9.318523e-02 0.80535571 1.014591e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [120,] 2.576046e-02 0.93772295 3.651660e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [121,] 7.743714e-01 0.20554931 2.007931e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [122,] 4.816398e-02 0.79564697 1.561891e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [123,] 2.371677e-02 0.93051313 4.577010e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [124,] 3.742451e-02 0.74715645 2.154190e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [125,] 8.646782e-02 0.86275998 5.077220e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [126,] 3.556497e-01 0.50934455 1.350058e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [127,] 8.286923e-02 0.87690748 4.022329e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [128,] 2.002525e-03 0.96939746 2.860002e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [129,] 7.156714e-02 0.92364076 4.792096e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [130,] 6.240959e-02 0.85042330 8.716710e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [131,] 1.847709e-01 0.76046398 5.476509e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [132,] 1.960005e-02 0.95557943 2.482052e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [133,] 1.027484e-01 0.87773608 1.951552e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [134,] 9.808406e-02 0.89081192 1.110402e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [135,] 9.931349e-03 0.94567730 4.439135e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [136,] 8.029295e-01 0.18043585 1.663464e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [137,] 2.766265e-02 0.94903453 2.330282e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [138,] 3.097354e-02 0.93390052 3.512593e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [139,] 3.910792e-02 0.93638146 2.451062e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [140,] 8.622017e-02 0.86876446 4.501537e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [141,] 6.959631e-02 0.92348429 6.919397e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [142,] 3.757859e-02 0.83260102 1.298204e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [143,] 5.998177e-02 0.93925022 7.680117e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [144,] 7.458408e-02 0.89604273 2.937319e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [145,] 2.049171e-02 0.96770465 1.180363e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [146,] 9.885258e-02 0.87592401 2.522341e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [147,] 9.511033e-02 0.52515538 3.797343e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [148,] 3.205985e-03 0.99578220 1.011818e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [149,] 5.190139e-01 0.46628293 1.470317e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [150,] 4.441536e-02 0.94550885 1.007579e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [151,] 3.124143e-02 0.89616592 7.259265e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [152,] 1.050501e-01 0.84174851 5.320139e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [153,] 2.826045e-01 0.66295159 5.444392e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [154,] 1.339666e-01 0.84233664 2.369672e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [155,] 1.017263e-02 0.98218087 7.646500e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [156,] 1.311927e-01 0.85147943 1.732783e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [157,] 4.730494e-01 0.37738692 1.495637e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [158,] 3.000415e-02 0.94311338 2.688246e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [159,] 4.253676e-01 0.57418043 4.519637e-04</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [160,] 7.423704e-02 0.65966664 2.660963e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [161,] 6.179458e-01 0.35689269 2.516150e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [162,] 5.486408e-02 0.90721949 3.791643e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [163,] 2.690224e-02 0.83764983 1.354479e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [164,] 1.056780e-01 0.76382782 1.304942e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [165,] 6.650590e-01 0.33263372 2.307261e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [166,] 1.507359e-02 0.68042006 3.045064e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [167,] 2.343204e-01 0.74369072 2.198891e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [168,] 3.043969e-02 0.95951588 1.004443e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [169,] 1.693933e-01 0.76830114 6.230560e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [170,] 2.447727e-02 0.92412061 5.140213e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [171,] 1.548007e-01 0.37120143 4.739979e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [172,] 2.900403e-02 0.91951532 5.148065e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [173,] 3.732188e-02 0.88763262 7.504550e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [174,] 1.176183e-01 0.83649627 4.588542e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [175,] 3.361549e-02 0.93615848 3.022603e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [176,] 2.851238e-02 0.92629366 4.519396e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [177,] 4.589376e-02 0.85268667 1.014196e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [178,] 6.672869e-05 0.34474270 6.551906e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [179,] 6.009729e-02 0.92171231 1.819040e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [180,] 2.101856e-01 0.59720985 1.926046e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [181,] 8.573151e-01 0.14132511 1.359841e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [182,] 2.187239e-02 0.96539316 1.273446e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [183,] 1.223246e-02 0.93770361 5.006393e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [184,] 2.009131e-02 0.97824543 1.663262e-03</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [185,] 5.748199e-02 0.84434605 9.817196e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [186,] 2.605584e-02 0.93914910 3.479505e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [187,] 1.406013e-02 0.88649095 9.944891e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [188,] 3.093697e-02 0.95739197 1.167106e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [189,] 2.481017e-02 0.94391940 3.127043e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [190,] 1.677051e-01 0.80733138 2.496351e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [191,] 1.082748e-01 0.82950353 6.222167e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [192,] 9.572290e-02 0.80482153 9.945557e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [193,] 3.828009e-02 0.92404782 3.767208e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [194,] 8.224779e-01 0.12261087 5.491120e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [195,] 4.967041e-01 0.48684747 1.644842e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [196,] 2.481798e-02 0.96341684 1.176518e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [197,] 1.390181e-01 0.60552149 2.554604e-01</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [198,] 7.403823e-03 0.99255927 3.690565e-05</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [199,] 4.806188e-02 0.88400872 6.792940e-02</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [200,] 1.983815e-01 0.75800764 4.361085e-02</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   1          2           3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [1,] 2.388572e-02 0.93436323 0.041751047</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [2,] 1.608888e-02 0.89322784 0.090683276</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [3,] 1.968674e-01 0.76363998 0.039492632</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [4,] 8.080246e-02 0.65454931 0.264648232</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [5,] 3.284806e-01 0.58960657 0.081912821</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [6,] 1.775984e-02 0.95413717 0.028102991</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [7,] 1.994059e-01 0.70477239 0.095821679</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [8,] 1.316470e-01 0.73078318 0.137569818</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [9,] 2.722229e-03 0.90530439 0.091973386</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [10,] 6.201278e-01 0.35509434 0.024777892</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [11,] 8.610333e-02 0.68813425 0.225762424</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [12,] 2.659525e-02 0.88234489 0.091059858</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [13,] 1.643865e-02 0.95634464 0.027216707</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [14,] 5.611557e-01 0.43417561 0.004668700</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [15,] 1.488829e-02 0.70784884 0.277262861</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [16,] 3.018891e-02 0.89292271 0.076888379</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [17,] 1.124815e-02 0.92667329 0.062078567</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [18,] 1.417569e-01 0.75087634 0.107366749</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [19,] 2.244151e-02 0.70537071 0.272187778</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [20,] 1.867106e-02 0.82227434 0.159054600</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [21,] 1.727951e-02 0.78332712 0.199393370</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [22,] 5.192266e-01 0.38558012 0.095193231</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [23,] 1.169493e-01 0.80730597 0.075744760</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [24,] 3.630042e-02 0.95385961 0.009839974</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [25,] 2.093973e-02 0.80931388 0.169746397</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [26,] 1.547101e-03 0.95772574 0.040727164</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [27,] 8.769918e-01 0.11137833 0.011629877</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [28,] 2.320449e-02 0.96542431 0.011371201</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [29,] 6.619416e-01 0.32117100 0.016887406</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [30,] 2.028676e-02 0.83963733 0.140075907</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [31,] 1.542255e-02 0.64724426 0.337333189</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [32,] 3.517372e-02 0.88255681 0.082269470</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [33,] 8.370454e-01 0.13737423 0.025580325</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [34,] 2.289458e-02 0.89054709 0.086558329</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [35,] 2.222956e-02 0.96390830 0.013862146</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [36,] 2.082751e-01 0.73374450 0.057980379</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [37,] 2.675520e-02 0.90888760 0.064357202</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [38,] 1.369577e-01 0.78590663 0.077135623</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [39,] 3.079425e-01 0.56673802 0.125319452</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [40,] 2.046654e-02 0.76066143 0.218872030</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [41,] 2.299307e-01 0.69178344 0.078285887</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [42,] 9.103905e-03 0.96353726 0.027358835</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [43,] 1.643180e-02 0.81980763 0.163760569</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [44,] 6.836813e-03 0.90637229 0.086790895</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [45,] 1.555241e-02 0.95795211 0.026495479</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [46,] 2.178717e-02 0.94970183 0.028510999</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [47,] 2.431178e-02 0.82854727 0.147140956</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [48,] 2.236731e-01 0.62499733 0.151329546</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [49,] 6.342354e-02 0.88712517 0.049451287</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [50,] 9.550946e-01 0.03247400 0.012431358</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [51,] 1.500068e-02 0.88507425 0.099925066</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [52,] 4.635261e-01 0.50268405 0.033789879</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [53,] 6.502518e-01 0.31379907 0.035949115</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [54,] 9.540142e-01 0.04400966 0.001976156</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [55,] 7.001844e-01 0.20876676 0.091048851</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [56,] 4.462391e-02 0.69589972 0.259476369</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [57,] 4.912549e-02 0.89826664 0.052607862</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [58,] 3.251525e-02 0.93441341 0.033071333</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [59,] 2.145845e-02 0.79581130 0.182730258</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [60,] 2.413489e-02 0.89987348 0.075991633</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [61,] 6.708816e-03 0.31616554 0.677125640</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [62,] 2.564186e-04 0.94916680 0.050576785</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [63,] 1.690076e-02 0.82254904 0.160550200</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [64,] 1.587953e-02 0.91573954 0.068380935</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [65,] 1.737177e-02 0.95391474 0.028713493</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [66,] 2.508182e-02 0.84704510 0.127873074</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [67,] 1.910517e-02 0.97432200 0.006572828</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [68,] 1.273496e-02 0.84807809 0.139186951</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [69,] 1.469539e-03 0.94019148 0.058338985</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [70,] 7.655319e-03 0.49794198 0.494402705</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [71,] 5.343370e-01 0.37049555 0.095167459</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [72,] 9.188509e-01 0.07503477 0.006114367</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [73,] 2.304923e-01 0.66336384 0.106143867</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [74,] 2.645819e-02 0.94532714 0.028214670</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [75,] 2.140291e-02 0.96261899 0.015978106</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [76,] 8.253893e-01 0.15128827 0.023322410</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [77,] 4.496383e-02 0.91134460 0.043691572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [78,] 5.640376e-02 0.87603876 0.067557488</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [79,] 1.455585e-02 0.92888411 0.056560034</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [80,] 1.911446e-02 0.94441825 0.036467291</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [81,] 1.870768e-02 0.94601832 0.035274009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [82,] 2.026144e-02 0.91586789 0.063870662</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [83,] 1.529307e-02 0.67124244 0.313464488</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [84,] 2.177441e-02 0.96757353 0.010652063</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [85,] 1.924902e-04 0.92676294 0.073044572</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [86,] 1.312152e-04 0.93729653 0.062572255</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [87,] 1.790359e-02 0.71104411 0.271052305</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [88,] 2.236513e-02 0.91522432 0.062410543</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [89,] 1.925616e-02 0.85435221 0.126391627</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [90,] 2.820203e-02 0.89278063 0.079017337</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [91,] 2.414063e-02 0.93145949 0.044399879</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [92,] 2.228522e-04 0.89319804 0.106579106</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [93,] 4.497179e-01 0.40330097 0.146981112</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [94,] 2.069407e-02 0.79644547 0.182860459</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [95,] 1.188865e-05 0.91654426 0.083443854</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [96,] 1.999394e-02 0.81528115 0.164724907</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [97,] 1.850535e-02 0.96746240 0.014032251</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [98,] 6.971666e-01 0.27990976 0.022923680</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [99,] 1.572741e-02 0.97225978 0.012012808</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [100,] 1.853809e-02 0.94385510 0.037606810</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [101,] 1.111005e-01 0.85795175 0.030947737</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [102,] 1.692422e-02 0.91877048 0.064305298</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [103,] 6.575580e-01 0.32415573 0.018286273</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [104,] 6.947504e-02 0.85515929 0.075365676</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [105,] 2.004273e-02 0.94287877 0.037078506</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [106,] 9.613456e-03 0.55383817 0.436548373</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [107,] 2.208770e-02 0.75433143 0.223580872</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [108,] 8.406194e-02 0.78375865 0.132179415</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [109,] 3.787479e-03 0.90783804 0.088374483</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [110,] 1.331548e-02 0.49296042 0.493724100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [111,] 1.872859e-02 0.94734836 0.033923051</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [112,] 2.093034e-02 0.93460340 0.044466262</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [113,] 1.258235e-02 0.67155979 0.315857866</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [114,] 2.087253e-02 0.94652885 0.032598613</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [115,] 2.040426e-02 0.91948320 0.060112537</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [116,] 1.857960e-02 0.93488799 0.046532414</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [117,] 2.501441e-01 0.70033486 0.049521069</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [118,] 2.254647e-02 0.91744350 0.060010032</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [119,] 1.369546e-01 0.74586014 0.117185274</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [120,] 2.408009e-02 0.89907730 0.076842610</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [121,] 4.139720e-01 0.54142772 0.044600316</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [122,] 3.237234e-02 0.74495644 0.222671220</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [123,] 4.785881e-01 0.48384414 0.037567739</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [124,] 4.596853e-02 0.89441301 0.059618455</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [125,] 1.347265e-01 0.78946582 0.075807682</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [126,] 8.542548e-01 0.12052686 0.025218294</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [127,] 2.006631e-02 0.91101213 0.068921562</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [128,] 1.653704e-02 0.92148708 0.061975888</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [129,] 1.735562e-02 0.95703487 0.025609510</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [130,] 4.507960e-02 0.90657154 0.048348857</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [131,] 2.199512e-02 0.88762273 0.090382150</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [132,] 2.188147e-02 0.94349853 0.034620004</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [133,] 1.082930e-02 0.90629000 0.082880697</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [134,] 2.660600e-02 0.95807561 0.015318383</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [135,] 1.046008e-03 0.93292876 0.066025234</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [136,] 5.321375e-01 0.44799409 0.019868420</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [137,] 1.837964e-02 0.93010737 0.051512986</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [138,] 2.380481e-02 0.93022876 0.045966433</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [139,] 2.893082e-02 0.93043524 0.040633937</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [140,] 1.999676e-01 0.74695642 0.053075979</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [141,] 2.414663e-02 0.96800873 0.007844636</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [142,] 1.463685e-02 0.73536162 0.250001539</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [143,] 2.557686e-02 0.95670346 0.017719672</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [144,] 1.581823e-01 0.78453029 0.057287435</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [145,] 1.048707e-02 0.96376076 0.025752172</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [146,] 2.037155e-02 0.95330840 0.026320044</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [147,] 9.200603e-03 0.38040042 0.610398973</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [148,] 1.676392e-02 0.91747612 0.065759958</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [149,] 2.889170e-02 0.94941883 0.021689467</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [150,] 2.165344e-02 0.96731738 0.011029183</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [151,] 1.620225e-02 0.85585555 0.127942199</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [152,] 1.985331e-02 0.90085867 0.079288027</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [153,] 6.782924e-01 0.29377340 0.027934200</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [154,] 3.005734e-01 0.67173958 0.027687021</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [155,] 2.037042e-02 0.96721165 0.012417933</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [156,] 2.411961e-02 0.95229620 0.023584191</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [157,] 9.508534e-01 0.03384293 0.015303677</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [158,] 1.891513e-02 0.94918505 0.031899818</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [159,] 4.172381e-01 0.56348511 0.019276759</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [160,] 1.050096e-02 0.50964976 0.479849281</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [161,] 6.501322e-01 0.29904801 0.050819823</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [162,] 6.892109e-02 0.86917142 0.061907490</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [163,] 1.463490e-02 0.76460794 0.220757165</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [164,] 1.804090e-01 0.63512650 0.184464547</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [165,] 5.369111e-01 0.44489719 0.018191714</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [166,] 6.529609e-03 0.49778318 0.495687206</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [167,] 1.033075e-01 0.82846836 0.068224165</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [168,] 2.270243e-02 0.96335803 0.013939532</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [169,] 2.502690e-02 0.89800431 0.076968790</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [170,] 1.653749e-02 0.90706130 0.076401207</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [171,] 3.979026e-01 0.32312216 0.278975270</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [172,] 9.947524e-03 0.90839557 0.081656911</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [173,] 1.803549e-02 0.86114591 0.120818595</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [174,] 2.207595e-02 0.90082026 0.077103799</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [175,] 1.552291e-02 0.94898149 0.035495594</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [176,] 1.601944e-02 0.92452104 0.059459520</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [177,] 2.695114e-02 0.86092332 0.112125544</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [178,] 3.053887e-04 0.77145760 0.228237015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [179,] 1.787570e-02 0.71398715 0.268137152</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [180,] 1.622222e-02 0.62618542 0.357592366</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [181,] 8.235968e-01 0.16616616 0.010237070</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [182,] 2.973629e-02 0.83357580 0.136687907</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [183,] 1.448461e-03 0.93451390 0.064037638</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [184,] 1.436260e-02 0.97755488 0.008082523</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [185,] 3.053058e-02 0.86831876 0.101150655</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [186,] 2.199849e-02 0.90898342 0.069018087</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [187,] 1.129861e-02 0.72784598 0.260855405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [188,] 2.154926e-02 0.94730217 0.031148570</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [189,] 8.685499e-02 0.84924945 0.063895557</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [190,] 2.191810e-02 0.95460010 0.023481802</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [191,] 1.796040e-02 0.92100029 0.061039311</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [192,] 1.601325e-02 0.87280845 0.111178298</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [193,] 1.801943e-02 0.95313902 0.028841552</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [194,] 6.242149e-01 0.29440818 0.081376921</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [195,] 9.710651e-01 0.02733155 0.001603336</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [196,] 1.557376e-02 0.97035190 0.014074340</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [197,] 1.611370e-02 0.50614500 0.477741295</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [198,] 1.710175e-02 0.96554497 0.017353278</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [199,] 1.163398e-02 0.91467703 0.073688990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [200,] 5.374753e-01 0.43456381 0.027960864</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
