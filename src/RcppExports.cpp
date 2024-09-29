@@ -2,6 +2,7 @@
 // Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #include <RcppArmadillo.h>
+#include <RcppEigen.h>
 #include <Rcpp.h>
 
 using namespace Rcpp;
@@ -11,6 +12,27 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// GBDT
+NumericVector GBDT(Eigen::MatrixXd X, Eigen::VectorXd y, Eigen::MatrixXd Xtest, NumericMatrix Y, int numClass, int maxTerms, int ntrees, int mtry, int MinLeaf, bool replacement, double ratOOB);
+RcppExport SEXP _ODRF_GBDT(SEXP XSEXP, SEXP ySEXP, SEXP XtestSEXP, SEXP YSEXP, SEXP numClassSEXP, SEXP maxTermsSEXP, SEXP ntreesSEXP, SEXP mtrySEXP, SEXP MinLeafSEXP, SEXP replacementSEXP, SEXP ratOOBSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type X(XSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXd >::type y(ySEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type Xtest(XtestSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type Y(YSEXP);
+    Rcpp::traits::input_parameter< int >::type numClass(numClassSEXP);
+    Rcpp::traits::input_parameter< int >::type maxTerms(maxTermsSEXP);
+    Rcpp::traits::input_parameter< int >::type ntrees(ntreesSEXP);
+    Rcpp::traits::input_parameter< int >::type mtry(mtrySEXP);
+    Rcpp::traits::input_parameter< int >::type MinLeaf(MinLeafSEXP);
+    Rcpp::traits::input_parameter< bool >::type replacement(replacementSEXP);
+    Rcpp::traits::input_parameter< double >::type ratOOB(ratOOBSEXP);
+    rcpp_result_gen = Rcpp::wrap(GBDT(X, y, Xtest, Y, numClass, maxTerms, ntrees, mtry, MinLeaf, replacement, ratOOB));
+    return rcpp_result_gen;
+END_RCPP
+}
 // best_cut_node
 List best_cut_node(char method, double lambda, NumericMatrix Data, NumericVector Labels, NumericVector W, int minleaf, int numLabels);
 RcppExport SEXP _ODRF_best_cut_node(SEXP methodSEXP, SEXP lambdaSEXP, SEXP DataSEXP, SEXP LabelsSEXP, SEXP WSEXP, SEXP minleafSEXP, SEXP numLabelsSEXP) {
@@ -66,6 +88,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_ODRF_GBDT", (DL_FUNC) &_ODRF_GBDT, 11},
     {"_ODRF_best_cut_node", (DL_FUNC) &_ODRF_best_cut_node, 7},
     {"_ODRF_ppOpt", (DL_FUNC) &_ODRF_ppOpt, 11},
     {"_ODRF_predict_ODT", (DL_FUNC) &_ODRF_predict_ODT, 5},

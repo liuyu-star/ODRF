@@ -39,7 +39,8 @@ The ODRF R package allows users to define their own functions to find the projec
 The ODRF [R package](https://cran.r-project.org/) consists of the following main functions:
 
 * `ODT()` classification and regression using an ODT in which each node is split by a linear combination of predictors.
-* `ODRF()` classification and regression implemented by the ODRF It’s an extension of random forest based on ODT() and includes random forest as a special case.
+* `ODRF()` classification and regression implemented by the ODRF, It’s an extension of random forest based on ODT() and includes random forest as a special case.
+* `ODBT()` applies feature bagging during the training process of ODT-based boosting trees to ensemble multiple boosting trees.
 * `Online()` online training to update existing ODT and ODRF by using new data sets.
 * `prune()`  prune ODT from bottom to top with validation data based on prediction error.
 * `print()`, predict() and plot() the base R functions in the base R Package to class ODT and ODRF.
@@ -59,7 +60,7 @@ devtools::install_github("liuyu-star/ODRF")
 
 We show how to use the ODRF package with examples.
 
-### Classification and regression using ODT and ODRF
+### Classification and regression using ODT, ODRF, and ODBT.
 
 Examples of classification and regression using ODRF and ODT are as follows.
 ```{r classification and regression}
@@ -80,6 +81,10 @@ bodyfat_test <- data.frame(body_fat[-train, ])
 tree <- ODT(Density ~ ., bodyfat_train, split = 'mse')
 pred <- predict(tree, bodyfat_test[, -1])
 (e.tree <- mean((pred - bodyfat_test[, 1])^2))
+btree <- ODBT(Density ~ ., bodyfat_train, bodyfat_test[, -1],
+type = "reg",parallel = FALSE, model="ODT",NodeRotateFun = "RotMatPPO")
+pred <- btree$results$prediction
+(e.btree <- mean((pred - bodyfat_test[, 1])^2))
 ```
 
 In the following example, suppose the training data are available in two batches. The first batch is used to train ODT and ODRF, and the second batch is used to update the model by online. The error after the model update is significantly smaller than that of one batch of data alone.

@@ -35,9 +35,11 @@ following main functions:
 
 - `ODT()` classification and regression using an ODT in which each node
   is split by a linear combination of predictors.
-- `ODRF()` classification and regression implemented by the ODRF It’s an
-  extension of random forest based on ODT() and includes random forest
-  as a special case.
+- `ODRF()` classification and regression implemented by the ODRF, It’s
+  an extension of random forest based on ODT() and includes random
+  forest as a special case.
+- `ODBT()` applies feature bagging during the training process of
+  ODT-based boosting trees to ensemble multiple boosting trees.
 - `Online()` online training to update existing ODT and ODRF by using
   new data sets.
 - `prune()` prune ODT from bottom to top with validation data based on
@@ -64,7 +66,7 @@ devtools::install_github("liuyu-star/ODRF")
 
 We show how to use the ODRF package with examples.
 
-### Classification and regression using ODT and ODRF
+### Classification and regression using ODT, ODRF, and ODBT.
 
 Examples of classification and regression using ODRF and ODT are as
 follows.
@@ -72,6 +74,7 @@ follows.
 ``` r
 library(ODRF)
 #> Loading required package: partykit
+#> Warning: package 'partykit' was built under R version 4.2.3
 #> Loading required package: grid
 #> Loading required package: libcoin
 #> Loading required package: mvtnorm
@@ -92,7 +95,12 @@ bodyfat_test <- data.frame(body_fat[-train, ])
 tree <- ODT(Density ~ ., bodyfat_train, split = 'mse')
 pred <- predict(tree, bodyfat_test[, -1])
 (e.tree <- mean((pred - bodyfat_test[, 1])^2))
-#> [1] 4.775053e-05
+#> [1] 4.248171e-05
+btree <- ODBT(Density ~ ., bodyfat_train, bodyfat_test[, -1],
+type = "reg",parallel = FALSE, model="ODT",NodeRotateFun = "RotMatPPO")
+pred <- btree$results$prediction
+(e.btree <- mean((pred - bodyfat_test[, 1])^2))
+#> [1] 3.718075e-05
 ```
 
 In the following example, suppose the training data are available in two
@@ -118,11 +126,11 @@ index <- seq(floor(nrow(bodyfat_train) / 2))
 tree1 <- ODT(Density ~ ., bodyfat_train[index, ], split = 'mse')
 pred <- predict(tree1, bodyfat_test[, -1])
 (e.tree.1 <- mean((pred - bodyfat_test[, 1])^2))
-#> [1] 6.37745e-05
+#> [1] 5.057853e-05
 tree2 <- online(tree1, bodyfat_train[-index, -1], bodyfat_train[-index, 1])
 pred <- predict(tree2, bodyfat_test[, -1])
 (e.tree.online <- mean((pred - bodyfat_test[, 1])^2))
-#> [1] 5.659303e-05
+#> [1] 5.065922e-05
 ```
 
 prune first judges whether the error of new data is reduced or not if
@@ -143,25 +151,25 @@ forest1 <- ODRF(seeds_train[index, -8], seeds_train[index, 8],
   split = "gini", parallel = FALSE)
 pred <- predict(forest1, seeds_test[, -8])
 (e.forest.1 <- mean(pred != seeds_test[, 8]))
-#> [1] 0.08474576
+#> [1] 0.1016949
 forest2 <- prune(forest1, seeds_train[-index, -8], seeds_train[-index, 8], 
   useOOB = FALSE)
 pred <- predict(forest2, seeds_test[, -8])
 (e.forest.prune1 <- mean(pred != seeds_test[, 8]))
-#> [1] 0.06779661
+#> [1] 0.08474576
 forest3 <- prune(forest1, seeds_train[index, -8], seeds_train[index, 8])
 pred <- predict(forest3, seeds_test[, -8])
 (e.forest.prune2 <- mean(pred != seeds_test[, 8]))
-#> [1] 0.06779661
+#> [1] 0.08474576
 index <- sample(nrow(bodyfat_train), floor(nrow(bodyfat_train) / 2))
 tree1 <- ODT(bodyfat_train[index, -1], bodyfat_train[index, 1], split = 'mse')
 pred <- predict(tree1, bodyfat_test[, -1])
 (e.tree.1 <- mean((pred - bodyfat_test[, 1])^2))
-#> [1] 6.766526e-05
+#> [1] 0.0001275841
 tree2 <- prune(tree1, bodyfat_train[-index, -1], bodyfat_train[-index, 1])
 pred <- predict(tree2, bodyfat_test[, -1])
 (e.tree.prune <- mean((pred - bodyfat_test[, 1])^2))
-#> [1] 5.798751e-05
+#> [1] 7.589647e-05
 ```
 
 Note that, prune does not always improve efficiency because the number
@@ -174,8 +182,8 @@ make prune effective.
 ``` r
 data(iris, package = "datasets")
 tree <- ODT(Species ~ ., data = iris)
-#> Warning in ODT.compute(formula, Call, varName, X, y, split, lambda,
-#> NodeRotateFun, : You are creating a tree for classification
+#> Warning in ODT_compute(formula, Call, varName, X, y, Xsplit, split, lambda, :
+#> You are creating a tree for classification
 print(tree)
 #> 
 #> ============================================================= 
@@ -183,10 +191,10 @@ print(tree)
 #> =============================================================
 #> 
 #> 1) root
-#>    node2)# proj1*X < 0.25 -> (leaf1 = setosa)
-#>    node3)  proj1*X >= 0.25
-#>       node4)# proj2*X < 0.88 -> (leaf2 = versicolor)
-#>       node5)# proj2*X >= 0.88 -> (leaf3 = virginica)
+#>    node2)# proj1*X < 0.29 -> (leaf1 = setosa)
+#>    node3)  proj1*X >= 0.29
+#>       node4)# proj2*X < 0.52 -> (leaf2 = versicolor)
+#>       node5)# proj2*X >= 0.52 -> (leaf3 = virginica)
 party.tree <- as.party(tree, data = iris)
 print(party.tree)
 #> 
@@ -195,15 +203,15 @@ print(party.tree)
 #> 
 #> Fitted party:
 #> [1] root
-#> |   [2] proj1X >= 0.24576
-#> |   |   [3] proj2X >= 0.88395: virginica (n = 53, err = 5.7%)
-#> |   |   [4] proj2X < 0.88395: versicolor (n = 47, err = 0.0%)
-#> |   [5] proj1X < 0.24576: setosa (n = 50, err = 0.0%)
+#> |   [2] proj1*X >= 0.29165
+#> |   |   [3] proj2*X >= 0.52235: virginica (n = 54, err = 7.4%)
+#> |   |   [4] proj2*X < 0.52235: versicolor (n = 46, err = 0.0%)
+#> |   [5] proj1*X < 0.29165: setosa (n = 50, err = 0.0%)
 #> 
 #> Number of inner nodes:    2
 #> Number of terminal nodes: 3
 forest <- ODRF(Species ~ ., data = iris, parallel = FALSE)
-#> Warning in ODRF.compute(formula, Call, varName, X, y, split, lambda,
+#> Warning in ODRF_compute(formula, Call, varName, X, y, split, lambda,
 #> NodeRotateFun, : You are creating a forest for classification
 print(forest)
 #> 
@@ -211,12 +219,12 @@ print(forest)
 #>  ODRF.formula(formula = Species ~ ., data = data, parallel = FALSE) 
 #>                Type of oblique decision random forest: classification
 #>                                       Number of trees: 100
-#>                            OOB estimate of error rate: 3.33%
+#>                            OOB estimate of error rate: 4.67%
 #> Confusion matrix:
 #>            setosa versicolor virginica class_error
 #> setosa         50          0         0  0.00000000
-#> versicolor      0         47         2  0.04081624
-#> virginica       0          3        48  0.05882341
+#> versicolor      0         47         4  0.07843122
+#> virginica       0          3        46  0.06122436
 ```
 
 ### Plot the tree structure of ODT
