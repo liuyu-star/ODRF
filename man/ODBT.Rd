@@ -185,7 +185,7 @@ train <- sample(1:252, 80)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 # To use ODT as the basic tree model for boosting, you need to set
-the parameters model = "ODT" and NodeRotateFun = "RotMatPPO".
+#the parameters model = "ODT" and NodeRotateFun = "RotMatPPO".
 forest <- ODBT(Density ~ ., train_data, test_data[, -1],
   type = "reg",parallel = FALSE, model="ODT",
   NodeRotateFun = "RotMatPPO")
