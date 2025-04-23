@@ -1,4 +1,4 @@
-# ODRF (development version)
+# ODRF 0.0.5
 
 * Added linear model tree. Specifically, use parameter Xsplit as the splitting variable for ODT and fit a linear model for each split using the function "gmlnet". The corresponding parameter is split="linear".
 * Added the ensemble of ODT-based boosting trees，denoted by ODBT.
@@ -28,9 +28,7 @@
 * We have removed par from plot.VarImp() and added on.exit to plot.prune.ODT(), and checked the code to make sure that it does not change the user's options, including par or working directory.
 * We have removed the random seed number in functions ODRF(), poune.ODRF(), online.ODRF() and plot_ODT_depth().
 
-
 # ODRF 0.0.1
 
 * Added a `NEWS.md` file to track changes to the package.
 * This is the first fully-functioning version of the package. It currently has no ERRORs, WARNINGs, or NOTEs from devtools::check().
-
