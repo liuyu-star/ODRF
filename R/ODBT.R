@@ -9,7 +9,7 @@
 #' @param y A response vector of length n.
 #' @param Xnew An n by d numeric matrix (preferable) or data frame containing predictors for the new data.
 #' @param type Use \code{ODBT} for classification ("class") or regression ("reg").'auto' (default): If the response in \code{data} or \code{y} is a factor, "class" is used, otherwise regression is assumed.
-#' @param model The basic tree model for boosting. We offer three options: "ODT" (default), "rpart," and "rpart.cpp" (improved "rpart")..
+#' @param model The basic tree model for boosting. We offer three options: "ODT" (default), "rpart" and "rpart.cpp" (improved "rpart").
 #' @param TreeRotate If or not to rotate the training data with the rotation matrix estimated by logistic regression before building the tree (default TRUE).
 #' @param max.terms The maximum number of iterations for boosting trees.
 #' @param NodeRotateFun Name of the function of class \code{character} that implements a linear combination of predictors in the split node.
@@ -60,7 +60,7 @@
 #' \item{\code{results}: The prediction results for new data \code{Xnew} using \code{ODBT}.}
 #' }
 #'
-#' @seealso \code{\link{ODT}}
+#' @seealso \code{\link{ODT}} \code{\link{best.cut.node}}
 #'
 #' @author Yu Liu and Yingcun Xia
 #' @references Zhan, H., Liu, Y., & Xia, Y. (2024). Consistency of Oblique Decision Tree and its Boosting and Random Forest. arXiv preprint arXiv:2211.12653.
@@ -74,6 +74,7 @@
 #' train <- sample(1:209, 100)
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
+#' \donttest{
 #' forest <- ODBT(varieties_of_wheat ~ ., train_data, test_data[, -8],model="rpart",
 #' type = "class", parallel = FALSE, NodeRotateFun = "RotMatRF")
 #' pred <- forest$results$prediction
@@ -84,6 +85,7 @@
 #' pred <- forest$results$prediction
 #' # classification error
 #' (mean(pred != test_data[, 8]))
+#' }
 #'
 #' # Regression with Oblique Decision Randome Forest.
 #' data(body_fat)
@@ -93,6 +95,7 @@
 #' test_data <- data.frame(body_fat[-train, ])
 #' # To use ODT as the basic tree model for boosting, you need to set
 #' #the parameters model = "ODT" and NodeRotateFun = "RotMatPPO".
+#' \donttest{
 #' forest <- ODBT(Density ~ ., train_data, test_data[, -1],
 #'   type = "reg",parallel = FALSE, model="ODT",
 #'   NodeRotateFun = "RotMatPPO")
@@ -105,6 +108,7 @@
 #' pred <- forest$results$prediction
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
+#' }
 
 #' @export
 ODBT <- function(X, ...) {
@@ -743,8 +747,9 @@ ODBT.compute <- function(formula, Call, varName, X, y, Xnew,type,model,TreeRotat
       #lapply(chunks[[icore]], runTree)
       vapply(chunks[[icore]], function(t){
         if(model=="rpart.cpp"){
-          GBDTCpp(X,y,Xnew,Y,#nnet,rpart,control,predict,
-                  numClass, maxTerms=max.terms, ntrees, mtry, MinLeaf,replacement,ratOOB)
+          #GBDTCpp(X,y,Xnew,Y,#nnet,rpart,control,predict,
+          #        numClass, maxTerms=max.terms, ntrees, mtry, MinLeaf,replacement,ratOOB)
+          .Call("_ODRF_GBDT", PACKAGE = "ODRF",X,y,Xnew,Y,numClass, maxTerms=max.terms, ntrees, mtry, MinLeaf,replacement,ratOOB)
         }else{
           runTree()
         }

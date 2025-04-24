@@ -30,6 +30,7 @@ Mifflin
 NOTEs
 Niewczas
 NodeRotateFun
+ODBT
 ODT
 ODTs
 OL
@@ -71,13 +72,13 @@ arXiv
 bag’
 bottomleft
 bottomright
+cpp
 devtools
 dimProj
 fitL
 fitR
 friedmantukey
 gini
-glmnetParList
 gmlnet
 hermite
 kurtosismax
@@ -96,10 +97,12 @@ piA
 pkgdown
 pois
 poune
+pred
 prediced
 preprint
 projectin
 randomer
+rpart
 signif
 topleft
 topright

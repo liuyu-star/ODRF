@@ -82,7 +82,7 @@ ODBT(X, ...)
 
 \item{type}{Use \code{ODBT} for classification ("class") or regression ("reg").'auto' (default): If the response in \code{data} or \code{y} is a factor, "class" is used, otherwise regression is assumed.}
 
-\item{model}{The basic tree model for boosting. We offer three options: "ODT" (default), "rpart," and "rpart.cpp" (improved "rpart")..}
+\item{model}{The basic tree model for boosting. We offer three options: "ODT" (default), "rpart" and "rpart.cpp" (improved "rpart").}
 
 \item{TreeRotate}{If or not to rotate the training data with the rotation matrix estimated by logistic regression before building the tree (default TRUE).}
 
@@ -167,6 +167,7 @@ set.seed(221212)
 train <- sample(1:209, 100)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
+\donttest{
 forest <- ODBT(varieties_of_wheat ~ ., train_data, test_data[, -8],model="rpart",
 type = "class", parallel = FALSE, NodeRotateFun = "RotMatRF")
 pred <- forest$results$prediction
@@ -177,6 +178,7 @@ type = "class", parallel = FALSE, NodeRotateFun = "RotMatRF")
 pred <- forest$results$prediction
 # classification error
 (mean(pred != test_data[, 8]))
+}
 
 # Regression with Oblique Decision Randome Forest.
 data(body_fat)
@@ -186,6 +188,7 @@ train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 # To use ODT as the basic tree model for boosting, you need to set
 #the parameters model = "ODT" and NodeRotateFun = "RotMatPPO".
+\donttest{
 forest <- ODBT(Density ~ ., train_data, test_data[, -1],
   type = "reg",parallel = FALSE, model="ODT",
   NodeRotateFun = "RotMatPPO")
@@ -199,13 +202,14 @@ pred <- forest$results$prediction
 # estimation error
 mean((pred - test_data[, 1])^2)
 }
+}
 \references{
 Zhan, H., Liu, Y., & Xia, Y. (2024). Consistency of Oblique Decision Tree and its Boosting and Random Forest. arXiv preprint arXiv:2211.12653.
 
 Tomita, T. M., Browne, J., Shen, C., Chung, J., Patsolic, J. L., Falk, B., ... & Vogelstein, J. T. (2020). Sparse projection oblique randomer forests. Journal of machine learning research, 21(104).
 }
 \seealso{
-\code{\link{ODT}}
+\code{\link{ODT}} \code{\link{best.cut.node}}
 }
 \author{
 Yu Liu and Yingcun Xia

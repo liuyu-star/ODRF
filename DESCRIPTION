@@ -30,6 +30,7 @@ Imports:
     rlang (>= 0.4.11),
     stats,
     rpart,
+    methods,
     glmnet
 Suggests: 
     knitr,

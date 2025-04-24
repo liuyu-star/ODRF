@@ -55,7 +55,7 @@ y <- (rnorm(100) > 0) + 0
 library(nnet)
 (RotMat <- RotMatMake(X, y, "RotMatPPO", "PPO", paramList = list(model = "Log")))
 
-## Define projection matrix function makeRotMat and projection pursuit function makePP.##
+## Define projection matrix function makeRotMat and projection pursuit function makePP.
 ##  Note that '...' is necessary.
 makeRotMat <- function(dimX, dimProj, numProj, ...) {
   RotMat <- matrix(1, dimProj * numProj, 3)

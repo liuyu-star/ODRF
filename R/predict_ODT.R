@@ -59,7 +59,7 @@
 #'                NodeRotateFun = "RotMatRF",MinLeaf = 10, MaxDepth = 5,
 #'                glmnetParList=list(lambda = 0.1,family = "gaussian"))
 #' (leafnode <- predict(my.tree, X, Xsplit=Z, type="leafnode"))
-#'
+#' \donttest{
 #' y1 = (y>0)*1
 #' my.tree <- ODT(X=X, y=y1, Xsplit=Z, split = "linear",
 #'                NodeRotateFun = "RotMatRF",MinLeaf = 10, MaxDepth = 5,
@@ -72,7 +72,7 @@
 #'                NodeRotateFun = "RotMatRF",MinLeaf = 10, MaxDepth = 5,
 #'                glmnetParList=list(family = "multinomial"))
 #' (prob <- predict(my.tree, X, Xsplit=Z, type="prob"))
-#'
+#'}
 #'
 #' @importFrom stats aggregate as.formula na.action predict quantile runif
 #' @importFrom glmnet predict.glmnet

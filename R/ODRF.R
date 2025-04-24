@@ -33,7 +33,7 @@
 #' @param na.action A function to specify the action to be taken if NAs are found. (NOTE: If given, this argument must be named.)
 #' @param catLabel A category labels of class \code{list} in predictors. (default NULL, for details see Examples)
 #' @param Xcat A class \code{vector} is used to indicate which predictor is the categorical variable. The default Xcat=0 means that no special treatment is given to category variables.
-#' When Xcat=NULL, the predictor x that satisfies the condition "\code{(length(table(x))<10) & (length(x)>20)}" is judged to be a category variable.
+#' When Xcat=NULL, the predictor x that satisfies the condition "\code{(length(}\code{table(x))<10) & (length(x)>20)}" is judged to be a category variable.
 #' @param Xscale Predictor standardization methods. " Min-max" (default), "Quantile", "No" denote Min-max transformation, Quantile transformation and No transformation respectively.
 #' @param TreeRandRotate If or not to randomly rotate the training data before building the tree (default FALSE, see \code{\link[ODRF]{RandRot}}).
 #' @param ... Optional parameters to be passed to the low level function.
