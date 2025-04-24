@@ -13,8 +13,8 @@ License: GPL (>= 3)
 URL: https://liuyu-star.github.io/ODRF/
 BugReports: https://github.com/liuyu-star/ODRF/issues
 Depends: 
-    partykit,
-    R (>= 4.1.0)
+    partykit(>= 1.2-20),
+    R (>= 3.5.0)
 Imports: 
     doParallel,
     foreach,
