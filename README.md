@@ -73,18 +73,20 @@ follows.
 
 ``` r
 library(ODRF)
-#> Loading required package: partykit
-#> Warning: package 'partykit' was built under R version 4.2.3
-#> Loading required package: grid
-#> Loading required package: libcoin
-#> Loading required package: mvtnorm
+#> 载入需要的程辑包：partykit
+#> Warning: 程辑包'partykit'是用R版本4.2.3 来建造的
+#> 载入需要的程辑包：grid
+#> 载入需要的程辑包：libcoin
+#> 载入需要的程辑包：mvtnorm
 data(seeds, package = "ODRF")
 set.seed(12)
 train <- sample(1:209, 150)
 seeds_train <- data.frame(seeds[train, ])
 seeds_test <- data.frame(seeds[-train, ])
-forest <- ODRF(varieties_of_wheat ~ ., seeds_train, split = "gini", 
-  parallel = FALSE)
+forest <- ODRF(varieties_of_wheat ~ ., seeds_train,
+  split = "gini",
+  parallel = FALSE
+)
 pred <- predict(forest, seeds_test[, -8])
 (e.forest <- mean(pred != seeds_test[, 8]))
 #> [1] 0.01694915
@@ -92,12 +94,13 @@ data(body_fat, package = "ODRF")
 train <- sample(1:252, 200)
 bodyfat_train <- data.frame(body_fat[train, ])
 bodyfat_test <- data.frame(body_fat[-train, ])
-tree <- ODT(Density ~ ., bodyfat_train, split = 'mse')
+tree <- ODT(Density ~ ., bodyfat_train, split = "mse")
 pred <- predict(tree, bodyfat_test[, -1])
 (e.tree <- mean((pred - bodyfat_test[, 1])^2))
 #> [1] 4.248171e-05
 btree <- ODBT(Density ~ ., bodyfat_train, bodyfat_test[, -1],
-type = "reg",parallel = FALSE, model="ODT",NodeRotateFun = "RotMatPPO")
+  type = "reg", parallel = FALSE, model = "ODT", NodeRotateFun = "RotMatPPO"
+)
 pred <- btree$results$prediction
 (e.btree <- mean((pred - bodyfat_test[, 1])^2))
 #> [1] 3.718075e-05
@@ -114,7 +117,8 @@ Update existing ODT and ODRF with online.
 set.seed(17)
 index <- sample(nrow(seeds_train), floor(nrow(seeds_train) / 2))
 forest1 <- ODRF(varieties_of_wheat ~ ., seeds_train[index, ],
-  split = "gini", parallel = FALSE)
+  split = "gini", parallel = FALSE
+)
 pred <- predict(forest1, seeds_test[, -8])
 (e.forest.1 <- mean(pred != seeds_test[, 8]))
 #> [1] 0.03389831
@@ -123,7 +127,7 @@ pred <- predict(forest2, seeds_test[, -8])
 (e.forest.online <- mean(pred != seeds_test[, 8]))
 #> [1] 0.01694915
 index <- seq(floor(nrow(bodyfat_train) / 2))
-tree1 <- ODT(Density ~ ., bodyfat_train[index, ], split = 'mse')
+tree1 <- ODT(Density ~ ., bodyfat_train[index, ], split = "mse")
 pred <- predict(tree1, bodyfat_test[, -1])
 (e.tree.1 <- mean((pred - bodyfat_test[, 1])^2))
 #> [1] 5.057853e-05
@@ -140,20 +144,24 @@ follows.
 
 ``` r
 set.seed(4)
-bodyfat_train=rbind(as.matrix(bodyfat_train),matrix(rnorm(3000*5),5*200,15))
-seeds_train=rbind(as.matrix(seeds_train),matrix(rnorm(1200*5),5*150,8))
-bodyfat_train[-seq(200),1]=sample(bodyfat_train[seq(200),1],5*200,
-  replace = TRUE)
-seeds_train[-seq(150),8]=sample(seeds_train[seq(150),8],5*150,
-  replace = TRUE)
+bodyfat_train <- rbind(as.matrix(bodyfat_train), matrix(rnorm(3000 * 5), 5 * 200, 15))
+seeds_train <- rbind(as.matrix(seeds_train), matrix(rnorm(1200 * 5), 5 * 150, 8))
+bodyfat_train[-seq(200), 1] <- sample(bodyfat_train[seq(200), 1], 5 * 200,
+  replace = TRUE
+)
+seeds_train[-seq(150), 8] <- sample(seeds_train[seq(150), 8], 5 * 150,
+  replace = TRUE
+)
 index <- sample(nrow(seeds_train), floor(nrow(seeds_train) / 2))
 forest1 <- ODRF(seeds_train[index, -8], seeds_train[index, 8],
-  split = "gini", parallel = FALSE)
+  split = "gini", parallel = FALSE
+)
 pred <- predict(forest1, seeds_test[, -8])
 (e.forest.1 <- mean(pred != seeds_test[, 8]))
 #> [1] 0.1016949
-forest2 <- prune(forest1, seeds_train[-index, -8], seeds_train[-index, 8], 
-  useOOB = FALSE)
+forest2 <- prune(forest1, seeds_train[-index, -8], seeds_train[-index, 8],
+  useOOB = FALSE
+)
 pred <- predict(forest2, seeds_test[, -8])
 (e.forest.prune1 <- mean(pred != seeds_test[, 8]))
 #> [1] 0.08474576
@@ -162,7 +170,7 @@ pred <- predict(forest3, seeds_test[, -8])
 (e.forest.prune2 <- mean(pred != seeds_test[, 8]))
 #> [1] 0.08474576
 index <- sample(nrow(bodyfat_train), floor(nrow(bodyfat_train) / 2))
-tree1 <- ODT(bodyfat_train[index, -1], bodyfat_train[index, 1], split = 'mse')
+tree1 <- ODT(bodyfat_train[index, -1], bodyfat_train[index, 1], split = "mse")
 pred <- predict(tree1, bodyfat_test[, -1])
 (e.tree.1 <- mean((pred - bodyfat_test[, 1])^2))
 #> [1] 0.0001275841
