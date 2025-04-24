@@ -60,11 +60,11 @@
 <dt id="arg-model">model<a class="anchor" aria-label="anchor" href="#arg-model"></a></dt>
 <dd><p>Model for projection pursuit.</p><ul><li><p>"PPR"(default): projection projection regression from <code><a href="https://rdrr.io/r/stats/ppr.html" class="external-link">ppr</a></code>. When y is a category label, it is
 expanded to K binary features.</p></li>
-<li><p>"Log": logistic based on <code>nnet</code>.</p></li>
+<li><p>"Log": logistic based on <code><a href="https://rdrr.io/pkg/nnet/man/nnet.html" class="external-link">nnet</a></code>.</p></li>
 <li><p>"Rand": The random projection generated from \(\{-1, 1\}\).
 The following models can only be used for classification, i.e. the <code>split</code> must be ”entropy” or 'gini'.</p></li>
 <li><p>"LDA", "PDA", "Lr", "GINI", and "ENTROPY" from library <code>PPtreeViz</code>.</p></li>
-<li><p>The following models based on <code>Pursuit</code>.
+<li><p>The following models based on <code><a href="https://rdrr.io/pkg/Pursuit/man/Pursuit-package.html" class="external-link">Pursuit</a></code>.
 </p><ul><li><p>"holes": Holes index</p></li>
 <li><p>"cm": Central Mass index</p></li>
 <li><p>"holes": Holes index</p></li>
