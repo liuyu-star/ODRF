@@ -39,7 +39,7 @@ Suggests:
     testthat (>= 3.0.0)
 LinkingTo: 
     Rcpp,
-    RcppArmadillo,
+    RcppArmadillo(>= 0.12.4),
     RcppEigen
 VignetteBuilder: 
     knitr
