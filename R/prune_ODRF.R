@@ -30,11 +30,11 @@
 #' pred <- predict(prune_forest, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
-#'\donttest{
+#' \donttest{
 #' # Regression with Oblique Decision Random Forest
 #' data(body_fat)
 #' set.seed(221212)
-#' train <- sample(1:252,80)
+#' train <- sample(1:252, 80)
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #' index <- seq(floor(nrow(train_data) / 2))
@@ -43,7 +43,7 @@
 #' pred <- predict(prune_forest, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
-#'}
+#' }
 #' @keywords forest prune
 #' @rdname prune.ODRF
 #' @aliases prune.ODRF
@@ -101,7 +101,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
   numClass <- nC
   ntrees <- length(structure)
 
-  if (split %in% c("gini","entropy")) {
+  if (split %in% c("gini", "entropy")) {
     classCt <- cumsum(table(ynew))
     if (stratify) {
       Cindex <- vector("list", numClass)
@@ -158,19 +158,19 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
 
 
   PPtree <- function(itree, ...) {
-    #set.seed(seed + itree)
-    ppTree=obj[seq(7)]
-    ppTree$data <- c(obj$data,structure[[itree]][c(1,2)])
+    # set.seed(seed + itree)
+    ppTree <- obj[seq(7)]
+    ppTree$data <- c(obj$data, structure[[itree]][c(1, 2)])
     ppTree$data$Xcat <- 0L
     ppTree$data$Xscale <- "No"
     ppTree$tree <- obj$tree
-    ppTree$structure <- structure[[itree]][-c(1,2)]
+    ppTree$structure <- structure[[itree]][-c(1, 2)]
     class(ppTree) <- "ODT"
 
     if (useOOB) {
       ppTree <- prune(ppTree, Xnew[ppTree$structure$oobIndex, ], ynew[ppTree$structure$oobIndex], MaxDepth) # [seq(7)]
-      TreeRotate=list(rotdims=ppTree[["data"]][["rotdims"]],rotmat=ppTree[["data"]][["rotmat"]])
-      ppTree <- ppTree$structure#[-length(ppForestT)]
+      TreeRotate <- list(rotdims = ppTree[["data"]][["rotdims"]], rotmat = ppTree[["data"]][["rotmat"]])
+      ppTree <- ppTree$structure # [-length(ppForestT)]
     } else {
       TDindx0 <- seq(n)
       TDindx <- TDindx0
@@ -178,7 +178,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
         go <- TRUE
         while (go) {
           # make sure each class is represented in proportion to classes in initial dataset
-          if (stratify && (split %in% c("gini","entropy"))) {
+          if (stratify && (split %in% c("gini", "entropy"))) {
             if (classCt[1L] != 0L) {
               TDindx[1:classCt[1L]] <- sample(Cindex[[1L]], classCt[1L], replace = TRUE)
             }
@@ -207,7 +207,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
       ppTree <- ppTree[-length(ppTree)]
       class(ppTree) <- "ODT"
 
-      TreeRotate=list(rotdims=ppTree[["data"]][["rotdims"]],rotmat=ppTree[["data"]][["rotmat"]])
+      TreeRotate <- list(rotdims = ppTree[["data"]][["rotdims"]], rotmat = ppTree[["data"]][["rotmat"]])
 
       if ((ratOOB > 0) && storeOOB) {
         oobErr <- 1
@@ -218,19 +218,19 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
         # }
         pred <- predict(ppTree, Xnew[NTD, ])
 
-        if (split %in% c("gini","entropy")) {
+        if (split %in% c("gini", "entropy")) {
           oobErr <- mean(pred != ynew[NTD])
         } else {
           oobErr <- mean((pred - ynew[NTD])^2)
         }
 
         ppTree <- c(ppTree$structure, list(oobErr = oobErr, oobIndex = NTD, oobPred = pred))
-      }else{
+      } else {
         ppTree <- ppTree$structure
       }
     }
 
-    return(c(TreeRotate,ppTree))
+    return(c(TreeRotate, ppTree))
   }
 
 
@@ -285,7 +285,7 @@ prune.ODRF <- function(obj, X, y, MaxDepth = 1, useOOB = TRUE, ...) {
     oobVotes <- oobVotes[idx, , drop = FALSE]
     yy <- ynew[idx]
 
-    if (split %in% c("gini","entropy")) {
+    if (split %in% c("gini", "entropy")) {
       ny <- length(yy)
       nC <- numClass
       weights <- rep(1, ny * ntrees)

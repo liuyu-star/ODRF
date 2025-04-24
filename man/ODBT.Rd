@@ -168,13 +168,17 @@ train <- sample(1:209, 100)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 \donttest{
-forest <- ODBT(varieties_of_wheat ~ ., train_data, test_data[, -8],model="rpart",
-type = "class", parallel = FALSE, NodeRotateFun = "RotMatRF")
+forest <- ODBT(varieties_of_wheat ~ ., train_data, test_data[, -8],
+  model = "rpart",
+  type = "class", parallel = FALSE, NodeRotateFun = "RotMatRF"
+)
 pred <- forest$results$prediction
 # classification error
 (mean(pred != test_data[, 8]))
-forest <- ODBT(varieties_of_wheat ~ ., train_data, test_data[, -8],model="rpart.cpp",
-type = "class", parallel = FALSE, NodeRotateFun = "RotMatRF")
+forest <- ODBT(varieties_of_wheat ~ ., train_data, test_data[, -8],
+  model = "rpart.cpp",
+  type = "class", parallel = FALSE, NodeRotateFun = "RotMatRF"
+)
 pred <- forest$results$prediction
 # classification error
 (mean(pred != test_data[, 8]))
@@ -187,17 +191,19 @@ train <- sample(1:252, 80)
 train_data <- data.frame(body_fat[train, ])
 test_data <- data.frame(body_fat[-train, ])
 # To use ODT as the basic tree model for boosting, you need to set
-#the parameters model = "ODT" and NodeRotateFun = "RotMatPPO".
+# the parameters model = "ODT" and NodeRotateFun = "RotMatPPO".
 \donttest{
 forest <- ODBT(Density ~ ., train_data, test_data[, -1],
-  type = "reg",parallel = FALSE, model="ODT",
-  NodeRotateFun = "RotMatPPO")
+  type = "reg", parallel = FALSE, model = "ODT",
+  NodeRotateFun = "RotMatPPO"
+)
 pred <- forest$results$prediction
 # estimation error
 mean((pred - test_data[, 1])^2)
 forest <- ODBT(Density ~ ., train_data, test_data[, -1],
-  type = "reg", parallel = FALSE,model="rpart.cpp",
-  NodeRotateFun = "RotMatRF")
+  type = "reg", parallel = FALSE, model = "rpart.cpp",
+  NodeRotateFun = "RotMatRF"
+)
 pred <- forest$results$prediction
 # estimation error
 mean((pred - test_data[, 1])^2)

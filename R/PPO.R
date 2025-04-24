@@ -8,11 +8,11 @@
 #' \itemize{
 #' \item{"PPR"(default): projection projection regression from \code{\link{ppr}}. When y is a category label, it is
 #' expanded to K binary features.}
-#' \item{"Log": logistic based on \code{\link{nnet}}.}
+#' \item{"Log": logistic based on \code{\link[nnet]{nnet}}.}
 #' \item{"Rand": The random projection generated from \eqn{\{-1, 1\}}.
 #' The following models can only be used for classification, i.e. the \code{split} must be ''entropy'' or 'gini'.}
 #' \item{"LDA", "PDA", "Lr", "GINI", and "ENTROPY" from library \code{PPtreeViz}.}
-#' \item{The following models based on \code{\link{Pursuit}}.
+#' \item{The following models based on \code{\link[Pursuit]{Pursuit}}.
 #' \itemize{
 #' \item{"holes": Holes index}
 #' \item{"cm": Central Mass index}
@@ -73,7 +73,7 @@ PPO <- function(X, y, model = "PPR", split = "gini", weights = NULL, ...) {
 
     Y <- c(y)
     indC <- 0L
-    if (split %in% c("gini","entropy")) {
+    if (split %in% c("gini", "entropy")) {
       y <- as.factor(y)
       indC <- levels(y)
       if (length(indC) > 2) {

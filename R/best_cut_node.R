@@ -22,63 +22,66 @@
 #'
 #' @examples
 #' ### Find the best split variable ###
-#' #Classification
+#' # Classification
 #' data(iris)
 #' X <- as.matrix(iris[, 1:4])
 #' y <- iris[[5]]
 #' (bestcut <- best.cut.node(X, y, split = "gini"))
 #' (bestcut <- best.cut.node(X, y, split = "entropy"))
 #'
-#' #Regression
+#' # Regression
 #' data(body_fat)
-#' X=body_fat[, -1]
-#' y=body_fat[, 1]
+#' X <- body_fat[, -1]
+#' y <- body_fat[, 1]
 #' (bestcut <- best.cut.node(X, y, split = "mse"))
 #'
 #' set.seed(10)
-#' cutpoint=50
-#' X=matrix(rnorm(100*10),100,10)
-#' age=sample(seq(20,80),100,replace = TRUE)
-#' height=sample(seq(50,200),100,replace = TRUE)
-#' weight=sample(seq(5,150),100,replace = TRUE)
-#' Xsplit=cbind(age=age,height=height,weight=weight)
-#' mu=rep(0,100)
-#' mu[age<=cutpoint]=X[age<=cutpoint,1]+X[age<=cutpoint,2]
-#' mu[age>cutpoint]=X[age>cutpoint,1]+X[age>cutpoint,3]
-#' y=mu+rnorm(100)
-#' bestcut <- best.cut.node(X, y, Xsplit, split = "linear",
-#'            glmnetParList=list(lambda = 0))
+#' cutpoint <- 50
+#' X <- matrix(rnorm(100 * 10), 100, 10)
+#' age <- sample(seq(20, 80), 100, replace = TRUE)
+#' height <- sample(seq(50, 200), 100, replace = TRUE)
+#' weight <- sample(seq(5, 150), 100, replace = TRUE)
+#' Xsplit <- cbind(age = age, height = height, weight = weight)
+#' mu <- rep(0, 100)
+#' mu[age <= cutpoint] <- X[age <= cutpoint, 1] + X[age <= cutpoint, 2]
+#' mu[age > cutpoint] <- X[age > cutpoint, 1] + X[age > cutpoint, 3]
+#' y <- mu + rnorm(100)
+#' bestcut <- best.cut.node(X, y, Xsplit,
+#'   split = "linear",
+#'   glmnetParList = list(lambda = 0)
+#' )
 #'
 #' @export
-best.cut.node <- function(X, y, Xsplit=X, split, lambda = "log", weights = 1, MinLeaf = 10,
-                          numLabels = ifelse(split %in% c("gini","entropy"), length(unique(y)), 0),glmnetParList=NULL) {
+best.cut.node <- function(X, y, Xsplit = X, split, lambda = "log", weights = 1, MinLeaf = 10,
+                          numLabels = ifelse(split %in% c("gini", "entropy"), length(unique(y)), 0), glmnetParList = NULL) {
   if (any(is.na(X))) {
     stop("data 'X' has Missing value, NA or NaN")
   }
 
   X <- as.matrix(X)
   Xsplit <- as.matrix(Xsplit)
-  if (split %in% c("gini","entropy")) {
+  if (split %in% c("gini", "entropy")) {
     y <- as.integer(as.factor(y))
   } else {
     y <- c(y)
   }
 
 
-  if(split == "linear"){
-    if(length(weights)==1)glmnetParList$weights=NULL
-    bestcut=linear_split(X, y, Xsplit, MinLeaf, lambda, numLabels, glmnetParList)
-  }else{
+  if (split == "linear") {
+    if (length(weights) == 1) glmnetParList$weights <- NULL
+    bestcut <- linear_split(X, y, Xsplit, MinLeaf, lambda, numLabels, glmnetParList)
+  } else {
     if (lambda == "log") lambda <- length(y)
-    #if (split == "") method <- "r"
-    #if (split == "entropy") method <- "i"
-    #if (split == "gini") method <- "g"
+    # if (split == "") method <- "r"
+    # if (split == "entropy") method <- "i"
+    # if (split == "gini") method <- "g"
     method <- switch(split,
-                     "mse" = "r",
-                     "entropy" = "i",
-                     "gini" = "g")
+      "mse" = "r",
+      "entropy" = "i",
+      "gini" = "g"
+    )
     # strsplit(split, split = "")[[1]][1]
-    bestcut=.Call("_ODRF_best_cut_node", PACKAGE = "ODRF", method, lambda, Xsplit, y, weights, MinLeaf, numLabels)
+    bestcut <- .Call("_ODRF_best_cut_node", PACKAGE = "ODRF", method, lambda, Xsplit, y, weights, MinLeaf, numLabels)
   }
 
   return(bestcut)

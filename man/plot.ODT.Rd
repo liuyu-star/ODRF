@@ -37,7 +37,7 @@ plot(tree)
 Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software.
 }
 \seealso{
-\code{\link{ODT}} \code{\link{as.party}} \code{\link{plot_ODT_depth}}
+\code{\link{ODT}} \code{\link{as.party.ODT}} \code{\link{plot_ODT_depth}}
 }
 \keyword{plot}
 \keyword{tree}

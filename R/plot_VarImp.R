@@ -17,8 +17,10 @@
 #' set.seed(221212)
 #' train <- sample(1:569, 200)
 #' train_data <- data.frame(breast_cancer[train, -1])
-#' forest <- ODRF(train_data[, -1], train_data[, 1], split = "gini",
-#'   parallel = FALSE)
+#' forest <- ODRF(train_data[, -1], train_data[, 1],
+#'   split = "gini",
+#'   parallel = FALSE
+#' )
 #' varimp <- VarImp(forest, train_data[, -1], train_data[, 1])
 #' plot(varimp)
 #' @keywords forest plot
@@ -26,7 +28,7 @@
 #' @aliases plot.VarImp
 #' @method plot VarImp
 #' @export
-plot.VarImp <- function(x, nvar = min(30,nrow(x$varImp)), digits = NULL, main = NULL, ...) {
+plot.VarImp <- function(x, nvar = min(30, nrow(x$varImp)), digits = NULL, main = NULL, ...) {
   imp <- x$varImp
   imp <- imp[1:nvar, , drop = FALSE]
 
@@ -36,7 +38,7 @@ plot.VarImp <- function(x, nvar = min(30,nrow(x$varImp)), digits = NULL, main = 
 
   minErr <- strsplit(as.character(min(imp[, 2])), "")[[1]]
   id <- which(minErr == "e")
-  if (x$split %in% c("gini","entropy")) {
+  if (x$split %in% c("gini", "entropy")) {
     digits <- 0
   } else if (is.null(digits)) {
     if (length(id) > 0) {
@@ -46,16 +48,18 @@ plot.VarImp <- function(x, nvar = min(30,nrow(x$varImp)), digits = NULL, main = 
     }
   }
 
-  if(digits==0){
-    xlab = paste0("Increased ",ifelse(x$split %in% c("gini","entropy"),"MR","MSE"))
-  }else if(digits==2){
-    xlab = paste0("Increased ",ifelse(x$split %in% c("gini","entropy"),"MR","MSE")," (%)")
-  }else{
-    xlab = substitute(paste("Increased ",ifelse(x$split %in% c("gini","entropy"),"MR","MSE")," (*",10^{-dig},")"),list(dig = digits))
+  if (digits == 0) {
+    xlab <- paste0("Increased ", ifelse(x$split %in% c("gini", "entropy"), "MR", "MSE"))
+  } else if (digits == 2) {
+    xlab <- paste0("Increased ", ifelse(x$split %in% c("gini", "entropy"), "MR", "MSE"), " (%)")
+  } else {
+    xlab <- substitute(paste("Increased ", ifelse(x$split %in% c("gini", "entropy"), "MR", "MSE"), " (*", 10^{
+      -dig
+    }, ")"), list(dig = digits))
   }
 
   ## If there are more than two columns, just use the last two columns.
-  #op <- par(xaxs = "i") #* 10^digits
+  # op <- par(xaxs = "i") #* 10^digits
 
 
   dotchart(sort(imp[, 2]),
@@ -66,7 +70,7 @@ plot.VarImp <- function(x, nvar = min(30,nrow(x$varImp)), digits = NULL, main = 
     round(seq(min(imp[, 2]), max(imp[, 2]), length.out = min(6, nvar)) * 10^digits, 2),
     cex.lab = 1.5, cex.axis = 1.25
   )
-  #par(op)
+  # par(op)
 
   return(invisible(imp))
 }

@@ -75,13 +75,17 @@
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #' \donttest{
-#' forest <- ODBT(varieties_of_wheat ~ ., train_data, test_data[, -8],model="rpart",
-#' type = "class", parallel = FALSE, NodeRotateFun = "RotMatRF")
+#' forest <- ODBT(varieties_of_wheat ~ ., train_data, test_data[, -8],
+#'   model = "rpart",
+#'   type = "class", parallel = FALSE, NodeRotateFun = "RotMatRF"
+#' )
 #' pred <- forest$results$prediction
 #' # classification error
 #' (mean(pred != test_data[, 8]))
-#' forest <- ODBT(varieties_of_wheat ~ ., train_data, test_data[, -8],model="rpart.cpp",
-#' type = "class", parallel = FALSE, NodeRotateFun = "RotMatRF")
+#' forest <- ODBT(varieties_of_wheat ~ ., train_data, test_data[, -8],
+#'   model = "rpart.cpp",
+#'   type = "class", parallel = FALSE, NodeRotateFun = "RotMatRF"
+#' )
 #' pred <- forest$results$prediction
 #' # classification error
 #' (mean(pred != test_data[, 8]))
@@ -94,17 +98,19 @@
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
 #' # To use ODT as the basic tree model for boosting, you need to set
-#' #the parameters model = "ODT" and NodeRotateFun = "RotMatPPO".
+#' # the parameters model = "ODT" and NodeRotateFun = "RotMatPPO".
 #' \donttest{
 #' forest <- ODBT(Density ~ ., train_data, test_data[, -1],
-#'   type = "reg",parallel = FALSE, model="ODT",
-#'   NodeRotateFun = "RotMatPPO")
+#'   type = "reg", parallel = FALSE, model = "ODT",
+#'   NodeRotateFun = "RotMatPPO"
+#' )
 #' pred <- forest$results$prediction
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
 #' forest <- ODBT(Density ~ ., train_data, test_data[, -1],
-#'   type = "reg", parallel = FALSE,model="rpart.cpp",
-#'   NodeRotateFun = "RotMatRF")
+#'   type = "reg", parallel = FALSE, model = "rpart.cpp",
+#'   NodeRotateFun = "RotMatRF"
+#' )
 #' pred <- forest$results$prediction
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
@@ -120,10 +126,10 @@ ODBT <- function(X, ...) {
 #' @method ODBT formula
 #' @aliases ODBT.formula
 #' @export
-ODBT.formula <- function(formula, data = NULL, Xnew = NULL, type = "auto",model=c("ODT","rpart","rpart.cpp")[1],TreeRotate=TRUE, max.terms=30,NodeRotateFun = "RotMatRF", FunDir = getwd(), paramList=NULL, #= list(numProj=ceiling(ifelse(is.null(data),ncol(eval(formula[[3]])),nrow(data))/2)),
-                        ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, ratOOB = 0.368, parallel = TRUE,
-                        numCores = Inf, MaxDepth = Inf, numNode = Inf, MinLeaf = ceiling(sqrt(ifelse(replacement,1,1-ratOOB)*ifelse(is.null(data),length(eval(formula[[2]])),nrow(data)))/3),
-                        subset = NULL, weights = NULL,na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "No", ...) {
+ODBT.formula <- function(formula, data = NULL, Xnew = NULL, type = "auto", model = c("ODT", "rpart", "rpart.cpp")[1], TreeRotate = TRUE, max.terms = 30, NodeRotateFun = "RotMatRF", FunDir = getwd(), paramList = NULL, # = list(numProj=ceiling(ifelse(is.null(data),ncol(eval(formula[[3]])),nrow(data))/2)),
+                         ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, ratOOB = 0.368, parallel = TRUE,
+                         numCores = Inf, MaxDepth = Inf, numNode = Inf, MinLeaf = ceiling(sqrt(ifelse(replacement, 1, 1 - ratOOB) * ifelse(is.null(data), length(eval(formula[[2]])), nrow(data))) / 3),
+                         subset = NULL, weights = NULL, na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "No", ...) {
   Call <- match.call()
   indx <- match(c("formula", "data", "subset", "na.action"), names(Call), nomatch = 0L) # , "weights"
   # formula=X
@@ -178,7 +184,7 @@ ODBT.formula <- function(formula, data = NULL, Xnew = NULL, type = "auto",model=
   }
 
   forest <- ODBT.compute(
-    formula, Call, varName, X, y, Xnew,type,model,TreeRotate,
+    formula, Call, varName, X, y, Xnew, type, model, TreeRotate,
     max.terms, NodeRotateFun, FunDir, paramList,
     ntrees, storeOOB, replacement, stratify, ratOOB, parallel,
     numCores, MaxDepth, numNode, MinLeaf, subset, weights,
@@ -195,11 +201,11 @@ ODBT.formula <- function(formula, data = NULL, Xnew = NULL, type = "auto",model=
 #' @aliases ODBT.default
 #' @export
 ODBT.default <- function(X, y, Xnew = NULL,
-                         type = "auto",model=c("ODT","rpart","rpart.cpp")[1],TreeRotate=TRUE, max.terms=30,NodeRotateFun = "RotMatRF", FunDir = getwd(), paramList=NULL,
-                         #= list(numProj=ceiling(ifelse(is.null(data),ncol(eval(formula[[3]])),nrow(data))/2)),
+                         type = "auto", model = c("ODT", "rpart", "rpart.cpp")[1], TreeRotate = TRUE, max.terms = 30, NodeRotateFun = "RotMatRF", FunDir = getwd(), paramList = NULL,
+                         # = list(numProj=ceiling(ifelse(is.null(data),ncol(eval(formula[[3]])),nrow(data))/2)),
                          ntrees = 100, storeOOB = TRUE, replacement = TRUE, stratify = TRUE, ratOOB = 0.368, parallel = TRUE,
-                         numCores = Inf, MaxDepth = Inf, numNode = Inf, MinLeaf = ceiling(sqrt(ifelse(replacement,1,1-ratOOB)*length(y))/3),
-                         subset = NULL, weights = NULL,na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "No", ...) {
+                         numCores = Inf, MaxDepth = Inf, numNode = Inf, MinLeaf = ceiling(sqrt(ifelse(replacement, 1, 1 - ratOOB) * length(y)) / 3),
+                         subset = NULL, weights = NULL, na.action = na.fail, catLabel = NULL, Xcat = 0, Xscale = "No", ...) {
   Call <- match.call()
   indx <- match(c("X", "y", "subset", "na.action"), names(Call), nomatch = 0L) # , "weights"
   if (indx[[1]] == 0 || indx[[2]] == 0) {
@@ -226,7 +232,7 @@ ODBT.default <- function(X, y, Xnew = NULL,
   }
 
   ODBT.compute(
-    formula, Call, varName, X, y, Xnew,type,model,TreeRotate,
+    formula, Call, varName, X, y, Xnew, type, model, TreeRotate,
     max.terms, NodeRotateFun, FunDir, paramList,
     ntrees, storeOOB, replacement, stratify, ratOOB, parallel,
     numCores, MaxDepth, numNode, MinLeaf, subset, weights,
@@ -236,7 +242,6 @@ ODBT.default <- function(X, y, Xnew = NULL,
 
 # @importFrom RcppArmadillo fastLm
 # @import fastmatrix ols.fit
-#' @useDynLib ODRF, .registration = TRUE
 #' @import Rcpp
 #' @import doParallel
 #' @import foreach
@@ -246,14 +251,14 @@ ODBT.default <- function(X, y, Xnew = NULL,
 #' @importFrom rpart rpart rpart.control
 #' @keywords internal
 #' @noRd
-ODBT.compute <- function(formula, Call, varName, X, y, Xnew,type,model,TreeRotate,
+ODBT.compute <- function(formula, Call, varName, X, y, Xnew, type, model, TreeRotate,
                          max.terms, NodeRotateFun, FunDir, paramList,
                          ntrees, storeOOB, replacement, stratify, ratOOB, parallel,
-                        numCores, MaxDepth, numNode, MinLeaf, subset, weights,
-                        na.action, catLabel, Xcat, Xscale) {
-  #if (ntrees == 1) {
+                         numCores, MaxDepth, numNode, MinLeaf, subset, weights,
+                         na.action, catLabel, Xcat, Xscale) {
+  # if (ntrees == 1) {
   #  stop("argument 'ntrees' must exceed 1")
-  #}
+  # }
   if (is.factor(y) && (type == "auto")) {
     type <- "class"
     warning("You are creating a forest for classification")
@@ -307,8 +312,8 @@ ODBT.compute <- function(formula, Call, varName, X, y, Xnew,type,model,TreeRotat
     rm(X1)
     p <- ncol(X)
   }
-  if (!is.numeric(X)){
-    X=apply(X, 2, as.numeric)
+  if (!is.numeric(X)) {
+    X <- apply(X, 2, as.numeric)
   }
   X <- as.matrix(X)
   colnames(X) <- varName
@@ -360,8 +365,9 @@ ODBT.compute <- function(formula, Call, varName, X, y, Xnew,type,model,TreeRotat
   rm(data)
 
 
-  Levels=NULL; numClass <- 1
-  #if (type %in% c("gini","entropy")) {
+  Levels <- NULL
+  numClass <- 1
+  # if (type %in% c("gini","entropy")) {
   if (type == "class") {
     y <- as.factor(y)
     Levels <- levels(y)
@@ -411,7 +417,7 @@ ODBT.compute <- function(formula, Call, varName, X, y, Xnew,type,model,TreeRotat
 
 
   numCat <- 0
-  n1=nrow(Xnew)
+  n1 <- nrow(Xnew)
   if (sum(Xcat) > 0) {
     xj <- 1
     Xnew1 <- matrix(0, nrow = n1, ncol = length(unlist(catLabel))) # initialize training data matrix X
@@ -431,13 +437,13 @@ ODBT.compute <- function(formula, Call, varName, X, y, Xnew,type,model,TreeRotat
     }
 
     Xnew <- cbind(Xnew1, Xnew[, -Xcat])
-    #p <- ncol(Xnew)
+    # p <- ncol(Xnew)
     numCat <- length(unlist(catLabel))
     rm(Xnew1)
     rm(Xnewj)
   }
-  if (!is.numeric(Xnew)){
-    Xnew=apply(Xnew, 2, as.numeric)
+  if (!is.numeric(Xnew)) {
+    Xnew <- apply(Xnew, 2, as.numeric)
   }
 
   # Variable scaling.
@@ -448,16 +454,18 @@ ODBT.compute <- function(formula, Call, varName, X, y, Xnew,type,model,TreeRotat
   }
 
 
-  if(is.null(paramList$numProj)){paramList$numProj=ceiling(p/2)}
-  #paramList <- defaults(paramList, split="mse", p, weights, catLabel)
+  if (is.null(paramList$numProj)) {
+    paramList$numProj <- ceiling(p / 2)
+  }
+  # paramList <- defaults(paramList, split="mse", p, weights, catLabel)
   ppForest <- list(
     call = Call, terms = Terms, type = type, Levels = Levels, NodeRotateFun = FALSE,
-    predicted=NULL, paramList = paramList, oobErr = NULL, oobConfusionMat = NULL
+    predicted = NULL, paramList = paramList, oobErr = NULL, oobConfusionMat = NULL
   )
   ppForest$data <- list(
     subset = subset, weights = weights, na.action = na.action, n = n, p = p, varName = varName,
     Xscale = Xscale, minCol = minCol, maxminCol = maxminCol, Xcat = Xcat, catLabel = catLabel,
-    TreeRotate=TreeRotate
+    TreeRotate = TreeRotate
   )
   ppForest$tree <- list(lambda = 0, FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode)
   ppForest$forest <- list(
@@ -465,7 +473,7 @@ ODBT.compute <- function(formula, Call, varName, X, y, Xnew,type,model,TreeRotat
     parallel = parallel, numCores = numCores
   )
 
-  seqn=seq(n)
+  seqn <- seq(n)
   index <- function(...) {
     TDindx <- seqn
     if (replacement) {
@@ -493,236 +501,238 @@ ODBT.compute <- function(formula, Call, varName, X, y, Xnew,type,model,TreeRotat
     return(TDindx)
   }
 
-  if("type"%in%names(Call0)){Call0=Call0[-which("type"==names(Call0))]}
-  #if("type"%in%names(Call0)){names(Call0)["type"==names(Call0)]="split"}
-  #mtry=ifelse(is.null(paramList$numProj),ceiling(p/2),paramList$numProj)
-  mtry=ifelse(ntrees==1,p,paramList$numProj)
-  if(TreeRotate)varName=c(varName,"XB")
+  if ("type" %in% names(Call0)) {
+    Call0 <- Call0[-which("type" == names(Call0))]
+  }
+  # if("type"%in%names(Call0)){names(Call0)["type"==names(Call0)]="split"}
+  # mtry=ifelse(is.null(paramList$numProj),ceiling(p/2),paramList$numProj)
+  mtry <- ifelse(ntrees == 1, p, paramList$numProj)
+  if (TreeRotate) varName <- c(varName, "XB")
 
   runTree <- function(itree, ...) {
-    #set.seed(seed + itree)
-    #options (warn = -1)
-    #ow <- options("warn")
-    #options(warn = -1)
-    #warnings('off')
+    # set.seed(seed + itree)
+    # options (warn = -1)
+    # ow <- options("warn")
+    # options(warn = -1)
+    # warnings('off')
 
-    AIC=Inf;nterm=1;nterm.fails=0
-    if(type=="class"&&(length(Levels)>2)){
-      #nn=length(TDindx)
-      #Y=(matrix(y, n, numClass) == matrix(seq(numClass), n, numClass, byrow = TRUE)) + 0
-      YRes=Y
-      #Ftk=matrix(table(y[TDindx])/nn, nn, numClass, byrow = TRUE)
-      #PFtk=matrix(0, length(NTD), numClass)
+    AIC <- Inf
+    nterm <- 1
+    nterm.fails <- 0
+    if (type == "class" && (length(Levels) > 2)) {
+      # nn=length(TDindx)
+      # Y=(matrix(y, n, numClass) == matrix(seq(numClass), n, numClass, byrow = TRUE)) + 0
+      YRes <- Y
+      # Ftk=matrix(table(y[TDindx])/nn, nn, numClass, byrow = TRUE)
+      # PFtk=matrix(0, length(NTD), numClass)
 
-      COEF=matrix(0,max.terms+1,numClass)
-      RES=matrix(0,n,numClass)
-      fitted=rep(list(matrix(0, n, max.terms)),numClass)# vector("list", numClass)
-      pred=rep(list(matrix(0, n1, max.terms)),numClass)#vector("list", numClass)
+      COEF <- matrix(0, max.terms + 1, numClass)
+      RES <- matrix(0, n, numClass)
+      fitted <- rep(list(matrix(0, n, max.terms)), numClass) # vector("list", numClass)
+      pred <- rep(list(matrix(0, n1, max.terms)), numClass) # vector("list", numClass)
       for (t in seq(max.terms)) {
         if (ntrees == 1) {
-          TDindx=seqn
-          J = 1:p
-        }else{
-          TDindx=index()
-          J = sample(1:p, mtry)
+          TDindx <- seqn
+          J <- 1:p
+        } else {
+          TDindx <- index()
+          J <- sample(1:p, mtry)
         }
         NTD <- setdiff(seqn, TDindx)
 
 
-        XB = X
-        XBtest=Xnew
-        if(model=="rpart"){
-          XB = X[,J]
-          XBtest=Xnew[,J]
+        XB <- X
+        XBtest <- Xnew
+        if (model == "rpart") {
+          XB <- X[, J]
+          XBtest <- Xnew[, J]
         }
-        if(TreeRotate){
-          B <- nnet(XB[TDindx, ],  YRes[TDindx,], size=1, trace=FALSE)$wts[2:(1 + ncol(XB))]#linout = TRUE,MaxNWts= p+5
-          XB = data.frame(XB, XB=XB%*%B)
-          XBtest = data.frame(XBtest, XB=XBtest%*%B)
+        if (TreeRotate) {
+          B <- nnet(XB[TDindx, ], YRes[TDindx, ], size = 1, trace = FALSE)$wts[2:(1 + ncol(XB))] # linout = TRUE,MaxNWts= p+5
+          XB <- data.frame(XB, XB = XB %*% B)
+          XBtest <- data.frame(XBtest, XB = XBtest %*% B)
         }
-        XB = data.frame(XB)
-        XBtest = data.frame(XBtest)
+        XB <- data.frame(XB)
+        XBtest <- data.frame(XBtest)
 
-        #XB = data.frame(X,y=YRes[,k])[TDindx,J]
-        #XB = data.frame(cbind(X[, J], X[, I]%*%B))
-        #X1B = data.frame(cbind(X1[, I], X1[, I]%*%B))
-        #sse=sse.oob=0
-        #ppForestT[[t]]=vector("list", numClass)
-        #prSum=rowSums(exp(Ftk))
+        # XB = data.frame(X,y=YRes[,k])[TDindx,J]
+        # XB = data.frame(cbind(X[, J], X[, I]%*%B))
+        # X1B = data.frame(cbind(X1[, I], X1[, I]%*%B))
+        # sse=sse.oob=0
+        # ppForestT[[t]]=vector("list", numClass)
+        # prSum=rowSums(exp(Ftk))
         for (k in seq(numClass)) {
-          #pr=exp(Ftk[,k])/prSum
-          if(model=="ODT"){
+          # pr=exp(Ftk[,k])/prSum
+          if (model == "ODT") {
             Tree <- ODT_compute(formula, Call0, varName,
-                                X =XB[TDindx, ], y = YRes[TDindx,k], split="mse",lambda=0, NodeRotateFun=NodeRotateFun,FunDir=FunDir, paramList=paramList, MaxDepth=MaxDepth, numNode=numNode,
-                                MinLeaf=MinLeaf, Levels=Levels, subset = NULL, weights = weights[TDindx], na.action = NULL, catLabel=catLabel, Xcat = 0L, Xscale = "No",TreeRandRotate=FALSE)
+              X = XB[TDindx, ], y = YRes[TDindx, k], split = "mse", lambda = 0, NodeRotateFun = NodeRotateFun, FunDir = FunDir, paramList = paramList, MaxDepth = MaxDepth, numNode = numNode,
+              MinLeaf = MinLeaf, Levels = Levels, subset = NULL, weights = weights[TDindx], na.action = NULL, catLabel = catLabel, Xcat = 0L, Xscale = "No", TreeRandRotate = FALSE
+            )
           }
-          if(model=="rpart"){
-            Tree <-rpart(y~., data.frame(XB,y=YRes[,k])[TDindx,],control = rpart.control(minbucket = MinLeaf))
+          if (model == "rpart") {
+            Tree <- rpart(y ~ ., data.frame(XB, y = YRes[, k])[TDindx, ], control = rpart.control(minbucket = MinLeaf))
           }
-          fitted[[k]][,nterm]=predict(Tree, XB)
-          pred[[k]][,nterm]=predict(Tree, XBtest)
+          fitted[[k]][, nterm] <- predict(Tree, XB)
+          pred[[k]][, nterm] <- predict(Tree, XBtest)
 
           # Tree[["predicted"]])
-          LM = lm(y~.,data.frame(y=Y[,k], fitted[[k]][,seq(nterm)]))
-          #LM = fastLm(y~.,data.frame(y=Y[,k], fitted[[k]]))
-          #LM <- ols.fit(x = cbind(1,fitted[[k]]), y = Y[,k])
-          RES[,k] = LM$residuals
-          #sse = sse + sum(LM$residuals^2)
-          #sse.oob = sse.oob + sum(LM$residuals[NTD]^2)
+          LM <- lm(y ~ ., data.frame(y = Y[, k], fitted[[k]][, seq(nterm)]))
+          # LM = fastLm(y~.,data.frame(y=Y[,k], fitted[[k]]))
+          # LM <- ols.fit(x = cbind(1,fitted[[k]]), y = Y[,k])
+          RES[, k] <- LM$residuals
+          # sse = sse + sum(LM$residuals^2)
+          # sse.oob = sse.oob + sum(LM$residuals[NTD]^2)
           LM$coefficients[is.na(LM$coefficients)] <- 0.0
-          COEF[seq(nterm+1),k] = LM$coefficients
+          COEF[seq(nterm + 1), k] <- LM$coefficients
         }
 
-        #J = setdiff(1:n, J)
-        aic = log((sum(RES^2) + sum(RES[NTD,]^2))/((n+length(NTD))*numClass)) + log(p)*nterm*log(n)/n
-        if (aic < AIC)
-        {
-          YRes = RES
-          #pred = cbind(pred,predict(Tree, Xnew))
-          #pred[,count.terms] = predict(fit.B, data.frame(cbind(X1[,I], X1[,I]%*%B)))
-          #pred[,count.terms] = predict(fit.B, list(Xk = cbind(X1[,I], X1[,I]%*%B)))
-          AIC = aic # AIC(A, k = log(n))
-          #nterm=t
-          COEF0 = COEF[seq(1+nterm),]
-          nterm=nterm+1
-          #count.terms0 = count.terms
-          #ppForestT[[t]]=c(list(rotdims=Tree[["data"]][["rotdims"]],rotmat=Tree[["data"]][["rotmat"]]),Tree$structure)
-          #count.terms = min(count.terms + 1,max.terms)
-          nterm.fails=0
-        }else{
-          nterm.fails = nterm.fails + 1
-          if (nterm.fails > 5){
+        # J = setdiff(1:n, J)
+        aic <- log((sum(RES^2) + sum(RES[NTD, ]^2)) / ((n + length(NTD)) * numClass)) + log(p) * nterm * log(n) / n
+        if (aic < AIC) {
+          YRes <- RES
+          # pred = cbind(pred,predict(Tree, Xnew))
+          # pred[,count.terms] = predict(fit.B, data.frame(cbind(X1[,I], X1[,I]%*%B)))
+          # pred[,count.terms] = predict(fit.B, list(Xk = cbind(X1[,I], X1[,I]%*%B)))
+          AIC <- aic # AIC(A, k = log(n))
+          # nterm=t
+          COEF0 <- COEF[seq(1 + nterm), ]
+          nterm <- nterm + 1
+          # count.terms0 = count.terms
+          # ppForestT[[t]]=c(list(rotdims=Tree[["data"]][["rotdims"]],rotmat=Tree[["data"]][["rotmat"]]),Tree$structure)
+          # count.terms = min(count.terms + 1,max.terms)
+          nterm.fails <- 0
+        } else {
+          nterm.fails <- nterm.fails + 1
+          if (nterm.fails > 5) {
             break
           }
         }
       }
 
-      #predictions=matrix(0,n1,numClass)
-      #for (k in seq(numClass)) {
-      #nterm=min(nterm,max.terms)
-      nterm=nterm-1
-      #COEF0=COEF0*(1-is.na(COEF0))
-      pred=vapply(seq(numClass), function(k){
-        cbind(1,pred[[k]][,seq(nterm)]) %*% COEF0[,k]
+      # predictions=matrix(0,n1,numClass)
+      # for (k in seq(numClass)) {
+      # nterm=min(nterm,max.terms)
+      nterm <- nterm - 1
+      # COEF0=COEF0*(1-is.na(COEF0))
+      pred <- vapply(seq(numClass), function(k) {
+        cbind(1, pred[[k]][, seq(nterm)]) %*% COEF0[, k]
       }, rep(0, n1))
-      predictions=c(pred)
+      predictions <- c(pred)
 
-      fitted=vapply(seq(numClass), function(k){
-        cbind(1,fitted[[k]][,seq(nterm)]) %*% COEF0[,k]
+      fitted <- vapply(seq(numClass), function(k) {
+        cbind(1, fitted[[k]][, seq(nterm)]) %*% COEF0[, k]
       }, rep(0, n))
-      sse = mean((fitted-Y)^2)
-      predictions = c(predictions,sse)
-      #predictions=Levels[max.col(predictions)]
-
-    }else{
-
-      #if((type=="regression")||(length(Levels)==2)){
-      if(length(Levels)==2){
-        yy=y-1
-      }else{
-        yy=y
+      sse <- mean((fitted - Y)^2)
+      predictions <- c(predictions, sse)
+      # predictions=Levels[max.col(predictions)]
+    } else {
+      # if((type=="regression")||(length(Levels)==2)){
+      if (length(Levels) == 2) {
+        yy <- y - 1
+      } else {
+        yy <- y
       }
-      yres=yy
+      yres <- yy
 
-      fitted=matrix(0, n, max.terms)
-      pred=matrix(0, n1, max.terms)
+      fitted <- matrix(0, n, max.terms)
+      pred <- matrix(0, n1, max.terms)
       for (t in seq(max.terms)) {
         if (ntrees == 1) {
-          TDindx=seqn
-          J = 1:p
-        }else{
-          TDindx=index()
-          J = sample(1:p, mtry)
+          TDindx <- seqn
+          J <- 1:p
+        } else {
+          TDindx <- index()
+          J <- sample(1:p, mtry)
         }
         NTD <- setdiff(seqn, TDindx)
 
-        XB = X
-        XBtest=Xnew
-        if(model=="rpart"){
-          XB = X[,J]
-          XBtest=Xnew[,J]
+        XB <- X
+        XBtest <- Xnew
+        if (model == "rpart") {
+          XB <- X[, J]
+          XBtest <- Xnew[, J]
         }
-        if(TreeRotate){
-          B <- nnet(XB[TDindx, ], yres[TDindx], size=1, trace=FALSE)$wts[2:(1 + ncol(XB))]#linout = TRUE,MaxNWts= p+5
-          XB = data.frame(XB, XB=XB%*%B)
-          XBtest = data.frame(XBtest, XB=XBtest%*%B)
+        if (TreeRotate) {
+          B <- nnet(XB[TDindx, ], yres[TDindx], size = 1, trace = FALSE)$wts[2:(1 + ncol(XB))] # linout = TRUE,MaxNWts= p+5
+          XB <- data.frame(XB, XB = XB %*% B)
+          XBtest <- data.frame(XBtest, XB = XBtest %*% B)
         }
-        XB = data.frame(XB)
-        XBtest = data.frame(XBtest)
+        XB <- data.frame(XB)
+        XBtest <- data.frame(XBtest)
 
-        if(model=="ODT"){
+        if (model == "ODT") {
           Tree <- ODT_compute(formula, Call0, varName,
-                              X = XB[TDindx, ], y = yres[TDindx], split="mse",lambda=0, NodeRotateFun=NodeRotateFun,FunDir=FunDir, paramList=paramList, MaxDepth=MaxDepth, numNode=numNode,
-                              MinLeaf=MinLeaf, Levels=Levels, subset = NULL, weights = weights[TDindx], na.action = NULL, catLabel=catLabel, Xcat = 0L, Xscale = "No",TreeRandRotate=FALSE)
+            X = XB[TDindx, ], y = yres[TDindx], split = "mse", lambda = 0, NodeRotateFun = NodeRotateFun, FunDir = FunDir, paramList = paramList, MaxDepth = MaxDepth, numNode = numNode,
+            MinLeaf = MinLeaf, Levels = Levels, subset = NULL, weights = weights[TDindx], na.action = NULL, catLabel = catLabel, Xcat = 0L, Xscale = "No", TreeRandRotate = FALSE
+          )
         }
-        if(model=="rpart"){
-          Tree <-rpart(y~., data.frame(XB,y=yres)[TDindx,],control = rpart.control(minbucket = MinLeaf))
+        if (model == "rpart") {
+          Tree <- rpart(y ~ ., data.frame(XB, y = yres)[TDindx, ], control = rpart.control(minbucket = MinLeaf))
         }
-        fitted[,nterm] =predict(Tree, XB)
-        pred[,nterm] = predict(Tree, XBtest)
+        fitted[, nterm] <- predict(Tree, XB)
+        pred[, nterm] <- predict(Tree, XBtest)
 
-        LM = lm(y~.,data.frame(y=yy, fitted[,seq(nterm)]))
-        #LM = fastLm(y~.,data.frame(y=yy, fitted))#,silent = TRUE)
-        #LM <- ols.fit(x = cbind(1,fitted), y = yy)
-        res.t = LM$residuals
+        LM <- lm(y ~ ., data.frame(y = yy, fitted[, seq(nterm)]))
+        # LM = fastLm(y~.,data.frame(y=yy, fitted))#,silent = TRUE)
+        # LM <- ols.fit(x = cbind(1,fitted), y = yy)
+        res.t <- LM$residuals
 
-        #J = setdiff(1:n, J)
-        aic = log((sum(res.t^2)+sum(res.t[NTD]^2))/(n+length(NTD)))  + log(p)*nterm*log(n)/n
-        if (aic < AIC)
-        {
-          yres = res.t
-          #pred[,count.terms] = predict(fit.B, data.frame(cbind(X1[,I], X1[,I]%*%B)))
-          #pred[,count.terms] = predict(fit.B, list(Xk = cbind(X1[,I], X1[,I]%*%B)))
-          coef = LM$coefficients
-          AIC = aic # AIC(A, k = log(n))
-          #nterm=t
-          #count.terms0 = count.terms
-          #ppForestT[[t]]=c(list(rotdims=Tree[["data"]][["rotdims"]],rotmat=Tree[["data"]][["rotmat"]]),Tree$structure)
-          nterm = nterm+1
-          nterm.fails = 0
-        }else{
-          nterm.fails = nterm.fails + 1
-          if (nterm.fails > 5){
+        # J = setdiff(1:n, J)
+        aic <- log((sum(res.t^2) + sum(res.t[NTD]^2)) / (n + length(NTD))) + log(p) * nterm * log(n) / n
+        if (aic < AIC) {
+          yres <- res.t
+          # pred[,count.terms] = predict(fit.B, data.frame(cbind(X1[,I], X1[,I]%*%B)))
+          # pred[,count.terms] = predict(fit.B, list(Xk = cbind(X1[,I], X1[,I]%*%B)))
+          coef <- LM$coefficients
+          AIC <- aic # AIC(A, k = log(n))
+          # nterm=t
+          # count.terms0 = count.terms
+          # ppForestT[[t]]=c(list(rotdims=Tree[["data"]][["rotdims"]],rotmat=Tree[["data"]][["rotmat"]]),Tree$structure)
+          nterm <- nterm + 1
+          nterm.fails <- 0
+        } else {
+          nterm.fails <- nterm.fails + 1
+          if (nterm.fails > 5) {
             break
           }
         }
       }
 
-      nterm=nterm-1
+      nterm <- nterm - 1
       coef[is.na(coef)] <- 0.0
 
-      predictions = cbind(1,pred[,seq(nterm)]) %*% coef#predict(LM0, data.frame(pred))
-      sse = mean((cbind(1,fitted[,seq(nterm)]) %*% coef-yy)^2)
-      predictions = c(predictions,sse)
+      predictions <- cbind(1, pred[, seq(nterm)]) %*% coef # predict(LM0, data.frame(pred))
+      sse <- mean((cbind(1, fitted[, seq(nterm)]) %*% coef - yy)^2)
+      predictions <- c(predictions, sse)
 
-      #if(length(Levels)==2){
+      # if(length(Levels)==2){
       #  predictions = Levels[(predictions>0.5)+1]
-      #}
-      #coef = LM0$coefficients
+      # }
+      # coef = LM0$coefficients
     }
-    #}
+    # }
 
-    #options(ow)
-    #warnings('on')
-    #options (warn = 0)
+    # options(ow)
+    # warnings('on')
+    # options (warn = 0)
     return(predictions)
-    #return(c(ppForestT, list(oobErr = oobErr0, oobIndex = NTD, oobPred = pred, ts=nterms)))
+    # return(c(ppForestT, list(oobErr = oobErr0, oobIndex = NTD, oobPred = pred, ts=nterms)))
   }
 
-  #op=options(nwarnings)
-  #op=options(nwarnings = 1)
-  #VALUE <- rep(ifelse(type == "classification","0",0), n1)
-  #VALUE <- rep(ifelse(type=="classification"&&(length(Levels)>2),"0",0), n1)
-  VALUE <- rep(0, ifelse(type=="class"&&(length(Levels)>2),n1*numClass,n1)+1)
-  if(type=="class"&&(length(Levels)>2)){
-    Y=(matrix(y, n, numClass) == matrix(seq(numClass), n, numClass, byrow = TRUE)) + 0
-  }else{
-    Y=y
+  # op=options(nwarnings)
+  # op=options(nwarnings = 1)
+  # VALUE <- rep(ifelse(type == "classification","0",0), n1)
+  # VALUE <- rep(ifelse(type=="classification"&&(length(Levels)>2),"0",0), n1)
+  VALUE <- rep(0, ifelse(type == "class" && (length(Levels) > 2), n1 * numClass, n1) + 1)
+  if (type == "class" && (length(Levels) > 2)) {
+    Y <- (matrix(y, n, numClass) == matrix(seq(numClass), n, numClass, byrow = TRUE)) + 0
+  } else {
+    Y <- y
   }
-  Y=as.matrix(Y)
-  #nnet=nnet::nnet.default;rpart=rpart::rpart;
-  #control=rpart::rpart.control;predict=rpart:::predict.rpart
-  if (parallel&&(ntrees>1)) {
+  Y <- as.matrix(Y)
+  # nnet=nnet::nnet.default;rpart=rpart::rpart;
+  # control=rpart::rpart.control;predict=rpart:::predict.rpart
+  if (parallel && (ntrees > 1)) {
     # RNGkind("L'Ecuyer-CMRG")
     if (is.infinite(numCores)) {
       # Use all but 1 core if numCores=0.
@@ -741,65 +751,67 @@ ODBT.compute <- function(formula, Call, varName, X, y, Xnew,type,model,TreeRotat
     # set.seed(seed)
     icore <- NULL
     Votes <- foreach::foreach(
-      icore = seq_along(chunks), .combine = 'cbind', .export = c("ODT.compute"),
-      .packages = c("ODRF","nnet","rpart"), .noexport = "ppForest"
+      icore = seq_along(chunks), .combine = "cbind", .export = c("ODT.compute"),
+      .packages = c("ODRF", "nnet", "rpart"), .noexport = "ppForest"
     ) %dopar% {
-      #lapply(chunks[[icore]], runTree)
-      vapply(chunks[[icore]], function(t){
-        if(model=="rpart.cpp"){
-          #GBDTCpp(X,y,Xnew,Y,#nnet,rpart,control,predict,
+      # lapply(chunks[[icore]], runTree)
+      vapply(chunks[[icore]], function(t) {
+        if (model == "rpart.cpp") {
+          # GBDTCpp(X,y,Xnew,Y,#nnet,rpart,control,predict,
           #        numClass, maxTerms=max.terms, ntrees, mtry, MinLeaf,replacement,ratOOB)
-          .Call("_ODRF_GBDT", PACKAGE = "ODRF",X,y,Xnew,Y,numClass, maxTerms=max.terms, ntrees, mtry, MinLeaf,replacement,ratOOB)
-        }else{
+          .Call("_ODRF_GBDT", PACKAGE = "ODRF", X, y, Xnew, Y, numClass, maxTerms = max.terms, ntrees, mtry, MinLeaf, replacement, ratOOB)
+        } else {
           runTree()
         }
-        }, VALUE)
+      }, VALUE)
     }
     doParallel::stopImplicitCluster()
     parallel::stopCluster(cl)
 
     # do.call(rbind.fill,list1)
-    #Votes <- t(do.call("c", ppForestT))
+    # Votes <- t(do.call("c", ppForestT))
     # ppForest$structure=NULL
     # for (i in 1:numCores) {
     #  ppForest$structure=c(ppForest$structure,ppForestT[[i]])
     # }
   } else {
     # Use just one core.
-    #Votes <- vapply(1:ntrees, runTree, VALUE)
-    #Votes <- vapply(1:ntrees, function(t){
-     # GBDTCpp(X,as.numeric(y),Xnew,Y,nnet,rpart,control,predict,
+    # Votes <- vapply(1:ntrees, runTree, VALUE)
+    # Votes <- vapply(1:ntrees, function(t){
+    # GBDTCpp(X,as.numeric(y),Xnew,Y,nnet,rpart,control,predict,
     #          numClass, maxTerms=max.terms, ntrees, mtry, ratOOB, MinLeaf)}
     #  , VALUE)
-      #if(model=="rpart.cpp"){
-      #  Votes <- ODBTCpp(X,y,Xnew,numClass, maxTerms=max.terms, ntrees, mtry, MinLeaf,replacement,ratOOB)
-      #}else{
-      #  Votes <- vapply(1:ntrees, runTree, VALUE)
-      #}
-    #Votes <- ODBTCpp(X,y,Xnew,numClass, maxTerms=max.terms, ntrees, mtry, ratOOB, MinLeaf)
-    Votes <- vapply(1:ntrees, function(t){
-      if(model=="rpart.cpp"){
-        BODTCpp(X,y,Xnew,Y,#nnet,rpart,control,predict,
-                numClass, maxTerms=max.terms, ntrees, mtry, MinLeaf,replacement,ratOOB)
-      }else{
+    # if(model=="rpart.cpp"){
+    #  Votes <- ODBTCpp(X,y,Xnew,numClass, maxTerms=max.terms, ntrees, mtry, MinLeaf,replacement,ratOOB)
+    # }else{
+    #  Votes <- vapply(1:ntrees, runTree, VALUE)
+    # }
+    # Votes <- ODBTCpp(X,y,Xnew,numClass, maxTerms=max.terms, ntrees, mtry, ratOOB, MinLeaf)
+    Votes <- vapply(1:ntrees, function(t) {
+      if (model == "rpart.cpp") {
+        BODTCpp(X, y, Xnew, Y, # nnet,rpart,control,predict,
+          numClass,
+          maxTerms = max.terms, ntrees, mtry, MinLeaf, replacement, ratOOB
+        )
+      } else {
         runTree()
       }
     }, VALUE)
   }
-  #options(op)
+  # options(op)
 
   ##############################################################################
-  Votes=as.matrix(Votes)
-  #weights <- rep(1, ntrees)
-  weights=1/(Votes[length(VALUE),]+1)
+  Votes <- as.matrix(Votes)
+  # weights <- rep(1, ntrees)
+  weights <- 1 / (Votes[length(VALUE), ] + 1)
   weights <- weights / sum(weights)
-  Votes=Votes[-length(VALUE),,drop = FALSE]
-  #if(ntrees==1){
+  Votes <- Votes[-length(VALUE), , drop = FALSE]
+  # if(ntrees==1){
   #  prob=1
   #  pred=Votes
-  #}else{
-  if (type=="class"&&(length(Levels)>2)) {
-    if(1==2){
+  # }else{
+  if (type == "class" && (length(Levels) > 2)) {
+    if (1 == 2) {
       weights <- rep(weights, n1)
       Votes <- factor(c(Votes), levels = Levels)
       Votes <- as.integer(Votes) + numClass * rep(0:(n1 - 1), rep(ntrees, n1))
@@ -808,33 +820,32 @@ ODBT.compute <- function(formula, Call, varName, X, y, Xnew,type,model,TreeRotat
       prob <- matrix(Votes, n1, numClass, byrow = TRUE)
     }
     prob <- Votes %*% weights
-    prob=matrix(prob, n1, numClass)
-    #prob <- prob / matrix(rowSums(prob), n1, numClass)
-    prob=exp(prob)/rowSums(exp(prob))
+    prob <- matrix(prob, n1, numClass)
+    # prob <- prob / matrix(rowSums(prob), n1, numClass)
+    prob <- exp(prob) / rowSums(exp(prob))
     colnames(prob) <- Levels
     # pred=apply(prob,1,which.max);
     pred <- max.col(prob) ## "random"
     pred <- Levels[pred]
   } else {
-    prob <- weights #/ sum(weights)
+    prob <- weights # / sum(weights)
     pred <- Votes %*% prob
-    if(length(Levels)==2){
-      pred = Levels[(pred>0.5)+1]
-      #prob <- cbind(1-prob,prob)
-      #prob <- prob / matrix(rowSums(prob), n1, numClass)
-      #colnames(prob) <- Levels
-      #pred <- Levels[max.col(prob)]
+    if (length(Levels) == 2) {
+      pred <- Levels[(pred > 0.5) + 1]
+      # prob <- cbind(1-prob,prob)
+      # prob <- prob / matrix(rowSums(prob), n1, numClass)
+      # colnames(prob) <- Levels
+      # pred <- Levels[max.col(prob)]
     }
     # pred=colMeans(Votes);
     # prob=NULL
   }
-  #}
+  # }
 
 
-  ppForest$results=list(probability=prob, prediction=c(pred))
+  ppForest$results <- list(probability = prob, prediction = c(pred))
 
   class(ppForest) <- append(class(ppForest), "ODBT")
   # class(ppForest) <- "ODBT"
   return(ppForest)
 }
-

@@ -49,31 +49,33 @@ A function to select the splitting variables and nodes using one of four criteri
 }
 \examples{
 ### Find the best split variable ###
-#Classification
+# Classification
 data(iris)
 X <- as.matrix(iris[, 1:4])
 y <- iris[[5]]
 (bestcut <- best.cut.node(X, y, split = "gini"))
 (bestcut <- best.cut.node(X, y, split = "entropy"))
 
-#Regression
+# Regression
 data(body_fat)
-X=body_fat[, -1]
-y=body_fat[, 1]
+X <- body_fat[, -1]
+y <- body_fat[, 1]
 (bestcut <- best.cut.node(X, y, split = "mse"))
 
 set.seed(10)
-cutpoint=50
-X=matrix(rnorm(100*10),100,10)
-age=sample(seq(20,80),100,replace = TRUE)
-height=sample(seq(50,200),100,replace = TRUE)
-weight=sample(seq(5,150),100,replace = TRUE)
-Xsplit=cbind(age=age,height=height,weight=weight)
-mu=rep(0,100)
-mu[age<=cutpoint]=X[age<=cutpoint,1]+X[age<=cutpoint,2]
-mu[age>cutpoint]=X[age>cutpoint,1]+X[age>cutpoint,3]
-y=mu+rnorm(100)
-bestcut <- best.cut.node(X, y, Xsplit, split = "linear",
-           glmnetParList=list(lambda = 0))
+cutpoint <- 50
+X <- matrix(rnorm(100 * 10), 100, 10)
+age <- sample(seq(20, 80), 100, replace = TRUE)
+height <- sample(seq(50, 200), 100, replace = TRUE)
+weight <- sample(seq(5, 150), 100, replace = TRUE)
+Xsplit <- cbind(age = age, height = height, weight = weight)
+mu <- rep(0, 100)
+mu[age <= cutpoint] <- X[age <= cutpoint, 1] + X[age <= cutpoint, 2]
+mu[age > cutpoint] <- X[age > cutpoint, 1] + X[age > cutpoint, 3]
+y <- mu + rnorm(100)
+bestcut <- best.cut.node(X, y, Xsplit,
+  split = "linear",
+  glmnetParList = list(lambda = 0)
+)
 
 }

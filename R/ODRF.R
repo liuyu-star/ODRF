@@ -73,7 +73,7 @@
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data,
-#'   split = "entropy",parallel = FALSE, ntrees = 50
+#'   split = "entropy", parallel = FALSE, ntrees = 50
 #' )
 #' pred <- predict(forest, test_data[, -8])
 #' # classification error
@@ -348,8 +348,8 @@ ODRF_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
     rm(X1)
     p <- ncol(X)
   }
-  if (!is.numeric(X)){
-    X=apply(X, 2, as.numeric)
+  if (!is.numeric(X)) {
+    X <- apply(X, 2, as.numeric)
   }
   X <- as.matrix(X)
   colnames(X) <- varName
@@ -400,16 +400,16 @@ ODRF_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
   p <- ncol(X)
   rm(data)
 
-  if(length(y)==1){
+  if (length(y) == 1) {
     stop("The size of training data must be greater than 1.")
   }
 
   ppForest <- list(
     call = Call, terms = Terms, split = split, Levels = NULL, NodeRotateFun = NodeRotateFun,
-    predicted=NULL, paramList = paramList, oobErr = NULL, oobConfusionMat = NULL
+    predicted = NULL, paramList = paramList, oobErr = NULL, oobConfusionMat = NULL
   )
 
-  if (split %in% c("gini","entropy")) {
+  if (split %in% c("gini", "entropy")) {
     y <- as.factor(y)
     ppForest$Levels <- levels(y)
     y <- as.integer(y)
@@ -442,23 +442,23 @@ ODRF_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
   if (Xscale != "No") {
     indp <- (sum(numCat) + 1):p
     if (Xscale == "Min-max") {
-      minCol <- apply(X[, indp,drop=F], 2, min)
-      maxminCol <- apply(X[, indp,drop=F], 2, function(x) {
+      minCol <- apply(X[, indp, drop = F], 2, min)
+      maxminCol <- apply(X[, indp, drop = F], 2, function(x) {
         max(x) - min(x)
       })
     }
     if (Xscale == "Quantile") {
-      minCol <- apply(X[, indp,drop=F], 2, quantile, 0.05)
-      maxminCol <- apply(X[, indp,drop=F], 2, function(x) {
+      minCol <- apply(X[, indp, drop = F], 2, quantile, 0.05)
+      maxminCol <- apply(X[, indp, drop = F], 2, function(x) {
         quantile(x, 0.95) - quantile(x, 0.05)
       })
     }
-    X[, indp] <- (X[, indp,drop=F] - matrix(minCol, n, length(indp), byrow = T)) / matrix(maxminCol, n, length(indp), byrow = T)
+    X[, indp] <- (X[, indp, drop = F] - matrix(minCol, n, length(indp), byrow = T)) / matrix(maxminCol, n, length(indp), byrow = T)
   }
 
   ppForest$data <- list(
     subset = subset, weights = weights, na.action = na.action, n = n, p = p, varName = varName,
-    Xscale = Xscale, minCol = minCol, maxminCol = maxminCol, Xcat = Xcat, catLabel = catLabel,TreeRandRotate = TreeRandRotate
+    Xscale = Xscale, minCol = minCol, maxminCol = maxminCol, Xcat = Xcat, catLabel = catLabel, TreeRandRotate = TreeRandRotate
   )
   ppForest$tree <- list(lambda = lambda, FunDir = FunDir, MaxDepth = MaxDepth, MinLeaf = MinLeaf, numNode = numNode)
   ppForest$forest <- list(
@@ -469,7 +469,7 @@ ODRF_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
   # Weights=weights
   # vars=all.vars(Terms)
   PPtree <- function(itree, ...) {
-    #set.seed(seed + itree)
+    # set.seed(seed + itree)
 
     TDindx0 <- seq(n)
     TDindx <- TDindx0
@@ -477,7 +477,7 @@ ODRF_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
       go <- TRUE
       while (go) {
         # make sure each class is represented in proportion to classes in initial dataset
-        if (stratify && (split %in% c("gini","entropy"))) {
+        if (stratify && (split %in% c("gini", "entropy"))) {
           if (classCt[1L] != 0L) {
             TDindx[1:classCt[1L]] <- sample(Cindex[[1L]], classCt[1L], replace = TRUE)
           }
@@ -498,29 +498,30 @@ ODRF_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
 
     # data=data.frame(y[TDindx],X[TDindx,])
     # colnames(data)=vars
-    ppForestT <- ODT_compute(formula=formula, Call=Call0, varName=varName,
-      X = X[TDindx, ], y = y[TDindx], split=split, lambda=lambda, NodeRotateFun=NodeRotateFun, FunDir=FunDir, paramList=paramList, MaxDepth=MaxDepth, numNode=numNode,
-      MinLeaf=MinLeaf, Levels=Levels, subset = NULL, weights = weights[TDindx], na.action = NULL, catLabel=catLabel, Xcat = 0L, Xscale = "No", TreeRandRotate=TreeRandRotate
+    ppForestT <- ODT_compute(
+      formula = formula, Call = Call0, varName = varName,
+      X = X[TDindx, ], y = y[TDindx], split = split, lambda = lambda, NodeRotateFun = NodeRotateFun, FunDir = FunDir, paramList = paramList, MaxDepth = MaxDepth, numNode = numNode,
+      MinLeaf = MinLeaf, Levels = Levels, subset = NULL, weights = weights[TDindx], na.action = NULL, catLabel = catLabel, Xcat = 0L, Xscale = "No", TreeRandRotate = TreeRandRotate
     )
 
-    TreeRotate=list(rotdims=ppForestT[["data"]][["rotdims"]],rotmat=ppForestT[["data"]][["rotmat"]])
+    TreeRotate <- list(rotdims = ppForestT[["data"]][["rotdims"]], rotmat = ppForestT[["data"]][["rotmat"]])
     if ((ratOOB > 0) && storeOOB) {
       oobErr <- 1
       NTD <- setdiff(TDindx0, TDindx)
       pred <- predict(ppForestT, X[NTD, ])
 
-      if (split %in% c("gini","entropy")) {
+      if (split %in% c("gini", "entropy")) {
         oobErr <- mean(pred != Levels[y[NTD]])
       } else {
         oobErr <- mean((pred - y[NTD])^2)
       }
 
       ppForestT <- c(ppForestT$structure, list(oobErr = oobErr, oobIndex = NTD, oobPred = pred))
-    }else{
+    } else {
       ppForestT <- ppForestT$structure
     }
 
-    return(c(TreeRotate,ppForestT))
+    return(c(TreeRotate, ppForestT))
   }
 
 
@@ -572,7 +573,7 @@ ODRF_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
     oobVotes <- oobVotes[idx, , drop = FALSE]
     yy <- y[idx]
 
-    if (split %in% c("gini","entropy")) {
+    if (split %in% c("gini", "entropy")) {
       ny <- length(yy)
       nC <- numClass
       tree_weights <- rep(1, ny * ntrees)

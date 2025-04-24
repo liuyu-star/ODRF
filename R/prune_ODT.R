@@ -51,7 +51,6 @@
 #' @method prune ODT
 #' @export
 prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
-
   if (length(obj[["structure"]][["nodeDepth"]]) == 1) {
     stop("No tree structure to use 'prune'!")
   }
@@ -140,7 +139,7 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
 
   prediction <- predictTree(structure, Xnew, obj$split, obj$Levels)$prediction
 
-  if (obj$split %in% c("gini","entropy")) {
+  if (obj$split %in% c("gini", "entropy")) {
     err0 <- mean(prediction != ynew)
   } else {
     # e.0 = mean((ynew-mean(y))^2)
@@ -214,7 +213,7 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
     # id=idx[!idx%in%cutNode]
     # nodeLabel[currentNode]=ifelse(obj$split!="mse",nodeLabel[idx][which.max(structure$nodeNumLabel[idx])],
     #                              structure$nodeNumLabel[idx]*nodeLabel[idx]/sum(structure$nodeNumLabel[idx]))
-    if (obj$split %in% c("gini","entropy")) {
+    if (obj$split %in% c("gini", "entropy")) {
       # nnl=rep(nodeLabel[id],nodeNumLabel[id])
       # nnl=table(nnl)
       # nodeLabel[currentNode]=names(nnl)[which.max(nnl)]
@@ -234,7 +233,7 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
     nodeCutValue[currentNode] <- 0
     nodeCutValue <- nodeCutValue[-idx]
 
-    if (obj$split %in% c("gini","entropy")) {
+    if (obj$split %in% c("gini", "entropy")) {
       nodeLabel <- colnames(nodeNumLabel)[max.col(nodeNumLabel)] ## "random"
       # nodeLabel[which(rowSums(structure$nodeNumLabel)==0),]=0
     } else {
@@ -245,12 +244,12 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
       prediction <- rep(nodeLabel, n)
     } else {
       prediction <- .Call("_ODRF_predict_ODT",
-                          PACKAGE = "ODRF", Xnew,
-                          nodeRotaMat, nodeCutValue, childNode, nodeLabel
+        PACKAGE = "ODRF", Xnew,
+        nodeRotaMat, nodeCutValue, childNode, nodeLabel
       )$prediction
     }
 
-    if (obj$split %in% c("gini","entropy")) {
+    if (obj$split %in% c("gini", "entropy")) {
       err <- mean(prediction != ynew)
     } else {
       err <- mean((as.numeric(prediction) - ynew)^2) # /e.0
@@ -298,7 +297,7 @@ prune.ODT <- function(obj, X, y, MaxDepth = 1, ...) {
     obj$projections <- projections
   }
 
-  obj$predicted = predictTree(obj$structure, Xnew, obj$split, obj$Levels)$prediction
+  obj$predicted <- predictTree(obj$structure, Xnew, obj$split, obj$Levels)$prediction
 
   class(obj) <- append(class(obj), "prune.ODT")
 

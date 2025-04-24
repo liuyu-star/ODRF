@@ -32,16 +32,16 @@ Then the same is done after permuting each predictor variable. The difference be
 }
 \examples{
 data(body_fat)
-y=body_fat[,1]
-X=body_fat[,-1]
+y <- body_fat[, 1]
+X <- body_fat[, -1]
 
 tree <- ODT(X, y, split = "mse")
-(varimp <- VarImp(tree, type="impurity"))
-
-forest <- ODRF(X, y, split = "mse", parallel = FALSE, ntrees=50)
-(varimp <- VarImp(forest, type="impurity"))
-(varimp <- VarImp(forest, X, y, type="permutation"))
-
+(varimp <- VarImp(tree, type = "impurity"))
+\donttest{
+forest <- ODRF(X, y, split = "mse", parallel = FALSE, ntrees = 50)
+(varimp <- VarImp(forest, type = "impurity"))
+(varimp <- VarImp(forest, X, y, type = "permutation"))
+}
 }
 \seealso{
 \code{\link{ODRF}} \code{\link{Accuracy}} \code{\link{plot.VarImp}}

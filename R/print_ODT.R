@@ -34,7 +34,7 @@ print.ODT <- function(x, projection = FALSE, cutvalue = FALSE, verbose = TRUE, .
   TS <- matrix(0, numNode, 5)
   TS[, 1] <- seq(numNode)
   TS[, 2] <- ppTree[["structure"]][["childNode"]]
-  if (ppTree$split %in% c("gini","entropy")) {
+  if (ppTree$split %in% c("gini", "entropy")) {
     TS[setdiff(seq(numNode), cutNode), 3] <- max.col(ppTree$structure$nodeNumLabel)[setdiff(seq(numNode), cutNode)]
   } else {
     TS[setdiff(seq(numNode), cutNode), 3] <- round(ppTree$structure$nodeNumLabel[, 1][setdiff(seq(numNode), cutNode)], 3)
@@ -48,12 +48,12 @@ print.ODT <- function(x, projection = FALSE, cutvalue = FALSE, verbose = TRUE, .
 
   # TS<-ppTree$ppTree.Struct p
   # Alpha<-ppTree$projbest.node
-  #nodeRotaMat <- ppTree[["structure"]][["nodeRotaMat"]]
-  #Alpha <- matrix(0, length(cutNode), ifelse(split=="linear",ppTree[["data"]][["ps"]],ppTree[["data"]][["p"]]))
-  #for (cn in seq_along(cutNode)) {
+  # nodeRotaMat <- ppTree[["structure"]][["nodeRotaMat"]]
+  # Alpha <- matrix(0, length(cutNode), ifelse(split=="linear",ppTree[["data"]][["ps"]],ppTree[["data"]][["p"]]))
+  # for (cn in seq_along(cutNode)) {
   #  idx <- which(nodeRotaMat[, 2] == cutNode[cn])
   #  Alpha[cn, nodeRotaMat[idx, 1]] <- nodeRotaMat[idx, 3]
-  #}
+  # }
 
   CutValue <- ppTree$structure$nodeCutValue[cutNode]
   # CutValue<-ppTree$splitCutoff.node
@@ -79,7 +79,7 @@ print.ODT <- function(x, projection = FALSE, cutvalue = FALSE, verbose = TRUE, .
         n.temp <- length(TreePrint)
         tempp <- strsplit(TreePrint[n.temp], ") ")[[1]]
         temp.L <- paste(tempp[1], ")#", tempp[2], sep = "")
-        temp.L <- paste(temp.L, " -> ", "(", "leaf", leaf[i], " = ", ifelse(ppTree$split %in% c("gini","entropy"), ppTree$Levels[TS[i, 3]], TS[i, 3]), ")", sep = "")
+        temp.L <- paste(temp.L, " -> ", "(", "leaf", leaf[i], " = ", ifelse(ppTree$split %in% c("gini", "entropy"), ppTree$Levels[TS[i, 3]], TS[i, 3]), ")", sep = "")
         TreePrint <- TreePrint[-n.temp]
         id.l <- length(keep.track) - 1
         i <- keep.track[id.l]
@@ -115,7 +115,7 @@ print.ODT <- function(x, projection = FALSE, cutvalue = FALSE, verbose = TRUE, .
   TreePrint.output <-
     paste(
       "\n=============================================================",
-      "\nOblique", ifelse(ppTree$split %in% c("gini","entropy"), "Classification","Regression"), "Tree structure",
+      "\nOblique", ifelse(ppTree$split %in% c("gini", "entropy"), "Classification", "Regression"), "Tree structure",
       "\n=============================================================\n"
     )
   for (i in seq_along(TreePrint)) {
@@ -135,8 +135,8 @@ print.ODT <- function(x, projection = FALSE, cutvalue = FALSE, verbose = TRUE, .
         stop("This tree is not partitioned and has no projection matrix.")
       }
 
-      #colnames(Alpha) <- ppTree$data$varName
-      #rownames(Alpha) <- paste("proj", seq_len(nrow(Alpha)), sep = "")
+      # colnames(Alpha) <- ppTree$data$varName
+      # rownames(Alpha) <- paste("proj", seq_len(nrow(Alpha)), sep = "")
       print(round(ppTree[["projections"]], 4))
     }
     if (cutvalue) {

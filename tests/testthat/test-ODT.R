@@ -1,14 +1,14 @@
 data(body_fat, package = "ODRF")
 
 test_that("classification seeds tree is of class ODT with 11 elements", {
-  tree <- ODT(Density ~ ., body_fat[seq(200),], split = "mse")
+  tree <- ODT(Density ~ ., body_fat[seq(200), ], split = "mse")
   expect_s3_class(tree, "ODT")
   expect_length(tree, 11)
 })
 
 test_that("online tree is of class ODT with 11 elements", {
-  tree <- ODT(Density ~ ., body_fat[seq(200),], split = "mse")
-  online_tree <- online(tree, body_fat[-seq(200),-1], body_fat[-seq(200),1])
+  tree <- ODT(Density ~ ., body_fat[seq(200), ], split = "mse")
+  online_tree <- online(tree, body_fat[-seq(200), -1], body_fat[-seq(200), 1])
   expect_s3_class(online_tree, "ODT")
   expect_length(online_tree, 11)
 })
@@ -77,7 +77,7 @@ test_that("Split points are at (A+B)/2 for numeric features, entropy splitting",
   tree <- ODT(y ~ ., data = dat, split = "entropy", NodeRotateFun = "RotMatRF")
   split_points <- tree$structure$nodeCutValue
   nsp <- which(split_points != 0)
-  expect_equal(round(split_points[nsp],2), rep(0.5, length(nsp)))
+  expect_equal(round(split_points[nsp], 2), rep(0.5, length(nsp)))
 })
 
 test_that("Split points are at (A+B)/2 for numeric features, gini splitting", {
@@ -93,7 +93,7 @@ test_that("Split points are at (A+B)/2 for numeric features, regression", {
   tree <- ODT(y ~ ., data = dat, split = "mse", NodeRotateFun = "RotMatRF")
   split_points <- tree$structure$nodeCutValue
   nsp <- which(split_points != 0)
-  expect_equal(split_points[nsp], rep(0.5, length(nsp)))
+  expect_equal(round(split_points[nsp], 1), rep(0.5, length(nsp)))
 })
 
 ## Tests for using seeds

@@ -11,7 +11,7 @@
 #'
 #' @references Lee, EK(2017) PPtreeViz: An R Package for Visualizing Projection Pursuit Classification Trees, Journal of Statistical Software.
 #'
-#' @seealso \code{\link{ODT}} \code{\link{party}}
+#' @seealso \code{\link{ODT}} \code{\link[partykit]{party}}
 #'
 #' @examples
 #' data(iris)
@@ -33,7 +33,7 @@ as.party.ODT <- function(obj, data, ...) {
   #  data <- data.frame(y=eval(formula[[2]]),eval(formula[[3]]))
   # }
 
-  if (prod(dim(data)) != obj$data$n * (obj$data$p+1)) {
+  if (prod(dim(data)) != obj$data$n * (obj$data$p + 1)) {
     stop("'data' must be the training data 'data' in class ODT.")
   }
 
@@ -48,7 +48,7 @@ as.party.ODT <- function(obj, data, ...) {
   TS <- matrix(0, numNode, 5)
   TS[, 1] <- seq(numNode)
   TS[, 2] <- obj[["structure"]][["childNode"]]
-  if (obj$split %in% c("gini","entropy")) {
+  if (obj$split %in% c("gini", "entropy")) {
     TS[setdiff(seq(numNode), cutNode), 3] <- max.col(obj$structure$nodeNumLabel)[setdiff(seq(numNode), cutNode)]
   } else {
     TS[setdiff(seq(numNode), cutNode), 3] <- round(obj$structure$nodeNumLabel[, 1][setdiff(seq(numNode), cutNode)], 3)
@@ -82,7 +82,7 @@ as.party.ODT <- function(obj, data, ...) {
   mf <- data.frame(X %*% t(Alpha))
   rownames(mf) <- rownames(X)
   colnames(mf) <- paste0("proj", seq_len(ncol(mf)), "*X")
-  #mf <- data.frame(mf)
+  # mf <- data.frame(mf)
 
   fit <- as.data.frame(matrix(nrow = NROW(mf), ncol = 0))
   # fit <- as.data.frame(matrix(nrow = NROW(mf), ncol = 0))
@@ -92,7 +92,7 @@ as.party.ODT <- function(obj, data, ...) {
   #  pred=predict_ppCART(obj,X)
   # }
   # fit[["(fitted)"]] <- apply(matrix(pred,ncol=1),1,function(x) which((TS[,3]==x)*is.leaf==1))
-  fit[["(fitted)"]] <- predict(obj, X, type="leafnode")
+  fit[["(fitted)"]] <- predict(obj, X, type = "leafnode")
   fit[["(response)"]] <- y
 
   # fitted <- predict_ppCART(tree,X)

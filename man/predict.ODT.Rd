@@ -47,7 +47,7 @@ tree <- ODT(varieties_of_wheat ~ ., train_data, split = "entropy")
 pred <- predict(tree, test_data[, -8])
 # classification error
 (mean(pred != test_data[, 8]))
-(prob=predict(tree, test_data[, -8],type = "prob"))
+(prob <- predict(tree, test_data[, -8], type = "prob"))
 
 # Regression with Oblique Decision Tree.
 data(body_fat)
@@ -62,32 +62,38 @@ mean((pred - test_data[, 1])^2)
 
 # Use "Z" as the splitting variable to build a linear model tree for "X" and "y".
 set.seed(1)
-n = 200
-p = 10
-q = 5
-X = matrix(rnorm(n*p), n, p)
-Z = matrix(rnorm(n*q), n, q)
-y = (Z[,1] > 1)*(X[,1] - X[,2] + 2)  +
-(Z[,1] < 1)*(Z[,2] > 0)*(X[,1] + X[,2] + 0) +
-(Z[,1] < 1)*(Z[,2] < 0)*(X[,3] - 2)
-my.tree <- ODT(X=X, y=y, Xsplit=Z, split = "linear",
-               NodeRotateFun = "RotMatRF",MinLeaf = 10, MaxDepth = 5,
-               glmnetParList=list(lambda = 0.1,family = "gaussian"))
-(leafnode <- predict(my.tree, X, Xsplit=Z, type="leafnode"))
+n <- 200
+p <- 10
+q <- 5
+X <- matrix(rnorm(n * p), n, p)
+Z <- matrix(rnorm(n * q), n, q)
+y <- (Z[, 1] > 1) * (X[, 1] - X[, 2] + 2) +
+  (Z[, 1] < 1) * (Z[, 2] > 0) * (X[, 1] + X[, 2] + 0) +
+  (Z[, 1] < 1) * (Z[, 2] < 0) * (X[, 3] - 2)
+my.tree <- ODT(
+  X = X, y = y, Xsplit = Z, split = "linear",
+  NodeRotateFun = "RotMatRF", MinLeaf = 10, MaxDepth = 5,
+  glmnetParList = list(lambda = 0.1, family = "gaussian")
+)
+(leafnode <- predict(my.tree, X, Xsplit = Z, type = "leafnode"))
+\donttest{
+y1 <- (y > 0) * 1
+my.tree <- ODT(
+  X = X, y = y1, Xsplit = Z, split = "linear",
+  NodeRotateFun = "RotMatRF", MinLeaf = 10, MaxDepth = 5,
+  glmnetParList = list(family = "binomial")
+)
+(class <- predict(my.tree, X, Xsplit = Z, type = "pred"))
+(prob <- predict(my.tree, X, Xsplit = Z, type = "prob"))
 
-y1 = (y>0)*1
-my.tree <- ODT(X=X, y=y1, Xsplit=Z, split = "linear",
-               NodeRotateFun = "RotMatRF",MinLeaf = 10, MaxDepth = 5,
-               glmnetParList=list(family = "binomial"))
-(class <- predict(my.tree, X, Xsplit=Z, type="pred"))
-(prob <- predict(my.tree, X, Xsplit=Z, type="prob"))
-
-y2 = (y < -2.5)*1+(y>=-2.5&y<2.5)*2+(y>=2.5)*3
-my.tree <- ODT(X=X, y=y2, Xsplit=Z, split = "linear",
-               NodeRotateFun = "RotMatRF",MinLeaf = 10, MaxDepth = 5,
-               glmnetParList=list(family = "multinomial"))
-(prob <- predict(my.tree, X, Xsplit=Z, type="prob"))
-
+y2 <- (y < -2.5) * 1 + (y >= -2.5 & y < 2.5) * 2 + (y >= 2.5) * 3
+my.tree <- ODT(
+  X = X, y = y2, Xsplit = Z, split = "linear",
+  NodeRotateFun = "RotMatRF", MinLeaf = 10, MaxDepth = 5,
+  glmnetParList = list(family = "multinomial")
+)
+(prob <- predict(my.tree, X, Xsplit = Z, type = "prob"))
+}
 
 }
 \references{

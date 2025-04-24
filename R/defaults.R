@@ -50,7 +50,7 @@ defaults <- function(paramList, split = "entropy", dimX = NULL, weights = NULL, 
     #  q<- min(ceiling(length(y)^0.4),ceiling(paramList$p*2/3))
     #  paramList$d <-min(max(5, ceiling(paramList$p/q)),paramList$p)
     # if(NodeRotateFun!="RotMatPPO")
-    p=paramList$dimX - (!is.null(paramList$catLabel)) * (length(unlist(paramList$catLabel)) - length(paramList$catLabel))
+    p <- paramList$dimX - (!is.null(paramList$catLabel)) * (length(unlist(paramList$catLabel)) - length(paramList$catLabel))
     paramList$numProj <- ceiling(sqrt(p))
   }
   if (is.null(paramList[["weights"]])) {

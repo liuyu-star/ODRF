@@ -60,7 +60,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, MaxDepth = Inf, 
   predicted <- obj$predicted
   paramList <- obj$paramList
   obj <- obj[-seq(6)]
-  projections=NULL
+  projections <- NULL
   if ("projections" %in% names(obj)) {
     projections <- obj$projections
     obj <- obj[-1]
@@ -118,7 +118,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, MaxDepth = Inf, 
   # method0 <- strsplit(split, split = "")[[1]][1]
 
 
-  if (split %in% c("gini","entropy")) {
+  if (split %in% c("gini", "entropy")) {
     if (!is.integer(y)) {
       y <- as.integer(as.factor(y))
     }
@@ -167,9 +167,9 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, MaxDepth = Inf, 
     X <- as.matrix(X)
     colnames(X) <- varName
 
-    #if (!is.null(subset)) {
+    # if (!is.null(subset)) {
     #  X <- X[subset, ]
-    #}
+    # }
 
     # weights=c(weights,paramList$weights)
     if (!is.null(weights)) {
@@ -202,10 +202,10 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, MaxDepth = Inf, 
   MaxDepth <- MaxDepth0
   numNode0 <- length(nodeCutValue)
   if (is.infinite(MaxDepth)) {
-    numNode <- sum(2^(0:ceiling(log2(n / MinLeaf))))#max(numNode,
+    numNode <- sum(2^(0:ceiling(log2(n / MinLeaf)))) # max(numNode,
   } else {
     MaxDepth <- min(MaxDepth, ceiling(log2(n / MinLeaf)), n / MinLeaf - 1)
-    numNode <- sum(2^(0:MaxDepth))#min(numNode,
+    numNode <- sum(2^(0:MaxDepth)) # min(numNode,
   }
   numNode <- max(numNode, numNode0)
 
@@ -253,7 +253,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, MaxDepth = Inf, 
       nn <- length(y[nodeXIndx[[currentNode]]])
       # r=ceiling(nn*nodeNumLabel0[currentNode])
       # parentLabel=nn*nodeNumLabel0[currentNode,]
-      if (split %in% c("gini","entropy")) {
+      if (split %in% c("gini", "entropy")) {
         leafLabel <- table(Levels[c(sl, y[nodeXIndx[[currentNode]]])]) - 1 + nn * nodeNumLabel0[currentNode, ]
         # leafLabel = table(c(Levels[y[nodeXIndx[[currentNode]]]],rep(names(nodeNumLabel0[currentNode]),r)))
         # nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
@@ -274,7 +274,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, MaxDepth = Inf, 
         nodeNumLabel[currentNode, ] <- leafLabel
       }
 
-      #nodeXIndx[currentNode] <- NA
+      # nodeXIndx[currentNode] <- NA
       currentNode <- currentNode + 1
       next
     }
@@ -333,7 +333,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, MaxDepth = Inf, 
     rotaX <- X[nodeXIndx[[currentNode]], , drop = FALSE] %*% rotaX
 
     # bestCut <- best_cut_node(method0, rotaX, y[nodeXIndx[[currentNode]]], Wcd, MinLeaf, maxLabel)
-    bestCut <- best.cut.node(X=rotaX, y=y[nodeXIndx[[currentNode]]],split=split, lambda=lambda,weights= Wcd, MinLeaf=MinLeaf, numLabels=maxLabel)
+    bestCut <- best.cut.node(X = rotaX, y = y[nodeXIndx[[currentNode]]], split = split, lambda = lambda, weights = Wcd, MinLeaf = MinLeaf, numLabels = maxLabel)
 
     if (bestCut$BestCutVar == -1) {
       TF <- TRUE
@@ -345,7 +345,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, MaxDepth = Inf, 
       nn <- length(y[nodeXIndx[[currentNode]]])
       # r=ceiling(nn*nodeNumLabel0[currentNode])
       # parentLabel=nn*nodeNumLabel0[currentNode,]
-      if (split %in% c("gini","entropy")) {
+      if (split %in% c("gini", "entropy")) {
         leafLabel <- table(Levels[c(sl, y[nodeXIndx[[currentNode]]])]) - 1 + nn * nodeNumLabel0[currentNode, ]
         # leafLabel = table(c(Levels[y[nodeXIndx[[currentNode]]]],rep(names(nodeNumLabel0[currentNode]),r)))
         # nodeLabel[currentNode]=names(leafLabel)[which.max(leafLabel)];
@@ -366,7 +366,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, MaxDepth = Inf, 
         nodeNumLabel[currentNode, ] <- leafLabel
       }
 
-      #nodeXIndx[currentNode] <- NA
+      # nodeXIndx[currentNode] <- NA
       currentNode <- currentNode + 1
       next
     }
@@ -378,7 +378,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, MaxDepth = Inf, 
       # names(r)=rep(nodeLabel[currentNode],2)
       LRnode <- rbind(nodeNumLabel0[currentNode, ], nodeNumLabel0[currentNode, ])
       if (!is.na(childNode0[currentNode])) {
-        if (split %in% c("gini","entropy")) {
+        if (split %in% c("gini", "entropy")) {
           # r=rep(nodeNumLabel0[currentNode],2)
           # names(r)=rep(names(nodeNumLabel0[currentNode]),2)
           LRnode <- LRnode / length(y[nodeXIndx[[currentNode]]])
@@ -452,7 +452,7 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, MaxDepth = Inf, 
   rownames(nodeNumLabel) <- nodeDepth
 
 
-  ppTree <- list(call = Call, terms = Terms, split = split, Levels = Levels, NodeRotateFun = NodeRotateFun, predicted=NULL, paramList = paramList)
+  ppTree <- list(call = Call, terms = Terms, split = split, Levels = Levels, NodeRotateFun = NodeRotateFun, predicted = NULL, paramList = paramList)
 
   if (!is.null(projections)) {
     cutNode <- unique(nodeRotaMat[, 2][nodeRotaMat[, 1] != 0])
@@ -466,15 +466,15 @@ online.ODT <- function(obj, X = NULL, y = NULL, weights = NULL, MaxDepth = Inf, 
     ppTree <- c(ppTree[seq(6)], list(projections = projections), ppTree[-seq(6)])
   }
 
-  predicted=rep(0,n)
-  idx=which(!is.na(nodeXIndx[1:(currentNode - 1)]))
-  if (split %in% c("gini","entropy")) {
-    if(all(nodeCutValue == 0)){
-      nodeNumLabel=matrix(nodeNumLabel,nrow = 1, ncol = length(Levels))
+  predicted <- rep(0, n)
+  idx <- which(!is.na(nodeXIndx[1:(currentNode - 1)]))
+  if (split %in% c("gini", "entropy")) {
+    if (all(nodeCutValue == 0)) {
+      nodeNumLabel <- matrix(nodeNumLabel, nrow = 1, ncol = length(Levels))
     }
     nodeLabel <- Levels[max.col(nodeNumLabel)]
     nodeLabel[which(rowSums(nodeNumLabel) == 0)] <- "0"
-  }else{
+  } else {
     nodeLabel <- nodeNumLabel[, 1]
   }
   for (i in idx) {

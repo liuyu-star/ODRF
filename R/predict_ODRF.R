@@ -28,7 +28,7 @@
 #' train_data <- data.frame(seeds[train, ])
 #' test_data <- data.frame(seeds[-train, ])
 #' forest <- ODRF(varieties_of_wheat ~ ., train_data,
-#'   split = "entropy", parallel = FALSE,ntrees = 50
+#'   split = "entropy", parallel = FALSE, ntrees = 50
 #' )
 #' pred <- predict(forest, test_data[, -8], weight.tree = TRUE)
 #' # classification error
@@ -41,8 +41,10 @@
 #' train <- sample(1:252, 80)
 #' train_data <- data.frame(body_fat[train, ])
 #' test_data <- data.frame(body_fat[-train, ])
-#' forest <- ODRF(Density ~ ., train_data, split = "mse", parallel = FALSE,
-#' ntrees = 50, TreeRandRotate=TRUE)
+#' forest <- ODRF(Density ~ ., train_data,
+#'   split = "mse", parallel = FALSE,
+#'   ntrees = 50, TreeRandRotate = TRUE
+#' )
 #' pred <- predict(forest, test_data[, -1])
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
@@ -54,7 +56,6 @@
 #' @method predict ODRF
 #' @export
 predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, ...) {
-
   pp <- object$data$p
   if (!is.null(object$data$catLabel) && (sum(object$data$Xcat) > 0)) {
     pp <- pp - length(unlist(object$data$catLabel)) + length(object$data$Xcat)
@@ -111,8 +112,8 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
     rm(Xnew1)
     rm(Xnewj)
   }
-  if (!is.numeric(Xnew)){
-    Xnew=apply(Xnew, 2, as.numeric)
+  if (!is.numeric(Xnew)) {
+    Xnew <- apply(Xnew, 2, as.numeric)
   }
 
   # Variable scaling.
@@ -130,36 +131,37 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
   # }
   # Votes=t(sapply(seq(ntrees), function(i)PPtreePredict(Xnew,object$trees[[i]])))
 
-  #VALUE <- rep(ifelse(split == "mse", 0, "0"), n)
-  #TreePrediction <- vapply(object$structure,function(tree){predictTree(tree,Xnew,split,Levels)$prediction}, VALUE)
-  #Votes <- t(TreePrediction)
-  split=object$split
-  Levels=object$Levels
-  Rotate=object$data$TreeRandRotate
-  VALUE <- rep(ifelse(split %in% c("gini","entropy"), "0", 0), n)
-  TreePrediction <- vapply(object$structure,function(tree){
-    XXnew=Xnew
+  # VALUE <- rep(ifelse(split == "mse", 0, "0"), n)
+  # TreePrediction <- vapply(object$structure,function(tree){predictTree(tree,Xnew,split,Levels)$prediction}, VALUE)
+  # Votes <- t(TreePrediction)
+  split <- object$split
+  Levels <- object$Levels
+  Rotate <- object$data$TreeRandRotate
+  VALUE <- rep(ifelse(split %in% c("gini", "entropy"), "0", 0), n)
+  TreePrediction <- vapply(object$structure, function(tree) {
+    XXnew <- Xnew
     if (Rotate) {
       XXnew[, tree$rotdims] <- XXnew[, tree$rotdims, drop = FALSE] %*% tree$rotmat
     }
-    predictTree(tree,XXnew,split,Levels)$prediction}, VALUE)
+    predictTree(tree, XXnew, split, Levels)$prediction
+  }, VALUE)
   Votes <- t(TreePrediction)
 
 
   weights <- rep(1, ntrees)
   if (weight.tree) {
-    if (object$forest$ratOOB == 0){
+    if (object$forest$ratOOB == 0) {
       warning("ratOOB=0, weight.tree = TRUE invalid")
-      #stop("out-of-bag indices for each tree are not stored. ODRF must be called with storeOOB = TRUE.")
-    }else{
+      # stop("out-of-bag indices for each tree are not stored. ODRF must be called with storeOOB = TRUE.")
+    } else {
       oobErr <- sapply(object$structure, function(trees) trees$oobErr)
-      weights <- 1/(oobErr+1e-5)
+      weights <- 1 / (oobErr + 1e-5)
     }
   }
 
-  #weights <- weight.tree * oobErr + (!weight.tree)
+  # weights <- weight.tree * oobErr + (!weight.tree)
   weights <- weights / sum(weights)
-  if (split %in% c("gini","entropy")) {
+  if (split %in% c("gini", "entropy")) {
     # prob=matrix(0,n,nC)
     # for (i in 1:n) {
     #    prob[i,]=aggregate(c(rep(0,nC),weights[,i]), by=list(c(1:nC, f_votes[,i])),sum)[,2];
@@ -188,7 +190,7 @@ predict.ODRF <- function(object, Xnew, type = "response", weight.tree = FALSE, .
     pred <- max.col(prob) ## "random"
     pred <- Levels[pred]
   } else {
-    prob <- weights #/ sum(weights)
+    prob <- weights # / sum(weights)
     pred <- t(Votes) %*% prob
     # pred=colMeans(Votes);
     # prob=NULL

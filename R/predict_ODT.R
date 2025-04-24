@@ -32,7 +32,7 @@
 #' pred <- predict(tree, test_data[, -8])
 #' # classification error
 #' (mean(pred != test_data[, 8]))
-#' (prob=predict(tree, test_data[, -8],type = "prob"))
+#' (prob <- predict(tree, test_data[, -8], type = "prob"))
 #'
 #' # Regression with Oblique Decision Tree.
 #' data(body_fat)
@@ -47,32 +47,38 @@
 #'
 #' # Use "Z" as the splitting variable to build a linear model tree for "X" and "y".
 #' set.seed(1)
-#' n = 200
-#' p = 10
-#' q = 5
-#' X = matrix(rnorm(n*p), n, p)
-#' Z = matrix(rnorm(n*q), n, q)
-#' y = (Z[,1] > 1)*(X[,1] - X[,2] + 2)  +
-#' (Z[,1] < 1)*(Z[,2] > 0)*(X[,1] + X[,2] + 0) +
-#' (Z[,1] < 1)*(Z[,2] < 0)*(X[,3] - 2)
-#' my.tree <- ODT(X=X, y=y, Xsplit=Z, split = "linear",
-#'                NodeRotateFun = "RotMatRF",MinLeaf = 10, MaxDepth = 5,
-#'                glmnetParList=list(lambda = 0.1,family = "gaussian"))
-#' (leafnode <- predict(my.tree, X, Xsplit=Z, type="leafnode"))
+#' n <- 200
+#' p <- 10
+#' q <- 5
+#' X <- matrix(rnorm(n * p), n, p)
+#' Z <- matrix(rnorm(n * q), n, q)
+#' y <- (Z[, 1] > 1) * (X[, 1] - X[, 2] + 2) +
+#'   (Z[, 1] < 1) * (Z[, 2] > 0) * (X[, 1] + X[, 2] + 0) +
+#'   (Z[, 1] < 1) * (Z[, 2] < 0) * (X[, 3] - 2)
+#' my.tree <- ODT(
+#'   X = X, y = y, Xsplit = Z, split = "linear",
+#'   NodeRotateFun = "RotMatRF", MinLeaf = 10, MaxDepth = 5,
+#'   glmnetParList = list(lambda = 0.1, family = "gaussian")
+#' )
+#' (leafnode <- predict(my.tree, X, Xsplit = Z, type = "leafnode"))
 #' \donttest{
-#' y1 = (y>0)*1
-#' my.tree <- ODT(X=X, y=y1, Xsplit=Z, split = "linear",
-#'                NodeRotateFun = "RotMatRF",MinLeaf = 10, MaxDepth = 5,
-#'                glmnetParList=list(family = "binomial"))
-#' (class <- predict(my.tree, X, Xsplit=Z, type="pred"))
-#' (prob <- predict(my.tree, X, Xsplit=Z, type="prob"))
+#' y1 <- (y > 0) * 1
+#' my.tree <- ODT(
+#'   X = X, y = y1, Xsplit = Z, split = "linear",
+#'   NodeRotateFun = "RotMatRF", MinLeaf = 10, MaxDepth = 5,
+#'   glmnetParList = list(family = "binomial")
+#' )
+#' (class <- predict(my.tree, X, Xsplit = Z, type = "pred"))
+#' (prob <- predict(my.tree, X, Xsplit = Z, type = "prob"))
 #'
-#' y2 = (y < -2.5)*1+(y>=-2.5&y<2.5)*2+(y>=2.5)*3
-#' my.tree <- ODT(X=X, y=y2, Xsplit=Z, split = "linear",
-#'                NodeRotateFun = "RotMatRF",MinLeaf = 10, MaxDepth = 5,
-#'                glmnetParList=list(family = "multinomial"))
-#' (prob <- predict(my.tree, X, Xsplit=Z, type="prob"))
-#'}
+#' y2 <- (y < -2.5) * 1 + (y >= -2.5 & y < 2.5) * 2 + (y >= 2.5) * 3
+#' my.tree <- ODT(
+#'   X = X, y = y2, Xsplit = Z, split = "linear",
+#'   NodeRotateFun = "RotMatRF", MinLeaf = 10, MaxDepth = 5,
+#'   glmnetParList = list(family = "multinomial")
+#' )
+#' (prob <- predict(my.tree, X, Xsplit = Z, type = "prob"))
+#' }
 #'
 #' @importFrom stats aggregate as.formula na.action predict quantile runif
 #' @importFrom glmnet predict.glmnet
@@ -81,8 +87,7 @@
 #' @aliases predict.ODT
 #' @method predict ODT
 #' @export
-predict.ODT <- function(object, Xnew, Xsplit=NULL, type = c("pred","leafnode","prob")[1], ...) {
-
+predict.ODT <- function(object, Xnew, Xsplit = NULL, type = c("pred", "leafnode", "prob")[1], ...) {
   pp <- object$data$p
   if (!is.null(object$data$catLabel) && (sum(object$data$Xcat) > 0)) {
     pp <- pp - length(unlist(object$data$catLabel)) + length(object$data$Xcat)
@@ -133,15 +138,15 @@ predict.ODT <- function(object, Xnew, Xsplit=NULL, type = c("pred","leafnode","p
       xj <- xj1
     }
 
-    #Xnew <- cbind(Xnew1, apply(Xnew[, -Xcat], 2, as.numeric))
+    # Xnew <- cbind(Xnew1, apply(Xnew[, -Xcat], 2, as.numeric))
     Xnew <- cbind(Xnew1, Xnew[, -Xcat])
     p <- ncol(Xnew)
     numCat <- length(unlist(catLabel))
     rm(Xnew1)
     rm(Xnewj)
   }
-  if (!is.numeric(Xnew)){
-    Xnew=apply(Xnew, 2, as.numeric)
+  if (!is.numeric(Xnew)) {
+    Xnew <- apply(Xnew, 2, as.numeric)
   }
 
   # Variable scaling.
@@ -155,51 +160,51 @@ predict.ODT <- function(object, Xnew, Xsplit=NULL, type = c("pred","leafnode","p
     Xnew[, object$data$rotdims] <- Xnew[, object$data$rotdims, drop = FALSE] %*% object$data$rotmat
   }
 
-  if(is.null(Xsplit))Xsplit=Xnew
+  if (is.null(Xsplit)) Xsplit <- Xnew
   predict_tree <- predictTree(object$structure, Xsplit, object$split, object$Levels)
 
   LeafNode <- predict_tree$leafnode
-  if(is.null(object$Levels)){
-    nodeSeq=which(object$structure$nodeNumLabel[,2]!=0)
-  }else{
-    nodeSeq=which(rowSums(object$structure$nodeNumLabel)!=0)
+  if (is.null(object$Levels)) {
+    nodeSeq <- which(object$structure$nodeNumLabel[, 2] != 0)
+  } else {
+    nodeSeq <- which(rowSums(object$structure$nodeNumLabel) != 0)
   }
 
-  if (type =="leafnode") {
+  if (type == "leafnode") {
     pred <- LeafNode
   }
-  if (type =="pred") {
+  if (type == "pred") {
     pred <- predict_tree$prediction
     # if (!object$split %in% c("mse" ,"gini","entropy")){
     #    pred[pred<min(object$predicted)]=min(object$predicted)
     #    pred[pred>max(object$predicted)]=max(object$predicted)
     # }
-    if(object$split=="linear"){
-      type0 =ifelse(object$glmnetParList$family%in%c("binomial","multinomial"),"class","link")
-      #nodeSeq=which(object$structure$nodeNumLabel[,2]!=0)
-      pred=rep(0,n)
+    if (object$split == "linear") {
+      type0 <- ifelse(object$glmnetParList$family %in% c("binomial", "multinomial"), "class", "link")
+      # nodeSeq=which(object$structure$nodeNumLabel[,2]!=0)
+      pred <- rep(0, n)
       for (node in nodeSeq) {
-        idx=which(LeafNode==node)
-        #do.call(glmnet, glmnetParList)
-        pred[idx]=predict(object$structure$glmnetFit[[node]],Xnew[idx,],type=type0)
+        idx <- which(LeafNode == node)
+        # do.call(glmnet, glmnetParList)
+        pred[idx] <- predict(object$structure$glmnetFit[[node]], Xnew[idx, ], type = type0)
       }
     }
   }
-  if (type =="prob") {
-    pred=matrix(0,n,length(object$Levels))
-    colnames(pred)=object$Levels
+  if (type == "prob") {
+    pred <- matrix(0, n, length(object$Levels))
+    colnames(pred) <- object$Levels
     for (node in nodeSeq) {
-      idx=which(LeafNode==node)
-      #do.call(glmnet, glmnetParList)
-      if(object$split=="linear"){
-        pred[idx,]=predict(object$structure$glmnetFit[[node]], Xnew[idx,], type ="response")
-      }else{
-        pred[idx,]=matrix(object$structure$nodeNumLabel[node,]/sum(object$structure$nodeNumLabel[node,]),length(idx),length(object$Levels),byrow = T)
+      idx <- which(LeafNode == node)
+      # do.call(glmnet, glmnetParList)
+      if (object$split == "linear") {
+        pred[idx, ] <- predict(object$structure$glmnetFit[[node]], Xnew[idx, ], type = "response")
+      } else {
+        pred[idx, ] <- matrix(object$structure$nodeNumLabel[node, ] / sum(object$structure$nodeNumLabel[node, ]), length(idx), length(object$Levels), byrow = T)
       }
     }
-    TFclass=ifelse(is.null(object$glmnetParList$family),FALSE,object$glmnetParList$family=="binomial")
-    if(object$split=="linear" & TFclass){
-      pred[,1]=1-pred[,1]
+    TFclass <- ifelse(is.null(object$glmnetParList$family), FALSE, object$glmnetParList$family == "binomial")
+    if (object$split == "linear" & TFclass) {
+      pred[, 1] <- 1 - pred[, 1]
     }
   }
 

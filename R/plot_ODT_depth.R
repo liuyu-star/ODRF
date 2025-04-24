@@ -37,10 +37,10 @@
 plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, split = "gini", NodeRotateFun = "RotMatPPO",
                            paramList = NULL, digits = NULL, main = NULL, ...) {
   if (is.null(main)) {
-    main <- paste0("Oblique ", ifelse(split %in% c("gini","entropy"), "Classification","Regression"), " Tree")
+    main <- paste0("Oblique ", ifelse(split %in% c("gini", "entropy"), "Classification", "Regression"), " Tree")
   }
 
-  #set.seed(seed)
+  # set.seed(seed)
   if (is.null(data)) {
     data <- data.frame(y = eval(formula[[2]]), eval(formula[[3]]))
     formula <- y~.
@@ -66,12 +66,12 @@ plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, split = "gini",
 
   err <- rep(0, Depth)
   for (d in 1:Depth) {
-    #set.seed(seed)
+    # set.seed(seed)
     paramList$MaxDepth <- d
     tree <- do.call(ODT.formula, paramList)
     pred <- predict(tree, Xnew)
 
-    if (split %in% c("gini","entropy")) {
+    if (split %in% c("gini", "entropy")) {
       err[d] <- mean(pred != ynew)
     } else {
       err[d] <- mean((pred - ynew)^2) # /mean((ynew-mean(y))^2);
@@ -83,7 +83,7 @@ plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, split = "gini",
   # err=round(err,errid)
   minErr <- strsplit(as.character(min(err)), "")[[1]]
   id <- which(minErr == "e")
-  if (split %in% c("gini","entropy")) {
+  if (split %in% c("gini", "entropy")) {
     digits <- 0
   } else if (is.null(digits)) {
     if (length(id) > 0) {
@@ -93,12 +93,12 @@ plot_ODT_depth <- function(formula, data = NULL, newdata = NULL, split = "gini",
     }
   }
 
-  if(digits==0){
-    ylab = paste0("Error")
-  }else if(digits==2){
-    ylab = paste0("Error (%)")
-  }else{
-    ylab = paste0("Error (*",10^-digits,")")
+  if (digits == 0) {
+    ylab <- paste0("Error")
+  } else if (digits == 2) {
+    ylab <- paste0("Error (%)")
+  } else {
+    ylab <- paste0("Error (*", 10^-digits, ")")
   }
 
   # type = "l",lty=1,

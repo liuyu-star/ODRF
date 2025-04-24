@@ -168,37 +168,43 @@ mean((pred - test_data[, 1])^2)
 
 # Use "Z" as the splitting variable to build a linear model tree for "X" and "y".
 set.seed(10)
-cutpoint=50
-X=matrix(rnorm(100*10),100,10)
-age=sample(seq(20,80),100,replace = TRUE)
-height=sample(seq(50,200),100,replace = TRUE)
-weight=sample(seq(5,150),100,replace = TRUE)
-Z=cbind(age=age,height=height,weight=weight)
-mu=rep(0,100)
-mu[age<=cutpoint]=X[age<=cutpoint,1]+X[age<=cutpoint,2]
-mu[age>cutpoint]=X[age>cutpoint,1]+X[age>cutpoint,3]
-y=mu+rnorm(100)
+cutpoint <- 50
+X <- matrix(rnorm(100 * 10), 100, 10)
+age <- sample(seq(20, 80), 100, replace = TRUE)
+height <- sample(seq(50, 200), 100, replace = TRUE)
+weight <- sample(seq(5, 150), 100, replace = TRUE)
+Z <- cbind(age = age, height = height, weight = weight)
+mu <- rep(0, 100)
+mu[age <= cutpoint] <- X[age <= cutpoint, 1] + X[age <= cutpoint, 2]
+mu[age > cutpoint] <- X[age > cutpoint, 1] + X[age > cutpoint, 3]
+y <- mu + rnorm(100)
 # Regression model tree
-my.tree <- ODT(X=X, y=y, Xsplit=Z, split = "linear", lambda = 0,
-NodeRotateFun = "RotMatRF",
-glmnetParList=list(lambda = 0, family = "gaussian"))
-pred <- predict(my.tree, X, Xsplit=Z)
+my.tree <- ODT(
+  X = X, y = y, Xsplit = Z, split = "linear", lambda = 0,
+  NodeRotateFun = "RotMatRF",
+  glmnetParList = list(lambda = 0, family = "gaussian")
+)
+pred <- predict(my.tree, X, Xsplit = Z)
 # fitting error
 mean((pred - y)^2)
 mean((my.tree$predicted - y)^2)
 # Classification model tree
-y1 = (y>0)*1
-my.tree <- ODT(X=X, y=y1, Xsplit=Z, split = "linear",lambda = 0,
-               NodeRotateFun = "RotMatRF",MinLeaf = 10, MaxDepth = 5,
-               glmnetParList=list(family = "binomial"))
-(class <- predict(my.tree, X, Xsplit=Z, type="pred"))
-(prob <- predict(my.tree, X, Xsplit=Z, type="prob"))
+y1 <- (y > 0) * 1
+my.tree <- ODT(
+  X = X, y = y1, Xsplit = Z, split = "linear", lambda = 0,
+  NodeRotateFun = "RotMatRF", MinLeaf = 10, MaxDepth = 5,
+  glmnetParList = list(family = "binomial")
+)
+(class <- predict(my.tree, X, Xsplit = Z, type = "pred"))
+(prob <- predict(my.tree, X, Xsplit = Z, type = "prob"))
 
 # Projection analysis of the oblique decision tree.
 data(iris)
-tree <- ODT(Species ~ ., data = iris, split="gini",
-            paramList = list(model = "PPR", numProj = 1))
-print(round(tree[["projections"]],3))
+tree <- ODT(Species ~ .,
+  data = iris, split = "gini",
+  paramList = list(model = "PPR", numProj = 1)
+)
+print(round(tree[["projections"]], 3))
 
 ### Train ODT on one-of-K encoded categorical data ###
 # Note that the category variable must be placed at the beginning of the predictor X
@@ -257,14 +263,14 @@ catLabel
 #> $Xcol2
 #> [1] "1" "2" "3" "4" "5"
 
-tree <- ODT(X, y, split = "gini", Xcat = c(1, 2), catLabel = catLabel,NodeRotateFun = "RotMatRF")
+tree <- ODT(X, y, split = "gini", Xcat = c(1, 2), catLabel = catLabel, NodeRotateFun = "RotMatRF")
 
 }
 \references{
 Zhan, H., Liu, Y., & Xia, Y. (2022). Consistency of The Oblique Decision Tree and Its Random Forest. arXiv preprint arXiv:2211.12653.
 }
 \seealso{
-\code{\link{online.ODT}} \code{\link{prune.ODT}} \code{\link{as.party}} \code{\link{predict.ODT}} \code{\link{print.ODT}} \code{\link{plot.ODT}} \code{\link{plot_ODT_depth}}
+\code{\link{online.ODT}} \code{\link{prune.ODT}} \code{\link{as.party.ODT}} \code{\link{predict.ODT}} \code{\link{print.ODT}} \code{\link{plot.ODT}} \code{\link{plot_ODT_depth}}
 }
 \author{
 Yu Liu and Yingcun Xia

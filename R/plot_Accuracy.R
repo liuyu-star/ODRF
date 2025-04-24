@@ -21,8 +21,10 @@
 #' train_data <- data.frame(breast_cancer[train, -1])
 #' test_data <- data.frame(breast_cancer[-train, -1])
 #'
-#' forest <- ODRF(diagnosis ~ ., train_data, split = "gini",
-#' parallel = FALSE, ntrees = 30)
+#' forest <- ODRF(diagnosis ~ ., train_data,
+#'   split = "gini",
+#'   parallel = FALSE, ntrees = 30
+#' )
 #' (error <- Accuracy(forest, train_data, test_data))
 #' plot(error)
 #'
@@ -32,14 +34,14 @@
 #' @export
 plot.Accuracy <- function(x, lty = 1, digits = NULL, main = NULL, ...) {
   if (is.null(main)) {
-    main <- paste0("Oblique ", ifelse(x$split %in% c("gini","entropy"), "Classification","Regression"), " Forest")
+    main <- paste0("Oblique ", ifelse(x$split %in% c("gini", "entropy"), "Classification", "Regression"), " Forest")
   }
   Err <- x
   err <- cbind(Err$err.oob, Err$err.test)
 
   minErr <- strsplit(as.character(min(err)), "")[[1]]
   id <- which(minErr == "e")
-  if (x$split %in% c("gini","entropy")) {
+  if (x$split %in% c("gini", "entropy")) {
     digits <- 0
   } else if (is.null(digits)) {
     if (length(id) > 0) {
@@ -49,12 +51,12 @@ plot.Accuracy <- function(x, lty = 1, digits = NULL, main = NULL, ...) {
     }
   }
 
-  if(digits==0){
-    ylab = paste0("Error")
-  }else if(digits==2){
-    ylab = paste0("Error (%)")
-  }else{
-    ylab = paste0("Error (*",10^-digits,")")
+  if (digits == 0) {
+    ylab <- paste0("Error")
+  } else if (digits == 2) {
+    ylab <- paste0("Error (%)")
+  } else {
+    ylab <- paste0("Error (*", 10^-digits, ")")
   }
 
   err <- round(err * 10^digits, 2)

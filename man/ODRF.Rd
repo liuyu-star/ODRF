@@ -159,7 +159,7 @@ train <- sample(1:209, 80)
 train_data <- data.frame(seeds[train, ])
 test_data <- data.frame(seeds[-train, ])
 forest <- ODRF(varieties_of_wheat ~ ., train_data,
-  split = "entropy",parallel = FALSE, ntrees = 50
+  split = "entropy", parallel = FALSE, ntrees = 50
 )
 pred <- predict(forest, test_data[, -8])
 # classification error
