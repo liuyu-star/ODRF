@@ -115,7 +115,16 @@
 #' # estimation error
 #' mean((pred - test_data[, 1])^2)
 #' }
-
+#'
+# @importFrom RcppArmadillo fastLm
+# @import fastmatrix ols.fit
+#' @import Rcpp
+#' @import doParallel
+#' @import foreach
+#' @import nnet
+#' @importFrom parallel detectCores makeCluster clusterSplit stopCluster
+#' @importFrom stats model.frame model.extract model.matrix na.fail
+#' @importFrom rpart rpart rpart.control
 #' @export
 ODBT <- function(X, ...) {
   UseMethod("ODBT")
@@ -183,7 +192,7 @@ ODBT.formula <- function(formula, data = NULL, Xnew = NULL, type = "auto", model
     varName <- c(yname, varName)
   }
 
-  forest <- ODBT.compute(
+  forest <- ODBT_compute(
     formula, Call, varName, X, y, Xnew, type, model, TreeRotate,
     max.terms, NodeRotateFun, FunDir, paramList,
     ntrees, storeOOB, replacement, stratify, ratOOB, parallel,
@@ -231,7 +240,7 @@ ODBT.default <- function(X, y, Xnew = NULL,
     Call$y <- NULL
   }
 
-  ODBT.compute(
+  ODBT_compute(
     formula, Call, varName, X, y, Xnew, type, model, TreeRotate,
     max.terms, NodeRotateFun, FunDir, paramList,
     ntrees, storeOOB, replacement, stratify, ratOOB, parallel,
@@ -240,18 +249,10 @@ ODBT.default <- function(X, y, Xnew = NULL,
   )
 }
 
-# @importFrom RcppArmadillo fastLm
-# @import fastmatrix ols.fit
-#' @import Rcpp
-#' @import doParallel
-#' @import foreach
-#' @import nnet
-#' @importFrom parallel detectCores makeCluster clusterSplit stopCluster
-#' @importFrom stats model.frame model.extract model.matrix na.fail
-#' @importFrom rpart rpart rpart.control
+
 #' @keywords internal
 #' @noRd
-ODBT.compute <- function(formula, Call, varName, X, y, Xnew, type, model, TreeRotate,
+ODBT_compute <- function(formula, Call, varName, X, y, Xnew, type, model, TreeRotate,
                          max.terms, NodeRotateFun, FunDir, paramList,
                          ntrees, storeOOB, replacement, stratify, ratOOB, parallel,
                          numCores, MaxDepth, numNode, MinLeaf, subset, weights,

@@ -208,6 +208,7 @@ pred <- forest$results$prediction
 # estimation error
 mean((pred - test_data[, 1])^2)
 }
+
 }
 \references{
 Zhan, H., Liu, Y., & Xia, Y. (2024). Consistency of Oblique Decision Tree and its Boosting and Random Forest. arXiv preprint arXiv:2211.12653.

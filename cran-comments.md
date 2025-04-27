@@ -1,6 +1,8 @@
 ## Update ODRF version to 0.0.5
 
-We have fixed some known bugs and added some new functions for the ODRF package. Therefore we request to update the ODRF version. The main changes as follows.
+Dear CRAN maintainers,
+
+Thank you for your feedback, we cannot resolve the "checking CRAN incoming feasibility ... NOTE". We have fixed some known bugs and added some new functions for the ODRF package. Therefore we request to update the ODRF version. The main changes as follows.
 
 - Added linear model tree. Specifically, use parameter Xsplit as the splitting variable for ODT and fit a linear model for each split using the function "gmlnet". The corresponding parameter is split="linear".
 - Added the ensemble of ODT-based boosting trees，denoted by ODBT.

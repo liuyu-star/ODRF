@@ -41,7 +41,7 @@ A list which contains:
 \item BestCutVar: The best split variable.
 \item BestCutVal: The best split points for the best split variable.
 \item BestIndex: Each variable corresponds to maximum decrease in gini impurity index, information gain, and mean square error.
-\item fitL and fitR: The multivariate linear models for the left and right nodes after splitting are trained using the function \code{\link{glmnet}}.
+\item fitL and fitR: The multivariate linear models for the left and right nodes after splitting are trained using the function \code{\link[glmnet]{glmnet}}.
 }
 }
 \description{

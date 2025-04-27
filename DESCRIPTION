@@ -13,7 +13,7 @@ License: GPL (>= 3)
 URL: https://liuyu-star.github.io/ODRF/
 BugReports: https://github.com/liuyu-star/ODRF/issues
 Depends: 
-    partykit(>= 1.2-20),
+    partykit,
     R (>= 3.5.0)
 Imports: 
     doParallel,
@@ -39,7 +39,7 @@ Suggests:
     testthat (>= 3.0.0)
 LinkingTo: 
     Rcpp,
-    RcppArmadillo(>= 0.12.4),
+    RcppArmadillo,
     RcppEigen
 VignetteBuilder: 
     knitr
