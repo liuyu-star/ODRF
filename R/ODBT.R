@@ -752,7 +752,7 @@ ODBT_compute <- function(formula, Call, varName, X, y, Xnew, type, model, TreeRo
     # set.seed(seed)
     icore <- NULL
     Votes <- foreach::foreach(
-      icore = seq_along(chunks), .combine = "cbind", #.export = c("ODT.compute"),
+      icore = seq_along(chunks), .combine = "cbind",# .export = c("ODT.compute"),
       .packages = c("ODRF", "nnet", "rpart"), .noexport = "ppForest"
     ) %dopar% {
       # lapply(chunks[[icore]], runTree)

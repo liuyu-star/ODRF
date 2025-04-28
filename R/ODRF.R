@@ -469,7 +469,7 @@ ODRF_compute <- function(formula, Call, varName, X, y, split, lambda, NodeRotate
   # Weights=weights
   # vars=all.vars(Terms)
   PPtree <- function(itree, ...) {
-     set.seed(itree)
+    # set.seed(seed + itree)
 
     TDindx0 <- seq(n)
     TDindx <- TDindx0
