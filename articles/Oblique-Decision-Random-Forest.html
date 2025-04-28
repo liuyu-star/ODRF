@@ -160,7 +160,7 @@ follows.</p>
 <span><span class="va">tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ODT.html">ODT</a></span><span class="op">(</span><span class="va">Density</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">bodyfat_train</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span></span>
 <span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">tree</span>, <span class="va">bodyfat_test</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">e.tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span> <span class="op">-</span> <span class="va">bodyfat_test</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1.4797e-05</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 4.047499e-05</span></span></code></pre></div>
 <p>In the following example, suppose the training data are available in
 two batches. The first batch is used to train ODT and ODRF, and the
 second batch is used to update the model by online. The error after the
@@ -184,11 +184,11 @@ alone.</p>
 <span><span class="va">tree1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ODT.html">ODT</a></span><span class="op">(</span><span class="va">Density</span> <span class="op">~</span> <span class="va">.</span>, <span class="va">bodyfat_train</span><span class="op">[</span><span class="va">index</span>, <span class="op">]</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span></span>
 <span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">tree1</span>, <span class="va">bodyfat_test</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">e.tree.1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span> <span class="op">-</span> <span class="va">bodyfat_test</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 2.119649e-05</span></span>
+<span><span class="co">#&gt; [1] 4.428549e-05</span></span>
 <span><span class="va">tree2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/online.html">online</a></span><span class="op">(</span><span class="va">tree1</span>, <span class="va">bodyfat_train</span><span class="op">[</span><span class="op">-</span><span class="va">index</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="va">bodyfat_train</span><span class="op">[</span><span class="op">-</span><span class="va">index</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">tree2</span>, <span class="va">bodyfat_test</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">e.tree.online</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span> <span class="op">-</span> <span class="va">bodyfat_test</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 2.105668e-05</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 4.418373e-05</span></span></code></pre></div>
 <p>prune first judges whether the error of new data is reduced or not if
 applied, starting from the last leaf nodes. For ODRF, if argument
 ‘useOOB=TRUE’ then it uses ‘out-of-bag’ for pruning. Examples are as
@@ -209,26 +209,26 @@ follows.</p>
 <span><span class="op">)</span></span>
 <span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">forest1</span>, <span class="va">seeds_test</span><span class="op">[</span>, <span class="op">-</span><span class="fl">8</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">e.forest.1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pred</span> <span class="op">!=</span> <span class="va">seeds_test</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.1016949</span></span>
+<span><span class="co">#&gt; [1] 0.06779661</span></span>
 <span><span class="va">forest2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prune.html">prune</a></span><span class="op">(</span><span class="va">forest1</span>, <span class="va">seeds_train</span><span class="op">[</span><span class="op">-</span><span class="va">index</span>, <span class="op">-</span><span class="fl">8</span><span class="op">]</span>, <span class="va">seeds_train</span><span class="op">[</span><span class="op">-</span><span class="va">index</span>, <span class="fl">8</span><span class="op">]</span>,</span>
 <span>  useOOB <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">forest2</span>, <span class="va">seeds_test</span><span class="op">[</span>, <span class="op">-</span><span class="fl">8</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">e.forest.prune1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pred</span> <span class="op">!=</span> <span class="va">seeds_test</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.08474576</span></span>
+<span><span class="co">#&gt; [1] 0.05084746</span></span>
 <span><span class="va">forest3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prune.html">prune</a></span><span class="op">(</span><span class="va">forest1</span>, <span class="va">seeds_train</span><span class="op">[</span><span class="va">index</span>, <span class="op">-</span><span class="fl">8</span><span class="op">]</span>, <span class="va">seeds_train</span><span class="op">[</span><span class="va">index</span>, <span class="fl">8</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">forest3</span>, <span class="va">seeds_test</span><span class="op">[</span>, <span class="op">-</span><span class="fl">8</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">e.forest.prune2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">pred</span> <span class="op">!=</span> <span class="va">seeds_test</span><span class="op">[</span>, <span class="fl">8</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.1016949</span></span>
+<span><span class="co">#&gt; [1] 0.06779661</span></span>
 <span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">bodyfat_train</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">bodyfat_train</span><span class="op">)</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">tree1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ODT.html">ODT</a></span><span class="op">(</span><span class="va">bodyfat_train</span><span class="op">[</span><span class="va">index</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="va">bodyfat_train</span><span class="op">[</span><span class="va">index</span>, <span class="fl">1</span><span class="op">]</span>, split <span class="op">=</span> <span class="st">"mse"</span><span class="op">)</span></span>
 <span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">tree1</span>, <span class="va">bodyfat_test</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">e.tree.1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span> <span class="op">-</span> <span class="va">bodyfat_test</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 4.869672e-05</span></span>
+<span><span class="co">#&gt; [1] 8.18606e-05</span></span>
 <span><span class="va">tree2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/prune.html">prune</a></span><span class="op">(</span><span class="va">tree1</span>, <span class="va">bodyfat_train</span><span class="op">[</span><span class="op">-</span><span class="va">index</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="va">bodyfat_train</span><span class="op">[</span><span class="op">-</span><span class="va">index</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">tree2</span>, <span class="va">bodyfat_test</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="op">(</span><span class="va">e.tree.prune</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span> <span class="op">-</span> <span class="va">bodyfat_test</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 3.751733e-05</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 7.581808e-05</span></span></code></pre></div>
 <p>Note that, prune does not always improve efficiency because the
 number of observers in the training set is too small to build a simple
 tree structure. Therefore, we expand the training set with random
@@ -249,8 +249,8 @@ numbers to make prune effective.</p>
 <span><span class="co">#&gt; =============================================================</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; 1) root</span></span>
-<span><span class="co">#&gt;    node2)# proj1*X &lt; 0.29 -&gt; (leaf1 = setosa)</span></span>
-<span><span class="co">#&gt;    node3)  proj1*X &gt;= 0.29</span></span>
+<span><span class="co">#&gt;    node2)# proj1*X &lt; 0.21 -&gt; (leaf1 = setosa)</span></span>
+<span><span class="co">#&gt;    node3)  proj1*X &gt;= 0.21</span></span>
 <span><span class="co">#&gt;       node4)# proj2*X &lt; 0.88 -&gt; (leaf2 = versicolor)</span></span>
 <span><span class="co">#&gt;       node5)# proj2*X &gt;= 0.88 -&gt; (leaf3 = virginica)</span></span>
 <span><span class="va">party.tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/partykit/man/party-coercion.html" class="external-link">as.party</a></span><span class="op">(</span><span class="va">tree</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
@@ -261,10 +261,10 @@ numbers to make prune effective.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Fitted party:</span></span>
 <span><span class="co">#&gt; [1] root</span></span>
-<span><span class="co">#&gt; |   [2] proj1*X &gt;= 0.29165</span></span>
+<span><span class="co">#&gt; |   [2] proj1*X &gt;= 0.20707</span></span>
 <span><span class="co">#&gt; |   |   [3] proj2*X &gt;= 0.88392: virginica (n = 53, err = 5.7%)</span></span>
 <span><span class="co">#&gt; |   |   [4] proj2*X &lt; 0.88392: versicolor (n = 47, err = 0.0%)</span></span>
-<span><span class="co">#&gt; |   [5] proj1*X &lt; 0.29165: setosa (n = 50, err = 0.0%)</span></span>
+<span><span class="co">#&gt; |   [5] proj1*X &lt; 0.20707: setosa (n = 50, err = 0.0%)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Number of inner nodes:    2</span></span>
 <span><span class="co">#&gt; Number of terminal nodes: 3</span></span>
@@ -277,12 +277,12 @@ numbers to make prune effective.</p>
 <span><span class="co">#&gt;  ODRF.formula(formula = Species ~ ., data = data, parallel = FALSE) </span></span>
 <span><span class="co">#&gt;                Type of oblique decision random forest: classification</span></span>
 <span><span class="co">#&gt;                                       Number of trees: 100</span></span>
-<span><span class="co">#&gt;                            OOB estimate of error rate: 3.33%</span></span>
+<span><span class="co">#&gt;                            OOB estimate of error rate: 4%</span></span>
 <span><span class="co">#&gt; Confusion matrix:</span></span>
 <span><span class="co">#&gt;            setosa versicolor virginica class_error</span></span>
 <span><span class="co">#&gt; setosa         50          0         0  0.00000000</span></span>
-<span><span class="co">#&gt; versicolor      0         47         2  0.04081624</span></span>
-<span><span class="co">#&gt; virginica       0          3        48  0.05882341</span></span></code></pre></div>
+<span><span class="co">#&gt; versicolor      0         47         3  0.05999988</span></span>
+<span><span class="co">#&gt; virginica       0          3        47  0.05999988</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="plot-the-tree-structure-of-odt">Plot the tree structure of ODT<a class="anchor" aria-label="anchor" href="#plot-the-tree-structure-of-odt"></a>
