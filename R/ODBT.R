@@ -511,7 +511,7 @@ ODBT_compute <- function(formula, Call, varName, X, y, Xnew, type, model, TreeRo
   if (TreeRotate) varName <- c(varName, "XB")
 
   runTree <- function(itree, ...) {
-    # set.seed(seed + itree)
+     set.seed(itree)
     # options (warn = -1)
     # ow <- options("warn")
     # options(warn = -1)
@@ -762,7 +762,7 @@ ODBT_compute <- function(formula, Call, varName, X, y, Xnew, type, model, TreeRo
           #        numClass, maxTerms=max.terms, ntrees, mtry, MinLeaf,replacement,ratOOB)
           .Call("_ODRF_GBDT", PACKAGE = "ODRF", X, y, Xnew, Y, numClass, maxTerms = max.terms, ntrees, mtry, MinLeaf, replacement, ratOOB)
         } else {
-          runTree()
+          runTree(t)
         }
       }, VALUE)
     }
@@ -795,7 +795,7 @@ ODBT_compute <- function(formula, Call, varName, X, y, Xnew, type, model, TreeRo
           maxTerms = max.terms, ntrees, mtry, MinLeaf, replacement, ratOOB
         )
       } else {
-        runTree()
+        runTree(t)
       }
     }, VALUE)
   }
